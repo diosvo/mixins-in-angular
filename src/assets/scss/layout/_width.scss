@@ -1,0 +1,67 @@
+@mixin width-px($i) {
+    width: $i * 1px;
+}
+
+.full-screen-width {
+    width: 100vw;
+}
+
+.max-width {
+    max-width: 100%;
+}
+
+.min-width {
+    min-width: 0;
+}
+
+.width {
+    &-inherit {
+        width: inherit;
+    }
+
+    &-100 {
+        width: 100%;
+    }
+}
+
+.w {
+    &-10 {
+        @include width-px(10);
+    }
+
+    &-25 {
+        @include width-px(25);
+    }
+
+    &-32 {
+        @include width-px(32);
+    }
+
+    &-40 {
+        @include width-px(40);
+    }
+
+    &-50 {
+        @include width-px(50);
+    }
+
+    &-100 {
+        @include width-px(100);
+    }
+
+    &-300 {
+        @include width-px(300);
+    }
+
+    &-400 {
+        @include width-px(400);
+    }
+
+    &-500 {
+        @include width-px(500);
+    }
+
+    &-650 {
+        @include width-px(650);
+    }
+}

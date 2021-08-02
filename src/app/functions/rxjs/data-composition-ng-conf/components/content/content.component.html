@@ -1,0 +1,30 @@
+<mat-card *ngIf="combination$ | async as combination">
+  <ng-container *ngIf="hasError">
+    <alert-message type="error">An error occurred.</alert-message>
+  </ng-container>
+
+  <mat-list>
+    <h3 matSubheader>
+      <span>{{pageTitle | titlecase}}</span>
+    </h3>
+
+    <div class="px-2">
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <p>Product Name</p>
+          <p>Category Name</p>
+          <p>Image Link</p>
+          <p>Product Price</p>
+          <p>Product Sale Price</p>
+        </div>
+        <div class="flex-grow-2">
+          <p>{{ combination.product.productName | titlecase}}</p>
+          <p>{{ combination.product.categoryName }}</p>
+          <p><a [href]="combination.product.productImage">{{ combination.product.productImage }}</a></p>
+          <p>{{ combination.product.productPrice | currency}}</p>
+          <p>{{ combination.product.productSalePrice | currency }}</p>
+        </div>
+      </div>
+    </div>
+  </mat-list>
+</mat-card>

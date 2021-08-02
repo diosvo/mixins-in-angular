@@ -1,0 +1,9 @@
+.cdk-overlay-pane {
+  width: 80vw;
+}
+
+@media screen and (min-width: 641px) {
+  .cdk-overlay-pane {
+    width: 400px;
+  }
+}

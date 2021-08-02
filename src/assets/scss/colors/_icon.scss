@@ -1,0 +1,32 @@
+:root {
+    --icon-fill-dark : #131313;
+    --icon-fill-light: #737373;
+}
+
+.icon {
+    &-dark {
+        fill: var(--icon-fill-dark);
+    }
+
+    &-light {
+        fill: var(--icon-fill-light);
+    }
+
+    &-green {
+        fill: var(--color-success);
+    }
+
+    &-purple {
+        fill: var(--color-purple);
+    }
+}
+
+.icon {
+    &-valid {
+        color: var(--color-success);
+    }
+
+    &-invalid {
+        color: var(--color-error);
+    }
+}

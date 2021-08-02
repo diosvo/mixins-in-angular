@@ -1,0 +1,19 @@
+.text-deco {
+    &-none {
+        text-decoration: none;
+    }
+}
+
+.text {
+    &-none {
+        text-transform: none;
+    }
+
+    &-uppercase {
+        text-transform: uppercase;
+    }
+
+    &-capitalize {
+        text-transform: capitalize;
+    }
+}

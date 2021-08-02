@@ -1,0 +1,31 @@
+<article class="d-grid template-container gap-1 p-2">
+  <ng-container *ngFor="let group of (data | async)">
+    <mat-card *ngFor="let item of group.groupDetails">
+      <!-- Summary -->
+      <ng-container>
+        <mat-card-title class="f-16">{{ item.name | titlecase }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip-list aria-label="Item Category">
+            <mat-chip class="f-13">{{ group.groupName }}</mat-chip>
+          </mat-chip-list>
+        </mat-card-subtitle>
+      </ng-container>
+
+      <!-- Main -->
+      <img mat-card-image [src]="item.image ? item.image : emptyImg" class="cursor-pointer"
+        (click)="directItem(group.groupUrl, group.groupName, item.route)">
+      <mat-card-content>
+        <p class="text-secondary">{{ item.description ? item.description : 'Updating...' }}</p>
+      </mat-card-content>
+
+      <!-- Action -->
+      <mat-card-actions class="text-right">
+        <button mat-button color="primary" aria-label="View Details"
+          (click)="directItem(group.groupUrl, group.groupName, item.route)">
+          <mat-icon class="mr-1">play_arrow</mat-icon>
+          <span>View</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</article>

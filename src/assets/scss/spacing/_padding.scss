@@ -1,0 +1,34 @@
+$maximum_size : 8;
+
+@for $i from 0 through $maximum_size {
+
+    .p-#{$i} {
+        padding: 0.5rem * $i;
+    }
+
+    .pt-#{$i} {
+        padding-top: 0.5rem * $i;
+    }
+
+    .pr-#{$i} {
+        padding-right: 0.5rem * $i;
+    }
+
+    .pb-#{$i} {
+        padding-bottom: 0.5rem * $i;
+    }
+
+    .pl-#{$i} {
+        padding-left: 0.5rem * $i;
+    }
+
+    .px-#{$i} {
+        padding-right: 0.5rem * $i;
+        padding-left : 0.5rem * $i;
+    }
+
+    .py-#{$i} {
+        padding-top   : 0.5rem * $i;
+        padding-bottom: 0.5rem * $i;
+    }
+}

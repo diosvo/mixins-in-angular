@@ -1,0 +1,47 @@
+[
+  {
+    "id": 3656,
+    "uid": "d07a0b6d-ba64-44a1-8f98-226037806554",
+    "blend_name": "American Java",
+    "origin": "Apaneca-Ilamatepec, El Salvador",
+    "variety": "Yellow Bourbon",
+    "notes": "muted, creamy, tobacco, bakers chocolate, toast",
+    "intensifier": "sharp"
+  },
+  {
+    "id": 7311,
+    "uid": "0071fa60-b73e-4c3c-bf73-9695caf18571",
+    "blend_name": "Winter Star",
+    "origin": "Puebla, Mexico",
+    "variety": "Pacas",
+    "notes": "clean, big, mandarin, rose hips, figs",
+    "intensifier": "dry"
+  },
+  {
+    "id": 3372,
+    "uid": "c68ec535-7967-4d91-ac14-ce02e98d867b",
+    "blend_name": "Heart America",
+    "origin": "Ojimmah, Ethiopia",
+    "variety": "Sarchimor",
+    "notes": "mild, slick, mushroom, pecan, figs",
+    "intensifier": "pointed"
+  },
+  {
+    "id": 9904,
+    "uid": "1a0e4c7a-4f2d-42f1-a1eb-d6bdc9125e06",
+    "blend_name": "Hello Symphony",
+    "origin": "El Paraiso, Honduras",
+    "variety": "SL28",
+    "notes": "mild, tea-like, leafy greens, orange blossom, jasmine",
+    "intensifier": "lingering"
+  },
+  {
+    "id": 2217,
+    "uid": "4f9ded88-be1d-47d7-af9b-c7ce122a941f",
+    "blend_name": "Hello Select",
+    "origin": "Lake Kivu Region, Rwanda",
+    "variety": "Kent",
+    "notes": "lingering, silky, snow pea, graham cracker, molasses",
+    "intensifier": "bright"
+  }
+]

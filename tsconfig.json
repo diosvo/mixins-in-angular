@@ -1,0 +1,48 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "tslib": [
+        "path/to/node_modules/tslib/tslib.d.ts"
+      ],
+      "@auth/*": [
+        "src/app/auth/*"
+      ],
+      "@lib/animations/*": [
+        "src/app/library/animations/*"
+      ],
+      "@lib/components/*": [
+        "src/app/library/components/*"
+      ],
+      "@lib/guards/*": [
+        "src/app/library/guards/*"
+      ],
+      "@lib/models/*": [
+        "src/app/library/models/*"
+      ],
+      "@lib/services/*": [
+        "src/app/library/services/*"
+      ],
+      "@lib/utils/*": [
+        "src/app/library/utils/*"
+      ]
+    },
+  },
+}

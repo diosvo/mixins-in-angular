@@ -1,0 +1,21 @@
+<form [formGroup]="dynamicForm" (ngSubmit)="submitForm.emit(dynamicForm.value)">
+  <ng-container *ngFor="let formItem of dynamicFormFields">
+    <label for="lable" class="d-block mb-0.25" [innerHTML]="formItem.label"></label>
+
+    <ng-container [ngSwitch]="formItem.type">
+      <!-- Input -->
+      <mat-form-field *ngSwitchCase="'text'" class="width-100">
+        <input matInput type="text" autocomplete="off" [formControlName]="formItem.id"
+          [placeholder]="formItem.placeholder">
+      </mat-form-field>
+
+      <!-- Select -->
+      <mat-form-field *ngSwitchCase="'select'" class="width-100">
+        <mat-select [formControlName]="formItem.id" [placeholder]="formItem.placeholder">
+          <mat-option *ngFor="let option of formItem.selectOptions | keyvalue" [value]="option.key"
+            [innerHTML]="option.value"></mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+</form>

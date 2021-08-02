@@ -1,0 +1,15 @@
+<div #alert id="alert-{{type}}" class="bg-{{type}} bd-{{type}} d-flex ai-flex-end p-2 bd-radius-2">
+  <div [ngSwitch]="type">
+    <mat-icon class="icon-{{type}}" *ngSwitchCase="'success'">check_circle_outline</mat-icon>
+    <mat-icon class="icon-{{type}}" *ngSwitchCase="'info'">help_outline</mat-icon>
+    <mat-icon class="icon-{{type}}" *ngSwitchCase="'warning'">error_outline</mat-icon>
+    <mat-icon class="icon-{{type}}" *ngSwitchCase="'error'">highlight_off</mat-icon>
+  </div>
+  <div class="as-center ml-1 opacity-0.8">
+    <ng-content></ng-content>
+  </div>
+  <button (click)="dismissAlert(alert)" type="button" class="bg-{{type}} icon-{{type}} ml-auto bd-circle"
+    data-dismiss="alert" aria-label="Close" data-toggle="tooltip" title="Close Alert" style="padding: 0.5rem 0.75rem;">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>

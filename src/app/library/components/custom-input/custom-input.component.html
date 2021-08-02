@@ -1,0 +1,7 @@
+<ng-container>
+  <label for="input" class="d-block mb-0.25" [innerHTML]="label"></label>
+  <mat-form-field class="width-100" appearance="outline">
+    <input matInput type="text" autocomplete="off" [placeholder]="placeholder" [ngModel]="value"
+      (ngModelChange)="onChange($event)" (blur)="onTouched()">
+  </mat-form-field>
+</ng-container>

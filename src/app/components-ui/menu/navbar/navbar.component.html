@@ -1,0 +1,14 @@
+<div class="navbar position-fixed fixed-auto-center width-100">
+  <ul class="nav position-relative d-flex p-0 bg-white bs-light">
+    <ng-container *ngFor="let item of navList; index as idx">
+      <li class="nav__item d-flex flex-direction-column ai-center flex-1 height-inherit mt-2 mb-4 cursor-pointer"
+        [ngClass]="{'active': idx === selected}" (click)="onSelect(elem, idx)" #elem>
+        <svg class="icon icon-light w-32 h-32">
+          <use attr.href="assets/svg/icons.svg#{{item.icon}}"></use>
+        </svg>
+        <a class="nav__link opacity-0 visibility-hidden fw-500 text-secondary">{{item.title}}</a>
+      </li>
+      <div class="slider position-absolute top-0 bg-primary bd-radius-12" [ngStyle]="animate"></div>
+    </ng-container>
+  </ul>
+</div>

@@ -1,0 +1,53 @@
+[
+  {
+    "groupName": "Button",
+    "groupDetails": [
+      {
+        "name": "Micro Interaction",
+        "route": "micro-interaction",
+        "image": "",
+        "description": "GSAP"
+      },
+      {
+        "name": "Button Toggle Mode",
+        "route": "toggle-mode",
+        "image": "",
+        "description": "ngClass"
+      },
+      {
+        "name": "Button Expandable Floating Menu",
+        "route": "expandable-floating-menu",
+        "image": "",
+        "description": "GSAP, Directive"
+      }
+    ]
+  },
+  {
+    "groupName": "Card",
+    "groupDetails": [
+      {
+        "name": "Animated Counter Card",
+        "route": "animated-counter",
+        "image": "",
+        "description": "Counter Directive, ViewChild, GSAP"
+      }
+    ]
+  },
+  {
+    "groupName": "Menu",
+    "groupDetails": [
+      {
+        "name": "Liquid Menu Interaction",
+        "route": "liquid-menu",
+        "image": "",
+        "description": "GSAP"
+      },
+      {
+        "name": "Navbar Interaction",
+        "route": "navbar",
+        "image": "",
+        "description": "ngClass, ngStyle, GSAP"
+      }
+    ]
+  }
+]

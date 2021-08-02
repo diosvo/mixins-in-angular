@@ -1,0 +1,67 @@
+@import './flex', './grid';
+
+.d {
+  &-none {
+    display: none;
+  }
+
+  &-block {
+    display: block;
+  }
+
+  &-inline-block {
+    display: inline-block;
+  }
+
+  &-flex {
+    display: flex;
+  }
+
+  &-inline-flex {
+    display: inline-flex;
+  }
+
+  &-grid {
+    display: grid;
+  }
+}
+
+.opacity {
+  &-0 {
+    opacity: 0;
+  }
+
+  &-0\.5 {
+    opacity: 0.5;
+  }
+
+  &-0\.8 {
+    opacity: 0.8;
+  }
+
+  &-0\.9 {
+    opacity: 0.9;
+  }
+
+  &-1 {
+    opacity: 1;
+  }
+}
+
+.visibility {
+  &-hidden {
+    visibility: hidden;
+  }
+}
+
+.overflow {
+  &-hidden {
+    overflow: hidden;
+  }
+}
+
+.place-items {
+  &-center {
+    place-items: center;
+  }
+}

@@ -1,0 +1,53 @@
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+<alert-message *ngIf="errorMessage" type="error">{{ errorMessage }}</alert-message>
+
+<!-- Search -->
+<ng-container>
+  <mat-accordion matTooltip="Click here to {{ openState === true ? 'close': 'open'}} search box"
+    matTooltipPosition="above">
+    <mat-expansion-panel (opened)="openState = true" (closed)="openState = false">
+      <!-- Header -->
+      <mat-expansion-panel-header>
+        <mat-panel-description>
+          Used to represent distinct UI elements.
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Body -->
+      <ng-template matExpansionPanelContent>
+        <div class="panel-container d-flex gap-1">
+          <!-- Filter by Group Name -->
+          <mat-form-field id="search-input" class="filter-group">
+            <mat-label>Components</mat-label>
+            <mat-select (selectionChange)="onFilterGroupName($event)" [(ngModel)]="selectedGroup">
+              <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}
+              </mat-option>
+            </mat-select>
+            <button matSuffix mat-icon-button *ngIf="showFilterIcon" matTooltip="Clear" (click)="clearFilter($event)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <!-- Search by Name -->
+          <mat-form-field id="search-input" class="width-100">
+            <mat-label>What are you looking for today...</mat-label>
+            <input matInput autocomplete="off" [(ngModel)]="searchInput"
+              (ngModelChange)="onFilterKeyChanged(searchInput)">
+            <button matSuffix mat-icon-button *ngIf="searchInput" matTooltip="Clear" (click)="clearInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>
+
+<!-- Fetch Data -->
+<ng-container [ngTemplateOutlet]="noResults">
+  <menu-item [data]="filteredData$"></menu-item>
+
+  <ng-template #noResults>
+    <div class="text-center fs-16">{{ emptyMessage }}</div>
+  </ng-template>
+</ng-container>

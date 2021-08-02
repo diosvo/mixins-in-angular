@@ -1,0 +1,10 @@
+<h2 mat-dialog-title [innerHTML]="data.header | titlecase"></h2>
+<!-- Body -->
+<mat-dialog-content class="mat-typography" [innerHTML]="data.body"></mat-dialog-content>
+
+<!-- Actions -->
+<mat-dialog-actions align="end" style="padding: 0.5rem 0 1rem;">
+  <button mat-stroked-button color="warn" mat-dialog-close>Close</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="true" [innerHTML]="data.btnConfirm | titlecase"
+    cdkFocusInitial></button>
+</mat-dialog-actions>

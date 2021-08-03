@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { CustomInputModule } from 'src/app/library/components/custom-input/custom-input.module';
+import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { InteractionFormRoutingModule } from './interaction-form-routing.module';
 

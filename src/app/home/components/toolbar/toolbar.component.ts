@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
-import { ConfirmDialogComponent } from 'src/app/library/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { IMenu } from '../../models/search.model';
 import { EMenuLink, EUrl } from '../../models/url.enum';
+
 
 @Component({
   selector: 'toolbar',

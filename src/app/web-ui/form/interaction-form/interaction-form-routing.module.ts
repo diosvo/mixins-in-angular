@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HasRoleGuard } from 'src/app/library/guards/has-role.guard';
-import { IsAuthenticatedGuard } from 'src/app/library/guards/is-authenticated.guard';
-import { IsFormValidGuard } from 'src/app/library/guards/is-form-valid.guard';
+import { HasRoleGuard } from '@lib/guards/has-role.guard';
+import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
+import { IsFormValidGuard } from '@lib/guards/is-form-valid.guard';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 
 const routes: Routes = [

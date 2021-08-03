@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { ILogger, LOGGER } from '@lib/services/log/logger';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
-import { ILogger, LOGGER } from 'src/app/library/services/log/logger';
 import { IGroupValue } from '../models/search.model';
 import { EUrl } from '../models/url.enum';
 

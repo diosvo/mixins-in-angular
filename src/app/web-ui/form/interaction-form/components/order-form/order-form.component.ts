@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BaseFormComponent } from 'src/app/library/models/base-form-component';
+import { BaseFormComponent } from '@lib/models/base-form-component';
 
 @Component({
   selector: 'app-order-form',

@@ -1,6 +1,6 @@
 <div class="overlay" #overlay (click)="closeMenu(menu, btn, overlay)"></div>
 
-<div class="position-fixed fixed-auto-center">
+<div class="d-flex ai-center jc-center p-2">
   <button mat-raised-button color="primary" class="position-relative btn-circle text-white p-4" #btn
     (click)="showMenu(menu, btn, overlay)" [ngStyle]="setStyles()" [disabled]="disabled">Menu</button>
 

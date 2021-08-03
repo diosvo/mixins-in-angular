@@ -1,15 +1,1 @@
-:root {
-    --color-primary   : #7B78F8;
-    --color-light-blue: #5175FB;
-    --color-purple    : #5D00D6;
-    --color-light     : #F5F6FA;
-    --color-black     : #121638;
-    --color-grey      : #858B93;
-    --color-error     : #E14A4A;
-    --color-success   : #4ABB4A;
-
-    --hr  : #DADDE1;
-    --line: #CCCCCC;
-}
-
-@import './background', './box-shadow', './icon', './text'
+@import './background', './box-shadow', './icon', './text';

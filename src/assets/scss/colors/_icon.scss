@@ -1,32 +1,24 @@
-:root {
-    --icon-fill-dark : #131313;
-    --icon-fill-light: #737373;
+@use 'palette';
+
+$-icon-fill-dark : #131313;
+$-icon-fill-light: #737373;
+
+.icon {
+  &-dark {
+    fill: $-icon-fill-dark;
+  }
+
+  &-light {
+    fill: $-icon-fill-light;
+  }
 }
 
 .icon {
-    &-dark {
-        fill: var(--icon-fill-dark);
-    }
+  &-valid {
+    color: palette.$success;
+  }
 
-    &-light {
-        fill: var(--icon-fill-light);
-    }
-
-    &-green {
-        fill: var(--color-success);
-    }
-
-    &-purple {
-        fill: var(--color-purple);
-    }
-}
-
-.icon {
-    &-valid {
-        color: var(--color-success);
-    }
-
-    &-invalid {
-        color: var(--color-error);
-    }
+  &-invalid {
+    color: palette.$error;
+  }
 }

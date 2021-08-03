@@ -11,7 +11,7 @@
 
       <div class="card-content d-flex flex-direction-column jc-center flex-1 px-2">
         <div class="card-title">
-          <h4 class="title-dark text-capitalize mt-0 mb-1 fw-400">{{item.title}}</h4>
+          <h4 class="title-dark title-required text-capitalize fw-400">{{ item.title }}</h4>
         </div>
         <div class="card-total d-flex">
           <span class="total f-32" [appAnimatedCounter]="item.amount" [delay]="1000"></span>
@@ -19,7 +19,7 @@
             <svg class="icon-arrow-up w-10 h-10">
               <use href="assets/svg/icons.svg#icon-arrow-thin-up"></use>
             </svg>
-            <span class="percent icon-green f-13 ml-1" [appAnimatedCounter]="item.percent" [delay]="1200">%</span>
+            <span class="percent f-13 ml-1" [appAnimatedCounter]="item.percent" [delay]="1200">%</span>
           </div>
         </div>
       </div>

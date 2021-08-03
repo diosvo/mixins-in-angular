@@ -1,46 +1,25 @@
-:root {
-    --text-white    : #FFFFFF;
-    --text-secondary: #737373;
-    --text-black    : #000000;
-    --text-light    : #ECECEC;
-
-    --title-dark: #616161;
-}
+@use 'palette';
 
 .text {
-    &-white {
-        color: var(--text-white);
-    }
+  &-white {
+    color: palette.$white;
+  }
 
-    &-light {
-        color: var(--text-light);
-    }
+  &-light {
+    color: palette.$light;
+  }
 
-    &-secondary {
-        color: var(--text-secondary);
-    }
+  &-secondary {
+    color: palette.$secondary;
+  }
 
-    &-black {
-        color: var(--text-black);
-    }
-
-    &-primary-color {
-        color: var(--color-primary);
-    }
-
-    &-purple {
-        color: var(--color-purple);
-    }
+  &-black {
+    color: palette.$black;
+  }
 }
 
-.title {
-    &-dark {
-        color: var(--title-dark);
-    }
-
-    &-required::after {
-        content    : '*';
-        color      : var(--color-error);
-        margin-left: 0.5rem;
-    }
+.title-required::after {
+  content    : '*';
+  color      : palette.$error;
+  margin-left: 0.5rem;
 }

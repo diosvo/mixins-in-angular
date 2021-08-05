@@ -33,7 +33,28 @@
             "type": "element",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "eqeqeq": ["error", "smart"],
+        "semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "comma-dangle": [
+          "error",
+          {
+            "objects": "never",
+            "arrays": "never",
+            "functions": "never"
+          }
+        ],
+        "dot-notation": "off",
+        "id-blacklist": "off",
+        "id-match": "off",
+        "no-empty-function": "off",
+        "no-magic-numbers": "off",
+        "no-param-reassign": "error",
+        "no-shadow": "error",
+        "no-underscore-dangle": "off",
+        "no-unused-expressions": "error",
+        "radix": "off"
       }
     },
     {

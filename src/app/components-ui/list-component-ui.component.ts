@@ -64,7 +64,7 @@ export class ListComponentUiComponent implements OnDestroy {
             error: () => this.errorMessage = 'An error occurred. Please try again!'
           }),
           takeUntil(this.destroyed$),
-        )
+        );
     } else {
       this.filteredData$ = this.data$;
       this.emptyMessage = null;
@@ -84,11 +84,11 @@ export class ListComponentUiComponent implements OnDestroy {
     this.filteredData$ = this.data$.pipe(
       map(group => group.filter(item => item.groupName === $event.value)),
       takeUntil(this.destroyed$)
-    )
+    );
   }
 
   clearFilter($event: any): void {
-    $event.stopPropagation()
+    $event.stopPropagation();
     this.selectedGroup = null;
     this.showFilterIcon = false;
     this.onFilterKeyChanged(this.selectedGroup);

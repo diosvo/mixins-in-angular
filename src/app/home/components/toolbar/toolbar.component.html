@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" class="d-flex">
   <mat-toolbar-row>
-    <button mat-button *ngFor="let item of menuList" [ngClass]="{'text-light, opacity-0.5': item.active === false}"
-      class="mr-2 f-14" (click)="onDirect(item.route)">
+    <button mat-button *ngFor="let item of options" [ngClass]="{'text-light, opacity-0.5': item.active === false}"
+      class="mr-2 f-14" (click)="directMenu.emit(item.route)">
       {{ item.name | titlecase }}
     </button>
     <div class="flex-auto"></div>

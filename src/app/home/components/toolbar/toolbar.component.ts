@@ -1,18 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { IMenu } from '../../models/search.model';
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {
-  @Input() options: Array<IMenu>;
-  @Output() directMenu = new EventEmitter();
-
   isLoggedIn = true;
 
   constructor(

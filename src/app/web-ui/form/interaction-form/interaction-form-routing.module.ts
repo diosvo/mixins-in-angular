@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CanLoadGuard } from '@lib/guards/can-load.guard';
 import { HasRoleGuard } from '@lib/guards/has-role.guard';
 import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
 import { UnsavedChangesGuard } from '@lib/guards/unsaved-changes.guard';
@@ -10,7 +9,6 @@ const routes: Routes = [
   {
     path: '',
     component: OrderFormComponent,
-    canLoad: [CanLoadGuard],
     canDeactivate: [UnsavedChangesGuard],
     canActivate: [IsAuthenticatedGuard, HasRoleGuard],
     data: {

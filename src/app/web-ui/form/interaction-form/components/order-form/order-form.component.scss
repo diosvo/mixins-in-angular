@@ -4,12 +4,11 @@
   letter-spacing: 1px;
 }
 
-@media screen and (min-width: 641px ) {
+@media screen and (min-width: 641px) {
   .form-container {
-    position : fixed;
-    top      : calc(40% - 1rem);
-    left     : 50%;
-    transform: translate(-50%, -50%);
+    display   : block;
+    margin    : 0 auto;
+    margin-top: 1rem;
 
     max-width : 500px;
     max-height: calc(100vh - 2rem);

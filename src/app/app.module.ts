@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FakeBackendProvider } from '@backend/api/fake-be';
+import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
 import { LOGGER } from '@lib/services/log/logger';
 import { LoggerService } from '@lib/services/log/logger.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,8 +26,9 @@ import { HomeModule } from './home/home.module';
     AppRoutingModule,
     HttpClientModule,
 
+    HomeModule,
     MatSnackBarModule,
-    HomeModule
+    UnsavedChangesDialogModule
   ],
   providers: [
     FakeBackendProvider,

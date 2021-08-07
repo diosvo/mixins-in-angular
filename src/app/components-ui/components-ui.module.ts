@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,8 +24,9 @@ import { ListComponentUiComponent } from './list-component-ui.component';
     ComponentsUiRoutingModule,
 
     FormsModule,
+    ReactiveFormsModule,
+    
     AuthModule,
-
     HomeModule,
     AlertModule,
 

@@ -8,22 +8,26 @@
     <mat-expansion-panel (opened)="openState = true" (closed)="openState = false">
       <!-- Header -->
       <mat-expansion-panel-header>
-        <mat-panel-description>
-          Used to represent distinct UI elements.
+        <mat-panel-title class="ai-center">
+          Use to represent distinct UI elements.
+        </mat-panel-title>
+        <mat-panel-description class="jc-flex-end">
+          <button mat-button *ngIf="showFilterIcon" (click)="cleanFilters($event)">Clean Filters</button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <!-- Body -->
       <ng-template matExpansionPanelContent>
-        <div class="panel-container d-flex gap-1">
+        <form [formGroup]="componentsForm" class="panel-container d-flex gap-1">
           <!-- Filter by Group Name -->
           <mat-form-field id="search-input" class="filter-group">
             <mat-label>Components</mat-label>
-            <mat-select (selectionChange)="onFilterGroupName($event)" [(ngModel)]="selectedGroup">
+            <mat-select formControlName="group">
               <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}
               </mat-option>
             </mat-select>
-            <button matSuffix mat-icon-button *ngIf="showFilterIcon" matTooltip="Clear" (click)="clearFilter($event)">
+            <button matSuffix mat-icon-button *ngIf="group.value !== ''" matTooltip="Clear"
+              (click)="cleanGroup($event)">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
@@ -31,13 +35,12 @@
           <!-- Search by Name -->
           <mat-form-field id="search-input" class="width-100">
             <mat-label>What are you looking for today...</mat-label>
-            <input matInput autocomplete="off" [(ngModel)]="searchInput"
-              (ngModelChange)="onFilterKeyChanged(searchInput)">
-            <button matSuffix mat-icon-button *ngIf="searchInput" matTooltip="Clear" (click)="clearInput()">
+            <input matInput autocomplete="off" formControlName="query">
+            <button matSuffix mat-icon-button *ngIf="query.value !== ''" matTooltip="Clear" (click)="cleanQuery()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-        </div>
+        </form>
       </ng-template>
     </mat-expansion-panel>
   </mat-accordion>

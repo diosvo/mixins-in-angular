@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { AuthService } from '@auth/services/auth.service';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { IGroupValue } from '../home/models/search.model';
@@ -11,13 +11,15 @@ import { SearchService } from '../home/services/search.service';
   styleUrls: ['./list-component-ui.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponentUiComponent implements OnDestroy {
+export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   openState = false;
   showFilterIcon = false;
 
-  searchInput: string;
-  selectedGroup: string;
+  componentsForm: FormGroup = this.fb.group({
+    query: [''],
+    group: ['']
+  })
 
   emptyMessage: string;
   errorMessage: string;
@@ -38,60 +40,72 @@ export class ListComponentUiComponent implements OnDestroy {
   filteredData$: Observable<Array<IGroupValue>> = this.data$;
 
   constructor(
+    private fb: FormBuilder,
     private searchService: SearchService,
-    public authService: AuthService,
   ) { }
 
-  /**
-  * @description: Search by name
-  */
-  onFilterKeyChanged($event: string): void {
-    if ($event) {
-      this.filteredData$ = this.data$
-        .pipe(
-          map((items: Array<IGroupValue>) =>
-            items
-              .map(item => ({
-                ...item,
-                groupDetails: item.groupDetails.filter(
-                  details => details.name.toLowerCase().indexOf($event.toLowerCase()) !== -1
-                )
-              }))
-              .filter(item => item.groupDetails.length > 0)
-          ),
-          tap({
-            next: (data: Array<IGroupValue>) => this.emptyMessage = data.length === 0 ? 'No results found.' : null,
-            error: () => this.errorMessage = 'An error occurred. Please try again!'
-          }),
-          takeUntil(this.destroyed$),
-        );
-    } else {
-      this.filteredData$ = this.data$;
-      this.emptyMessage = null;
-    }
-  }
-
-  clearInput(): void {
-    this.searchInput = null;
-    this.onFilterKeyChanged(this.searchInput);
+  ngOnInit(): void {
+    this.onFormChanged();
   }
 
   /**
-  * @description: Filter by Group Name
+  * @description: Search
   */
-  onFilterGroupName($event): void {
-    this.showFilterIcon = true;
-    this.filteredData$ = this.data$.pipe(
-      map(group => group.filter(item => item.groupName === $event.value)),
-      takeUntil(this.destroyed$)
-    );
+
+  onFormChanged(): void {
+    this.componentsForm.valueChanges
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe(response => {
+        if (response.query !== '' || response.group !== '') {
+          this.filteredData$ = this.data$
+            .pipe(
+              map((group: Array<IGroupValue>) => group
+                .map(item => ({
+                  ...item,
+                  groupDetails: item.groupDetails.filter(
+                    details => details.name.toLowerCase().indexOf(response.query.toLowerCase()) !== -1
+                  )
+                }))
+                .filter(item => item.groupName === response.group)
+                .filter(item => item.groupDetails.length > 0)
+              ),
+              tap({
+                next: (data: Array<IGroupValue>) => this.emptyMessage = data.length === 0 ? 'No results found.' : null,
+                error: () => this.errorMessage = 'An error occurred. Please try again!'
+              })
+            );
+
+          this.showFilterIcon = true;
+        } else {
+          this.filteredData$ = this.data$;
+          this.emptyMessage = null;
+        }
+      });
   }
 
-  clearFilter($event: any): void {
+  cleanQuery(): void {
+    return this.query.setValue('');
+  }
+
+  cleanGroup($event: Event): void {
     $event.stopPropagation();
-    this.selectedGroup = null;
+    return this.group.setValue('');
+  }
+
+  cleanFilters($event: Event): void {
+    this.cleanQuery();
+    this.cleanGroup($event);
     this.showFilterIcon = false;
-    this.onFilterKeyChanged(this.selectedGroup);
+  }
+
+  get query(): FormControl {
+    return this.componentsForm.get('query') as FormControl;
+  }
+
+  get group(): FormControl {
+    return this.componentsForm.get('group') as FormControl;
   }
 
   ngOnDestroy(): void {

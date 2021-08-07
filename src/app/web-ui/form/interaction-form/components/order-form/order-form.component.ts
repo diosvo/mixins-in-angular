@@ -35,12 +35,17 @@ export class OrderFormComponent implements DeactivateComponent {
 
   canDeactivate = () => this.isFormSubmitted || !this.orderForm.dirty;
 
-  onSave(): void {
-    return this.snackbar.success('Save successfully.');
+  saveBeforeDeactivate(): void {
+    return this.onSubmit();
   }
 
   onSubmit(): void {
+    if(this.orderForm.invalid) {
+      this.snackbar.error('You need to provide all required information.');
+      return;
+    }
     this.isFormSubmitted = true;
+    this.snackbar.success('Saved successfully');
   }
 
   get email(): FormControl {

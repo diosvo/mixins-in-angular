@@ -5,7 +5,7 @@ interface BaseFormComponent {
 
 interface DeactivateComponent {
   canDeactivate: () => boolean;
-  onSave: () => void;
+  saveBeforeDeactivate: () => void;
 }
 
 export { BaseFormComponent, DeactivateComponent };

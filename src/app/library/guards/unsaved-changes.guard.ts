@@ -2,31 +2,30 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate } from '@angular/router';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { Observable, of, Subject } from 'rxjs';
 import { DeactivateComponent } from '../models/base-form-component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
+  subject = new Subject<boolean>();
+
   constructor(private dialog: MatDialog) { }
 
   canDeactivate(
-    component: DeactivateComponent): boolean {
-    if (component.canDeactivate()) {
-      return true;
-    }
-    else {
+    component: DeactivateComponent
+  ): Observable<boolean> {
+    if (!component.canDeactivate()) {
       const dialogRef = this.dialog.open(UnsavedChangesDialogComponent, {
         width: '500px',
         disableClose: true
       });
-      dialogRef.afterClosed().subscribe(response => {
-        if (!!response) {
-          component.onSave();
-        } else {
-          console.log('false');
-        }
-      });
+
+      dialogRef.componentInstance.subject = this.subject;
+      this.subject.subscribe(() => component.saveBeforeDeactivate());
+      return dialogRef.afterClosed();
     }
+    return of(true);
   }
 }

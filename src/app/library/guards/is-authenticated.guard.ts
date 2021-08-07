@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate } from '@angular/router';
+import { AuthService } from '@auth/services/auth.service';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { SnackbarService } from '../services/snackbar/snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,7 @@ export class IsAuthenticatedGuard implements CanActivate {
     private snackbar: SnackbarService
   ) { }
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  canActivate(): Observable<boolean> {
     return this.authService.isLoggedIn.pipe(
       tap({
         next: (isLoggedIn: boolean) => {

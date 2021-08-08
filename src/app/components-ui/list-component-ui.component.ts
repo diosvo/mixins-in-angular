@@ -48,7 +48,9 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.componentsForm.patchValue(this.route.snapshot.queryParams);
+    this.route.queryParams
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(params => this.componentsForm.patchValue(params));
     this.onFormChanges();
     this.onFilters();
   }
@@ -74,7 +76,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
           .map(item => ({
             ...item,
             groupDetails: item.groupDetails.filter(
-              details => details.name.toLowerCase().indexOf(this.query.value.toLowerCase() || '') !== -1
+              details => details.name.toLowerCase().indexOf(this.query.value.toLowerCase()) !== -1
             )
           }))
           .filter(item => item.groupDetails.length > 0)
@@ -126,5 +128,6 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.destroyed$.unsubscribe();
   }
 }

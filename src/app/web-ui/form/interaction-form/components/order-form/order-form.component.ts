@@ -40,7 +40,7 @@ export class OrderFormComponent implements DeactivateComponent {
   }
 
   onSubmit(): void {
-    if(this.orderForm.invalid) {
+    if (this.orderForm.invalid) {
       this.snackbar.error('You need to provide all required information.');
       return;
     }

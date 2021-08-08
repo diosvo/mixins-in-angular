@@ -9,10 +9,13 @@
       <!-- Header -->
       <mat-expansion-panel-header>
         <mat-panel-title class="ai-center">
-          Use to represent distinct UI elements.
+          Represent distinct UI elements.
         </mat-panel-title>
         <mat-panel-description class="jc-flex-end">
-          <button mat-button *ngIf="showFilterIcon" (click)="cleanFilters($event)">Clean Filters</button>
+          <button mat-icon-button *ngIf="clearAllIconActive()" (click)="cleanFilters($event)"
+            matTooltip="Clear All Filters" matTooltipPosition="left">
+            <mat-icon> clear_all</mat-icon>
+          </button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
@@ -23,10 +26,11 @@
           <mat-form-field id="search-input" class="filter-group">
             <mat-label>Components</mat-label>
             <mat-select formControlName="group">
+              <mat-option value="all" selected>All</mat-option>
               <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}
               </mat-option>
             </mat-select>
-            <button matSuffix mat-icon-button *ngIf="group.value !== ''" matTooltip="Clear"
+            <button matSuffix mat-icon-button *ngIf="group.value !== 'all'" matTooltip="Clear"
               (click)="cleanGroup($event)">
               <mat-icon>close</mat-icon>
             </button>

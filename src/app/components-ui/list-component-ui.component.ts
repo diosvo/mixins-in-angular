@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { IGroupValue } from '../home/models/search.model';
@@ -18,7 +19,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   componentsForm: FormGroup = this.fb.group({
     query: [''],
-    group: ['']
+    group: ['all']
   })
 
   emptyMessage: string;
@@ -37,52 +38,63 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$)
       );
 
-  filteredData$: Observable<Array<IGroupValue>> = this.data$;
+  filteredData$: Observable<Array<IGroupValue>>;
 
   constructor(
+    private router: Router,
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private searchService: SearchService,
   ) { }
 
   ngOnInit(): void {
-    this.onFormChanged();
+    this.componentsForm.patchValue(this.route.snapshot.queryParams);
+    this.onFormChanges();
+    this.onFilters();
   }
 
   /**
   * @description: Search
   */
 
-  onFormChanged(): void {
+  onFormChanges(): void {
     this.componentsForm.valueChanges
-      .pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe(response => {
-        if (response.query !== '' || response.group !== '') {
-          this.filteredData$ = this.data$
-            .pipe(
-              map((group: Array<IGroupValue>) => group
-                .map(item => ({
-                  ...item,
-                  groupDetails: item.groupDetails.filter(
-                    details => details.name.toLowerCase().indexOf(response.query.toLowerCase()) !== -1
-                  )
-                }))
-                .filter(item => item.groupName === response.group)
-                .filter(item => item.groupDetails.length > 0)
-              ),
-              tap({
-                next: (data: Array<IGroupValue>) => this.emptyMessage = data.length === 0 ? 'No results found.' : null,
-                error: () => this.errorMessage = 'An error occurred. Please try again!'
-              })
-            );
-
-          this.showFilterIcon = true;
-        } else {
-          this.filteredData$ = this.data$;
-          this.emptyMessage = null;
-        }
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(_ => {
+        this.onFilters();
+        this.updateParams();
       });
+  }
+
+  onFilters(): void {
+    this.filteredData$ = this.data$
+      .pipe(
+        map((group: Array<IGroupValue>) => group
+          .filter(item => this.group.value !== 'all' ? item.groupName === this.group.value : 'all')
+          .map(item => ({
+            ...item,
+            groupDetails: item.groupDetails.filter(
+              details => details.name.toLowerCase().indexOf(this.query.value.toLowerCase() || '') !== -1
+            )
+          }))
+          .filter(item => item.groupDetails.length > 0)
+        ),
+        tap({
+          next: (data: Array<IGroupValue>) => this.emptyMessage = data.length === 0 ? 'No results found.' : null,
+          error: () => this.errorMessage = 'An error occurred. Please try again!'
+        }),
+        takeUntil(this.destroyed$)
+      );
+  }
+
+  updateParams() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        ...this.componentsForm.value
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   cleanQuery(): void {
@@ -91,13 +103,16 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   cleanGroup($event: Event): void {
     $event.stopPropagation();
-    return this.group.setValue('');
+    return this.group.setValue('all');
   }
 
   cleanFilters($event: Event): void {
     this.cleanQuery();
     this.cleanGroup($event);
-    this.showFilterIcon = false;
+  }
+
+  clearAllIconActive(): boolean {
+    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
   }
 
   get query(): FormControl {

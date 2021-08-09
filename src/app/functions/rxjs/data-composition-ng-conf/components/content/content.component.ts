@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { IProduct } from '@lib/models/product';
+import { ProductsService } from '@lib/services/products/products.service';
 import { combineLatest } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { IProduct } from 'src/app/library/models/product';
-import { ProductsService } from 'src/app/library/services/products/products.service';
 
 @Component({
   selector: 'data-composition-content',

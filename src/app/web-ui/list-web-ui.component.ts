@@ -7,25 +7,26 @@ import { IGroupValue } from '../home/models/search.model';
 import { SearchService } from '../home/services/search.service';
 
 @Component({
-  selector: 'list-component-ui',
-  templateUrl: './list-component-ui.component.html',
+  selector: 'app-list-web-ui',
+  templateUrl: './list-web-ui.component.html',
   styles: [`
       @media screen and (max-width: 600px) {
         .panel-container {
           display: block;
-                .filter-group {
+      
+          .filter-group {
             width: 100%;
           }
         }
       }
   `]
 })
-export class ListComponentUiComponent implements OnInit, OnDestroy {
+export class ListWebUiComponent implements OnInit, OnDestroy {
 
   openState = false;
   showFilterIcon = false;
 
-  componentsForm: FormGroup = this.fb.group({
+  webUiForm: FormGroup = this.fb.group({
     query: [''],
     group: ['all']
   })
@@ -37,7 +38,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean> = this.searchService.getLoading();
 
   data$: Observable<Array<IGroupValue>> =
-    this.searchService.uiComponentsList$
+    this.searchService.webUiList$
       .pipe(
         filter(item => !!item),
         tap({
@@ -58,7 +59,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.componentsForm.patchValue(params));
+      .subscribe(params => this.webUiForm.patchValue(params));
     this.onFormChanges();
     this.onFilters();
   }
@@ -68,7 +69,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   */
 
   onFormChanges(): void {
-    this.componentsForm.valueChanges
+    this.webUiForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe(_ => {
         this.onFilters();
@@ -101,7 +102,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        ...this.componentsForm.value
+        ...this.webUiForm.value
       },
       queryParamsHandling: 'merge'
     });
@@ -126,11 +127,11 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   get query(): FormControl {
-    return this.componentsForm.get('query') as FormControl;
+    return this.webUiForm.get('query') as FormControl;
   }
 
   get group(): FormControl {
-    return this.componentsForm.get('group') as FormControl;
+    return this.webUiForm.get('group') as FormControl;
   }
 
   ngOnDestroy(): void {

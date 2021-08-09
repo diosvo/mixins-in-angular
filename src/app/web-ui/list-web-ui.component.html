@@ -9,7 +9,7 @@
       <!-- Header -->
       <mat-expansion-panel-header>
         <mat-panel-title class="ai-center">
-          Represent distinct UI elements.
+          Build a great-looking pages
         </mat-panel-title>
         <mat-panel-description class="jc-flex-end">
           <button mat-icon-button *ngIf="clearAllIconActive()" (click)="cleanFilters($event)"
@@ -21,7 +21,7 @@
 
       <!-- Body -->
       <ng-template matExpansionPanelContent>
-        <form [formGroup]="componentsForm" class="panel-container d-flex gap-1">
+        <form [formGroup]="webUiForm" class="panel-container d-flex gap-1">
           <!-- Filter by Group Name -->
           <mat-form-field id="search-input" class="filter-group">
             <mat-label>Components</mat-label>

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
+import { ILogger, LOGGER } from '@lib/services/log/logger';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
-import { ILogger, LOGGER } from 'src/app/library/services/log/logger';
 import { IGroupValue } from '../models/search.model';
 import { EUrl } from '../models/url.enum';
 
@@ -16,6 +16,26 @@ export class SearchService {
   uiComponentsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.COMPONENT}.json`)
     .pipe(
       map(data => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
+      tap({
+        complete: () => this.loading$.next(false)
+      }),
+      shareReplay(),
+      catchError(_ => of(null))
+    );
+
+  webUiList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.WEB}.json`)
+    .pipe(
+      map(data => data.map(item => ({ ...item, groupUrl: EUrl.WEB }))),
+      tap({
+        complete: () => this.loading$.next(false)
+      }),
+      shareReplay(),
+      catchError(_ => of(null))
+    );
+
+  functionsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.FUNCTION}.json`)
+    .pipe(
+      map(data => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
       tap({
         complete: () => this.loading$.next(false)
       }),

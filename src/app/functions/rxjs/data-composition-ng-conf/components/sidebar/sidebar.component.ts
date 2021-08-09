@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProductsService } from '@lib/services/products/products.service';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EFunctions, EUrl } from 'src/app/home/models/url.enum';
-import { ProductsService } from 'src/app/library/services/products/products.service';
 
 @Component({
   selector: 'data-composition-sidebar',

@@ -1,8 +1,12 @@
 interface BaseFormComponent {
-  isFormValid?: () => boolean;
   onChange?: (value: unknown) => void;
   onTouched?: () => void;
 }
 
-export { BaseFormComponent };
+interface DeactivateComponent {
+  canDeactivate: () => boolean;
+  saveBeforeDeactivate: () => void;
+}
+
+export { BaseFormComponent, DeactivateComponent };
 

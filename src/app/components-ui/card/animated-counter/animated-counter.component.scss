@@ -3,8 +3,12 @@ $colors: ('lightpurple': #9AB3F5,
   'lightgreen' : #E8FFFF,
   'lightorange': #FFE8D6);
 
+$-title  : #616161;
+$-shadow: #D4D4F7 0 0.25rem 0.5rem 0;
+$-hover-shadow: 0.625rem 1rem rgba(125 125 125 / 20%);
+
 .card {
-  box-shadow: var(--light-shadow);
+  box-shadow: $-shadow;
   transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   @each $name,
@@ -15,12 +19,18 @@ $colors: ('lightpurple': #9AB3F5,
   }
 
   &:hover {
-    box-shadow: var(--hover-light-shadow);
+    box-shadow: $-hover-shadow;
   }
 
   &-content {
     .card-title h4 {
       letter-spacing: 0.5px;
+    }
+
+    .title {
+      &-dark {
+        color: $-title;
+      }
     }
   }
 }

@@ -6,11 +6,11 @@ import { AuthService } from './auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html'
 })
 
 export class AppComponent {
+
   constructor(
     public router: Router,
     private titleService: Title,

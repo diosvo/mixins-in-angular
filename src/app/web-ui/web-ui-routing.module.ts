@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EWebUI } from '../home/models/url.enum';
+import { ListWebUiComponent } from './list-web-ui.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: ListWebUiComponent,
+  },
   {
     path: EWebUI.TABLE,
     loadChildren: () => import('./table/table.module').then(m => m.TableModule)

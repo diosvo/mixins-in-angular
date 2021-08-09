@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListComponentUiComponent } from './list-component-ui.component';
 
-
 describe('ListComponentUiComponent', () => {
   let component: ListComponentUiComponent;
   let fixture: ComponentFixture<ListComponentUiComponent>;
@@ -23,7 +22,7 @@ describe('ListComponentUiComponent', () => {
     try {
       test ('hello', () => {
         expect(component).toBeTruthy();
-      })
+      });
     } catch (e) { }
   });
 });

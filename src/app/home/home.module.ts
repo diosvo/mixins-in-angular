@@ -8,7 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { ConfirmDialogModule } from '../library/components/confirm-dialog/confirm-dialog.module';
+import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { MenuItemComponent } from './components/menu-item/menu-item.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';

@@ -42,6 +42,15 @@
       ],
       "@lib/utils/*": [
         "src/app/library/utils/*"
+      ],
+      "@backend/api/*": [
+        "src/assets/backend/api/*"
+      ],
+      "@backend/data/*": [
+        "src/assets/backend/data/*"
+      ],
+      "@backend/list-items/*": [
+        "src/assets/backend/list-items/*"
       ]
     },
   },

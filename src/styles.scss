@@ -3,30 +3,29 @@
 *,
 *::before,
 *::after {
-    padding   : 0;
-    margin    : 0;
-    box-sizing: inherit;
+  padding   : 0;
+  margin    : 0;
+  box-sizing: inherit;
 }
 
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: var(--body-color);
-    font-family     : Roboto, "Helvetica Neue", sans-serif;
+  background-color: #F0F2F5;
 }
 
 p {
-    margin: 0;
+  margin: 0;
 }
 
 ul {
-    li {
-        list-style-type: none;
-    }
+  li {
+    list-style-type: none;
+  }
 
-    a {
-        text-decoration: none;
-    }
+  a {
+    text-decoration: none;
+  }
 }

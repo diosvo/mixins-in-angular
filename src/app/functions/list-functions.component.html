@@ -9,7 +9,7 @@
       <!-- Header -->
       <mat-expansion-panel-header>
         <mat-panel-title class="ai-center">
-          Represent distinct UI elements.
+          Reactive programming with RxJS 6+, ...
         </mat-panel-title>
         <mat-panel-description class="jc-flex-end">
           <button mat-icon-button *ngIf="clearAllIconActive()" (click)="cleanFilters($event)"
@@ -21,10 +21,10 @@
 
       <!-- Body -->
       <ng-template matExpansionPanelContent>
-        <form [formGroup]="componentsForm" class="panel-container d-flex gap-1">
+        <form [formGroup]="functionsForm" class="panel-container d-flex gap-1">
           <!-- Filter by Group Name -->
           <mat-form-field id="search-input" class="filter-group">
-            <mat-label>Components</mat-label>
+            <mat-label>Lib/Language</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
               <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}

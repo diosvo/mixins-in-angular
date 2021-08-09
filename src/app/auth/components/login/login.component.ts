@@ -1,7 +1,7 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SnackbarService } from 'src/app/library/services/snackbar/snackbar.service';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BaseAuth } from '../../models/auth.model';
 import { AuthService } from '../../services/auth.service';
 

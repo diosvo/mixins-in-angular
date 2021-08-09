@@ -6,7 +6,7 @@
         "name": "Data Composition #ng-conf",
         "route": "data-composition-ng-conf",
         "image": "",
-        "description": "Without subscription, performance"
+        "description": "Without subscription, improve performance"
       }
     ]
   }

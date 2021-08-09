@@ -33,6 +33,16 @@ export class SearchService {
       catchError(_ => of(null))
     );
 
+  functionsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.FUNCTION}.json`)
+    .pipe(
+      map(data => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
+      tap({
+        complete: () => this.loading$.next(false)
+      }),
+      shareReplay(),
+      catchError(_ => of(null))
+    );
+
   constructor(
     private http: HttpClient,
     @Inject(LOGGER) private logger: ILogger

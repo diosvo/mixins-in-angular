@@ -14,7 +14,7 @@
         <mat-panel-description class="jc-flex-end">
           <button mat-icon-button *ngIf="clearAllIconActive()" (click)="cleanFilters($event)"
             matTooltip="Clear All Filters" matTooltipPosition="left">
-            <mat-icon> clear_all</mat-icon>
+            <mat-icon>clear_all</mat-icon>
           </button>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -55,6 +55,11 @@
   <menu-item [data]="filteredData$"></menu-item>
 
   <ng-template #noResults>
-    <div class="text-center fs-16">{{ emptyMessage }}</div>
+    <div *ngIf="emptyMessage" class="text-center fs-16">
+      <span>{{ emptyMessage }}</span>
+      <br class="my-1" />
+      <a class="text-light-blue text-deco-underline cursor-pointer" (click)="cleanFilters($event)">Reset your
+        criteria</a>
+    </div>
   </ng-template>
 </ng-container>

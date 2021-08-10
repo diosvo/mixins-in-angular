@@ -58,7 +58,10 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.componentsForm.patchValue(params));
+      .subscribe(params => this.componentsForm.setValue({
+        query: params.query || '',
+        group: params.group || 'all'
+      }));
     this.onFormChanges();
     this.onFilters();
   }
@@ -103,7 +106,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       queryParams: {
         ...this.componentsForm.value
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: this.primitiveFilters ? 'preserve' : 'merge'
     });
   }
 
@@ -122,7 +125,11 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

@@ -4,14 +4,15 @@ import { IProduct } from '@lib/models/product';
 import { BaseService } from '@lib/services/base/base.service';
 import { CategoryService } from '@lib/services/category/category.service';
 import { LoggerService } from '@lib/services/log/logger.service';
-import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService extends BaseService<IProduct> {
-
+  private loading$ = new BehaviorSubject<boolean>(true);
+  
   /**
    * @description create an action steam
    */
@@ -35,6 +36,9 @@ export class ProductsService extends BaseService<IProduct> {
 
   all$ = this.http.get<Array<IProduct>>('/assets/backend/data/products.json')
     .pipe(
+      tap({
+        complete: () => this.loading$.next(false)
+      }),
       shareReplay(),
       catchError((_) => of(null))
     );
@@ -68,6 +72,11 @@ export class ProductsService extends BaseService<IProduct> {
     private logger: LoggerService
   ) {
     super();
+    this.loading$.next(true);
+  }
+
+  getLoading(): Observable<boolean> {
+    return this.loading$;
   }
 
   /**

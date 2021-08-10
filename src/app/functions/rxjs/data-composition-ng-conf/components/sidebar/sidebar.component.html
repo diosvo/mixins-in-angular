@@ -1,5 +1,9 @@
 <mat-card>
-  <mat-list *ngIf="products$ | async as products">
+  <ng-template #loadingTmpl>
+    <mat-spinner class="m-0-auto"></mat-spinner>
+  </ng-template>
+
+  <mat-list *ngIf="products$ | async as products else loadingTmpl">
     <h3 matSubheader>
       <div class="mr-auto">
         <span>List of Products</span>
@@ -11,7 +15,7 @@
 
     <mat-action-list *ngFor="let product of products">
       <button mat-list-item [ngClass]="{'active': product?.productId === (selectedProductId$ | async)}"
-        (click)="onSelected(product.productId)"> {{product.productName | titlecase}} </button>
+        (click)="onSelected(product.productId)">{{ product.productName | titlecase }} </button>
     </mat-action-list>
   </mat-list>
 </mat-card>

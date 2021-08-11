@@ -10,16 +10,15 @@ import { SearchService } from '../home/services/search.service';
   selector: 'app-list-functions',
   templateUrl: './list-functions.component.html',
   styles: [`
-      @media screen and (max-width: 600px) {
-        .panel-container {
-          display: block;
-      
-          .filter-group {
-            width: 100%;
-          }
-        }
+  @media screen and (max-width: 600px) {
+    .panel-container {
+      display: block;
+        
+      .filter-group {
+        width: 100%;
       }
-  `]
+    }
+  }`]
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 

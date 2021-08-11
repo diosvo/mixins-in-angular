@@ -10,16 +10,15 @@ import { SearchService } from '../home/services/search.service';
   selector: 'app-list-web-ui',
   templateUrl: './list-web-ui.component.html',
   styles: [`
-      @media screen and (max-width: 600px) {
-        .panel-container {
-          display: block;
-      
-          .filter-group {
-            width: 100%;
-          }
-        }
+  @media screen and (max-width: 600px) {
+    .panel-container {
+      display: block;
+        
+      .filter-group {
+        width: 100%;
       }
-  `]
+    }
+  }`]
 })
 export class ListWebUiComponent implements OnInit, OnDestroy {
 

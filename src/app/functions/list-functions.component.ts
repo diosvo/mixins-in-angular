@@ -58,7 +58,12 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.functionsForm.patchValue(params));
+      .subscribe(params => {
+        if (this.primitiveFilters) {
+          this.functionsForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -122,7 +127,11 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

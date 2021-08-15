@@ -58,7 +58,12 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.webUiForm.patchValue(params));
+      .subscribe(params => {
+        if (this.primitiveFilters) {
+          this.webUiForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -122,7 +127,11 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

@@ -58,10 +58,12 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.componentsForm.setValue({
-        query: params.query || '',
-        group: params.group || 'all'
-      }));
+      .subscribe(params => {
+        if (this.primitiveFilters) {
+          this.componentsForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -103,10 +105,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.componentsForm.value
-      },
-      queryParamsHandling: this.primitiveFilters ? 'preserve' : 'merge'
+      queryParams: this.componentsForm.value
     });
   }
 

@@ -105,10 +105,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.functionsForm.value
-      },
-      queryParamsHandling: 'merge'
+      queryParams: this.functionsForm.value
     });
   }
 

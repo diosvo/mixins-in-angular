@@ -105,10 +105,7 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.webUiForm.value
-      },
-      queryParamsHandling: 'merge'
+      queryParams: this.webUiForm.value
     });
   }
 

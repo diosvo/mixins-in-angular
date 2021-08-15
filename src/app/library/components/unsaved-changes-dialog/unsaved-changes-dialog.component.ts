@@ -19,4 +19,9 @@ export class UnsavedChangesDialogComponent {
     this.subject.next(true);
     this.subject.complete();
   }
+
+  onDiscard(): void {
+    this.subject.next(false);
+    this.subject.complete();
+  }
 }

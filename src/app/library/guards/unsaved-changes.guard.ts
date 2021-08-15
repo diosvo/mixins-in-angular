@@ -9,7 +9,6 @@ import { DeactivateComponent } from '../models/base-form-component';
   providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
-  subject = new Subject<boolean>();
 
   constructor(private dialog: MatDialog) { }
 
@@ -22,8 +21,10 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         disableClose: true
       });
 
-      dialogRef.componentInstance.subject = this.subject;
-      this.subject.subscribe((response) => {
+      const subject = new Subject<boolean>();
+      dialogRef.componentInstance.subject = subject;
+
+      subject.subscribe((response) => {
         if (response) {
           component.saveBeforeDeactivate();
         }

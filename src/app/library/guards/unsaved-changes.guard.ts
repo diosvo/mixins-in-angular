@@ -28,6 +28,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         if (response) {
           component.saveBeforeDeactivate();
         }
+        return;
       });
       return dialogRef.afterClosed();
     }

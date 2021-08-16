@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { first, map, startWith } from 'rxjs/operators';
+import { EUrl } from 'src/app/home/models/url.enum';
 
 @Component({
   selector: 'app-unsaved-form',
@@ -16,17 +19,21 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   unsavedForm = new FormGroup({
     team_name: new FormControl('Dios', Validators.required)
   })
+  primitiveValue = of(this.unsavedForm.value).pipe(first());
 
-  // Can multi keys are difference from Form => need to filter same key
-  primitiveValue = { 'team_name': 'Dios' }
+  constructor(
+    private snackbar: SnackbarService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.watchForChanges();
   }
 
   private watchForChanges(): void {
-    const formChanges$ =
-      combineLatest([of(this.primitiveValue), this.unsavedForm.valueChanges]).pipe(
+    // Deep-compare between Primitive Form Value & Form Value Changes 
+    const formChanges$ = combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
+      .pipe(
         map(([prev, next]) => JSON.stringify(prev) === JSON.stringify(next)),
         startWith(true)
       );
@@ -35,7 +42,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return !this.unsavedForm.valid || this.isFormSubmitted || this.hasChanges;
+    return !this.unsavedForm.valid || this.hasChanges || this.isFormSubmitted;
   }
 
   saveBeforeDeactivate(): void {
@@ -44,6 +51,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   onSubmit(): void {
     this.isFormSubmitted = true;
-    alert('Update Successfully');
+    this.snackbar.success('Update successfully!');
+    this.router.navigate([EUrl.WEB]);
   }
 }

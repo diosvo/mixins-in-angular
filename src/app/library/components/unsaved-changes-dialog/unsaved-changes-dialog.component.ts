@@ -3,7 +3,12 @@ import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-unsaved-changes-dialog',
-  templateUrl: './unsaved-changes-dialog.component.html'
+  templateUrl: './unsaved-changes-dialog.component.html',
+  styles: [`
+    .dialog-actions {
+      padding: 0.5rem 0 1rem;
+    }
+  `]
 
 })
 export class UnsavedChangesDialogComponent {

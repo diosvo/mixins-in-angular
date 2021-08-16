@@ -17,7 +17,13 @@
         "name": "Interaction - Order Form",
         "route": "order-form",
         "image": "",
-        "description": "Reactive Form"
+        "description": "Reactive Form, Unsaved Changes Guard w/o initial values, Activated Guard"
+      },
+      {
+        "name": "Unsaved Form Demo",
+        "route": "unsaved-form",
+        "image": "",
+        "description": "Reactive Form, Unsaved Changes Guard with given value"
       }
     ]
   }

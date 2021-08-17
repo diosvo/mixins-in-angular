@@ -4,9 +4,7 @@ import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
-import { first, map, startWith } from 'rxjs/operators';
-import { EUrl } from 'src/app/home/models/url.enum';
-
+import { map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-unsaved-form',
   templateUrl: './unsaved-form.component.html'
@@ -17,9 +15,12 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   isFormSubmitted = false;
 
   unsavedForm = new FormGroup({
-    team_name: new FormControl('Dios', Validators.required)
+    team_name: new FormControl('Dios', Validators.required),
   })
-  primitiveValue = of(this.unsavedForm.value).pipe(first());
+  primitiveValue = of({
+    team_name: 'Dios',
+    team_id: 1
+  });
 
   constructor(
     private snackbar: SnackbarService,
@@ -52,6 +53,5 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   onSubmit(): void {
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
-    this.router.navigate([EUrl.WEB]);
   }
 }

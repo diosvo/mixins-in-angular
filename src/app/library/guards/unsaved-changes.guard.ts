@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CanDeactivate } from '@angular/router';
+import { CanDeactivate, GuardsCheckEnd, Router } from '@angular/router';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { Observable, of, Subject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { DeactivateComponent } from '../models/base-form-component';
 
 @Injectable({
@@ -10,7 +11,10 @@ import { DeactivateComponent } from '../models/base-form-component';
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(
+    private dialog: MatDialog,
+    private router: Router
+  ) { }
 
   canDeactivate(
     component: DeactivateComponent
@@ -27,11 +31,23 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
       subject.subscribe((response) => {
         if (response) {
           component.saveBeforeDeactivate();
+          this.navigate();
         }
-        return;
+        return; 
       });
       return dialogRef.afterClosed();
     }
     return of(true);
+  }
+
+  private navigate(): void {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof GuardsCheckEnd),
+        take(1)
+      )
+      .subscribe({
+        next: (router: GuardsCheckEnd) => this.router.navigate([router.urlAfterRedirects])
+      });
   }
 }

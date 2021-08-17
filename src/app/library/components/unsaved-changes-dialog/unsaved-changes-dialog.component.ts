@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
   `]
 
 })
-export class UnsavedChangesDialogComponent {
+export class UnsavedChangesDialogComponent implements OnDestroy {
   subject = new Subject<boolean>();
 
   /**
@@ -28,5 +28,9 @@ export class UnsavedChangesDialogComponent {
   onDiscard(): void {
     this.subject.next(false);
     this.subject.complete();
+  }
+
+  ngOnDestroy(): void {
+    this.subject.unsubscribe();
   }
 }

@@ -5,6 +5,7 @@ import { DeactivateComponent } from '@lib/models/base-form-component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { EUrl } from 'src/app/home/models/url.enum';
 @Component({
   selector: 'app-unsaved-form',
   templateUrl: './unsaved-form.component.html'
@@ -19,7 +20,6 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   })
   primitiveValue = of({
     team_name: 'Dios',
-    team_id: 1
   });
 
   constructor(
@@ -46,12 +46,13 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     return !this.unsavedForm.valid || this.hasChanges || this.isFormSubmitted;
   }
 
-  saveBeforeDeactivate(): void {
-    return this.onSubmit();
+  saveBeforeDeactivate(url: string): void {
+    return this.onSubmit(url);
   }
 
-  onSubmit(): void {
+  onSubmit(url: string): void {
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
+    this.router.navigate([url ?? EUrl.WEB]);
   }
 }

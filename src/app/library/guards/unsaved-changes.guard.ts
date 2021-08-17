@@ -30,24 +30,19 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
       subject.subscribe((response) => {
         if (response) {
-          component.saveBeforeDeactivate();
-          this.navigate();
+          this.router.events
+            .pipe(
+              filter(event => event instanceof GuardsCheckEnd),
+              take(1)
+            )
+            .subscribe({
+              next: (router: GuardsCheckEnd) => component.saveBeforeDeactivate(router.urlAfterRedirects)
+            });
         }
-        return; 
+        return;
       });
       return dialogRef.afterClosed();
     }
     return of(true);
-  }
-
-  private navigate(): void {
-    this.router.events
-      .pipe(
-        filter(event => event instanceof GuardsCheckEnd),
-        take(1)
-      )
-      .subscribe({
-        next: (router: GuardsCheckEnd) => this.router.navigate([router.urlAfterRedirects])
-      });
   }
 }

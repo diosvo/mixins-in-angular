@@ -22,7 +22,6 @@ import { SearchService } from '../home/services/search.service';
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
-  openState = false;
   showFilterIcon = false;
 
   componentsForm: FormGroup = this.fb.group({

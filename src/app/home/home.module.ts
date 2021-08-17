@@ -7,6 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
 import { FooterComponent } from './components/footer/footer.component';
@@ -29,6 +30,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     MatDialogModule,
     MatButtonModule,
     MatToolbarModule,
+    MatTooltipModule,
     ConfirmDialogModule
   ],
   providers: [FormBuilder], 

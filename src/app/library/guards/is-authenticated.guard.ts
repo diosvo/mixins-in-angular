@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
+import { LoggerService } from '@lib/services/log/logger.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -9,9 +10,11 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class IsAuthenticatedGuard implements CanActivate {
+
   constructor(
+    private logger: LoggerService,
     private authService: AuthService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
   ) { }
 
   canActivate(): Observable<boolean> {
@@ -19,6 +22,7 @@ export class IsAuthenticatedGuard implements CanActivate {
       tap({
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
+            this.logger.info('IsAuthenticatedGuard');
             this.snackbar.warning('You must log in first');
           }
         }

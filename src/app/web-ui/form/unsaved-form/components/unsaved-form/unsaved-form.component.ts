@@ -46,7 +46,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     return !this.unsavedForm.valid || this.hasChanges || this.isFormSubmitted;
   }
 
-  saveBeforeDeactivate(url: string): void {
+  saveChanges(url: string): void {
     return this.onSubmit(url);
   }
 

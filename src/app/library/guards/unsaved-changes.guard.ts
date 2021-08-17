@@ -36,7 +36,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
               take(1)
             )
             .subscribe({
-              next: (router: GuardsCheckEnd) => component.saveBeforeDeactivate(router.urlAfterRedirects)
+              next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
             });
         }
         return;

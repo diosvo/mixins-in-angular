@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, map, shareReplay, tap } from 'rxjs/operators';
-import { IProduct } from '../../models/product';
-import { BaseService } from '../base/base.service';
-import { CategoryService } from '../category/category.service';
+import { IProduct } from '@lib/models/product';
+import { BaseService } from '@lib/services/base/base.service';
+import { CategoryService } from '@lib/services/category/category.service';
+import { LoggerService } from '@lib/services/log/logger.service';
+import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService extends BaseService<IProduct> {
-
+  private loading$ = new BehaviorSubject<boolean>(true);
+  
   /**
    * @description create an action steam
    */
@@ -35,7 +37,8 @@ export class ProductsService extends BaseService<IProduct> {
   all$ = this.http.get<Array<IProduct>>('/assets/backend/data/products.json')
     .pipe(
       shareReplay(),
-      catchError((_) => of(null))
+      catchError((_) => of(null)),
+      finalize(() => this.loading$.next(false)),
     );
 
   withCategory$ =
@@ -57,15 +60,21 @@ export class ProductsService extends BaseService<IProduct> {
         map(([selectedProductId, products]) => {
           return products.find(product => product.productId === selectedProductId);
         }),
-        tap(product => console.log('Change selected product: ', product)),
+        tap(product => this.logger.log('Change selected product: ' + JSON.stringify(product))),
         shareReplay({ bufferSize: 1, refCount: false })
       );
 
   constructor(
     private http: HttpClient,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private logger: LoggerService
   ) {
     super();
+    this.loading$.next(true);
+  }
+
+  getLoading(): Observable<boolean> {
+    return this.loading$;
   }
 
   /**

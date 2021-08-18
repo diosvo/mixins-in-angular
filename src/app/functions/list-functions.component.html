@@ -3,8 +3,7 @@
 
 <!-- Search -->
 <ng-container>
-  <mat-accordion matTooltip="Click here to {{ openState === true ? 'close': 'open'}} search box"
-    matTooltipPosition="above">
+  <mat-accordion>
     <mat-expansion-panel (opened)="openState = true" (closed)="openState = false">
       <!-- Header -->
       <mat-expansion-panel-header>

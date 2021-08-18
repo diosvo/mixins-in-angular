@@ -9,21 +9,21 @@ export class LoggerService implements ILogger {
 
   log(value: string): void {
     if (environment.production) {
-      return console.log(`LogService: ${value}`);
+      return console.log(`LoggerService: ${value}`);
     }
     return;
   }
 
   info(value: string): void {
     if (environment.production) {
-      return console.info(`LogService: ${value}`);
+      return console.info(`LoggerService: ${value}`);
     }
     return;
   }
 
   error(value: string): void {
     if (environment.production) {
-    return console.error(`LogService: ${value}`);
+      return console.error(`LoggerService: ${value}`);
     }
     return;
   }

@@ -22,6 +22,12 @@
   }
 }
 
+.text-hover {
+  &-light-blue:hover {
+    color: palette.$light-blue;
+  }
+}
+
 .title-required::after {
   content    : '*';
   color      : palette.$error;

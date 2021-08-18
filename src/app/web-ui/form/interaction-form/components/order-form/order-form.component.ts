@@ -35,7 +35,7 @@ export class OrderFormComponent implements DeactivateComponent {
 
   canDeactivate = () => this.isFormSubmitted || !this.orderForm.dirty;
 
-  saveBeforeDeactivate(): void {
+  saveChanges(): void {
     return this.onSubmit();
   }
 

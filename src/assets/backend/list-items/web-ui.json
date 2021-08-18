@@ -17,7 +17,13 @@
         "name": "Interaction - Order Form",
         "route": "order-form",
         "image": "",
-        "description": "Reactive Form"
+        "description": "Unsaved Changes Guard w/o initial values, CanActivate and CanLoad Guard"
+      },
+      {
+        "name": "Unsaved Form Demo",
+        "route": "unsaved-form",
+        "image": "",
+        "description": "Unsaved Changes Guard with given value, CanActivate and CanLoad Guard"
       }
     ]
   }

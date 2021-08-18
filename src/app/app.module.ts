@@ -8,8 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FakeBackendProvider } from '@backend/api/fake-be';
 import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
-import { LOGGER } from '@lib/services/log/logger';
-import { LoggerService } from '@lib/services/log/logger.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';
@@ -32,11 +30,6 @@ import { HomeModule } from './home/home.module';
   ],
   providers: [
     FakeBackendProvider,
-    {
-      // Turn off this provide => LogService is default
-      provide: LOGGER,
-      useClass: LoggerService
-    },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline', floatLabel: 'never' }

@@ -4,7 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { AlertModule } from 'src/app/library/components/alert/alert.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AlertModule } from '@lib/components/alert/alert.module';
 import { ContentComponent } from './components/content/content.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -22,9 +23,10 @@ import { DataCompositionNgConfRoutingModule } from './data-composition-ng-conf-r
     AlertModule,
 
     MatListModule,
-    MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule
   ]
 })
 export class DataCompositionNgConfModule { }

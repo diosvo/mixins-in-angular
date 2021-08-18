@@ -10,20 +10,18 @@ import { SearchService } from '../home/services/search.service';
   selector: 'app-list-web-ui',
   templateUrl: './list-web-ui.component.html',
   styles: [`
-      @media screen and (max-width: 600px) {
-        .panel-container {
-          display: block;
-      
-          .filter-group {
-            width: 100%;
-          }
-        }
+  @media screen and (max-width: 600px) {
+    .panel-container {
+      display: block;
+        
+      .filter-group {
+        width: 100%;
       }
-  `]
+    }
+  }`]
 })
 export class ListWebUiComponent implements OnInit, OnDestroy {
 
-  openState = false;
   showFilterIcon = false;
 
   webUiForm: FormGroup = this.fb.group({
@@ -59,7 +57,12 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.webUiForm.patchValue(params));
+      .subscribe(params => {
+        if((params.query && params.group) !== undefined) {
+          this.webUiForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -101,10 +104,7 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.webUiForm.value
-      },
-      queryParamsHandling: 'merge'
+      queryParams: this.webUiForm.value
     });
   }
 
@@ -123,7 +123,11 @@ export class ListWebUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

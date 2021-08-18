@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '@lib/services/products/products.service';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { EFunctions, EUrl } from 'src/app/home/models/url.enum';
 
 @Component({
@@ -16,9 +15,8 @@ export class SidebarComponent implements OnInit {
   products$ = this.productsService
     .all$
     .pipe(
-      catchError(error => {
-        this.messageError = error;
-        return of(null);
+      tap({
+        error: () => this.messageError = 'An error occurred. Please try again.!'
       })
     );
 
@@ -32,7 +30,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      const id = +params.get('id');
+      const id = Number(params.get('id'));
       this.productsService.selectedProduct(id);
     });
   }

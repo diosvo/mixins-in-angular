@@ -10,19 +10,18 @@ import { SearchService } from '../home/services/search.service';
   selector: 'list-component-ui',
   templateUrl: './list-component-ui.component.html',
   styles: [`
-      @media screen and (max-width: 600px) {
-        .panel-container {
-          display: block;
-                .filter-group {
-            width: 100%;
-          }
-        }
+  @media screen and (max-width: 600px) {
+    .panel-container {
+      display: block;
+        
+      .filter-group {
+        width: 100%;
       }
-  `]
+    }
+  }`]
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
-  openState = false;
   showFilterIcon = false;
 
   componentsForm: FormGroup = this.fb.group({
@@ -58,7 +57,12 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.componentsForm.patchValue(params));
+      .subscribe(params => {
+        if((params.query && params.group) !== undefined) {
+          this.componentsForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -100,10 +104,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.componentsForm.value
-      },
-      queryParamsHandling: 'merge'
+      queryParams: this.componentsForm.value
     });
   }
 
@@ -122,7 +123,11 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

@@ -10,20 +10,18 @@ import { SearchService } from '../home/services/search.service';
   selector: 'app-list-functions',
   templateUrl: './list-functions.component.html',
   styles: [`
-      @media screen and (max-width: 600px) {
-        .panel-container {
-          display: block;
-      
-          .filter-group {
-            width: 100%;
-          }
-        }
+  @media screen and (max-width: 600px) {
+    .panel-container {
+      display: block;
+        
+      .filter-group {
+        width: 100%;
       }
-  `]
+    }
+  }`]
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 
-  openState = false;
   showFilterIcon = false;
 
   functionsForm: FormGroup = this.fb.group({
@@ -59,7 +57,12 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => this.functionsForm.patchValue(params));
+      .subscribe(params => {
+        if((params.query && params.group) !== undefined) {
+          this.functionsForm.patchValue(params);
+        }
+        return;
+      });
     this.onFormChanges();
     this.onFilters();
   }
@@ -101,10 +104,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   updateParams() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        ...this.functionsForm.value
-      },
-      queryParamsHandling: 'merge'
+      queryParams: this.functionsForm.value
     });
   }
 
@@ -123,7 +123,11 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.query.value === '' && this.group.value === 'all' ? false : true;
+    return this.showFilterIcon = this.primitiveFilters ? false : true;
+  }
+
+  private get primitiveFilters(): boolean {
+    return this.query.value === '' && this.group.value === 'all';
   }
 
   get query(): FormControl {

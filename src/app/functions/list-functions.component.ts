@@ -58,7 +58,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
-        if (this.primitiveFilters) {
+        if((params.query && params.group) !== undefined) {
           this.functionsForm.patchValue(params);
         }
         return;

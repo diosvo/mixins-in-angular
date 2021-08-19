@@ -17,22 +17,22 @@
       "src/app/auth/*"
     ],
     "@lib/animations/*": [
-      "src/app/library/animations/*"
+      "projects/mia-lib/src/lib/animations/*"
     ],
     "@lib/components/*": [
-      "src/app/library/components/*"
+      "projects/mia-lib/src/lib/components/*"
     ],
     "@lib/guards/*": [
-      "src/app/library/guards/*"
+      "projects/mia-lib/src/lib/guards/*"
     ],
     "@lib/models/*": [
-      "src/app/library/models/*"
+      "projects/mia-lib/src/lib/models/*"
     ],
     "@lib/services/*": [
-      "src/app/library/services/*"
+      "projects/mia-lib/src/lib/services/*"
     ],
     "@lib/utils/*": [
-      "src/app/library/utils/*"
+      "projects/mia-lib/src/lib/utils/*"
     ],
     "@backend/api/*": [
       "src/assets/backend/api/*"

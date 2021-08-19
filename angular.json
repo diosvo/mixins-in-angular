@@ -105,6 +105,46 @@
           }
         }
       }
+    },
+    "mia-lib": {
+      "projectType": "library",
+      "root": "projects/mia-lib",
+      "sourceRoot": "projects/mia-lib/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/mia-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/mia-lib/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/mia-lib/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/mia-lib/src/test.ts",
+            "tsConfig": "projects/mia-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/mia-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/mia-lib/**/*.ts",
+              "projects/mia-lib/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "mixins-in-angular",

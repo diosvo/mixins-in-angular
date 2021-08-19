@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { slideInOut } from 'src/app/library/animations/animations';
-import { ICategory } from 'src/app/library/models/category';
+import { slideInOut } from '@lib/animations/animations';
+import { ICategory } from '@lib/models/category';
 
 @Component({
   selector: 'app-advanced-crud',

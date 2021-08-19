@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { ILogger, LOGGER } from '@lib/services/log/logger';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, finalize, map, shareReplay } from 'rxjs/operators';
 import { IGroupValue } from '../models/search.model';
@@ -11,41 +10,52 @@ import { EUrl } from '../models/url.enum';
 })
 
 export class SearchService {
-  private loading$ = new BehaviorSubject<boolean>(true);
+  private uiLoading$ = new BehaviorSubject<boolean>(true);
+  private webLoading$ = new BehaviorSubject<boolean>(true);
+  private funcLoading$ = new BehaviorSubject<boolean>(true);
 
   uiComponentsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.COMPONENT}.json`)
     .pipe(
-      map(data => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
+      map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
       shareReplay(),
       catchError(_ => of(null)),
-      finalize(() => this.loading$.next(false)),
+      finalize(() => this.uiLoading$.next(false)),
     );
 
   webUiList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.WEB}.json`)
     .pipe(
-      map(data => data.map(item => ({ ...item, groupUrl: EUrl.WEB }))),
+      map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.WEB }))),
       shareReplay(),
       catchError(_ => of(null)),
-      finalize(() => this.loading$.next(false)),
+      finalize(() => this.webLoading$.next(false)),
     );
 
   functionsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.FUNCTION}.json`)
     .pipe(
-      map(data => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
+      map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
       shareReplay(),
       catchError(_ => of(null)),
-      finalize(() => this.loading$.next(false)),
+      finalize(() => this.funcLoading$.next(false)),
     );
 
   constructor(
-    private http: HttpClient,
-    @Inject(LOGGER) private logger: ILogger
+    private http: HttpClient
   ) {
-    this.loading$.next(true);
+    this.uiLoading$.next(true);
+    this.webLoading$.next(true);
+    this.funcLoading$.next(true);
   }
 
-  getLoading(): Observable<boolean> {
-    return this.loading$;
+  getUiLoading(): BehaviorSubject<boolean> {
+    return this.uiLoading$;
+  }
+
+  getWebLoading(): BehaviorSubject<boolean> {
+    return this.webLoading$;
+  }
+
+  getFuncLoading(): BehaviorSubject<boolean> {
+    return this.funcLoading$;
   }
 
   onFilter(session: EUrl, q: string): Observable<Array<IGroupValue>> {

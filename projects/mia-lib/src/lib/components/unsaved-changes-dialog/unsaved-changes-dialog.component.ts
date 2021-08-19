@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -9,10 +10,12 @@ import { Subject } from 'rxjs';
       padding: 0.5rem 0 1rem;
     }
   `]
-
 })
+
 export class UnsavedChangesDialogComponent implements OnDestroy {
   subject = new Subject<boolean>();
+
+  constructor(private dialog: MatDialog) {}
 
   /**
   * @description
@@ -28,6 +31,10 @@ export class UnsavedChangesDialogComponent implements OnDestroy {
   onDiscard(): void {
     this.subject.next(false);
     this.subject.complete();
+  }
+
+  onClose(): void {
+    return this.dialog.closeAll();
   }
 
   ngOnDestroy(): void {

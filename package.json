@@ -1,11 +1,12 @@
 {
   "name": "mixins-in-angular",
   "author": "diosvo",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:app": "ng build",
+    "build:lib": "ng build mia-lib",
     "build:stats": "ng build --stats-json",
     "analyze": "webpack-bundle-analyzer dist/mixins-in-angular/stats.json",
     "watch": "ng build --watch --configuration development",
@@ -15,29 +16,29 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~12.1.1",
-    "@angular/cdk": "^12.1.4",
-    "@angular/common": "~12.1.1",
-    "@angular/compiler": "~12.1.1",
-    "@angular/core": "~12.1.1",
-    "@angular/forms": "~12.1.1",
-    "@angular/material": "^12.1.4",
-    "@angular/platform-browser": "~12.1.1",
-    "@angular/platform-browser-dynamic": "~12.1.1",
-    "@angular/router": "~12.1.1",
+    "@angular/animations": "~12.2.2",
+    "@angular/cdk": "^12.2.2",
+    "@angular/common": "~12.2.2",
+    "@angular/compiler": "~12.2.2",
+    "@angular/core": "~12.2.2",
+    "@angular/forms": "~12.2.2",
+    "@angular/material": "^12.2.2",
+    "@angular/platform-browser": "~12.2.2",
+    "@angular/platform-browser-dynamic": "~12.2.2",
+    "@angular/router": "~12.2.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~12.1.1",
+    "@angular-devkit/build-angular": "^12.2.2",
     "@angular-eslint/builder": "12.3.1",
     "@angular-eslint/eslint-plugin": "12.3.1",
     "@angular-eslint/eslint-plugin-template": "12.3.1",
     "@angular-eslint/schematics": "12.3.1",
     "@angular-eslint/template-parser": "12.3.1",
-    "@angular/cli": "~12.1.1",
-    "@angular/compiler-cli": "~12.1.1",
+    "@angular/cli": "^12.2.2",
+    "@angular/compiler-cli": "~12.2.2",
     "@types/jest": "^26.0.24",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
@@ -46,6 +47,7 @@
     "gsap": "^3.7.1",
     "jest": "^27.0.6",
     "jest-preset-angular": "^9.0.6",
+    "ng-packagr": "^12.1.0",
     "typescript": "~4.3.2",
     "webpack-bundle-analyzer": "^4.4.2"
   },
@@ -60,7 +62,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "<rootDir>/tsconfig.spec.json",
+        "tsconfig": "<rootDir>/tsconfig.spec.json",
         "stringifyContentPathRegex": "\\.html$"
       }
     }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { IGroupValue } from '../home/models/search.model';
 import { SearchService } from '../home/services/search.service';
@@ -33,7 +33,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   errorMessage: string;
 
   private destroyed$: Subject<void> = new Subject();
-  loading$: Observable<boolean> = this.searchService.getLoading();
+  loading$: BehaviorSubject<boolean> = this.searchService.getFuncLoading();
 
   data$: Observable<Array<IGroupValue>> =
     this.searchService.functionsList$
@@ -58,7 +58,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
-        if((params.query && params.group) !== undefined) {
+        if ((params.query && params.group) !== undefined) {
           this.functionsForm.patchValue(params);
         }
         return;

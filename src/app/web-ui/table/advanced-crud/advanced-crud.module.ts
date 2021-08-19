@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BackButtonModule } from 'src/app/library/components/back-button/back-button.module';
+import { BackButtonModule } from '@lib/components/back-button/back-button.module';
 import { AdvancedCrudRoutingModule } from './advanced-crud-routing.module';
 import { AdvancedCrudComponent } from './components/advanced-crud/advanced-crud.component';
 

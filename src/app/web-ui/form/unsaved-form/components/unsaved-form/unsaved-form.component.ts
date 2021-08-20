@@ -6,13 +6,14 @@ import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { EUrl } from 'src/app/home/models/url.enum';
+
 @Component({
   selector: 'app-unsaved-form',
   templateUrl: './unsaved-form.component.html'
 })
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
-  hasChanges = false;
+  hasChanged = false;
   isFormSubmitted = false;
 
   unsavedForm = new FormGroup({
@@ -39,11 +40,11 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
         startWith(true)
       );
 
-    formChanges$.subscribe(response => this.hasChanges = response);
+    formChanges$.subscribe(response => this.hasChanged = response);
   }
 
   canDeactivate(): boolean {
-    return !this.unsavedForm.valid || this.hasChanges || this.isFormSubmitted;
+    return !this.unsavedForm.valid || this.hasChanged || this.isFormSubmitted;
   }
 
   saveChanges(url: string): void {

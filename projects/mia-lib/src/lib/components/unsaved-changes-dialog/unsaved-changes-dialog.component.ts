@@ -9,6 +9,10 @@ import { Subject } from 'rxjs';
     .dialog-actions {
       padding: 0.5rem 0 1rem;
     }
+
+    .close-button {
+      margin: -1rem -1rem 0 0;
+    }
   `]
 })
 

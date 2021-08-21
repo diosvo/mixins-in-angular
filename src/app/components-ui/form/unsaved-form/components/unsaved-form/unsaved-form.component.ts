@@ -45,7 +45,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return !this.unsavedForm.valid || this.hasChanged || this.isFormSubmitted;
+    return this.hasChanged || this.isFormSubmitted;
   }
 
   saveChanges(url: string): void {
@@ -53,6 +53,10 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   onSubmit(url: string): void {
+    if (this.unsavedForm.invalid) {
+      this.snackbar.error('You need to provide all required information.');
+      return;
+    }
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
     this.router.navigate([url ?? EUrl.COMPONENT]);

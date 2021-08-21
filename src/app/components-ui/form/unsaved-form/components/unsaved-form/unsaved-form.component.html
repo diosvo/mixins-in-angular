@@ -6,14 +6,16 @@
       [required]="true"
       formControlName="team_name"
     >
-      <small *ngIf="unsavedForm.get('team_name').invalid"> Required </small>
+      <small error *ngIf="unsavedForm.get('team_name').invalid">
+        Required
+      </small>
     </custom-input>
     <div class="d-flex jc-flex-end">
       <button
         mat-flat-button
         color="primary"
         (click)="onSubmit()"
-        [disabled]="canDeactivate()"
+        [disabled]="canDeactivate() || !this.unsavedForm.valid"
       >
         Update
       </button>

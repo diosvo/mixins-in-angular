@@ -26,7 +26,8 @@
             <mat-label>Components</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
-              <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}
+              <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">
+                {{ group.groupName | titlecase }}
               </mat-option>
             </mat-select>
             <button matSuffix mat-icon-button *ngIf="group.value !== 'all'" matTooltip="Clear"

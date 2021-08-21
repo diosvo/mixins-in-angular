@@ -1,6 +1,6 @@
 [
   {
-    "groupName": "Button",
+    "groupName": "button",
     "groupDetails": [
       {
         "name": "Micro Interaction",
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "groupName": "Card",
+    "groupName": "card",
     "groupDetails": [
       {
         "name": "Animated Counter Card",
@@ -34,7 +34,7 @@
     ]
   },
   {
-    "groupName": "Menu",
+    "groupName": "menu",
     "groupDetails": [
       {
         "name": "Liquid Menu Interaction",
@@ -51,7 +51,7 @@
     ]
   },
   {
-    "groupName": "Table",
+    "groupName": "table",
     "groupDetails": [
       {
         "name": "Advanced CRUD",
@@ -62,7 +62,7 @@
     ]
   },
   {
-    "groupName": "Form",
+    "groupName": "form",
     "groupDetails": [
       {
         "name": "Interaction - Order Form",

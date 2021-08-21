@@ -1,11 +1,22 @@
 <form [formGroup]="unsavedForm" class="d-flex jc-center">
   <div class="w-400 bg-white bd-auto bs-light p-3 m-3">
-    <label for="team_name" class="d-block mb-0.25">Team Name</label>
-    <mat-form-field class="width-100">
-      <input matInput type="text" autocomplete="off" formControlName="team_name">
-    </mat-form-field>
+    <custom-input
+      label="Team Name"
+      type="text"
+      [required]="true"
+      formControlName="team_name"
+    >
+      <small *ngIf="unsavedForm.get('team_name').invalid"> Required </small>
+    </custom-input>
     <div class="d-flex jc-flex-end">
-      <button mat-flat-button color="primary" [disabled]="canDeactivate()" (click)="onSubmit()">Update</button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="canDeactivate()"
+      >
+        Update
+      </button>
     </div>
   </div>
 </form>

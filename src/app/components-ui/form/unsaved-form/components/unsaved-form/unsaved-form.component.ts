@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
@@ -16,16 +16,17 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   hasChanged = false;
   isFormSubmitted = false;
 
-  unsavedForm = new FormGroup({
-    team_name: new FormControl('Dios', Validators.required),
+  unsavedForm: FormGroup = this.fb.group({
+    team_name: ['Dios', Validators.required],
   })
   primitiveValue = of({
     team_name: 'Dios',
   });
 
   constructor(
+    private router: Router,
+    private fb: FormBuilder,
     private snackbar: SnackbarService,
-    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -54,6 +55,6 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   onSubmit(url: string): void {
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
-    this.router.navigate([url ?? EUrl.WEB]);
+    this.router.navigate([url ?? EUrl.COMPONENT]);
   }
 }

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BackButtonComponent } from './back-button.component';
@@ -26,7 +25,6 @@ describe('BackButtonComponent', () => {
         MatButtonModule,
         MatIconModule
       ],
-
       providers: [
         {
           provide: ActivatedRoute,
@@ -46,11 +44,6 @@ describe('BackButtonComponent', () => {
     component = fixture.componentInstance;
     component['canGoBack' as any] = true;
     fixture.detectChanges();
-  });
-
-  beforeAll(async () => {
-    await TestBed.resetTestEnvironment();
-    await TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
   });
 
   it('should create', () => {

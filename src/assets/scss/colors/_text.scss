@@ -28,8 +28,15 @@
   }
 }
 
-.title-required::after {
-  content    : '*';
-  color      : palette.$error;
-  margin-left: 0.5rem;
+.title-required {
+  position: relative;
+
+  &::after {
+    content: '*';
+    color  : palette.$error;
+
+    position: absolute;
+    top     : -0.25rem;
+    right   : -0.75rem;
+  }
 }

@@ -1,7 +1,21 @@
 <ng-container>
-  <label for="input" class="d-block mb-0.25" [innerHTML]="label"></label>
-  <mat-form-field class="width-100" appearance="outline">
-    <input matInput type="text" autocomplete="off" [placeholder]="placeholder" [ngModel]="value"
-      (ngModelChange)="onChange($event)" (blur)="onTouched()">
+  <label for="input" class="d-block mb-0.25">
+    <span [ngClass]="{ 'title-required': control?.invalid }">{{ label }}</span>
+  </label>
+  <mat-form-field class="width-100">
+    <input
+      matInput
+      [id]="name"
+      [type]="type"
+      autocomplete="off"
+      [(ngModel)]="value"
+      [pattern]="pattern"
+      [required]="required"
+      [placeholder]="placeholder"
+      (blur)="onTouched()"
+    />
+    <mat-error *ngIf="required">
+      <ng-content></ng-content>
+    </mat-error>
   </mat-form-field>
 </ng-container>

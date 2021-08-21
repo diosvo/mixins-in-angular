@@ -11,7 +11,9 @@ enum EUrl {
 enum EComponentUI {
   BUTTON = 'button',
   CARD = 'card',
-  MENU = 'menu'
+  MENU = 'menu',
+  TABLE = 'table',
+  FORM = 'form',
 }
 
 enum EWebUI {

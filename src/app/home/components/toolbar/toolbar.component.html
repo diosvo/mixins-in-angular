@@ -2,7 +2,6 @@
   <mat-toolbar-row>
     <button class="opacity-0.8" mat-button routerLinkActive="opacity-1"
       [routerLink]="['/ui-components']">Components</button>
-    <button class="opacity-0.8" mat-button routerLinkActive="opacity-1" [routerLink]="['/web-ui']">Web</button>
     <button class="opacity-0.8" mat-button routerLinkActive="opacity-1" [routerLink]="['/functions']">Functions</button>
     <div class="flex-auto"></div>
     <a mat-icon-button *ngIf="!isLoggedIn" class="text-white" (click)="openLoginDialog()" data-toggle="tooltip"

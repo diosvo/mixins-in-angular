@@ -12,10 +12,6 @@ const routes: Routes = [
     loadChildren: () => import('./components-ui/components-ui.module').then(m => m.ComponentsUiModule)
   },
   {
-    path: EUrl.WEB,
-    loadChildren: () => import('./web-ui/web-ui.module').then(m => m.WebUiModule)
-  },
-  {
     path: EUrl.FUNCTION,
     loadChildren: () => import('./functions/functions.module').then(m => m.FunctionsModule)
   }

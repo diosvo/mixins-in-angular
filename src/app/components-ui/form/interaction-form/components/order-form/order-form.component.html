@@ -1,20 +1,28 @@
 <!-- 💥image: https://dribbble.com/shots/14691009-Form-Elements -->
 
-<form [formGroup]="orderForm" class="form-container bg-white bd-auto bs-light px-2 py-3 m-2" (ngSubmit)="onSubmit()">
+<form
+  [formGroup]="orderForm"
+  (ngSubmit)="onSubmit()"
+  class="form-container bg-white bd-auto bs-light p-3 m-2"
+>
   <ng-container>
     <!-- Email -->
     <div>
-      <label for="email" class="d-block mb-0.25">Email address</label>
-      <mat-form-field class="width-100">
-        <input matInput type="email" formControlName="email" autocomplete="off">
-        <button matSuffix mat-icon-button aria-label="Clear" color="primary">
-          <mat-icon *ngIf="email.valid" class="icon-valid">check_circle</mat-icon>
-          <mat-icon *ngIf="email.hasError('email') && !email.hasError('required')" class="icon-invalid">error</mat-icon>
-        </button>
-        <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
-          Invalid email address
-        </mat-error>
-      </mat-form-field>
+      <custom-input
+        name="email"
+        label="Email address"
+        formControlName="email"
+        [required]="true"
+        [showAsterisk]="true"
+      >
+        <mat-icon suffix class="icon-valid" *ngIf="email.valid">
+          check_circle
+        </mat-icon>
+        <mat-icon suffix class="icon-invalid" *ngIf="email.hasError('email')">
+          error
+        </mat-icon>
+        <small error>Required</small>
+      </custom-input>
     </div>
 
     <!-- Personal Information -->
@@ -22,14 +30,18 @@
       <label for="full-name" class="d-block mb-0.25">Full name</label>
       <div class="full-name gap-1" formGroupName="personalInfo">
         <div class="flex-grow-1">
-          <mat-form-field class="width-100">
-            <input matInput type="text" formControlName="firstName" autocomplete="off" placeholder="First Name">
-          </mat-form-field>
+          <custom-input
+            type="text"
+            formControlName="firstName"
+            placeholder="First Name"
+          ></custom-input>
         </div>
         <div class="flex-grow-1">
-          <mat-form-field class="width-100">
-            <input matInput type="text" formControlName="lastName" autocomplete="off" placeholder="Last Name">
-          </mat-form-field>
+          <custom-input
+            type="text"
+            formControlName="lastName"
+            placeholder="Last Name"
+          ></custom-input>
         </div>
       </div>
     </div>
@@ -38,39 +50,48 @@
     <div class="my-1" formGroupName="location">
       <label for="address" class="d-block mb-0.25">Address</label>
       <div>
-        <mat-form-field class="width-100">
-          <input matInput type="text" formControlName="street" autocomplete="off" placeholder="Street Address">
-        </mat-form-field>
-        <mat-form-field class="width-100">
-          <input matInput type="text" formControlName="building" autocomplete="off"
-            placeholder="Office, Suite, Apt, ...">
-        </mat-form-field>
+        <custom-input
+          type="text"
+          formControlName="street"
+          placeholder="Street Address"
+        ></custom-input>
+        <custom-input
+          type="text"
+          formControlName="building"
+          placeholder="Office, Suite, Apt, ..."
+        ></custom-input>
       </div>
 
       <div class="location gap-1">
         <div class="city">
-          <label for="city" class="d-block mb-0.25">City</label>
-          <mat-form-field class="width-100">
-            <input matInput type="text" formControlName="city" autocomplete="off">
-          </mat-form-field>
+          <custom-input
+            label="City"
+            type="text"
+            formControlName="city"
+          ></custom-input>
         </div>
         <div class="state">
-          <label for="state" class="d-block mb-0.25">State</label>
-          <mat-form-field class="width-100">
-            <input matInput type="text" formControlName="state" autocomplete="off" placeholder="Choose...">
-          </mat-form-field>
+          <custom-input
+            label="State"
+            type="text"
+            formControlName="state"
+            placeholder="Choose..."
+          ></custom-input>
         </div>
         <div class="zip">
-          <label for="zip" class="d-block mb-0.25">Zip</label>
-          <mat-form-field class="width-100">
-            <input matInput type="number" formControlName="zip" autocomplete="off">
-          </mat-form-field>
+          <custom-input
+            label="Zip"
+            type="number"
+            formControlName="zip"
+          ></custom-input>
         </div>
       </div>
     </div>
   </ng-container>
 
   <div class="d-flex jc-flex-end">
-    <button mat-flat-button color="primary" class="width-100">Place Order</button>
+    <button mat-flat-button color="primary" class="width-100">
+      Place Order
+    </button>
   </div>
 </form>

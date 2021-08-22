@@ -9,6 +9,7 @@ const routes: Routes = [
   {
     path: '',
     component: ListComponentUiComponent,
+    data: { title: 'Components' }
   },
   {
     path: EComponentUI.BUTTON,

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
@@ -12,6 +13,7 @@ export class ToolbarComponent {
   isLoggedIn = true;
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
     private authService: AuthService,
   ) {
@@ -39,7 +41,8 @@ export class ToolbarComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!!result) {
-        return this.authService.logout();
+        this.authService.logout();
+        this.router.navigate(['']);
       }
     });
   }

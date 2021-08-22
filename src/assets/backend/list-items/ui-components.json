@@ -31,12 +31,6 @@
     "groupName": "menu",
     "groupDetails": [
       {
-        "name": "Liquid Menu Interaction",
-        "route": "liquid-menu",
-        "image": "",
-        "description": "GSAP"
-      },
-      {
         "name": "Navbar Interaction",
         "route": "navbar",
         "image": "",

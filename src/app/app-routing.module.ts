@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PageNotFoundComponent } from './home/components/page-not-found/page-not-found.component';
 import { EUrl } from './home/models/url.enum';
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
     loadChildren: () => import('./functions/functions.module').then(m => m.FunctionsModule)
   },
   {
-    path: '**', redirectTo: EUrl.COMPONENT
+    path: '**',
+    component: PageNotFoundComponent,
   }
 ];
 

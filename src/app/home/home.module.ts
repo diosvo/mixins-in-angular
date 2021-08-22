@@ -13,12 +13,14 @@ import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dial
 import { FooterComponent } from './components/footer/footer.component';
 import { MenuItemComponent } from './components/menu-item/menu-item.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     FooterComponent,
     ToolbarComponent,
     MenuItemComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     CommonModule,

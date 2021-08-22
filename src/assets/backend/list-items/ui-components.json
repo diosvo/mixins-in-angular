@@ -13,12 +13,6 @@
         "route": "toggle-mode",
         "image": "",
         "description": "ngClass"
-      },
-      {
-        "name": "Button Expandable Floating Menu",
-        "route": "expandable-floating-menu",
-        "image": "",
-        "description": "GSAP, Directive"
       }
     ]
   },

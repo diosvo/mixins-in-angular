@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -9,10 +9,6 @@ const routes: Routes = [
   {
     path: 'toggle-mode',
     loadChildren: () => import('./toggle-mode/toggle-mode.module').then(m => m.ToggleModeModule),
-  },
-  {
-    path: 'expandable-floating-menu',
-    loadChildren: () => import('./expandable-floating-menu/expandable-floating-menu.module').then(m => m.ExpandableFloatingMenuModule),
   },
 ];
 

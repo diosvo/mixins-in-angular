@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { AuthService } from './auth/services/auth.service';
 
 @Component({
@@ -20,22 +20,18 @@ export class AppComponent {
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        map(() => {
-          let child = this.activatedRoute.firstChild;
-          while (child) {
-            if (child.firstChild) {
-              child = child.firstChild;
-            } else if (child.snapshot.data && child.snapshot.data.title) {
-              return child.snapshot.data.title;
-            } else {
-              return null;
-            }
-          }
-          return null;
-        })
+        map(() => this.activatedRoute),
+        map((route) => {
+          while (route.firstChild) route = route.firstChild;
+          return route;
+        }),
+        filter(route => route.outlet === 'primary'),
+        mergeMap(route => route.data)
       )
       .subscribe({
-        next: (data: any) => data ? this.titleService.setTitle(data) : null
+        next: (event: { title: string, toolbar: boolean }) => {
+          this.titleService.setTitle(event.title);
+        }
       });
   }
 }

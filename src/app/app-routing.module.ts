@@ -19,7 +19,7 @@ const routes: Routes = [
   {
     path: '**',
     component: PageNotFoundComponent,
-    data: { title: 'Page Not Found' }
+    data: { title: 'Page Not Found', toolbar: false, footer: false }
   }
 ];
 

@@ -10,6 +10,8 @@ import { AuthService } from './auth/services/auth.service';
 })
 
 export class AppComponent {
+  showToolbar = false;
+  showFooter = false;
 
   constructor(
     public router: Router,
@@ -29,8 +31,10 @@ export class AppComponent {
         mergeMap(route => route.data)
       )
       .subscribe({
-        next: (event: { title: string, toolbar: boolean }) => {
+        next: (event: { title: string, toolbar: boolean , footer: boolean}) => {
           this.titleService.setTitle(event.title);
+          this.showToolbar = event.toolbar ?? true;
+          this.showFooter = event.footer ?? true;
         }
       });
   }

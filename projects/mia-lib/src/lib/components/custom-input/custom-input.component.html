@@ -1,6 +1,9 @@
 <ng-container>
   <label for="input" class="d-block mb-0.25">
-    <span [ngClass]="{ 'title-required': control?.invalid }">{{ label }}</span>
+    <span
+      [ngClass]="{ 'title-required': showAsterisk }"
+      [innerHTML]="label"
+    ></span>
   </label>
   <mat-form-field class="width-100">
     <input
@@ -14,8 +17,11 @@
       [placeholder]="placeholder"
       (blur)="onTouched()"
     />
-    <mat-error *ngIf="required">
-      <ng-content></ng-content>
+    <span class="custom-input-icon-suffix" matSuffix>
+      <ng-content select="[suffix]"></ng-content>
+    </span>
+    <mat-error *ngIf="control?.invalid">
+      <ng-content select="[error]"></ng-content>
     </mat-error>
   </mat-form-field>
 </ng-container>

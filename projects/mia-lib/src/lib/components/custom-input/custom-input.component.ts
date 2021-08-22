@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
 @Component({
   selector: 'custom-input',
   templateUrl: './custom-input.component.html',
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -18,19 +17,23 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
       multi: true
     }
   ],
+  styles: [`
+  .custom-input-icon-suffix {
+    position: absolute;
+    top     : -1.25rem;
+    right   : -0.25rem;
+  }`]
 })
 
 export class CustomInputComponent implements ControlValueAccessor, Validator {
-  setDisabledState?(isDisabled: boolean): void {
-    throw new Error('Method not implemented.');
-  }
   @Input() type!: string;
-  @Input() name!: string;
-  @Input() label!: string;
-  @Input() pattern!: string;
-  @Input() placeholder!: string;
+  @Input() name?: string;
+  @Input() label?: string;
+  @Input() pattern?: string;
+  @Input() placeholder?: string;
   @Input() required = false;
-  @Input() readonly!: boolean;
+  @Input() showAsterisk = false;
+  @Input() readonly?: boolean;
 
   /** Callback when the value is changing **/
   onChange: (value: unknown) => void;

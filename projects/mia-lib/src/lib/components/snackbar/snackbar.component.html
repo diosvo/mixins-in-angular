@@ -1,7 +1,11 @@
 <div class="d-flex jc-between ai-center">
   <span class="text-black opacity-0.8">{{ data }}</span>
-  <button class="d-inline-flex jc-flex-end p-0 text-uppercase bg-none bd-circle p-1" data-toggle="tooltip"
-    title="Close message" (click)="snackBarRef.dismiss()">
+  <button
+    class="d-inline-flex jc-flex-end p-0 text-uppercase bg-none bd-circle p-1"
+    data-toggle="tooltip"
+    title="Close message"
+    (click)="snackBarRef.dismiss()"
+  >
     <span aria-hidden="true" class="text-secondary">&times;</span>
   </button>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
+import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -27,6 +28,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     private router: Router,
     private fb: FormBuilder,
     private snackbar: SnackbarService,
+    private detectPermission: DetectPermissionService
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return this.hasChanged || this.isFormSubmitted;
+    return this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }
 
   saveChanges(url: string): void {

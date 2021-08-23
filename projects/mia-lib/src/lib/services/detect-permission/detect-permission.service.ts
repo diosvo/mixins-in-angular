@@ -3,9 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DetectPermissionService {
   hasPermission: boolean;
 

@@ -31,10 +31,10 @@ export class AppComponent {
         mergeMap(route => route.data)
       )
       .subscribe({
-        next: (event: { title: string, toolbar: boolean, footer: boolean }) => {
-          this.titleService.setTitle(event.title);
-          this.showToolbar = event.toolbar ?? true;
-          this.showFooter = event.footer ?? true;
+        next: ({ title, toolbar, footer }) => {
+          this.titleService.setTitle(title);
+          this.showToolbar = toolbar ?? true;
+          this.showFooter = footer ?? true;
         }
       });
   }

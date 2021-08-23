@@ -23,11 +23,11 @@ export class DetectPermissionService {
         mergeMap(route => route.data)
       )
       .subscribe({
-        next: ({ role }) => {
+        next: ({ roles }) => {
           if (!this.authService.user) return false;
-          role.forEach((element: string) => {
-            return this.hasPermission = this.authService.user.roles.includes(element);
-          });
+
+          const checkRole = (role: string) => roles.includes(role);
+          this.hasPermission = this.authService.user.roles.some(checkRole);
         }
       });
   }

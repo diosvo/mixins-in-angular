@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -10,8 +10,10 @@ import { EUrl } from 'src/app/home/models/url.enum';
 
 @Component({
   selector: 'app-unsaved-form',
-  templateUrl: './unsaved-form.component.html'
+  templateUrl: './unsaved-form.component.html',
+  providers: [DetectPermissionService]
 })
+
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   hasChanged = false;
@@ -28,7 +30,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     private router: Router,
     private fb: FormBuilder,
     private snackbar: SnackbarService,
-    private detectPermission: DetectPermissionService
+    @Self() private detectPermission: DetectPermissionService,
   ) { }
 
   ngOnInit(): void {

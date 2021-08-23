@@ -6,6 +6,10 @@ import { Subject } from 'rxjs';
   selector: 'app-unsaved-changes-dialog',
   templateUrl: './unsaved-changes-dialog.component.html',
   styles: [`
+    .dialog-title {
+      margin-bottom: 0.5rem;
+    }
+
     .dialog-actions {
       padding: 0.5rem 0 1rem;
     }
@@ -19,7 +23,7 @@ import { Subject } from 'rxjs';
 export class UnsavedChangesDialogComponent implements OnDestroy {
   subject = new Subject<boolean>();
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   /**
   * @description

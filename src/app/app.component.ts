@@ -22,8 +22,8 @@ export class AppComponent {
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        map(() => this.activatedRoute),
-        map((route) => {
+        map(_ => this.activatedRoute),
+        map(route => {
           while (route.firstChild) route = route.firstChild;
           return route;
         }),
@@ -31,7 +31,7 @@ export class AppComponent {
         mergeMap(route => route.data)
       )
       .subscribe({
-        next: (event: { title: string, toolbar: boolean , footer: boolean}) => {
+        next: (event: { title: string, toolbar: boolean, footer: boolean }) => {
           this.titleService.setTitle(event.title);
           this.showToolbar = event.toolbar ?? true;
           this.showFooter = event.footer ?? true;

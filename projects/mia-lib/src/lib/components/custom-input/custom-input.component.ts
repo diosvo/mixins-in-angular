@@ -35,6 +35,8 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
   @Input() showAsterisk = false;
   @Input() readonly?: boolean;
 
+  disabled = false;
+
   /** Callback when the value is changing **/
   onChange: (value: unknown) => void;
   /** Callback when the input is accessed **/
@@ -66,6 +68,10 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
 
   registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   validate(control: FormControl) {

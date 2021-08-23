@@ -34,6 +34,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   ) { }
 
   ngOnInit(): void {
+    this.formState();
     this.watchForChanges();
   }
 
@@ -64,5 +65,9 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
     this.router.navigate([url ?? EUrl.COMPONENT]);
+  }
+
+  private formState(): void {
+    this.detectPermission.hasPermission ? this.unsavedForm.enable() : this.unsavedForm.disable();
   }
 }

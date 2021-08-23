@@ -23,14 +23,4 @@ describe('AlertComponent', () => {
   test('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  test('should call dismissAlert()', () => {
-    const element: any = {
-      parentElement: {
-        removeChild: jest.fn()
-      }
-    };
-    component.dismissAlert(element);
-    expect(element).toBeDefined();
-  });
 });

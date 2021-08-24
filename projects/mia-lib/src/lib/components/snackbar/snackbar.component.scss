@@ -1,1 +1,9 @@
 @use 'message';
+
+.mat-snack-bar-container {
+  padding: 1rem;
+
+  button {
+    margin-top: -1px;
+  }
+}

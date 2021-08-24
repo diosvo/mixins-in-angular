@@ -1,11 +1,11 @@
 <div class="d-flex jc-between">
   <h2 mat-dialog-title class="dialog-title">Unsaved Changes</h2>
-  <button mat-icon-button class="close-button" (click)="onClose()">
+  <button mat-icon-button class="close-button" mat-dialog-close>
     <span class="f-20">×</span>
   </button>
 </div>
-<mat-dialog-content class="mat-typography"
-  >You have unsaved changes. Do you want to save it?
+<mat-dialog-content class="mat-typography">
+  You have unsaved changes. Do you want to save it?
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions" align="end">
   <button

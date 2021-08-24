@@ -26,8 +26,8 @@ export class DetectPermissionService {
         next: ({ roles }) => {
           if (!this.authService.user) return false;
 
-          const checkRole = (role: string) => roles.includes(role);
-          this.hasPermission = this.authService.user.roles.some(checkRole);
+          const checkRole = (role: string) => this.authService.user.roles.includes(role);
+          this.hasPermission = roles.some(checkRole);
         }
       });
   }

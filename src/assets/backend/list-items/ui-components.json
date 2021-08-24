@@ -1,6 +1,6 @@
 [
   {
-    "groupName": "Button",
+    "groupName": "button",
     "groupDetails": [
       {
         "name": "Micro Interaction",
@@ -13,17 +13,11 @@
         "route": "toggle-mode",
         "image": "",
         "description": "ngClass"
-      },
-      {
-        "name": "Button Expandable Floating Menu",
-        "route": "expandable-floating-menu",
-        "image": "",
-        "description": "GSAP, Directive"
       }
     ]
   },
   {
-    "groupName": "Card",
+    "groupName": "card",
     "groupDetails": [
       {
         "name": "Animated Counter Card",
@@ -34,19 +28,41 @@
     ]
   },
   {
-    "groupName": "Menu",
+    "groupName": "menu",
     "groupDetails": [
-      {
-        "name": "Liquid Menu Interaction",
-        "route": "liquid-menu",
-        "image": "",
-        "description": "GSAP"
-      },
       {
         "name": "Navbar Interaction",
         "route": "navbar",
         "image": "",
         "description": "ngClass, ngStyle, GSAP"
+      }
+    ]
+  },
+  {
+    "groupName": "table",
+    "groupDetails": [
+      {
+        "name": "Advanced CRUD",
+        "route": "advanced-crud",
+        "image": "",
+        "description": "UX/UI interaction, handle Form"
+      }
+    ]
+  },
+  {
+    "groupName": "form",
+    "groupDetails": [
+      {
+        "name": "Interaction - Order Form",
+        "route": "order-form",
+        "image": "",
+        "description": "Unsaved Changes Guard w/o initial values, CanActivate and CanLoad Guard"
+      },
+      {
+        "name": "Unsaved Form Demo",
+        "route": "unsaved-form",
+        "image": "",
+        "description": "Unsaved Changes Guard with given value, CanActivate and CanLoad Guard"
       }
     ]
   }

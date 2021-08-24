@@ -11,17 +11,16 @@ enum EUrl {
 enum EComponentUI {
   BUTTON = 'button',
   CARD = 'card',
-  MENU = 'menu'
-}
-
-enum EWebUI {
+  MENU = 'menu',
   TABLE = 'table',
   FORM = 'form',
 }
+
+enum EWebUI { }
 
 enum EFunctions {
   RXJS = 'rxjs',
 }
 
-export { EUrl, EComponentUI, EWebUI, EFunctions };
+export { EUrl, EComponentUI, EFunctions };
 

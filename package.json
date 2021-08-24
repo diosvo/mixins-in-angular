@@ -1,7 +1,7 @@
 {
   "name": "mixins-in-angular",
   "author": "diosvo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -48,7 +48,7 @@
     "jest": "^27.0.6",
     "jest-preset-angular": "^9.0.6",
     "ng-packagr": "^12.1.0",
-    "typescript": "~4.3.2",
+    "typescript": "^4.3.5",
     "webpack-bundle-analyzer": "^4.4.2"
   },
   "jest": {

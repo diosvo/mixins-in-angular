@@ -8,8 +8,4 @@ import { MessageType } from '../../models/alert';
 })
 export class AlertComponent {
   @Input() type: MessageType;
-
-  public dismissAlert(element): void {
-    return element.parentElement.removeChild(element);
-  }
 }

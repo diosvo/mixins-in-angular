@@ -1,31 +1,48 @@
 <article class="d-grid template-container gap-1 p-2">
-  <ng-container *ngFor="let group of (data | async)">
+  <ng-container *ngFor="let group of data | async">
     <mat-card *ngFor="let item of group.groupDetails">
-      <!-- Summary -->
+      <!-- Header -->
       <ng-container>
         <div class="d-flex jc-between ai-baseline">
-          <mat-card-title class="f-16">{{ item.name | titlecase }}</mat-card-title>
-          <button mat-icon-button class="button-description"
-            [matTooltip]="item.description ? item.description : 'Updating...'">
-            <mat-icon class="f-20 text-secondary text-hover-light-blue opacity-0.8">info_outline</mat-icon>
+          <mat-card-title class="f-16">
+            {{ item.name | titlecase }}
+          </mat-card-title>
+          <button
+            mat-icon-button
+            class="button-description"
+            [matTooltip]="item.description ? item.description : 'Updating...'"
+          >
+            <mat-icon
+              class="f-20 text-secondary text-hover-light-blue opacity-0.8"
+            >
+              info_outline
+            </mat-icon>
           </button>
         </div>
 
         <mat-card-subtitle>
           <mat-chip-list aria-label="Group name">
-            <mat-chip class="f-13">{{ group.groupName }}</mat-chip>
+            <mat-chip class="f-13">{{ group.groupName | titlecase }}</mat-chip>
           </mat-chip-list>
         </mat-card-subtitle>
       </ng-container>
 
       <!-- Main -->
-      <img mat-card-image [src]="item.image ? item.image : emptyImg" class="cursor-pointer"
-        (click)="directItem(group.groupUrl, group.groupName, item.route)">
+      <img
+        mat-card-image
+        class="cursor-pointer"
+        [src]="item.image ? item.image : emptyImg"
+        (click)="directItem(group.groupUrl, group.groupName, item.route)"
+      />
 
       <!-- Actions -->
       <mat-card-actions class="text-right">
-        <button mat-button color="primary" aria-label="View Details"
-          (click)="directItem(group.groupUrl, group.groupName, item.route)">
+        <button
+          mat-button
+          color="primary"
+          aria-label="View Details"
+          (click)="directItem(group.groupUrl, group.groupName, item.route)"
+        >
           <mat-icon class="mr-1">play_arrow</mat-icon>
           <span>View</span>
         </button>

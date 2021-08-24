@@ -1,0 +1,37 @@
+<form
+  [formGroup]="unsavedForm"
+  class="d-flex flex-direction-column jc-center ai-center"
+>
+  <!-- Message -->
+  <div class="w-400 mt-3" *ngIf="!detectPermission.hasPermission">
+    <alert-message type="warning">
+      You don't have permission to edit/update this form.
+    </alert-message>
+  </div>
+
+  <!-- Form -->
+  <div class="w-400 bg-white bd-auto bs-light p-3 m-3">
+    <custom-input
+      label="Team Name"
+      type="text"
+      [required]="true"
+      formControlName="team_name"
+    >
+      <small error *ngIf="unsavedForm.get('team_name').invalid">
+        Required
+      </small>
+    </custom-input>
+
+    <!-- Actions -->
+    <div class="d-flex jc-flex-end">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="canDeactivate() || !unsavedForm.valid"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+</form>

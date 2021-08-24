@@ -1,20 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { AlertModule } from '@lib/components/alert/alert.module';
+import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { UnsavedFormComponent } from './components/unsaved-form/unsaved-form.component';
 import { UnsavedFormRoutingModule } from './unsaved-form-routing.module';
 
 @NgModule({
   declarations: [UnsavedFormComponent],
   imports: [
+    CommonModule,
     UnsavedFormRoutingModule,
-    ReactiveFormsModule,
 
+    AlertModule,
     MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule
+    CustomInputModule,
+    ReactiveFormsModule,
   ]
 })
 export class UnsavedFormModule { }

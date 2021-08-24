@@ -1,7 +1,28 @@
 <ng-container>
-  <label for="input" class="d-block mb-0.25" [innerHTML]="label"></label>
-  <mat-form-field class="width-100" appearance="outline">
-    <input matInput type="text" autocomplete="off" [placeholder]="placeholder" [ngModel]="value"
-      (ngModelChange)="onChange($event)" (blur)="onTouched()">
+  <label for="input" class="d-block mb-0.25">
+    <span
+      [ngClass]="{ 'title-required': showAsterisk }"
+      [innerHTML]="label"
+    ></span>
+  </label>
+  <mat-form-field class="width-100">
+    <input
+      matInput
+      [id]="name"
+      [type]="type"
+      autocomplete="off"
+      [(ngModel)]="value"
+      [pattern]="pattern"
+      [required]="required"
+      [disabled]="disabled"
+      [placeholder]="placeholder"
+      (blur)="onTouched()"
+    />
+    <span class="custom-input-icon-suffix" matSuffix>
+      <ng-content select="[suffix]"></ng-content>
+    </span>
+    <mat-error *ngIf="control?.invalid">
+      <ng-content select="[error]"></ng-content>
+    </mat-error>
   </mat-form-field>
 </ng-container>

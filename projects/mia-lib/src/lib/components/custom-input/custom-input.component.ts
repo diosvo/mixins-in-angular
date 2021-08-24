@@ -1,40 +1,83 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseFormComponent } from '../../models/base-form-component';
+import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'custom-input',
   templateUrl: './custom-input.component.html',
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: CustomInputComponent,
+      useExisting: forwardRef(() => CustomInputComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => CustomInputComponent),
       multi: true
     }
-  ]
+  ],
+  styles: [`
+  .custom-input-icon-suffix {
+    position: absolute;
+    top     : -1.25rem;
+    right   : -0.25rem;
+  }`]
 })
-export class CustomInputComponent implements BaseFormComponent, ControlValueAccessor {
-  @Input() label!: string;
-  @Input() placeholder!: string;
 
-  value: string;
-  onChange!: (value: string) => void;
-  onTouched!: () => void;
+export class CustomInputComponent implements ControlValueAccessor, Validator {
+  @Input() type!: string;
+  @Input() name?: string;
+  @Input() label?: string;
+  @Input() pattern?: string;
+  @Input() placeholder?: string;
+  @Input() required = false;
+  @Input() showAsterisk = false;
+  @Input() readonly?: boolean;
 
-  writeValue(obj: string): void {
-    this.value = obj;
+  disabled = false;
+
+  /** Callback when the value is changing **/
+  onChange: (value: unknown) => void;
+  /** Callback when the input is accessed **/
+  onTouched: () => void;
+
+  private _value: unknown;
+  control: FormControl;
+
+  get value(): unknown {
+    return this._value;
   }
 
-  registerOnChange(fn: any): void {
+  set value(v: unknown) {
+    if (v !== this._value) {
+      this._value = v;
+      this.onChange(v);
+    }
+  }
+
+  writeValue(value: unknown): void {
+    if (value !== undefined) {
+      this._value = value;
+    }
+  }
+
+  registerOnChange(fn: (_: unknown) => {}): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => {}): void {
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void { }
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  validate(control: FormControl) {
+    if (!this.control) {
+      this.control = control;
+      return null;
+    }
+  }
 }

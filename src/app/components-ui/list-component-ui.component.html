@@ -1,5 +1,10 @@
-<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
-<alert-message *ngIf="errorMessage" type="error">{{ errorMessage }}</alert-message>
+<mat-progress-bar
+  *ngIf="loading$ | async"
+  mode="indeterminate"
+></mat-progress-bar>
+<alert-message *ngIf="errorMessage" type="error">
+  {{ errorMessage }}
+</alert-message>
 
 <!-- Search -->
 <ng-container>
@@ -11,8 +16,13 @@
           Represent distinct UI elements.
         </mat-panel-title>
         <mat-panel-description class="jc-flex-end">
-          <button mat-icon-button *ngIf="clearAllIconActive()" (click)="cleanFilters($event)"
-            matTooltip="Clear All Filters" matTooltipPosition="left">
+          <button
+            mat-icon-button
+            *ngIf="clearAllIconActive()"
+            (click)="cleanFilters($event)"
+            matTooltip="Clear All Filters"
+            matTooltipPosition="left"
+          >
             <mat-icon>clear_all</mat-icon>
           </button>
         </mat-panel-description>
@@ -26,11 +36,20 @@
             <mat-label>Components</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
-              <mat-option *ngFor="let group of (data$ | async)" [value]="group.groupName">{{ group.groupName }}
+              <mat-option
+                *ngFor="let group of data$ | async"
+                [value]="group.groupName"
+              >
+                {{ group.groupName | titlecase }}
               </mat-option>
             </mat-select>
-            <button matSuffix mat-icon-button *ngIf="group.value !== 'all'" matTooltip="Clear"
-              (click)="cleanGroup($event)">
+            <button
+              matSuffix
+              mat-icon-button
+              *ngIf="group.value !== 'all'"
+              matTooltip="Clear"
+              (click)="cleanGroup($event)"
+            >
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
@@ -38,8 +57,14 @@
           <!-- Search by Name -->
           <mat-form-field id="search-input" class="width-100">
             <mat-label>What are you looking for today...</mat-label>
-            <input matInput autocomplete="off" formControlName="query">
-            <button matSuffix mat-icon-button *ngIf="query.value !== ''" matTooltip="Clear" (click)="cleanQuery()">
+            <input matInput autocomplete="off" formControlName="query" />
+            <button
+              matSuffix
+              mat-icon-button
+              *ngIf="query.value !== ''"
+              matTooltip="Clear"
+              (click)="cleanQuery()"
+            >
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
@@ -57,8 +82,12 @@
     <div *ngIf="emptyMessage" class="text-center fs-16">
       <span>{{ emptyMessage }}</span>
       <br class="my-1" />
-      <a class="text-light-blue text-deco-underline cursor-pointer" (click)="cleanFilters($event)">Reset your
-        criteria</a>
+      <a
+        (click)="cleanFilters($event)"
+        class="text-light-blue text-deco-underline cursor-pointer"
+      >
+        Reset your criteria
+      </a>
     </div>
   </ng-template>
 </ng-container>

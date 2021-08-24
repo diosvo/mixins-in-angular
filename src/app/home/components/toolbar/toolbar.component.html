@@ -1,16 +1,40 @@
 <mat-toolbar color="primary" class="d-flex">
   <mat-toolbar-row>
-    <button class="opacity-0.8" mat-button routerLinkActive="opacity-1"
-      [routerLink]="['/ui-components']">Components</button>
-    <button class="opacity-0.8" mat-button routerLinkActive="opacity-1" [routerLink]="['/web-ui']">Web</button>
-    <button class="opacity-0.8" mat-button routerLinkActive="opacity-1" [routerLink]="['/functions']">Functions</button>
+    <button
+      mat-button
+      class="opacity-0.8"
+      routerLinkActive="opacity-1"
+      [routerLink]="['/ui-components']"
+    >
+      Components
+    </button>
+    <button
+      mat-button
+      class="opacity-0.8"
+      routerLinkActive="opacity-1"
+      [routerLink]="['/functions']"
+    >
+      Functions
+    </button>
     <div class="flex-auto"></div>
-    <a mat-icon-button *ngIf="!isLoggedIn" class="text-white" (click)="openLoginDialog()" data-toggle="tooltip"
-      title="Login">
+    <a
+      title="Login"
+      mat-icon-button
+      *ngIf="!isLoggedIn"
+      class="text-white"
+      data-toggle="tooltip"
+      (click)="openLoginDialog()"
+    >
       <mat-icon>public</mat-icon>
     </a>
-    <a mat-icon-button *ngIf="isLoggedIn" class="text-white" (click)="openLogoutDialog()" data-toggle="tooltip"
-      title="Logged In">
+    <a
+      mat-icon-button
+      *ngIf="isLoggedIn"
+      title="Logged In"
+      class="text-white"
+      data-toggle="tooltip"
+      (click)="openLogoutDialog()"
+    >
       <mat-icon>vpn_lock</mat-icon>
     </a>
   </mat-toolbar-row>

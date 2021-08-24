@@ -10,6 +10,7 @@ import { EUrl } from '../models/url.enum';
 })
 
 export class SearchService {
+  // Web is temporarily inactive
   private uiLoading$ = new BehaviorSubject<boolean>(true);
   private webLoading$ = new BehaviorSubject<boolean>(true);
   private funcLoading$ = new BehaviorSubject<boolean>(true);

@@ -6,7 +6,8 @@ import { ListFunctionsComponent } from './list-functions.component';
 const routes: Routes = [
   {
     path: '',
-    component: ListFunctionsComponent
+    component: ListFunctionsComponent,
+    data: { title: 'Functions' }
   },
   {
     path: EFunctions.RXJS,

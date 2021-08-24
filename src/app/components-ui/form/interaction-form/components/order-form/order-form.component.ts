@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Self } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeactivateComponent } from '@lib/models/base-form-component';
+import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DetectPermissionService]
 })
+
 export class OrderFormComponent implements DeactivateComponent {
   orderForm: FormGroup = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -31,17 +33,24 @@ export class OrderFormComponent implements DeactivateComponent {
   constructor(
     private fb: FormBuilder,
     private snackbar: SnackbarService,
+    @Self() private detectPermission: DetectPermissionService,
   ) { }
 
-  canDeactivate = () => this.isFormSubmitted || !this.orderForm.dirty;
+  canDeactivate(): boolean {
+    return this.isFormSubmitted || !this.orderForm.dirty || !this.detectPermission.hasPermission;
+  }
 
   saveChanges(): void {
     return this.onSubmit();
   }
 
   onSubmit(): void {
-    if (this.orderForm.invalid) {
+    if (this.detectPermission.hasPermission && this.orderForm.invalid) {
       this.snackbar.error('You need to provide all required information.');
+      return;
+    }
+    if (!this.detectPermission.hasPermission) {
+      this.snackbar.error('You don\'t have permission to update this form!');
       return;
     }
     this.isFormSubmitted = true;

@@ -11,7 +11,7 @@ const routes: Routes = [
     canDeactivate: [UnsavedChangesGuard],
     // canActivate: [HasRoleGuard],
     data: {
-      role: [ERole.ADMIN],
+      roles: [ERole.CUSTOMER],
       title: 'Order Form Features'
     },
   }

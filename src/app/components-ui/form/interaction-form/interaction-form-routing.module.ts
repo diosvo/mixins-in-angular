@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UnsavedChangesGuard } from '@lib/guards/unsaved-changes.guard';
+import { ERole } from '@lib/models/role';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 
 const routes: Routes = [
@@ -10,7 +11,7 @@ const routes: Routes = [
     canDeactivate: [UnsavedChangesGuard],
     // canActivate: [HasRoleGuard],
     data: {
-      role: ['Admin'],
+      role: [ERole.ADMIN],
       title: 'Order Form Features'
     },
   }

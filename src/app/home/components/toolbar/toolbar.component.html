@@ -20,7 +20,7 @@
     <a
       title="Login"
       mat-icon-button
-      *ngIf="!isLoggedIn"
+      *ngIf="(isLoggedIn$ | async) === false"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLoginDialog()"
@@ -29,7 +29,7 @@
     </a>
     <a
       mat-icon-button
-      *ngIf="isLoggedIn"
+      *ngIf="(isLoggedIn$ | async) === true"
       title="Logged In"
       class="text-white"
       data-toggle="tooltip"

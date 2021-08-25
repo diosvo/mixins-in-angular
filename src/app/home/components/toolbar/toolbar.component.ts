@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {
-  isLoggedIn = true;
+  isLoggedIn$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private router: Router,
@@ -18,9 +19,7 @@ export class ToolbarComponent {
     private authService: AuthService,
   ) {
     this.authService.isLoggedIn.subscribe({
-      next: (isLoggedIn: boolean) => {
-        this.isLoggedIn = isLoggedIn;
-      }
+      next: (isLoggedIn: boolean) => this.isLoggedIn$.next(isLoggedIn)
     });
   }
 

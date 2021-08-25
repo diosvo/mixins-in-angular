@@ -13,9 +13,10 @@ export class HasRoleGuard implements CanActivate {
     private snackbar: SnackbarService
   ) { }
 
-  canActivate(
-    route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
-    const isAuthorized = this.authService.user.roles.includes(route.data.role);
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
+    const checkRole = (role: string) => this.authService.user.roles.includes(role);
+    const isAuthorized = route.data.roles.some(checkRole);
+
     if (!isAuthorized) {
       this.snackbar.warning('You are not authorized to access this page.');
     }

@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthModule } from '@auth/auth.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
-import { HomeModule } from '../home/home.module';
+import { MenuItemModule } from '../home/components/menu-item/menu-item.module';
 import { FunctionsRoutingModule } from './functions-routing.module';
 import { ListFunctionsComponent } from './list-functions.component';
 
@@ -24,9 +24,9 @@ import { ListFunctionsComponent } from './list-functions.component';
     FormsModule,
     ReactiveFormsModule,
 
-    AuthModule,
-    HomeModule,
+    AuthModule,   
     AlertModule,
+    MenuItemModule,
 
     MatIconModule,
     MatInputModule,

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PageNotFoundComponent } from './home/components/page-not-found/page-not-found.component';
 import { EUrl } from './home/models/url.enum';
 
 const routes: Routes = [
@@ -18,8 +17,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: PageNotFoundComponent,
-    data: { title: 'Page Not Found', toolbar: false, footer: false }
+    loadChildren: () => import('./home/components/page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
   }
 ];
 

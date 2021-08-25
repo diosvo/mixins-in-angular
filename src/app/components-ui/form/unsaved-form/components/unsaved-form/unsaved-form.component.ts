@@ -1,4 +1,4 @@
-import { Component, OnInit, Self } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -11,7 +11,8 @@ import { EUrl } from 'src/app/home/models/url.enum';
 @Component({
   selector: 'app-unsaved-form',
   templateUrl: './unsaved-form.component.html',
-  providers: [DetectPermissionService]
+  providers: [DetectPermissionService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {

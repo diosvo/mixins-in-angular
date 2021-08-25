@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { AuthService } from './auth/services/auth.service';
 
@@ -10,8 +11,8 @@ import { AuthService } from './auth/services/auth.service';
 })
 
 export class AppComponent {
-  showToolbar = false;
-  showFooter = false;
+  showToolbar$ = new BehaviorSubject<boolean>(false);
+  showFooter$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     public router: Router,
@@ -33,8 +34,8 @@ export class AppComponent {
       .subscribe({
         next: ({ title, toolbar, footer }) => {
           this.titleService.setTitle(title);
-          this.showToolbar = toolbar ?? true;
-          this.showFooter = footer ?? true;
+          this.showToolbar$.next(toolbar ?? true);
+          this.showFooter$.next(footer ?? true);
         }
       });
   }

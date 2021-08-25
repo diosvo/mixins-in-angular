@@ -1,4 +1,5 @@
-import { enableProdMode, Injectable, isDevMode } from '@angular/core';
+import { enableProdMode, Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { ILogger } from './logger';
 
 @Injectable({
@@ -7,24 +8,24 @@ import { ILogger } from './logger';
 export class LoggerService implements ILogger {
 
   log(value: string): void {
-    if (isDevMode()) {
-      return console.log(`LoggerService: ${value}`);
+    if (environment.production) {
+      this.disabledProdMode();
     }
-    this.disabledProdMode();
+    console.log(`LoggerService: ${value}`);
   }
 
   info(value: string): void {
-    if (isDevMode()) {
-      return console.log(`LoggerService: ${value}`);
+    if (environment.production) {
+      this.disabledProdMode();
     }
-    this.disabledProdMode();
+    console.log(`LoggerService: ${value}`);
   }
 
   error(value: string): void {
-    if (isDevMode()) {
-      return console.log(`LoggerService: ${value}`);
+    if (environment.production) {
+      this.disabledProdMode();
     }
-    this.disabledProdMode();
+    console.log(`LoggerService: ${value}`);
   }
 
   private disabledProdMode(): void {

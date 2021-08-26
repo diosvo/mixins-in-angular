@@ -41,13 +41,12 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   private watchForChanges(): void {
     // Deep-compare between Primitive Form Value & Form Value Changes 
-    const formChanges$ = combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
+    combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
       .pipe(
         map(([prev, next]) => JSON.stringify(prev) === JSON.stringify(next)),
         startWith(true)
-      );
-
-    formChanges$.subscribe(response => this.hasChanged = response);
+      )
+      .subscribe(response => this.hasChanged = response);
   }
 
   canDeactivate(): boolean {

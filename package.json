@@ -56,9 +56,14 @@
     "setupFilesAfterEnv": [
       "<rootDir>/jest-config.ts"
     ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/dist/"
+    "moduleNameMapper": {
+      "@lib(.*)": "<rootDir>/projects/mia-lib/src/lib/$1",
+      "@auth(.*)": "<rootDir>/src/app/auth/$1"
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "projects/mia-lib"
     ],
     "globals": {
       "ts-jest": {

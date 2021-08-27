@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { IGroupValue } from '../../home/models/search.model';
-import { SearchService } from '../../home/services/search.service';
+import { IGroupValue } from '../home/models/search.model';
+import { SearchService } from '../home/services/search.service';
 
 @Component({
   selector: 'list-component-ui',

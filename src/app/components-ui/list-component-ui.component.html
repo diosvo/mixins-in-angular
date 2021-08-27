@@ -76,7 +76,10 @@
 
 <!-- Fetch Data -->
 <ng-container [ngTemplateOutlet]="noResults">
-  <menu-item [data]="filteredData$"></menu-item>
+  <menu-item
+    [data]="filteredData$"
+    (selectedChip)="selectedChip($event)"
+  ></menu-item>
 
   <ng-template #noResults>
     <div *ngIf="emptyMessage" class="text-center fs-16">

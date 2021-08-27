@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IGroupValue } from '../../models/search.model';
@@ -11,6 +11,7 @@ import { IGroupValue } from '../../models/search.model';
 })
 export class MenuItemComponent {
   @Input() data: Observable<Array<IGroupValue>>;
+  @Output() selectedChip = new EventEmitter<string>();
 
   emptyImg = 'assets/images/logo/placeholder-image.png';
 
@@ -20,5 +21,9 @@ export class MenuItemComponent {
 
   directItem(groupUrl: string, groupName: string, itemRoute: string): void {
     this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
+  }
+
+  onSelect(groupName: string): void {    
+    this.selectedChip.emit(groupName);
   }
 }

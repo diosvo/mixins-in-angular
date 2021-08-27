@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { IGroupValue } from '../home/models/search.model';
@@ -52,6 +53,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private snackbar: SnackbarService,
     private searchService: SearchService,
   ) { }
 
@@ -107,6 +109,11 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       relativeTo: this.route,
       queryParams: this.componentsForm.value
     });
+  }
+
+  selectedChip($event: string): void {
+    this.group.setValue($event);
+    this.snackbar.info(`Filter by ${$event[0].toUpperCase() + $event.slice(1)} component was applied.`);
   }
 
   cleanQuery(): void {

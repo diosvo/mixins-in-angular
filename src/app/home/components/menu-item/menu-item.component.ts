@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IGroupValue } from '../../models/search.model';
@@ -6,7 +6,8 @@ import { IGroupValue } from '../../models/search.model';
 @Component({
   selector: 'menu-item',
   styleUrls: ['./menu-item.component.scss'],
-  templateUrl: './menu-item.component.html'
+  templateUrl: './menu-item.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuItemComponent {
   @Input() data: Observable<Array<IGroupValue>>;

@@ -37,7 +37,7 @@ $-easeCubic: cubic-bezier(0.65, 0, 0, 1);
       }
 
       .icon {
-        fill                     : palette.$primary;
+        fill                     : palette.$light-blue;
         animation                : nav-interaction .4s;
         animation-iteration-count: 1;
       }

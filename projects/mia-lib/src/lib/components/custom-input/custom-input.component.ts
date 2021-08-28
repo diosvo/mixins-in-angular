@@ -27,7 +27,6 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
 
 export class CustomInputComponent implements ControlValueAccessor, Validator {
   @Input() type!: string;
-  @Input() name?: string;
   @Input() label?: string;
   @Input() pattern?: string;
   @Input() placeholder?: string;

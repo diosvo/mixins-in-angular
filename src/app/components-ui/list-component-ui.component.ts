@@ -40,7 +40,6 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     this.searchService.uiComponentsList$
       .pipe(
         filter(item => !!item),
-        map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
         tap({
           error: () => this.errorMessage = 'An error occurred. Please try again!'
         }),

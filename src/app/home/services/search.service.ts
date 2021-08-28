@@ -18,6 +18,7 @@ export class SearchService {
   uiComponentsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.COMPONENT}.json`)
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
+      map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
       shareReplay(),
       catchError(_ => of(null)),
       finalize(() => this.uiLoading$.next(false)),
@@ -34,6 +35,7 @@ export class SearchService {
   functionsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.FUNCTION}.json`)
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
+      map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
       shareReplay(),
       catchError(_ => of(null)),
       finalize(() => this.funcLoading$.next(false)),

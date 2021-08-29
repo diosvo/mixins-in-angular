@@ -10,7 +10,7 @@
           (click)="openSearchBox(); onSearchFocus()">
           <mat-icon>search</mat-icon>
         </button>
-        <button mat-flat-button color="primary" [ngStyle]="{'margin-left.rem': 1}" [disabled]="form.invalid"
+        <button mat-flat-button color="primary" [style]="{'margin-left.rem': 1}" [disabled]="form.invalid"
           (click)="addNewRow(); onFocus()">
           Add New Row
         </button>
@@ -30,7 +30,7 @@
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> Category ID </th>
           <td mat-cell *matCellDef="let element; let idx = index" [formGroup]="element">
-            <mat-form-field [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'" [ngStyle]="{'width.%': 90}">
+            <mat-form-field [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'" [style]="{'width.%': 90}">
               <input matInput type="text" formControlName="categoryId" [readonly]="rows.value[idx].isEditable"
                 #focusInput (keydown.enter)="onEnter(idx, $event)">
             </mat-form-field>
@@ -40,7 +40,7 @@
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Category Name </th>
           <td mat-cell *matCellDef="let element; let idx = index" [formGroup]="element">
-            <mat-form-field [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'" [ngStyle]="{'width.%': 90}">
+            <mat-form-field [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'" [style]="{'width.%': 90}">
               <input matInput type="text" formControlName="categoryName" [readonly]="rows.value[idx].isEditable"
                 (keydown.enter)="onEnter(idx, $event)">
             </mat-form-field>
@@ -58,7 +58,7 @@
             </button>
 
             <button mat-icon-button *ngIf="!rows.value[idx].isEditable" matTooltip="Cancel Changes" color="warn"
-              [ngStyle]="{'margin-left.rem': 0.5}" (click)="cancelChanges(idx)">
+              [style]="{'margin-left.rem': 0.5}" (click)="cancelChanges(idx)">
               <mat-icon>cancel</mat-icon>
             </button>
 
@@ -68,7 +68,7 @@
             </button>
 
             <button mat-icon-button *ngIf="rows.value[idx].isEditable" matTooltip="Delete" color="warn"
-              [ngStyle]="{'margin-left.rem': 0.5}" (click)="deleteItem(idx)">
+              [style]="{'margin-left.rem': 0.5}" (click)="deleteItem(idx)">
               <mat-icon>remove_circle</mat-icon>
             </button>
           </td>

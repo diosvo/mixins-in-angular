@@ -13,7 +13,7 @@
           mb-4
           cursor-pointer
         "
-        [ngClass]="{ active: idx === selected }"
+        [class]="{ active: idx === selected }"
         (click)="onSelect(elem, idx)"
         #elem
       >
@@ -25,7 +25,7 @@
         </a>
       </li>
       <div
-        [ngStyle]="animate"
+        [style]="animate"
         class="slider position-absolute top-0 bg-light-blue bd-radius-12"
       ></div>
     </ng-container>

@@ -28,9 +28,9 @@
       <mat-icon>public</mat-icon>
     </a>
     <a
+      title="Logged In"
       mat-icon-button
       *ngIf="(isLoggedIn$ | async) === true"
-      title="Logged In"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLogoutDialog()"

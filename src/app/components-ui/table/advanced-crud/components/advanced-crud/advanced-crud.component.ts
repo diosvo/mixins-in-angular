@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { slideInOut } from '@lib/animations/animations';
 import { ICategory } from '@lib/models/category';
 
 @Component({
   selector: 'app-advanced-crud',
   templateUrl: './advanced-crud.component.html',
-  animations: [slideInOut],
+  styles: [`
+    tr.mat-header-row {
+      background-color: #F5F6FA;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -100,14 +103,6 @@ export class AdvancedCrudComponent  {
         this.cdr.detectChanges();
       });
     });
-  }
-
-  onEnter(idx: number, event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !this.isValidRow(idx)) {
-      this.saveChanges(idx);
-      event.preventDefault();
-    }
-    return;
   }
 
   private getRowValue(idx: number): ICategory {

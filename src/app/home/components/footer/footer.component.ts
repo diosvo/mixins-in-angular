@@ -14,7 +14,4 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class FooterComponent {
-
-  constructor() { }
-}
+export class FooterComponent { }

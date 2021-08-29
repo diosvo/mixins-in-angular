@@ -26,6 +26,11 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
 })
 
 export class CustomInputComponent implements ControlValueAccessor, Validator {
+  // Field
+  @Input() appearance = 'outline';
+  @Input() style = 'width: 100%';
+
+  // Input
   @Input() type!: string;
   @Input() label?: string;
   @Input() pattern?: string;

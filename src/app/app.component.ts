@@ -15,9 +15,9 @@ export class AppComponent {
   showFooter$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    public router: Router,
+    private router: Router,
     private titleService: Title,
-    public authService: AuthService,
+    readonly authService: AuthService,
     private activatedRoute: ActivatedRoute,
   ) {
     this.router.events

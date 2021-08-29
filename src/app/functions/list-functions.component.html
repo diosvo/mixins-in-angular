@@ -7,7 +7,7 @@
 </alert-message>
 
 <!-- Search -->
-<ng-container>
+<ng-container *ngIf="(loading$ | async) === false">
   <mat-accordion>
     <mat-expansion-panel>
       <!-- Header -->

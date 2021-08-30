@@ -1,6 +1,7 @@
 <!-- 💥 shortcut URL: http://localhost:4200/web-ui/table/advanced-crud -->
 <div class="bg-white p-3 m-3 bd-auto">
-  <ng-container>
+  <div class="d-flex jc-between ai-center">
+    <h2 [style.margin]="0">Categories</h2>
     <button
       mat-flat-button
       color="primary"
@@ -9,7 +10,7 @@
     >
       Add New Row
     </button>
-  </ng-container>
+  </div>
 
   <!-- Table -->
   <form [formGroup]="form">

@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
+import { of } from 'rxjs';
 
 interface AnimatedCounterModel {
   title: string;
@@ -48,7 +49,7 @@ const data: AnimatedCounterModel[] = [
 })
 
 export class AnimatedCounterComponent implements AfterViewInit {
-  animatedCardList = data;
+  animatedCardList = of(data);
 
   @ViewChild('el', { static: false }) el: ElementRef<HTMLDivElement>;
 

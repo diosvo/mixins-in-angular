@@ -20,9 +20,6 @@ const titleService = {
   setTitle: jest.fn().mockReturnValue('App')
 };
 
- interface RouterData { title: string, toolbar: boolean, footer: boolean };
-
-
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
@@ -51,7 +48,7 @@ describe('AppComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            firstChild: null,
+            firstChild: {},
             outlet: 'primary',
             data: jest.fn().mockReturnValue(of({ title: 'App', toolbar: true, footer: true }))
           }
@@ -66,8 +63,6 @@ describe('AppComponent', () => {
   });
 
   it('should create the app', (() => {
-    const router = new MockRouter();
-    router.events.subscribe();
     expect(component).toBeTruthy();
   }));
 });

@@ -54,7 +54,7 @@ describe('ToolbarComponent', () => {
 
     describe('openLogoutDialog() when result returns', () => {
       test('true', () => {
-        jest.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as MatDialogRef<typeof ToolbarComponent>);;
+        jest.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as MatDialogRef<typeof ToolbarComponent>);
         component.openLogoutDialog();
         expect(dialog.open).toHaveBeenCalled();
       });

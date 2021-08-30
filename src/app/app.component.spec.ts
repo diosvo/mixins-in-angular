@@ -48,7 +48,7 @@ describe('AppComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            firstChild: {},
+            firstChild: null,
             outlet: 'primary',
             data: jest.fn().mockReturnValue(of({ title: 'App', toolbar: true, footer: true }))
           }

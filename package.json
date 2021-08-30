@@ -45,8 +45,8 @@
     "@typescript-eslint/parser": "4.28.2",
     "eslint": "^7.26.0",
     "gsap": "^3.7.1",
-    "jest": "^27.0.6",
-    "jest-preset-angular": "^9.0.6",
+    "jest": "^27.1.0",
+    "jest-preset-angular": "^9.0.7",
     "ng-packagr": "^12.1.0",
     "typescript": "^4.3.5",
     "webpack-bundle-analyzer": "^4.4.2"

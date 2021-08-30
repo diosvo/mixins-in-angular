@@ -53,8 +53,6 @@ export class AnimatedCounterComponent implements AfterViewInit {
 
   @ViewChild('el', { static: false }) el: ElementRef<HTMLDivElement>;
 
-  constructor() { }
-
   ngAfterViewInit(): void {
     gsap.from(this.el.nativeElement.children, {
       delay: 1,

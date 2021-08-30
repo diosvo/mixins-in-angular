@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AnimatedCounterComponent } from './animated-counter.component';
+import { AnimatedCounterDirective } from './animated-counter.directive';
 
 describe('AnimatedCounterComponent', () => {
   let component: AnimatedCounterComponent;
@@ -8,9 +8,9 @@ describe('AnimatedCounterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AnimatedCounterComponent ]
+      declarations: [AnimatedCounterComponent, AnimatedCounterDirective]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

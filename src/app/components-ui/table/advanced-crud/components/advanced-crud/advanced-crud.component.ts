@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ICategory } from '@lib/models/category';
+import { CategoryService } from '@lib/services/category/category.service';
 
 @Component({
   selector: 'app-advanced-crud',
@@ -14,9 +15,9 @@ import { ICategory } from '@lib/models/category';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AdvancedCrudComponent  {
+export class AdvancedCrudComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource = new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<unknown>(null);
 
   form: FormGroup = this.fb.group({
     rows: this.fb.array([])
@@ -24,20 +25,39 @@ export class AdvancedCrudComponent  {
   isEdit: boolean;
   rowValue: ICategory;
 
+  loading = true;
+
   @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
   @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
 
-  visibleBox = false;
-
   constructor(
-    private fb: FormBuilder,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private service: CategoryService
   ) { }
 
-  /* ngOnInit(): void {
-    // problem: cant not path value between form array with response data from service
-  } */
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  getCategories(): void {
+    this.service.all().subscribe({
+      next: (data: Array<ICategory>) => {
+        this.form = this.fb.group({
+          rows: this.fb.array(data.map(item =>
+            this.fb.group({
+              categoryId: item.categoryId,
+              categoryName: item.categoryName,
+              isEditable: [false]
+            })
+          ))
+        });
+        this.dataSource = new MatTableDataSource(this.rows.controls);
+      },
+      complete: () => this.loading = false
+    });
+  }
 
   /**
    * @description: adding new row
@@ -52,7 +72,7 @@ export class AdvancedCrudComponent  {
   editItem(idx: number): void {
     this.isEdit = true;
     this.rowValue = this.getRowValue(idx);
-    this.rows.at(idx).get('isEditable').patchValue(false);
+    this.rows.at(idx).get('isEditable').patchValue(true);
   }
 
   deleteItem(idx: number): void {
@@ -61,7 +81,7 @@ export class AdvancedCrudComponent  {
   }
 
   saveChanges(idx: number): void {
-    this.rows.at(idx).get('isEditable').patchValue(true);
+    this.rows.at(idx).get('isEditable').patchValue(false);
   }
 
   cancelChanges(idx: number): void {
@@ -75,11 +95,11 @@ export class AdvancedCrudComponent  {
           categoryId: this.rowValue.categoryId,
           categoryName: this.rowValue.categoryName,
         });
-        this.rows.at(idx).get('isEditable').patchValue(true);
+        this.rows.at(idx).get('isEditable').patchValue(false);
         break;
       }
       default:
-        this.rows.at(idx).get('isEditable').patchValue(true);
+        this.rows.at(idx).get('isEditable').patchValue(false);
         break;
     }
   }
@@ -120,30 +140,7 @@ export class AdvancedCrudComponent  {
     return this.fb.group({
       categoryId: [null, Validators.required],
       categoryName: [null, Validators.required],
-      isEditable: [false]
-    });
-  }
-
-  /**
-   * @description: searching related
-   */
-
-  openSearchBox(): void {
-    this.visibleBox = !this.visibleBox;
-  }
-
-  onSearch(filterValue: string): void {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  onSearchFocus(): void {
-    this.ngZone.runOutsideAngular(() => {
-      setTimeout(() => {
-        if (this.searchInput) {
-          this.searchInput.nativeElement.focus();
-          this.cdr.detectChanges();
-        }
-      });
+      isEditable: [true]
     });
   }
 }

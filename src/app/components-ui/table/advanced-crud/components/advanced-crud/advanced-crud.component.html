@@ -1,4 +1,6 @@
 <!-- 💥 shortcut URL: http://localhost:4200/web-ui/table/advanced-crud -->
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
 <div class="bg-white p-3 m-3 bd-auto">
   <div class="d-flex jc-between ai-center">
     <h2 [style.margin]="0">Categories</h2>
@@ -20,7 +22,7 @@
         mat-table
         [dataSource]="dataSource"
         class="width-100 mt-2 bd-auto"
-        style="border: 1px solid lightgray"
+        [style.border]="'1px solid lightgray'"
       >
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>Category ID</th>
@@ -33,8 +35,8 @@
               type="text"
               [style]="'width: 90%'"
               formControlName="categoryId"
-              [readonly]="rows.value[idx].isEditable"
-              [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'"
+              [readonly]="!rows.value[idx].isEditable"
+              [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
             ></custom-input>
           </td>
         </ng-container>
@@ -50,60 +52,67 @@
               type="text"
               [style]="'width: 90%'"
               formControlName="categoryName"
-              [readonly]="rows.value[idx].isEditable"
-              [appearance]="rows.value[idx].isEditable ? 'none' : 'legacy'"
+              [readonly]="!rows.value[idx].isEditable"
+              [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
             ></custom-input>
           </td>
         </ng-container>
 
         <!-- Actions -->
         <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <th mat-header-cell *matHeaderCellDef [style.text-align]="'center'">
+            Actions
+          </th>
           <td
             mat-cell
-            *matCellDef="let element; let idx = index"
             [formGroup]="element"
+            *matCellDef="let element; let idx = index"
+            [style.text-align]="'center'"
           >
             <button
-              mat-icon-button
-              *ngIf="!rows.value[idx].isEditable"
-              matTooltip="Save Changes"
               color="primary"
-              [disabled]="isValidRow(idx)"
+              mat-icon-button
+              *ngIf="rows.value[idx].isEditable"
+              matTooltip="Save Changes"
+              matTooltipPosition="left"
               (click)="saveChanges(idx)"
+              [disabled]="isValidRow(idx)"
             >
               <mat-icon>check_circle</mat-icon>
             </button>
 
             <button
-              mat-icon-button
-              *ngIf="!rows.value[idx].isEditable"
-              matTooltip="Cancel Changes"
               color="warn"
-              [style.margin-left.rem]="0.5"
+              mat-icon-button
+              *ngIf="rows.value[idx].isEditable"
+              matTooltip="Cancel Changes"
+              matTooltipPosition="right"
               (click)="cancelChanges(idx)"
+              [style.margin-left.rem]="0.5"
             >
               <mat-icon>cancel</mat-icon>
             </button>
 
             <button
-              mat-icon-button
-              *ngIf="rows.value[idx].isEditable"
-              matTooltip="Edit"
               color="primary"
-              [disabled]="isValidRow(idx)"
+              mat-icon-button
+              *ngIf="!rows.value[idx].isEditable"
+              matTooltip="Edit"
+              matTooltipPosition="left"
               (click)="editItem(idx)"
+              [disabled]="isValidRow(idx)"
             >
               <mat-icon>swap_horizontal_circle</mat-icon>
             </button>
 
             <button
-              mat-icon-button
-              *ngIf="rows.value[idx].isEditable"
-              matTooltip="Delete"
               color="warn"
-              [style.margin-left.rem]="0.5"
+              mat-icon-button
+              *ngIf="!rows.value[idx].isEditable"
+              matTooltip="Delete"
+              matTooltipPosition="right"
               (click)="deleteItem(idx)"
+              [style.margin-left.rem]="0.5"
             >
               <mat-icon>remove_circle</mat-icon>
             </button>
@@ -121,11 +130,7 @@
       <!-- Paginator -->
       <mat-paginator
         [length]="dataSource.data.length"
-        [pageSizeOptions]="[
-          5,
-          dataSource.data.length > 5 ? dataSource.data.length : '',
-          10
-        ]"
+        [pageSizeOptions]="[2, 4]"
         showFirstLastButtons
       >
       </mat-paginator>

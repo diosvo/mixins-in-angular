@@ -15,7 +15,7 @@ export class SearchService {
   private webLoading$ = new BehaviorSubject<boolean>(true);
   private funcLoading$ = new BehaviorSubject<boolean>(true);
 
-  uiComponentsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.COMPONENT}.json`)
+  uiComponentsList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.COMPONENT))
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
       map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
@@ -24,7 +24,7 @@ export class SearchService {
       finalize(() => this.uiLoading$.next(false)),
     );
 
-  webUiList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.WEB}.json`)
+  webUiList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.WEB))
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.WEB }))),
       shareReplay(),
@@ -32,7 +32,7 @@ export class SearchService {
       finalize(() => this.webLoading$.next(false)),
     );
 
-  functionsList$ = this.http.get<Array<IGroupValue>>(`/assets/backend/list-items/${EUrl.FUNCTION}.json`)
+  functionsList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.FUNCTION))
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.FUNCTION }))),
       map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
@@ -76,5 +76,9 @@ export class SearchService {
             .filter(item => item.groupDetails.length > 0)
         )
       );
+  }
+
+  private getDataFrom(url: EUrl): string {
+    return `/assets/backend/list-items/${url}.json`;
   }
 }

@@ -5,8 +5,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '@auth/services/auth.service';
 import { Observable, of } from 'rxjs';
 import { AppComponent } from './app.component';
-import { FooterModule } from './home/components/footer/footer.module';
-import { ToolbarModule } from './home/components/toolbar/toolbar.module';
+import { ToolbarModule } from '@home/components/toolbar/toolbar.module';
+import { FooterModule } from '@home/components/footer/footer.module';
 
 class MockRouter {
   public navigate = new NavigationEnd(0, 'http://localhost:4200/ui-components', 'http://localhost:4200/ui-components');
@@ -62,7 +62,7 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the app', (() => {
+  test('should create the app', (() => {
     expect(component).toBeTruthy();
   }));
 });

@@ -1,23 +1,23 @@
 .text-deco {
-    &-none {
-        text-decoration: none;
-    }
+  &-none {
+    text-decoration: none;
+  }
 
-    &-underline {
-        text-decoration: underline;
-    }
+  &-underline {
+    text-decoration: underline;
+  }
 }
 
 .text {
-    &-none {
-        text-transform: none;
-    }
+  &-none {
+    text-transform: none;
+  }
 
-    &-uppercase {
-        text-transform: uppercase;
-    }
+  &-uppercase {
+    text-transform: uppercase;
+  }
 
-    &-capitalize {
-        text-transform: capitalize;
-    }
+  &-capitalize {
+    text-transform: capitalize;
+  }
 }

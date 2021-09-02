@@ -19,8 +19,8 @@ export class MenuItemComponent {
     private router: Router
   ) { }
 
-  directItem(groupUrl: string, groupName: string, itemRoute: string): void {
-    this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
+  async directItem(groupUrl: string, groupName: string, itemRoute: string): Promise<void> {
+    await this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
   }
 
   onSelect(groupName: string): void {    

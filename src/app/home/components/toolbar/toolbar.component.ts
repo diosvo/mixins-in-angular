@@ -21,7 +21,7 @@ export class ToolbarComponent {
     this.dialog.open(LoginComponent);
   }
 
-  openLogoutDialog(): void {
+  async openLogoutDialog(): Promise<void> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         header: 'logout',
@@ -32,7 +32,7 @@ export class ToolbarComponent {
       width: '500px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    await dialogRef.afterClosed().subscribe(result => {
       if (!!result) {
         this.authService.logout();
         this.router.navigate(['']);

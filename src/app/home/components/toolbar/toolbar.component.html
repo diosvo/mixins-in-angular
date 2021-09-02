@@ -20,7 +20,7 @@
     <a
       title="Login"
       mat-icon-button
-      *ngIf="(isLoggedIn$ | async) === false"
+      *ngIf="(authService.isLoggedIn | async) === false"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLoginDialog()"
@@ -30,7 +30,7 @@
     <a
       title="Logged In"
       mat-icon-button
-      *ngIf="(isLoggedIn$ | async) === true"
+      *ngIf="(authService.isLoggedIn | async) === true"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLogoutDialog()"

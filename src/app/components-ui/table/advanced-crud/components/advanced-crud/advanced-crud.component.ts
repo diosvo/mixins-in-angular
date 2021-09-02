@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgZone,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ICategory } from '@lib/models/category';
@@ -8,7 +18,7 @@ import { CategoryService } from '@lib/services/category/category.service';
   selector: 'app-advanced-crud',
   templateUrl: './advanced-crud.component.html',
   styles: [`
-    tr.mat-header-row {
+    .mat-header-row {
       background-color: #F5F6FA;
     }
   `],
@@ -105,17 +115,17 @@ export class AdvancedCrudComponent implements OnInit {
   }
 
   isValidRow(idx: number): boolean {
-    return this.rows.at(idx).valid ? false : true;
+    return !this.rows.at(idx).valid;
   }
 
   onFocus(): void {
     /***
-    * @description: another way to set autofocus: OnPush
-    * @issues: delete the first item, it returns this.focusInput.first is undefined
-      this.focusInput.changes.subscribe(() => {
+     * @description: another way to set autofocus: OnPush
+     * @issues: delete the first item, it returns this.focusInput.first is undefined
+     this.focusInput.changes.subscribe(() => {
         return this.focusInput.last.nativeElement.focus();
       });
-    */
+     */
 
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
@@ -132,7 +142,7 @@ export class AdvancedCrudComponent implements OnInit {
     return this.rowValue = values;
   }
 
-  private get rows(): FormArray {
+  get rows(): FormArray {
     return this.form.get('rows') as FormArray;
   }
 

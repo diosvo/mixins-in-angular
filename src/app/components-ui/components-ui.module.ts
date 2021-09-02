@@ -11,9 +11,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthModule } from '@auth/auth.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
-import { MenuItemModule } from '../home/components/menu-item/menu-item.module';
 import { ComponentsUiRoutingModule } from './components-ui-routing.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
+import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { ListComponentUiComponent } from './list-component-ui.component';
 
     FormsModule,
     ReactiveFormsModule,
-    
+
     AuthModule,
     AlertModule,
     MenuItemModule,

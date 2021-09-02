@@ -1,25 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IGroupValue } from '@home/models/search.model';
+import { SearchService } from '@home/services/search.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { IGroupValue } from '../home/models/search.model';
-import { SearchService } from '../home/services/search.service';
 
 @Component({
   selector: 'list-component-ui',
   templateUrl: './list-component-ui.component.html',
   styles: [`
-  @media screen and (max-width: 600px) {
-    .panel-container {
-      display: block;
-        
+    @media screen and (max-width: 600px) {
+      .panel-container {
+        display: block;
+      }
+
       .filter-group {
         width: 100%;
       }
-    }
-  }`]
+    }`]
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
@@ -56,7 +56,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
@@ -65,16 +65,16 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
         }
         return;
       });
-    this.onFormChanges();
+    await this.onFormChanges();
     this.onFilters();
   }
 
   /**
-  * @description: Search
-  */
+   * @description: Search
+   */
 
-  onFormChanges(): void {
-    this.componentsForm.valueChanges
+  async onFormChanges(): Promise<void> {
+    await this.componentsForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe(_ => {
         this.onFilters();
@@ -96,15 +96,16 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
           .filter(item => item.groupDetails.length > 0)
         ),
         tap({
-          next: (data: Array<IGroupValue>) => setTimeout(() => this.emptyMessage = data.length === 0 ? 'No item were found to match your search/filters' : null),
+          next: (data: Array<IGroupValue>) => this.emptyMessage = data.length ===
+          0 ? 'No item were found to match your search/filters' : null,
           error: () => this.errorMessage = 'An error occurred. Please try again!'
         }),
         takeUntil(this.destroyed$)
       );
   }
 
-  updateParams() {
-    this.router.navigate([], {
+  async updateParams(): Promise<void> {
+    await this.router.navigate([], {
       relativeTo: this.route,
       queryParams: this.componentsForm.value
     });
@@ -112,7 +113,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   selectedChip($event: string): void {
     this.group.setValue($event);
-    this.snackbar.info(`Filter by ${$event[0].toUpperCase() + $event.slice(1)} component was applied.`);
+    this.snackbar.info(`Filter by ${ $event[ 0 ].toUpperCase() + $event.slice(1) } component was applied.`);
   }
 
   cleanQuery(): void {
@@ -130,7 +131,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = this.primitiveFilters ? false : true;
+    return this.showFilterIcon = !this.primitiveFilters;
   }
 
   private get primitiveFilters(): boolean {

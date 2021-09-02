@@ -57,7 +57,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.route.queryParams
+    await this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
         if ((params.query && params.group) !== undefined) {
@@ -70,7 +70,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description: Search
+   * @description Search
    */
 
   async onFormChanges(): Promise<void> {
@@ -96,8 +96,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
           .filter(item => item.groupDetails.length > 0)
         ),
         tap({
-          next: (data: Array<IGroupValue>) => this.emptyMessage = data.length ===
-          0 ? 'No item were found to match your search/filters' : null,
+          next: (data: Array<IGroupValue>) =>
+            this.emptyMessage = data.length === 0 ? 'No item were found to match your search/filters' : null,
           error: () => this.errorMessage = 'An error occurred. Please try again!'
         }),
         takeUntil(this.destroyed$)

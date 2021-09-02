@@ -1,10 +1,5 @@
-<mat-progress-bar
-  *ngIf="loading$ | async"
-  mode="indeterminate"
-></mat-progress-bar>
-<alert-message *ngIf="errorMessage" type="error">
-  {{ errorMessage }}
-</alert-message>
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+<alert-message *ngIf="errorMessage" type="error">{{ errorMessage }}</alert-message>
 
 <!-- Search -->
 <ng-container *ngIf="(loading$ | async) === false">

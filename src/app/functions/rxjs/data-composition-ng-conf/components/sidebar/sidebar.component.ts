@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EFunctions, EUrl } from '@home/models/url.enum';
 import { ProductsService } from '@lib/services/products/products.service';
 import { tap } from 'rxjs/operators';
-import { EFunctions, EUrl } from 'src/app/home/models/url.enum';
 
 @Component({
   selector: 'data-composition-sidebar',
@@ -10,17 +10,15 @@ import { EFunctions, EUrl } from 'src/app/home/models/url.enum';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
-  messageError: string;
+  errorMessage: string;
 
   products$ = this.productsService
     .all$
     .pipe(
       tap({
-        error: () => this.messageError = 'An error occurred. Please try again.!'
+        error: () => this.errorMessage = 'An error occurred. Please try again.!'
       })
     );
-
-  selectedProduct = this.productsService.productSelectedAction$;
 
   constructor(
     private router: Router,
@@ -39,7 +37,7 @@ export class SidebarComponent implements OnInit {
     this.productsService.refreshData();
   }
 
-  onSelected(productId: number): void {
-    this.router.navigate([`${EUrl.FUNCTION}/${EFunctions.RXJS}/data-composition-ng-conf`, productId]);
+  async onSelected(productId: number): Promise<void> {
+    await this.router.navigate([`${ EUrl.FUNCTION }/${ EFunctions.RXJS }/data-composition-ng-conf`, productId]);
   }
 }

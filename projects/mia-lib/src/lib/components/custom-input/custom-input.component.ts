@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { MatFormFieldAppearance } from "@angular/material/form-field";
 
 @Component({
   selector: 'custom-input',
@@ -18,17 +19,18 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
     }
   ],
   styles: [`
-  .custom-input-icon-suffix {
-    position: absolute;
-    top     : -1.25rem;
-    right   : -0.25rem;
-  }`]
+    .custom-input-icon-suffix {
+      position: absolute;
+      top: -1.25rem;
+      right: -0.25rem;
+    }
+  `]
 })
 
 export class CustomInputComponent implements ControlValueAccessor, Validator {
   // Field
-  @Input() appearance = 'outline';
   @Input() style = 'width: 100%';
+  @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   // Input
   @Input() type!: string;

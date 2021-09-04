@@ -1,139 +1,144 @@
 <!-- 💥 shortcut URL: http://localhost:4200/web-ui/table/advanced-crud -->
-<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 
-<div class="bg-white p-3 m-3 bd-auto">
-  <div class="d-flex jc-between ai-center">
-    <h2 [style.margin]="0">Categories</h2>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="addNewRow()"
-      [disabled]="form.invalid"
-    >
-      Add New Row
-    </button>
+<ng-template #loadingTmpl>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
+
+<ng-container *ngIf="category$ | async; else loadingTmpl">
+  <div class="bg-white p-3 m-3 bd-auto">
+    <div class="d-flex jc-between ai-center">
+      <h2 [style.margin]="0">Categories</h2>
+      <button
+        (click)="addNewRow()"
+        [disabled]="form.invalid"
+        color="primary"
+        mat-flat-button
+      >
+        Add New Row
+      </button>
+    </div>
+
+    <!-- Table -->
+    <form [formGroup]="form">
+      <ng-container formArrayName="rows">
+        <table
+          [dataSource]="dataSource"
+          [style.border]="'1px solid lightgray'"
+          class="width-100 mt-2 bd-auto"
+          id="mat-table"
+          mat-table
+        >
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell>Category ID</th>
+            <td
+              *matCellDef="let element; let idx = index"
+              [formGroup]="element"
+              mat-cell
+            >
+              <custom-input
+                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
+                [readonly]="!rows.value[idx].isEditable"
+                [style]="'width: 90%'"
+                formControlName="categoryId"
+                type="text"
+              ></custom-input>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell>Category Name</th>
+            <td
+              *matCellDef="let element; let idx = index"
+              [formGroup]="element"
+              mat-cell
+            >
+              <custom-input
+                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
+                [readonly]="!rows.value[idx].isEditable"
+                [style]="'width: 90%'"
+                formControlName="categoryName"
+                type="text"
+              ></custom-input>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="action">
+            <th *matHeaderCellDef [style.text-align]="'center'" mat-header-cell>
+              Actions
+            </th>
+            <td
+              *matCellDef="let element; let idx = index"
+              [formGroup]="element"
+              [style.text-align]="'center'"
+              mat-cell
+            >
+              <button
+                (click)="saveChanges(idx)"
+                *ngIf="rows.value[idx].isEditable"
+                [disabled]="isValidRow(idx)"
+                color="primary"
+                mat-icon-button
+                matTooltip="Save Changes"
+                matTooltipPosition="left"
+              >
+                <mat-icon>check_circle</mat-icon>
+              </button>
+
+              <button
+                (click)="cancelChanges(idx)"
+                *ngIf="rows.value[idx].isEditable"
+                [style.margin-left.rem]="0.5"
+                color="warn"
+                mat-icon-button
+                matTooltip="Cancel Changes"
+                matTooltipPosition="right"
+              >
+                <mat-icon>cancel</mat-icon>
+              </button>
+
+              <button
+                (click)="editItem(idx)"
+                *ngIf="!rows.value[idx].isEditable"
+                [disabled]="isValidRow(idx)"
+                color="primary"
+                mat-icon-button
+                matTooltip="Edit"
+                matTooltipPosition="left"
+              >
+                <mat-icon>swap_horizontal_circle</mat-icon>
+              </button>
+
+              <button
+                (click)="deleteItem(idx)"
+                *ngIf="!rows.value[idx].isEditable"
+                [style.margin-left.rem]="0.5"
+                color="warn"
+                mat-icon-button
+                matTooltip="Delete"
+                matTooltipPosition="right"
+              >
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <tr *matNoDataRow class="mat-row text-center">
+            <td class="mat-cell" colspan="3">No data found.</td>
+          </tr>
+        </table>
+
+        <!-- Paginator -->
+        <mat-paginator
+          [length]="dataSource.data.length"
+          [pageSizeOptions]="[2, 4]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </ng-container>
+    </form>
   </div>
-
-  <!-- Table -->
-  <form [formGroup]="form">
-    <ng-container formArrayName="rows">
-      <table
-        id="mat-table"
-        mat-table
-        [dataSource]="dataSource"
-        class="width-100 mt-2 bd-auto"
-        [style.border]="'1px solid lightgray'"
-      >
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef>Category ID</th>
-          <td
-            mat-cell
-            *matCellDef="let element; let idx = index"
-            [formGroup]="element"
-          >
-            <custom-input
-              type="text"
-              [style]="'width: 90%'"
-              formControlName="categoryId"
-              [readonly]="!rows.value[idx].isEditable"
-              [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-            ></custom-input>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Category Name</th>
-          <td
-            mat-cell
-            *matCellDef="let element; let idx = index"
-            [formGroup]="element"
-          >
-            <custom-input
-              type="text"
-              [style]="'width: 90%'"
-              formControlName="categoryName"
-              [readonly]="!rows.value[idx].isEditable"
-              [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-            ></custom-input>
-          </td>
-        </ng-container>
-
-        <!-- Actions -->
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef [style.text-align]="'center'">
-            Actions
-          </th>
-          <td
-            mat-cell
-            [formGroup]="element"
-            *matCellDef="let element; let idx = index"
-            [style.text-align]="'center'"
-          >
-            <button
-              color="primary"
-              mat-icon-button
-              *ngIf="rows.value[idx].isEditable"
-              matTooltip="Save Changes"
-              matTooltipPosition="left"
-              (click)="saveChanges(idx)"
-              [disabled]="isValidRow(idx)"
-            >
-              <mat-icon>check_circle</mat-icon>
-            </button>
-
-            <button
-              color="warn"
-              mat-icon-button
-              *ngIf="rows.value[idx].isEditable"
-              matTooltip="Cancel Changes"
-              matTooltipPosition="right"
-              (click)="cancelChanges(idx)"
-              [style.margin-left.rem]="0.5"
-            >
-              <mat-icon>cancel</mat-icon>
-            </button>
-
-            <button
-              color="primary"
-              mat-icon-button
-              *ngIf="!rows.value[idx].isEditable"
-              matTooltip="Edit"
-              matTooltipPosition="left"
-              (click)="editItem(idx)"
-              [disabled]="isValidRow(idx)"
-            >
-              <mat-icon>swap_horizontal_circle</mat-icon>
-            </button>
-
-            <button
-              color="warn"
-              mat-icon-button
-              *ngIf="!rows.value[idx].isEditable"
-              matTooltip="Delete"
-              matTooltipPosition="right"
-              (click)="deleteItem(idx)"
-              [style.margin-left.rem]="0.5"
-            >
-              <mat-icon>remove_circle</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-        <tr class="mat-row text-center" *matNoDataRow>
-          <td class="mat-cell" colspan="3">No data found.</td>
-        </tr>
-      </table>
-
-      <!-- Paginator -->
-      <mat-paginator
-        [length]="dataSource.data.length"
-        [pageSizeOptions]="[2, 4]"
-        showFirstLastButtons
-      >
-      </mat-paginator>
-    </ng-container>
-  </form>
-</div>
+</ng-container>

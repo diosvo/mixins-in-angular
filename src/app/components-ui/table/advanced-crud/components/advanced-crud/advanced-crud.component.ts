@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   NgZone,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
@@ -13,21 +14,20 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ICategory } from '@lib/models/category';
 import { CategoryService } from '@lib/services/category/category.service';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-advanced-crud',
   templateUrl: './advanced-crud.component.html',
-  styles: [`
-    .mat-header-row {
-      background-color: #F5F6FA;
-    }
-  `],
+  styleUrls: ['./advanced-crud.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AdvancedCrudComponent implements OnInit {
+export class AdvancedCrudComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource = new MatTableDataSource<unknown>(null);
+  dataSource = new MatTableDataSource<unknown>([]);
+  category$: Observable<Array<ICategory>>;
 
   form: FormGroup = this.fb.group({
     rows: this.fb.array([])
@@ -35,7 +35,7 @@ export class AdvancedCrudComponent implements OnInit {
   isEdit: boolean;
   rowValue: ICategory;
 
-  loading = true;
+  private destroy$ = new Subject();
 
   @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
   @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
@@ -52,25 +52,27 @@ export class AdvancedCrudComponent implements OnInit {
   }
 
   getCategories(): void {
-    this.service.all().subscribe({
-      next: (data: Array<ICategory>) => {
-        this.form = this.fb.group({
-          rows: this.fb.array(data.map(item =>
-            this.fb.group({
-              categoryId: item.categoryId,
-              categoryName: item.categoryName,
-              isEditable: [false]
-            })
-          ))
-        });
-        this.dataSource = new MatTableDataSource(this.rows.controls);
-      },
-      complete: () => this.loading = false
-    });
+    this.category$ = this.service.all().pipe(
+      tap({
+        next: (data) => {
+          this.form = this.fb.group({
+            rows: this.fb.array(data.map(item =>
+              this.fb.group({
+                categoryId: item.categoryId,
+                categoryName: item.categoryName,
+                isEditable: [false]
+              })
+            ))
+          });
+          this.dataSource = new MatTableDataSource(this.rows.controls);
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
   /**
-   * @description: adding new row
+   * @description Adding new row
    */
 
   addNewRow(): void {
@@ -119,7 +121,7 @@ export class AdvancedCrudComponent implements OnInit {
   }
 
   onFocus(): void {
-    /***
+    /**
      * @description: another way to set autofocus: OnPush
      * @issues: delete the first item, it returns this.focusInput.first is undefined
      this.focusInput.changes.subscribe(() => {
@@ -152,5 +154,11 @@ export class AdvancedCrudComponent implements OnInit {
       categoryName: [null, Validators.required],
       isEditable: [true]
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }

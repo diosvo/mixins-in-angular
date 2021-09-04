@@ -2,8 +2,8 @@ import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Observable, race, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SnackbarComponent } from '../../components/snackbar/snackbar.component';
-import { MessageType } from '../../models/alert';
+import { MessageType } from "@lib/models/alert";
+import { SnackbarComponent } from "@lib/components/snackbar/snackbar.component";
 
 @Injectable({
   providedIn: 'root'
@@ -32,22 +32,22 @@ export class SnackbarService {
 
   success(message: string): void {
     this.type = 'success';
-    return this.show(message, this.getStyles(this.type));
+    return this.show(message, SnackbarService.getStyles(this.type));
   }
 
   info(message: string): void {
     this.type = 'info';
-    return this.show(message, this.getStyles(this.type));
+    return this.show(message, SnackbarService.getStyles(this.type));
   }
 
   warning(message: string): void {
     this.type = 'warning';
-    return this.show(message, this.getStyles(this.type));
+    return this.show(message, SnackbarService.getStyles(this.type));
   }
 
   error(message: string): void {
     this.type = 'error';
-    return this.show(message, this.getStyles(this.type));
+    return this.show(message, SnackbarService.getStyles(this.type));
   }
 
   private show(message: string, panelClasses: Array<string>): void {
@@ -69,7 +69,7 @@ export class SnackbarService {
     });
   }
 
-  private getStyles(type: MessageType): Array<string> {
-    return [`bg-${type}`, `bd-${type}`];
+  private static getStyles(type: MessageType): Array<string> {
+    return [`bg-${ type }`, `bd-${ type }`];
   }
 }

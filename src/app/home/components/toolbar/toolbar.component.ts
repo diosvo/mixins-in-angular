@@ -10,25 +10,18 @@ import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-d
   templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {
-  isLoggedIn = true;
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private authService: AuthService,
-  ) {
-    this.authService.isLoggedIn.subscribe({
-      next: (isLoggedIn: boolean) => {
-        this.isLoggedIn = isLoggedIn;
-      }
-    });
-  }
+    readonly authService: AuthService,
+  ) { }
 
   openLoginDialog(): void {
     this.dialog.open(LoginComponent);
   }
 
-  openLogoutDialog(): void {
+  async openLogoutDialog(): Promise<void> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         header: 'logout',
@@ -39,7 +32,7 @@ export class ToolbarComponent {
       width: '500px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    await dialogRef.afterClosed().subscribe(result => {
       if (!!result) {
         this.authService.logout();
         this.router.navigate(['']);

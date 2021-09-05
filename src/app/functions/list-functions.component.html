@@ -1,13 +1,8 @@
-<mat-progress-bar
-  *ngIf="loading$ | async"
-  mode="indeterminate"
-></mat-progress-bar>
-<alert-message *ngIf="errorMessage" type="error">
-  {{ errorMessage }}
-</alert-message>
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+<alert-message *ngIf="errorMessage" type="error">{{ errorMessage }}</alert-message>
 
 <!-- Search -->
-<ng-container>
+<ng-container *ngIf="(loading$ | async) === false">
   <mat-accordion>
     <mat-expansion-panel>
       <!-- Header -->
@@ -32,7 +27,7 @@
       <ng-template matExpansionPanelContent>
         <form [formGroup]="functionsForm" class="panel-container d-flex gap-1">
           <!-- Filter by Group Name -->
-          <mat-form-field id="search-input" class="filter-group">
+          <mat-form-field class="search-input filter-group">
             <mat-label>Components</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
@@ -55,9 +50,9 @@
           </mat-form-field>
 
           <!-- Search by Name -->
-          <mat-form-field id="search-input" class="width-100">
+          <mat-form-field class="search-input width-100">
             <mat-label>What are you looking for today...</mat-label>
-            <input matInput autocomplete="off" formControlName="query" />
+            <input matInput autocomplete="off" formControlName="query"/>
             <button
               matSuffix
               mat-icon-button
@@ -76,12 +71,15 @@
 
 <!-- Fetch Data -->
 <ng-container [ngTemplateOutlet]="noResults">
-  <menu-item [data]="filteredData$"></menu-item>
+  <menu-item
+    [data]="filteredData$"
+    (selectedChip)="selectedChip($event)"
+  ></menu-item>
 
   <ng-template #noResults>
     <div *ngIf="emptyMessage" class="text-center fs-16">
       <span>{{ emptyMessage }}</span>
-      <br class="my-1" />
+      <br class="my-1"/>
       <a
         (click)="cleanFilters($event)"
         class="text-light-blue text-deco-underline cursor-pointer"

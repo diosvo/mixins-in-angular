@@ -1,11 +1,5 @@
 .object-fit {
-    &-cover {
-        object-fit: cover;
-    }
-}
-
-.clip-path {
-    &-circle {
-        clip-path: circle(50% at 50% 50%);
-    }
+  &-cover {
+    object-fit: cover;
+  }
 }

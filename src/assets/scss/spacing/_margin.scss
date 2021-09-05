@@ -1,54 +1,54 @@
-$maximum_size : 8;
+$maximum_size: 8;
 
 @for $i from 0 through $maximum_size {
 
-    .m-#{$i} {
-        margin: 0.5rem * $i;
-    }
+  .m-#{$i} {
+    margin: 0.5rem * $i;
+  }
 
-    .mt-#{$i} {
-        margin-top: 0.5rem * $i;
-    }
+  .mt-#{$i} {
+    margin-top: 0.5rem * $i;
+  }
 
-    .mr-#{$i} {
-        margin-right: 0.5rem * $i;
-    }
+  .mr-#{$i} {
+    margin-right: 0.5rem * $i;
+  }
 
-    .mb-#{$i} {
-        margin-bottom: 0.5rem * $i;
-    }
+  .mb-#{$i} {
+    margin-bottom: 0.5rem * $i;
+  }
 
-    .ml-#{$i} {
-        margin-left: 0.5rem * $i;
-    }
+  .ml-#{$i} {
+    margin-left: 0.5rem * $i;
+  }
 
-    .mx-#{$i} {
-        margin-right: 0.5rem * $i;
-        margin-left : 0.5rem * $i;
-    }
+  .mx-#{$i} {
+    margin-right: 0.5rem * $i;
+    margin-left: 0.5rem * $i;
+  }
 
-    .my-#{$i} {
-        margin-top   : 0.5rem * $i;
-        margin-bottom: 0.5rem * $i;
-    }
+  .my-#{$i} {
+    margin-top: 0.5rem * $i;
+    margin-bottom: 0.5rem * $i;
+  }
 }
 
 .m-0-auto {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .mt-auto {
-    margin-top: auto;
+  margin-top: auto;
 }
 
 .mb-auto {
-    margin-bottom: auto;
+  margin-bottom: auto;
 }
 
 .mr-auto {
-    margin-right: auto;
+  margin-right: auto;
 }
 
 .ml-auto {
-    margin-left: auto;
+  margin-left: auto;
 }

@@ -1,7 +1,7 @@
 {
   "name": "mixins-in-angular",
   "author": "diosvo",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,37 +16,38 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~12.2.2",
+    "@angular/animations": "~12.2.3",
     "@angular/cdk": "^12.2.2",
-    "@angular/common": "~12.2.2",
-    "@angular/compiler": "~12.2.2",
-    "@angular/core": "~12.2.2",
-    "@angular/forms": "~12.2.2",
+    "@angular/common": "~12.2.3",
+    "@angular/compiler": "~12.2.3",
+    "@angular/core": "~12.2.3",
+    "@angular/forms": "~12.2.3",
     "@angular/material": "^12.2.2",
-    "@angular/platform-browser": "~12.2.2",
-    "@angular/platform-browser-dynamic": "~12.2.2",
-    "@angular/router": "~12.2.2",
+    "@angular/platform-browser": "~12.2.3",
+    "@angular/platform-browser-dynamic": "~12.2.3",
+    "@angular/router": "~12.2.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^12.2.2",
+    "@angular-devkit/build-angular": "^12.2.3",
     "@angular-eslint/builder": "12.3.1",
     "@angular-eslint/eslint-plugin": "12.3.1",
     "@angular-eslint/eslint-plugin-template": "12.3.1",
     "@angular-eslint/schematics": "12.3.1",
     "@angular-eslint/template-parser": "12.3.1",
-    "@angular/cli": "^12.2.2",
-    "@angular/compiler-cli": "~12.2.2",
+    "@angular/cli": "^12.2.3",
+    "@angular/compiler-cli": "~12.2.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
+    "@typescript-eslint/experimental-utils": "^4.30.0",
     "@typescript-eslint/parser": "4.28.2",
     "eslint": "^7.26.0",
     "gsap": "^3.7.1",
-    "jest": "^27.0.6",
-    "jest-preset-angular": "^9.0.6",
+    "jest": "^27.1.0",
+    "jest-preset-angular": "^9.0.7",
     "ng-packagr": "^12.1.0",
     "typescript": "^4.3.5",
     "webpack-bundle-analyzer": "^4.4.2"
@@ -56,9 +57,16 @@
     "setupFilesAfterEnv": [
       "<rootDir>/jest-config.ts"
     ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "<rootDir>/dist/"
+    "moduleNameMapper": {
+      "@lib(.*)": "<rootDir>/projects/mia-lib/src/lib/$1",
+      "@env(.*)": "<rootDir>/src/environments/$1",
+      "@auth(.*)": "<rootDir>/src/app/auth/$1",
+      "@home(.*)": "<rootDir>/src/app/home/$1"
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "projects/mia-lib"
     ],
     "globals": {
       "ts-jest": {

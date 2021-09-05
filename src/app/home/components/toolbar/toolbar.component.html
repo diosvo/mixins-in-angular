@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="d-flex">
+<mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-100">
   <mat-toolbar-row>
     <button
       mat-button
@@ -20,7 +20,7 @@
     <a
       title="Login"
       mat-icon-button
-      *ngIf="!isLoggedIn"
+      *ngIf="(authService.isLoggedIn | async) === false"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLoginDialog()"
@@ -28,9 +28,9 @@
       <mat-icon>public</mat-icon>
     </a>
     <a
-      mat-icon-button
-      *ngIf="isLoggedIn"
       title="Logged In"
+      mat-icon-button
+      *ngIf="(authService.isLoggedIn | async) === true"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLogoutDialog()"

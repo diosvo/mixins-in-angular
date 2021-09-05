@@ -1,10 +1,12 @@
+@use 'palette';
+
 @media screen and (min-width: 1680px) {
   .template-container {
     grid-template-columns: repeat(5, 1fr);
   }
 }
 
-@media screen and (min-width: 1200px)and (max-width: 1680px) {
+@media screen and (min-width: 1200px) and (max-width: 1680px) {
   .template-container {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -30,4 +32,22 @@
 
 .button-description {
   margin: -0.5rem -0.5rem 0 0;
+}
+
+// Chips custom
+.mat-chip.mat-standard-chip {
+  color: palette.$dark-blue;
+  border: 1px solid palette.$dark-blue;
+}
+
+.mat-chip.mat-standard-chip {
+  background-color: palette.$white;
+
+  &::after {
+    background: palette.$light-blue;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }

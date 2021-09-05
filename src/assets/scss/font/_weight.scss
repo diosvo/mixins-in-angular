@@ -1,17 +1,17 @@
 @mixin fw($n) {
-    font-weight: $n;
+  font-weight: $n;
 }
 
 .fw {
-    &-400 {
-        @include fw(400);
-    }
+  &-400 {
+    @include fw(400);
+  }
 
-    &-500 {
-        @include fw(500);
-    }
+  &-500 {
+    @include fw(500);
+  }
 
-    &-bold {
-        font-weight: bold;
-    }
+  &-bold {
+    font-weight: bold;
+  }
 }

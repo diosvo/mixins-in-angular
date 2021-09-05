@@ -1,19 +1,33 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { slideInOut } from '@lib/animations/animations';
 import { ICategory } from '@lib/models/category';
+import { CategoryService } from '@lib/services/category/category.service';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-advanced-crud',
   templateUrl: './advanced-crud.component.html',
-  animations: [slideInOut],
+  styleUrls: ['./advanced-crud.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AdvancedCrudComponent  {
+export class AdvancedCrudComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource = new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<unknown>([]);
+  category$: Observable<Array<ICategory>>;
 
   form: FormGroup = this.fb.group({
     rows: this.fb.array([])
@@ -21,23 +35,44 @@ export class AdvancedCrudComponent  {
   isEdit: boolean;
   rowValue: ICategory;
 
+  private destroy$ = new Subject();
+
   @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
   @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
 
-  visibleBox = false;
-
   constructor(
-    private fb: FormBuilder,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private service: CategoryService
   ) { }
 
-  /* ngOnInit(): void {
-    // problem: cant not path value between form array with response data from service
-  } */
+  ngOnInit(): void {
+    this.getCategories();
+  }
+
+  getCategories(): void {
+    this.category$ = this.service.all().pipe(
+      tap({
+        next: (data) => {
+          this.form = this.fb.group({
+            rows: this.fb.array(data.map(item =>
+              this.fb.group({
+                categoryId: item.categoryId,
+                categoryName: item.categoryName,
+                isEditable: [false]
+              })
+            ))
+          });
+          this.dataSource = new MatTableDataSource(this.rows.controls);
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
+  }
 
   /**
-   * @description: adding new row
+   * @description Adding new row
    */
 
   addNewRow(): void {
@@ -49,7 +84,7 @@ export class AdvancedCrudComponent  {
   editItem(idx: number): void {
     this.isEdit = true;
     this.rowValue = this.getRowValue(idx);
-    this.rows.at(idx).get('isEditable').patchValue(false);
+    this.rows.at(idx).get('isEditable').patchValue(true);
   }
 
   deleteItem(idx: number): void {
@@ -58,7 +93,7 @@ export class AdvancedCrudComponent  {
   }
 
   saveChanges(idx: number): void {
-    this.rows.at(idx).get('isEditable').patchValue(true);
+    this.rows.at(idx).get('isEditable').patchValue(false);
   }
 
   cancelChanges(idx: number): void {
@@ -72,27 +107,27 @@ export class AdvancedCrudComponent  {
           categoryId: this.rowValue.categoryId,
           categoryName: this.rowValue.categoryName,
         });
-        this.rows.at(idx).get('isEditable').patchValue(true);
+        this.rows.at(idx).get('isEditable').patchValue(false);
         break;
       }
       default:
-        this.rows.at(idx).get('isEditable').patchValue(true);
+        this.rows.at(idx).get('isEditable').patchValue(false);
         break;
     }
   }
 
   isValidRow(idx: number): boolean {
-    return this.rows.at(idx).valid ? false : true;
+    return !this.rows.at(idx).valid;
   }
 
   onFocus(): void {
-    /***
-    * @description: another way to set autofocus: OnPush
-    * @issues: delete the first item, it returns this.focusInput.first is undefined
-      this.focusInput.changes.subscribe(() => {
+    /**
+     * @description: another way to set autofocus: OnPush
+     * @issues: delete the first item, it returns this.focusInput.first is undefined
+     this.focusInput.changes.subscribe(() => {
         return this.focusInput.last.nativeElement.focus();
       });
-    */
+     */
 
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
@@ -102,14 +137,6 @@ export class AdvancedCrudComponent  {
     });
   }
 
-  onEnter(idx: number, event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !this.isValidRow(idx)) {
-      this.saveChanges(idx);
-      event.preventDefault();
-    }
-    return;
-  }
-
   private getRowValue(idx: number): ICategory {
     const values = this.rows.at(idx).value;
     delete values.isEditable;
@@ -117,7 +144,7 @@ export class AdvancedCrudComponent  {
     return this.rowValue = values;
   }
 
-  private get rows(): FormArray {
+  get rows(): FormArray {
     return this.form.get('rows') as FormArray;
   }
 
@@ -125,30 +152,13 @@ export class AdvancedCrudComponent  {
     return this.fb.group({
       categoryId: [null, Validators.required],
       categoryName: [null, Validators.required],
-      isEditable: [false]
+      isEditable: [true]
     });
   }
 
-  /**
-   * @description: searching related
-   */
-
-  openSearchBox(): void {
-    this.visibleBox = !this.visibleBox;
-  }
-
-  onSearch(filterValue: string): void {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  onSearchFocus(): void {
-    this.ngZone.runOutsideAngular(() => {
-      setTimeout(() => {
-        if (this.searchInput) {
-          this.searchInput.nativeElement.focus();
-          this.cdr.detectChanges();
-        }
-      });
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }

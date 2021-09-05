@@ -10,10 +10,11 @@
           <button
             mat-icon-button
             class="button-description"
+            [matTooltipPosition]="'below'"
             [matTooltip]="item.description ? item.description : 'Updating...'"
           >
             <mat-icon
-              class="f-20 text-secondary text-hover-light-blue opacity-0.8"
+              class="f-20 text-secondary text-hover-dark-blue opacity-0.8"
             >
               info_outline
             </mat-icon>
@@ -22,13 +23,16 @@
 
         <mat-card-subtitle>
           <mat-chip-list aria-label="Group name">
-            <mat-chip class="f-13">{{ group.groupName | titlecase }}</mat-chip>
+            <mat-chip class="f-13" (click)="onSelect(group.groupName)">
+              {{ group.groupName | titlecase }}
+            </mat-chip>
           </mat-chip-list>
         </mat-card-subtitle>
       </ng-container>
 
       <!-- Main -->
       <img
+        alt="Item image"
         mat-card-image
         class="cursor-pointer"
         [src]="item.image ? item.image : emptyImg"

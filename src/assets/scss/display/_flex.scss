@@ -1,122 +1,122 @@
 @mixin flex($n) {
-    flex: $n;
+  flex: $n;
 }
 
 @mixin flex-grow($n) {
-    flex-grow: $n;
+  flex-grow: $n;
 }
 
 @mixin flex-shrink($n) {
-    flex-shrink: $n;
+  flex-shrink: $n;
 }
 
 @mixin gap($n) {
-    gap: $n * 1rem;
+  gap: $n * 1rem;
 }
 
 .jc {
-    &-center {
-        justify-content: center;
-    }
+  &-center {
+    justify-content: center;
+  }
 
-    &-between {
-        justify-content: space-between;
-    }
+  &-between {
+    justify-content: space-between;
+  }
 
-    &-space-around {
-        justify-content: space-around;
-    }
+  &-space-around {
+    justify-content: space-around;
+  }
 
-    &-flex-end {
-        justify-content: flex-end;
-    }
+  &-flex-end {
+    justify-content: flex-end;
+  }
 }
 
 .ai {
-    &-center {
-        align-items: center;
-    }
+  &-center {
+    align-items: center;
+  }
 
-    &-baseline {
-        align-items: baseline;
-    }
+  &-baseline {
+    align-items: baseline;
+  }
 
-    &-flex-end {
-        align-items: flex-end;
-    }
+  &-flex-end {
+    align-items: flex-end;
+  }
 }
 
 .as {
-    &-center {
-        align-self: center;
-    }
+  &-center {
+    align-self: center;
+  }
 }
 
 .flex-direction {
-    &-column {
-        flex-direction: column;
-    }
+  &-column {
+    flex-direction: column;
+  }
 
-    &-row {
-        flex-direction: row;
-    }
+  &-row {
+    flex-direction: row;
+  }
 }
 
 .flex-grow {
 
-    &-0 {
-        @include flex-grow(0)
-    }
+  &-0 {
+    @include flex-grow(0)
+  }
 
-    &-1 {
-        @include flex-grow(1)
-    }
+  &-1 {
+    @include flex-grow(1)
+  }
 
-    &-2 {
-        @include flex-grow(2)
-    }
+  &-2 {
+    @include flex-grow(2)
+  }
 }
 
 .flex-shrink {
-    &-0 {
-        @include flex-shrink(0)
-    }
+  &-0 {
+    @include flex-shrink(0)
+  }
 
-    &-1 {
-        @include flex-shrink(1)
-    }
+  &-1 {
+    @include flex-shrink(1)
+  }
 
-    &-2 {
-        @include flex-shrink(2)
-    }
+  &-2 {
+    @include flex-shrink(2)
+  }
 }
 
 .flex {
-    &-1 {
-        @include flex(1)
-    }
+  &-1 {
+    @include flex(1)
+  }
 
-    &-auto {
-        flex: 1 1 auto;
-    }
+  &-auto {
+    flex: 1 1 auto;
+  }
 }
 
 .flex {
-    &-wrap {
-        flex-wrap: wrap;
-    }
+  &-wrap {
+    flex-wrap: wrap;
+  }
 }
 
 .gap {
-    &-1 {
-        @include gap(1)
-    }
+  &-1 {
+    @include gap(1)
+  }
 
-    &-2 {
-        @include gap(2)
-    }
+  &-2 {
+    @include gap(2)
+  }
 
-    &-3 {
-        @include gap(3)
-    }
+  &-3 {
+    @include gap(3)
+  }
 }

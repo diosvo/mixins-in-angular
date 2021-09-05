@@ -1,70 +1,70 @@
 @mixin top($n) {
-    top: $n * 1rem;
+  top: $n * 1rem;
 }
 
 @mixin left($n) {
-    left: $n * 1rem;
+  left: $n * 1rem;
 }
 
 @mixin z-index($n) {
-    z-index: $n;
+  z-index: $n;
 }
 
 .position {
-    &-relative {
-        position: relative;
-    }
+  &-relative {
+    position: relative;
+  }
 
-    &-absolute {
-        position: absolute;
-    }
+  &-absolute {
+    position: absolute;
+  }
 
-    &-sticky {
-        position: sticky;
-    }
+  &-sticky {
+    position: sticky;
+  }
 
-    &-fixed {
-        position: fixed;
-    }
+  &-fixed {
+    position: fixed;
+  }
 }
 
 .top {
-    &-0 {
-        @include top(0);
-    }
+  &-0 {
+    @include top(0);
+  }
 
-    &-1 {
-        @include top(1);
-    }
+  &-1 {
+    @include top(1);
+  }
 }
 
 .left {
 
-    &-1 {
-        @include left(1);
-    }
+  &-1 {
+    @include left(1);
+  }
 }
 
 .z-index {
-    &-1 {
-        @include z-index(1);
-    }
+  &-1 {
+    @include z-index(1);
+  }
 
-    &-10 {
-        @include z-index(10);
-    }
+  &-10 {
+    @include z-index(10);
+  }
 
-    &-20 {
-        @include z-index(20);
-    }
+  &-20 {
+    @include z-index(20);
+  }
 
-    &-100 {
-        @include z-index(100);
-    }
+  &-100 {
+    @include z-index(100);
+  }
 }
 
 .fixed-auto-center {
-    top : 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

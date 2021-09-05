@@ -1,20 +1,20 @@
 <ng-container>
-  <label for="input" class="d-block mb-0.25">
+  <label *ngIf="label" class="d-block mb-0.25">
     <span
-      [ngClass]="{ 'title-required': showAsterisk }"
+      [class]="{ 'title-required': showAsterisk }"
       [innerHTML]="label"
     ></span>
   </label>
-  <mat-form-field class="width-100">
+  <mat-form-field [style]="style" [appearance]="appearance">
     <input
       matInput
-      [id]="name"
       [type]="type"
       autocomplete="off"
       [(ngModel)]="value"
       [pattern]="pattern"
       [required]="required"
       [disabled]="disabled"
+      [readonly]="readonly"
       [placeholder]="placeholder"
       (blur)="onTouched()"
     />

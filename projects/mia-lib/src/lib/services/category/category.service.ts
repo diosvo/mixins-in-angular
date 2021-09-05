@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
-import { ICategory } from '../../models/category';
+import { catchError, mergeMap, shareReplay } from 'rxjs/operators';
 import { BaseService } from '../base/base.service';
+import { ICategory } from '@lib/models/category';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService extends BaseService<ICategory>  {
+export class CategoryService extends BaseService<ICategory> {
   private refresh = new ReplaySubject<void>();
 
   /**
@@ -17,12 +17,12 @@ export class CategoryService extends BaseService<ICategory>  {
    * @tips refreshes the data from the backend server
    */
 
-  // Using refresh here instead of reassigning the value ensures that no references are lost.
+    // Using refresh here instead of reassigning the value ensures that no references are lost.
 
   all$: Observable<Array<ICategory>> =
     this.refresh.pipe(
       mergeMap(() => this.http.get<Array<ICategory>>('/assets/backend/data/category.json')),
-      catchError((_) => of(null))
+      catchError(_ => of(null))
     );
 
   constructor(private http: HttpClient) {
@@ -37,7 +37,11 @@ export class CategoryService extends BaseService<ICategory>  {
 
   all(): Observable<Array<ICategory>> {
     return this.http
-      .get<Array<ICategory>>('/assets/backend/data/category.json');
+      .get<Array<ICategory>>('/assets/backend/data/category.json')
+      .pipe(
+        shareReplay(),
+        catchError(_ => of(null))
+      );
   }
 
   // Refresh the data.

@@ -1,5 +1,5 @@
 <div class="d-flex ai-center jc-center flex-wrap gap-2 m-2" #el>
-  <ng-container *ngFor="let item of animatedCardList">
+  <ng-container *ngFor="let item of animatedCardList | async">
     <div class="card d-flex flex-direction-column w-300 h-300 bd-radius-25 cursor-pointer" [ngClass]="item.color">
       <div class="card-icon-header d-flex ai-center p-0 mt-2 ml-2">
         <div class="icon-container d-flex jc-center ai-center w-100 h-100 bg-white bd-radius-25 bs-dark">

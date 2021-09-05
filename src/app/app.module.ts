@@ -9,7 +9,8 @@ import { FakeBackendProvider } from '@backend/api/fake-be';
 import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeModule } from './home/home.module';
+import { FooterModule } from './home/components/footer/footer.module';
+import { ToolbarModule } from './home/components/toolbar/toolbar.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HomeModule } from './home/home.module';
     AppRoutingModule,
     HttpClientModule,
 
-    HomeModule,
+    FooterModule,
+    ToolbarModule,
     MatSnackBarModule,
     UnsavedChangesDialogModule
   ],

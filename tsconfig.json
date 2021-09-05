@@ -21,8 +21,14 @@
       "tslib": [
         "path/to/node_modules/tslib/tslib.d.ts"
       ],
+      "@env/*": [
+        "src/environments/*"
+      ],
       "@auth/*": [
         "src/app/auth/*"
+      ],
+      "@home/*": [
+        "src/app/home/*"
       ],
       "@lib/animations/*": [
         "projects/mia-lib/src/lib/animations/*"

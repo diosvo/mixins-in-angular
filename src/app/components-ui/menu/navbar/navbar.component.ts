@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 const navList = [
   {
@@ -23,7 +23,6 @@ const navList = [
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
 
@@ -39,7 +38,7 @@ export class NavbarComponent {
   get animate(): any {
     return {
       width: this.sizes.listItemWidth + 'px',
-      transform: `translateX(${this.sizes.translateX}px)`
+      transform: `translateX(${ this.sizes.translateX }px)`
     };
   }
 

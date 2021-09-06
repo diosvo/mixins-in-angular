@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
+import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -12,7 +12,6 @@ import { EUrl } from 'src/app/home/models/url.enum';
   selector: 'app-unsaved-form',
   templateUrl: './unsaved-form.component.html',
   providers: [DetectPermissionService],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
@@ -31,7 +30,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     private router: Router,
     private fb: FormBuilder,
     private snackbar: SnackbarService,
-    @Self() private detectPermission: DetectPermissionService,
+    @Self() readonly detectPermission: DetectPermissionService,
   ) { }
 
   ngOnInit(): void {
@@ -40,7 +39,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   private watchForChanges(): void {
-    // Deep-compare between Primitive Form Value & Form Value Changes 
+    // Deep-compare between Primitive Form Value & Form Value Changes
     combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
       .pipe(
         map(([prev, next]) => JSON.stringify(prev) === JSON.stringify(next)),
@@ -64,7 +63,11 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     }
     this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
-    this.router.navigate([url ?? EUrl.COMPONENT]);
+    this.redirectAfterSaving(url).then();
+  }
+
+  private async redirectAfterSaving(url: string): Promise<void> {
+    await this.router.navigate([url ?? EUrl.COMPONENT]);
   }
 
   private formState(): void {

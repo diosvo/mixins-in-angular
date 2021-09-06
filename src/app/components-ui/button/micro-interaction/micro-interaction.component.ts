@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-micro-interaction',
   templateUrl: './micro-interaction.component.html',
   styleUrls: ['./micro-interaction.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MicroInteractionComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Self } from '@angular/core';
+import { Component, Self } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
@@ -8,7 +8,6 @@ import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DetectPermissionService]
 })
 

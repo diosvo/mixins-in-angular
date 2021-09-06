@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { of } from 'rxjs';
 
@@ -45,7 +45,6 @@ const data: AnimatedCounterModel[] = [
   selector: 'app-animated-counter',
   templateUrl: './animated-counter.component.html',
   styleUrls: ['./animated-counter.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AnimatedCounterComponent implements AfterViewInit {

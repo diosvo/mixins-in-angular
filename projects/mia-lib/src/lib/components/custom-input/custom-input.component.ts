@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
-import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 
 @Component({
   selector: 'custom-input',
@@ -16,14 +16,7 @@ import { MatFormFieldAppearance } from "@angular/material/form-field";
       useExisting: forwardRef(() => CustomInputComponent),
       multi: true
     }
-  ],
-  styles: [`
-    .custom-input-icon-suffix {
-      position: absolute;
-      top: -1.25rem;
-      right: -0.25rem;
-    }
-  `]
+  ]
 })
 
 export class CustomInputComponent implements ControlValueAccessor, Validator {
@@ -79,7 +72,7 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
     this.disabled = isDisabled;
   }
 
-  validate(control: FormControl) {
+  validate(control: FormControl): FormControl {
     if (!this.control) {
       this.control = control;
       return null;

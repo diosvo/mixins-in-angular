@@ -24,11 +24,11 @@ $maximum_size: 8;
 
   .mx-#{$i} {
     margin-right: 0.5rem * $i;
-    margin-left: 0.5rem * $i;
+    margin-left : 0.5rem * $i;
   }
 
   .my-#{$i} {
-    margin-top: 0.5rem * $i;
+    margin-top   : 0.5rem * $i;
     margin-bottom: 0.5rem * $i;
   }
 }

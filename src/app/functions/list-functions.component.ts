@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IGroupValue } from '@home/models/search.model';
+import { SearchService } from '@home/services/search.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { IGroupValue } from '@home/models/search.model';
-import { SearchService } from '@home/services/search.service';
 
 @Component({
   selector: 'app-list-functions',
@@ -23,7 +23,7 @@ import { SearchService } from '@home/services/search.service';
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 
-  showFilterIcon = false;
+  showFilterIcon: boolean = false;
 
   functionsForm: FormGroup = this.fb.group({
     query: [''],
@@ -41,7 +41,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
       .pipe(
         filter(item => !!item),
         tap({
-          error: () => this.errorMessage = 'An error occurred. Please try again!'
+          error: (): string => this.errorMessage = 'An error occurred. Please try again!'
         }),
         takeUntil(this.destroyed$)
       );
@@ -96,7 +96,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
           .filter(item => item.groupDetails.length > 0)
         ),
         tap({
-          next: (data: Array<IGroupValue>) => setTimeout(_ => {
+          next: (data: Array<IGroupValue>): number => setTimeout(_ => {
             this.emptyMessage = data.length === 0 ? 'No item were found to match your search/filters' : null;
           }),
           error: () => this.errorMessage = 'An error occurred. Please try again!'
@@ -114,7 +114,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
 
   selectedChip($event: string): void {
     this.group.setValue($event);
-    this.snackbar.info(`Filter by ${ $event } was applied.`);
+    this.snackbar.info(`Filter by ${$event} was applied.`);
   }
 
   cleanQuery(): void {

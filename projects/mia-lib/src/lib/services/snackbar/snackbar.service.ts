@@ -1,9 +1,9 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { SnackbarComponent } from '@lib/components/snackbar/snackbar.component';
+import { MessageType } from '@lib/models/alert';
 import { Observable, race, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { MessageType } from "@lib/models/alert";
-import { SnackbarComponent } from "@lib/components/snackbar/snackbar.component";
 
 @Injectable({
   providedIn: 'root'

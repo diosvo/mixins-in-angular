@@ -114,7 +114,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   selectedChip($event: string): void {
     this.group.setValue($event);
-    this.snackbar.info(`Filter by ${ $event[ 0 ].toUpperCase() + $event.slice(1) } component was applied.`);
+    this.snackbar.info(`Filter by ${$event[0].toUpperCase() + $event.slice(1)} component was applied.`);
   }
 
   cleanQuery(): void {

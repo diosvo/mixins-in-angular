@@ -1,9 +1,7 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AuthService } from '@auth/services/auth.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { BaseAuth } from '../../models/auth.model';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +18,6 @@ export class LoginComponent {
   hidePassword = true;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: BaseAuth,
     private fb: FormBuilder,
     private authService: AuthService,
     private snackbar: SnackbarService
@@ -28,10 +25,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.snackbar.success('Login successfully!');
-        this.data = this.loginForm.value;
-      },
+      next: () => this.snackbar.success('Login successfully!'),
       error: () => this.snackbar.error('Something went wrong. Please try again!')
     });
   }

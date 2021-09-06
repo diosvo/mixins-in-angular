@@ -32,7 +32,7 @@ export class OrderFormComponent implements DeactivateComponent {
   constructor(
     private fb: FormBuilder,
     private snackbar: SnackbarService,
-    @Self() private detectPermission: DetectPermissionService,
+    @Self() readonly detectPermission: DetectPermissionService,
   ) { }
 
   canDeactivate(): boolean {

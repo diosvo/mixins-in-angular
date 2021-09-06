@@ -31,6 +31,7 @@
         <div class="flex-grow-1">
           <custom-input
             type="text"
+            [required]="true"
             formControlName="firstName"
             placeholder="First Name"
           ></custom-input>
@@ -38,6 +39,7 @@
         <div class="flex-grow-1">
           <custom-input
             type="text"
+            [required]="true"
             formControlName="lastName"
             placeholder="Last Name"
           ></custom-input>
@@ -51,11 +53,13 @@
       <div>
         <custom-input
           type="text"
+          [required]="true"
           formControlName="street"
           placeholder="Street Address"
         ></custom-input>
         <custom-input
           type="text"
+          [required]="true"
           formControlName="building"
           placeholder="Office, Suite, Apt, ..."
         ></custom-input>
@@ -66,6 +70,7 @@
           <custom-input
             label="City"
             type="text"
+            [required]="true"
             formControlName="city"
           ></custom-input>
         </div>
@@ -73,6 +78,7 @@
           <custom-input
             label="State"
             type="text"
+            [required]="true"
             formControlName="state"
             placeholder="Choose..."
           ></custom-input>
@@ -81,6 +87,7 @@
           <custom-input
             label="Zip"
             type="number"
+            [required]="true"
             formControlName="zip"
           ></custom-input>
         </div>

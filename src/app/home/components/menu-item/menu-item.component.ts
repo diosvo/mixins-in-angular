@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IGroupValue } from '../../models/search.model';
@@ -7,7 +7,6 @@ import { IGroupValue } from '../../models/search.model';
   selector: 'menu-item',
   styleUrls: ['./menu-item.component.scss'],
   templateUrl: './menu-item.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuItemComponent {
   @Input() data: Observable<Array<IGroupValue>>;
@@ -23,7 +22,7 @@ export class MenuItemComponent {
     await this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
   }
 
-  onSelect(groupName: string): void {    
+  onSelect(groupName: string): void {
     this.selectedChip.emit(groupName);
   }
 }

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { MatFormFieldAppearance } from "@angular/material/form-field";
 
 @Component({
   selector: 'custom-input',
   templateUrl: './custom-input.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

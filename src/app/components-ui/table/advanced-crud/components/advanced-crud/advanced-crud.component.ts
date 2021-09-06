@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -21,7 +20,6 @@ import { takeUntil, tap } from 'rxjs/operators';
   selector: 'app-advanced-crud',
   templateUrl: './advanced-crud.component.html',
   styleUrls: ['./advanced-crud.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AdvancedCrudComponent implements OnInit, OnDestroy {

@@ -1,17 +1,17 @@
 <div class="d-flex jc-between">
-  <h2 mat-dialog-title class="dialog-title">Unsaved Changes</h2>
+  <h2 mat-dialog-title>Unsaved Changes</h2>
   <button mat-icon-button class="close-button" mat-dialog-close>
     <span class="f-20">×</span>
   </button>
 </div>
-<mat-dialog-content class="mat-typography">
+<mat-dialog-content>
   You have unsaved changes. Do you want to save it?
 </mat-dialog-content>
-<mat-dialog-actions class="dialog-actions" align="end">
+<mat-dialog-actions align="end">
   <button
     color="warn"
-    mat-stroked-button
     cdkFocusInitial
+    mat-stroked-button
     (click)="onDiscard()"
     [mat-dialog-close]="true"
   >

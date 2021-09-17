@@ -54,6 +54,11 @@ describe('ListComponentUiComponent', () => {
     component = fixture.componentInstance;
   });
 
+  afterEach(() => {
+    jest.spyOn(component, 'ngOnDestroy');
+    fixture.destroy();
+  });
+
   test('should create', () => {
     expect(component).toBeTruthy();
   });

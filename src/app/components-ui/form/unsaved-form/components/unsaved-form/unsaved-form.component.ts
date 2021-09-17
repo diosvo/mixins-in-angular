@@ -56,7 +56,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     return this.onSubmit(url);
   }
 
-  onSubmit(url: string): void {
+  onSubmit(url?: string): void {
     if (this.unsavedForm.invalid) {
       this.snackbar.error('You need to provide all required information.');
       return;

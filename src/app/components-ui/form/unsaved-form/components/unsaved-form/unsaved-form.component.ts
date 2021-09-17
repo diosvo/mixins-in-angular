@@ -42,14 +42,14 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     // Deep-compare between Primitive Form Value & Form Value Changes
     combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
       .pipe(
-        map(([prev, next]) => JSON.stringify(prev) === JSON.stringify(next)),
-        startWith(true)
+        map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
+        startWith(false)
       )
       .subscribe(response => this.hasChanged = response);
   }
 
   canDeactivate(): boolean {
-    return this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
+    return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }
 
   saveChanges(url: string): void {

@@ -9,6 +9,6 @@ import { IDialogPart } from './confirm-dialog.model';
 export class ConfirmDialogComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) readonly data: { dialogPart: IDialogPart }
+    @Inject(MAT_DIALOG_DATA) readonly data: IDialogPart
   ) { }
 }

@@ -6,7 +6,7 @@
           <mat-icon>delete_outline</mat-icon>
         </button>
         <button
-          *ngIf="hasChanges$ | async"
+          *ngIf="hasChanged"
           color="accent"
           mat-stroked-button
           (click)="onReset()"
@@ -17,8 +17,8 @@
         <button
           mat-flat-button
           color="primary"
-          (click)="onSave()"
-          [disabled]="!form.valid || (hasChanges$ | async) === false"
+          (click)="saveChanges()"
+          [disabled]="!isReadyToSave()"
           [style.margin-left.px]="8"
         >
           Save

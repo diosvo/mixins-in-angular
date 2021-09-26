@@ -8,7 +8,7 @@ import { CrudInOneViewRoutingModule } from './crud-in-one-view-routing.module';
 import { CrudInOneViewComponent } from './crud-in-one-view.component';
 
 @NgModule({
-  declarations: [ CrudInOneViewComponent],
+  declarations: [CrudInOneViewComponent],
   imports: [
     CommonModule,
     MatIconModule,

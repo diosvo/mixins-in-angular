@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
@@ -29,13 +31,14 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
 
   private readonly USER_STORAGE = 'user';
   readonly user$ = new BehaviorSubject<Info>({} as Info);
-  private destroy$ = new Subject<boolean>();
 
   hasChanged = false;
+  private destroy$ = new Subject<boolean>();
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private snackbar: SnackbarService
   ) { }
 
@@ -70,9 +73,24 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
   }
 
   onDelete(): void {
-    this.clearStorage();
-    this.form.reset();
-    this.user$.next({} as Info);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        header: 'Warning',
+        body: 'Your data will be lost. Are you sure?',
+        btnConfirm: 'Delete',
+      },
+      disableClose: true,
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe((response: boolean) => {
+      if (!!response) {
+        this.clearStorage();
+        this.form.reset();
+        this.user$.next({} as Info);
+        this.snackbar.success('User has been deleted.');
+      }
+    });
   }
 
   isReadyToSave(): boolean {

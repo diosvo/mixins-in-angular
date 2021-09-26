@@ -2,18 +2,20 @@
   <ng-container *ngIf="user$ | async as user">
     <ng-container *ngIf="hasUser(); else noUser">
       <div class="d-flex jc-flex-end mb-1">
-        <button mat-stroked-button color="warn" (click)="onDelete()">
-          <mat-icon>delete_outline</mat-icon>
-        </button>
-        <button
-          *ngIf="hasChanged"
-          color="accent"
-          mat-stroked-button
-          (click)="onReset()"
-          [style.margin-left.px]="8"
-        >
-          <mat-icon>restore</mat-icon>
-        </button>
+        <ng-container *ngIf="!createMode()">
+          <button mat-stroked-button color="warn" (click)="onDelete()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <button
+            *ngIf="hasChanged"
+            color="accent"
+            mat-stroked-button
+            (click)="onReset()"
+            [style.margin-left.px]="8"
+          >
+            <mat-icon>restore</mat-icon>
+          </button>
+        </ng-container>
         <button
           mat-flat-button
           color="primary"
@@ -42,7 +44,11 @@
           <mat-icon suffix class="icon-valid" *ngIf="form.get('email').valid">
             check_circle
           </mat-icon>
-          <mat-icon suffix class="icon-invalid" *ngIf="form.get('email').hasError('email')">
+          <mat-icon
+            suffix
+            class="icon-invalid"
+            *ngIf="form.get('email').hasError('email')"
+          >
             error
           </mat-icon>
         </custom-input>
@@ -53,7 +59,7 @@
     <ng-template #noUser>
       <div class="d-flex ai-center jc-between">
         <span>No user found.</span>
-        <button mat-icon-button color="primary" (click)="onCreate();">
+        <button mat-icon-button color="primary" (click)="onCreate()">
           Create
         </button>
       </div>

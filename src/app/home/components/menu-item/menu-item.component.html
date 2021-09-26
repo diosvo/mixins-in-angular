@@ -30,15 +30,6 @@
         </mat-card-subtitle>
       </ng-container>
 
-      <!-- Main -->
-      <img
-        alt="Item image"
-        mat-card-image
-        class="cursor-pointer"
-        [src]="item.image ? item.image : emptyImg"
-        (click)="directItem(group.groupUrl, group.groupName, item.route)"
-      />
-
       <!-- Actions -->
       <mat-card-actions class="text-right">
         <button

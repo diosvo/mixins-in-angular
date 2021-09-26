@@ -3,7 +3,6 @@ import { EUrl } from './url.enum';
 interface IBaseValue {
   name: string;
   route: string;
-  image: string;
   description: string;
 }
 

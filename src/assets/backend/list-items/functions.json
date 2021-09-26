@@ -5,8 +5,12 @@
       {
         "name": "Data Composition #ng-conf",
         "route": "data-composition-ng-conf",
-        "image": "",
         "description": "Without subscription, improve performance"
+      },
+      {
+        "name": "CRUD in one view",
+        "route": "crud-in-one-view",
+        "description": "Use Behavior Subject to handle form"
       }
     ]
   }

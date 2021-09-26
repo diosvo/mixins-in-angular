@@ -5,7 +5,10 @@ import { CrudInOneViewComponent } from './crud-in-one-view.component';
 const routes: Routes = [
   {
     path: '',
-    component: CrudInOneViewComponent
+    component: CrudInOneViewComponent,
+    data: {
+      title: 'CRUD in one view'
+    }
   }
 ];
 

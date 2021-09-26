@@ -32,10 +32,10 @@ export class ToolbarComponent {
       width: '500px'
     });
 
-    await dialogRef.afterClosed().subscribe(result => {
+    await dialogRef.afterClosed().subscribe((result: boolean) => {
       if (!!result) {
         this.authService.logout();
-        this.router.navigate(['']);
+        this.router.navigate([this.router.url]);
       }
     });
   }

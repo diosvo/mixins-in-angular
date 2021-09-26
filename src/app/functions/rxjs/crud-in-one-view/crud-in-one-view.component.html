@@ -1,1 +1,51 @@
-<p>crud-in-one-view works!</p>
+<div class="bg-white bd-auto bs-light w-400 p-3">
+  <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="hasUser(); else noUser">
+      <div class="d-flex jc-flex-end mb-1">
+        <button mat-stroked-button color="warn">Reset Changes</button>
+        <button
+          [style.margin-left.px]="8"
+          mat-flat-button
+          color="primary"
+          (click)="onSave()"
+          [disabled]="!form.valid"
+        >
+          Save
+        </button>
+      </div>
+
+      <form [formGroup]="form">
+        <custom-input
+          label="Name"
+          [required]="true"
+          [showAsterisk]="true"
+          formControlName="name"
+        ></custom-input>
+
+        <custom-input
+          label="Email"
+          formControlName="email"
+          [required]="true"
+          [showAsterisk]="true"
+        >
+          <mat-icon suffix class="icon-valid" *ngIf="form.get('email').valid">
+            check_circle
+          </mat-icon>
+          <mat-icon suffix class="icon-invalid" *ngIf="form.get('email').hasError('email')">
+            error
+          </mat-icon>
+        </custom-input>
+      </form>
+    </ng-container>
+
+    <!-- No User -->
+    <ng-template #noUser>
+      <div class="d-flex ai-center jc-between">
+        <span>No user found.</span>
+        <button mat-icon-button color="primary" (click)="onCreate()">
+          Create
+        </button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

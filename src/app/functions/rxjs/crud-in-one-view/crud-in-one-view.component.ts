@@ -60,7 +60,7 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
     return JSON.stringify(this.user$.value) !== JSON.stringify({});
   }
 
-  private createMode(): boolean {
+  createMode(): boolean {
     return JSON.stringify(this.user$.value) === JSON.stringify(DEFAULT_VALUES);
   }
 
@@ -102,16 +102,19 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
   }
 
   saveChanges(url?: string): void {
+    localStorage.setItem(this.USER_STORAGE, JSON.stringify(this.form.value));
     this.user$.next(this.form.value);
-    this.watchForChanges();
-    localStorage.setItem(this.USER_STORAGE, JSON.stringify(this.user$.value));
-
+    this.watchForChanges();    
     this.snackbar.success('User has been saved.');
     this.router.navigate([url ?? this.router.url]);
   }
 
-  canDeactivate(): boolean {
-    return !this.hasChanged;
+  canDeactivate(): boolean {        
+    if(this.hasUser()) {
+      return !this.hasChanged;
+    } else {
+      return true;
+    }
   };
 
   private watchForChanges(): void {

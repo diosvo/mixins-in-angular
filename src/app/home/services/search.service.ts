@@ -11,25 +11,21 @@ import { EUrl } from '../models/url.enum';
 
 export class SearchService {
   // Web is temporarily inactive
-  private uiLoading$ = new BehaviorSubject<boolean>(true);
-  private webLoading$ = new BehaviorSubject<boolean>(true);
   private funcLoading$ = new BehaviorSubject<boolean>(true);
 
-  uiComponentsList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.COMPONENT))
-    .pipe(
-      map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
-      map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
-      shareReplay(),
-      catchError(_ => of(null)),
-      finalize(() => this.uiLoading$.next(false)),
-    );
+  uiComponentsList$: Observable<Array<IGroupValue>> =
+    this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.COMPONENT))
+      .pipe(
+        map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
+        map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
+        shareReplay()
+      );
 
   webUiList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.WEB))
     .pipe(
       map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.WEB }))),
       shareReplay(),
       catchError(_ => of(null)),
-      finalize(() => this.webLoading$.next(false)),
     );
 
   functionsList$ = this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.FUNCTION))
@@ -44,17 +40,7 @@ export class SearchService {
   constructor(
     private http: HttpClient
   ) {
-    this.uiLoading$.next(true);
-    this.webLoading$.next(true);
     this.funcLoading$.next(true);
-  }
-
-  getUiLoading(): BehaviorSubject<boolean> {
-    return this.uiLoading$;
-  }
-
-  getWebLoading(): BehaviorSubject<boolean> {
-    return this.webLoading$;
   }
 
   getFuncLoading(): BehaviorSubject<boolean> {

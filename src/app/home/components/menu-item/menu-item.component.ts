@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { IGroupValue } from '../../models/search.model';
 
 @Component({
@@ -9,7 +8,7 @@ import { IGroupValue } from '../../models/search.model';
   templateUrl: './menu-item.component.html',
 })
 export class MenuItemComponent {
-  @Input() data: Observable<Array<IGroupValue>>;
+  @Input() data: Array<IGroupValue>;
   @Output() selectedChip = new EventEmitter<string>();
 
   emptyImg = 'assets/images/logo/placeholder-image.png';

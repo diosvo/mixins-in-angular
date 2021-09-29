@@ -8,8 +8,8 @@ export class DetectPermissionService {
   hasPermission: boolean;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute
   ) {
     this.isAuthorized();
@@ -18,7 +18,7 @@ export class DetectPermissionService {
   isAuthorized(): void {
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(_ => this.activatedRoute),
         mergeMap(route => route.data)
       )

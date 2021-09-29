@@ -30,7 +30,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     query: [''],
     group: ['all']
   })
-  groupList = Object.values(EComponentUI);
+  groupList = Object.values(EComponentUI).sort((prev, next) => prev < next ? -1 : 1)
 
   filteredData$: Observable<Array<IGroupValue>>;
   private destroyed$: Subject<void> = new Subject();

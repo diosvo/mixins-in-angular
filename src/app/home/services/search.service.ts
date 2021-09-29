@@ -17,7 +17,6 @@ export class SearchService {
     this.http.get<Array<IGroupValue>>(this.getDataFrom(EUrl.COMPONENT))
       .pipe(
         map((data: Array<IGroupValue>) => data.map(item => ({ ...item, groupUrl: EUrl.COMPONENT }))),
-        map(group => group.sort((prev, next) => prev.groupName < next.groupName ? -1 : 1)),
         shareReplay()
       );
 

@@ -1,4 +1,6 @@
+import { LocationStrategy } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-unsaved-changes-dialog',
@@ -19,5 +21,10 @@ import { Component } from '@angular/core';
 })
 
 export class UnsavedChangesDialogComponent {
-  constructor() { }
+  constructor(
+    readonly location: LocationStrategy,
+    private dialog: MatDialogRef<UnsavedChangesDialogComponent>,
+  ) { 
+    location.onPopState(() => this.dialog.close());
+  }
 }

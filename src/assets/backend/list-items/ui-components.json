@@ -41,6 +41,11 @@
         "name": "Advanced CRUD",
         "route": "advanced-crud",
         "description": "UX/UI interaction, handle Form"
+      },
+      {
+        "name": "Multiple Checkbox Filter",
+        "route": "multiple-checkbox-filter",
+        "description": "Persist on URL"
       }
     ]
   },

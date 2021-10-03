@@ -132,7 +132,7 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }

@@ -10,7 +10,7 @@ const routes: Routes = [
     component: UnsavedFormComponent,
     canDeactivate: [UnsavedChangesGuard],
     data: {
-      roles: [ERole.ADMIN],
+      roles: [ERole.CUSTOMER],
       title: 'Unsaved Form Demo',
     },
   }

@@ -1,4 +1,4 @@
-@use 'palette';
+@use 'severity';
 
 :host {
   display: flex;
@@ -10,10 +10,6 @@
   min-height: 200px;
   max-height: 400px;
   overflow  : auto;
-}
-
-.loading-shade {
-  background: palette.$shade;
 }
 
 /* Column Widths */

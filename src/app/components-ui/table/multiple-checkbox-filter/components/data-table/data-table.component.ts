@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Self, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { merge } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { GithubIssue, GithubRepoIssuesService } from '../../service/github-repo-issues.service';
@@ -15,11 +14,10 @@ import { GithubIssue, GithubRepoIssuesService } from '../../service/github-repo-
 
 export class DataTableComponent implements AfterViewInit {
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  data = new MatTableDataSource<GithubIssue>([]);
+  data: Array<GithubIssue>;
 
   resultsLength = 0;
   isLoadingResults = true;
-  isRateLimitReached = false;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -43,7 +41,6 @@ export class DataTableComponent implements AfterViewInit {
         }),
         map(data => {
           this.isLoadingResults = false;
-          this.isRateLimitReached = data === null;
 
           if (data === null) {
             return [];
@@ -54,7 +51,9 @@ export class DataTableComponent implements AfterViewInit {
         })
       )
       .subscribe({
-        next: (data: Array<GithubIssue>) => this.data = new MatTableDataSource<GithubIssue>(data)
+        next: (data: Array<GithubIssue>) => this.data = data
       });
   }
+
+  resetPage(): void {}
 }

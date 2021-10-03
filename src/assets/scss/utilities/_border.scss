@@ -1,3 +1,5 @@
+@use 'palette';
+
 @mixin border($n) {
   border: $n * 1px;
 }
@@ -35,5 +37,9 @@
     &-32 {
       @include border-radius(32);
     }
+  }
+
+  &-light {
+    border: 1px solid lightgray;
   }
 }

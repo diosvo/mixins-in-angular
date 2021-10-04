@@ -3,18 +3,7 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, shareReplay } from 'rxjs/operators';
-
-export interface GithubApi {
-  items: Array<GithubIssue>;
-  total_count: number;
-}
-
-export interface GithubIssue {
-  created_at: string;
-  number: string;
-  state: string;
-  title: string;
-}
+import { GithubApi } from '../models/service.model';
 
 @Injectable()
 
@@ -31,7 +20,7 @@ export class GithubRepoIssuesService {
       shareReplay(),
       catchError((error: HttpErrorResponse) => {
         this.error$.next(!error.ok);
-        return throwError(error.message);
+        return throwError(() => error.message);
       })
     );
   }

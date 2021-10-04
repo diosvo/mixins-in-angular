@@ -2,12 +2,12 @@
 
 :host {
   display: flex;
-  margin : 2rem;
+  margin : 1rem;
 }
 
 .table-container {
   width     : 100%;
-  min-height: 200px;
+  min-height: auto;
   max-height: 400px;
   overflow  : auto;
 }

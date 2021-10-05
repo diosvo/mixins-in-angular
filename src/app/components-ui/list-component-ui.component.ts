@@ -33,7 +33,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   groupList = Object.values(EComponentUI).sort((prev, next) => prev < next ? -1 : 1)
 
   filteredData$: Observable<Array<IGroupValue>>;
-  private destroyed$: Subject<void> = new Subject();
+  private destroyed$: Subject<boolean> = new Subject();
 
   constructor(
     private router: Router,
@@ -83,7 +83,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$),
       catchError(({ message }) => {
         this.errorMessage = message;
-        return throwError(message);
+        return throwError(() => message);
       }),
     );
   }
@@ -121,7 +121,6 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next();
     this.destroyed$.complete();
     this.destroyed$.unsubscribe();
   }

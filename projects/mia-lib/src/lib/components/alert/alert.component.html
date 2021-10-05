@@ -1,11 +1,11 @@
-<div #alert id="alert-{{type}}" class="bg-{{type}} bd-{{type}} d-flex ai-center p-2 bd-radius-2">
+<div class="severity-{{ type }} d-flex ai-center p-2 bd-radius-2">
   <ng-container [ngSwitch]="type">
-    <mat-icon class="icon-{{type}}" *ngSwitchCase="'success'">check_circle_outline</mat-icon>
-    <mat-icon class="icon-{{type}}" *ngSwitchCase="'info'">help_outline</mat-icon>
-    <mat-icon class="icon-{{type}}" *ngSwitchCase="'warning'">error_outline</mat-icon>
-    <mat-icon class="icon-{{type}}" *ngSwitchCase="'error'">highlight_off</mat-icon>
+    <mat-icon *ngSwitchCase="'success'">check_circle_outline</mat-icon>
+    <mat-icon *ngSwitchCase="'info'">help_outline</mat-icon>
+    <mat-icon *ngSwitchCase="'warning'">error_outline</mat-icon>
+    <mat-icon *ngSwitchCase="'error'">highlight_off</mat-icon>
   </ng-container>
-  <div class="as-center ml-1 opacity-0.8">
+  <div class="as-center ml-1">
     <ng-content></ng-content>
   </div>
 </div>

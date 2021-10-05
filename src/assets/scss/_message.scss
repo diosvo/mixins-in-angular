@@ -1,68 +1,23 @@
-$bg-success: #EDF9F0;
-$bg-info   : #EEF2FA;
-$bg-warning: #FFF4EC;
-$bg-error  : #FEEFEF;
+@use 'colors/severity'as severity;
 
-$bd-success: #5ACA75;
-$bd-info   : #89A7E0;
-$bd-warning: #FF8F39;
-$bd-error  : #F48989;
-
-$txt-success: #287D3C;
-$txt-info   : #2E5AAC;
-$txt-warning: #B95000;
-$txt-error  : #DA1414;
-
-.bg {
+.message {
   &-success {
-    background-color: $bg-success;
+    $success: #287D3C;
+    @include severity.config($success);
   }
 
   &-info {
-    background-color: $bg-info;
+    $info: #2E5AAC;
+    @include severity.config($info);
   }
 
   &-warning {
-    background-color: $bg-warning;
+    $warning: #B95000;
+    @include severity.config($warning);
   }
 
   &-error {
-    background-color: $bg-error;
-  }
-}
-
-.bd {
-  &-success {
-    border: 1px solid $bd-success;
-  }
-
-  &-info {
-    border: 1px solid $bd-info;
-  }
-
-  &-warning {
-    border: 1px solid $bd-warning;
-  }
-
-  &-error {
-    border: 1px solid $bd-error;
-  }
-}
-
-.icon {
-  &-success {
-    color: $txt-success;
-  }
-
-  &-info {
-    color: $txt-info;
-  }
-
-  &-warning {
-    color: $txt-warning;
-  }
-
-  &-error {
-    color: $txt-error;
+    $error: #DA1414;
+    @include severity.config($error);
   }
 }

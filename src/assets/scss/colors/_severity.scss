@@ -1,0 +1,5 @@
+@mixin config($color) {
+  color           : rgba($color, $alpha: 0.9);
+  background-color: rgba($color, $alpha: 0.1);
+  border          : 1px solid $color;
+}

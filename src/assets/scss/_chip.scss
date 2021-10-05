@@ -1,0 +1,17 @@
+@use 'palette';
+@use 'colors/severity'as severity;
+
+.chip {
+  &-success {
+    @include severity.config(palette.$success);
+  }
+
+  &-error {
+    @include severity.config(palette.$error);
+  }
+
+  &-spacing {
+    padding      : 0.25rem 0.5rem;
+    border-radius: 1rem;
+  }
+}

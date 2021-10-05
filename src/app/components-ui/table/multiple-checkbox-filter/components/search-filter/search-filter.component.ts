@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -11,7 +11,6 @@ import { GithubIssue } from '../../models/service.model';
   styleUrls: ['./search-filter.component.scss']
 })
 export class SearchFilterComponent implements OnInit, OnDestroy {
-  @Output() changed = new EventEmitter<Filter>();
   @Input() dataSource = new MatTableDataSource<GithubIssue>([]);
 
   filterForm: FormGroup = this.fb.group({
@@ -30,7 +29,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((filter: Filter) => {
-        this.changed.emit(filter);
+        this.onFilter();
         this.applyFilter(filter);
       });
   }
@@ -40,6 +39,25 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  
+  private onFilter(): void {
+    this.dataSource.filterPredicate = ((data: GithubIssue, filterForm: string) => {
+      const filterValues = JSON.parse(filterForm);
+      let conditions = true;
+
+      for (let key in filterValues) {
+        if (key === 'query') {
+          const searchTerm = data.number + data.title;
+          conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
+        }
+        else if (filterValues[key] !== null && filterValues[key].length) {
+          conditions = conditions && filterValues[key].includes(data[key].trim().toLowerCase());
+        }
+      }
+      
+      return conditions;
+    });
   }
 
   ngOnDestroy(): void {

@@ -70,30 +70,8 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
     window.location.reload();
   }
 
-  onFormChanged($event: Filter): void {
-    this.filters$.next($event);
-    this.onFilter();
-  }
+  resetFilters(): void {
 
-  onFilter(): void {
-    this.dataSource.filterPredicate = ((data: GithubIssue, filterForm: string) => {
-      const filterValues = JSON.parse(filterForm);
-      let conditions = true;
-
-      for (let key in filterValues) {
-        if (key === 'query') {
-          const searchTerm = data.number + data.title;
-          conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
-        }
-        else if (filterValues[key].length) {
-          conditions = conditions && filterValues[key].includes(data[key].trim().toLowerCase());
-        }
-      }
-
-      return conditions;
-    });
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy(): void {

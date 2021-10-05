@@ -21,10 +21,7 @@
 
   <!-- Table -->
   <div [style]="{ display: (service.error$ | async) ? 'none' : 'block' }">
-    <search-filter
-      [dataSource]="dataSource"
-      (changed)="onFormChanged($event)"
-    ></search-filter>
+    <search-filter [dataSource]="dataSource"></search-filter>
 
     <div class="table-container bd-auto">
       <table
@@ -74,8 +71,24 @@
           [style.background-color]="'#F5F6FA'"
         ></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        <tr mat-row *ngIf="dataSource.data.length === 0">
-          No issues found.
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">
+            <ng-container *ngIf="isLoadingResults; else noResults">
+              <div class="text-center">Loading...</div>
+            </ng-container>
+            <ng-template #noResults>
+              <div class="my-1 text-center">
+                <span>No issue was found to match your search/filters.</span>
+                <br class="my-1" />
+                <a
+                  (click)="resetFilters()"
+                  class="text-light-blue text-deco-underline cursor-pointer"
+                >
+                  Reset your criteria
+                </a>
+              </div>
+            </ng-template>
+          </td>
         </tr>
       </table>
     </div>

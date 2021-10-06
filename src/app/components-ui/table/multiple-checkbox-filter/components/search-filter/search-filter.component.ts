@@ -15,7 +15,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   filterForm: FormGroup = this.fb.group({
     query: [''],
-    state: []
+    state: ['']
   })
   destroy$ = new Subject<boolean>();
 
@@ -35,7 +35,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   }
 
   private applyFilter(filter: Filter): void {
-    this.dataSource.filter = JSON.stringify(filter);
+    this.dataSource.filter = JSON.stringify(filter);    
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -58,6 +58,13 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       
       return conditions;
     });
+  }
+
+  resetForm(): void {
+    this.filterForm.setValue({
+      query: '',
+      state: ''
+    });    
   }
 
   ngOnDestroy(): void {

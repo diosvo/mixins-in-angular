@@ -7,6 +7,7 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { Filter } from '../../models/filter.model';
 import { GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
+import { SearchFilterComponent } from '../search-filter/search-filter.component';
 
 @Component({
   selector: 'app-data-table',
@@ -18,9 +19,9 @@ import { GithubRepoIssuesService } from '../../service/github-repo-issues.servic
 export class DataTableComponent implements OnDestroy, AfterViewInit {
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
   dataSource: MatTableDataSource<GithubIssue>;
-  filters$ = new BehaviorSubject<Filter>({
+  filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
-    state: ['']
+    state: ''
   });
 
   resultsLength = 0;
@@ -28,6 +29,7 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(SearchFilterComponent) searchFilter: SearchFilterComponent;
 
   destroy$ = new Subject<boolean>();
 
@@ -71,7 +73,7 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
   }
 
   resetFilters(): void {
-
+    this.searchFilter.resetForm();
   }
 
   ngOnDestroy(): void {

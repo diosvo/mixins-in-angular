@@ -1,4 +1,4 @@
 export interface Filter {
   query: string;
-  state: Array<string>;
+  state: string | Array<string>;
 }

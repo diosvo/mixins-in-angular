@@ -18,14 +18,14 @@ export class LoggerService implements ILogger {
     if (environment.production) {
       this.disabledProdMode();
     }
-    console.log(`LoggerService: ${value}`);
+    console.info(`LoggerService: ${value}`);
   }
 
   error(value: string): void {
     if (environment.production) {
       this.disabledProdMode();
     }
-    console.log(`LoggerService: ${value}`);
+    console.error(`LoggerService: ${value}`);
   }
 
   private disabledProdMode(): void {

@@ -59,10 +59,7 @@
   </mat-accordion>
 
   <ng-container *ngIf="filteredData.length > 0; else notFound">
-    <menu-item
-      [data]="filteredData"
-      (selectedChip)="selectedChip($event)"
-    ></menu-item>
+    <menu-item [data]="filteredData"></menu-item>
   </ng-container>
 
   <ng-template #notFound>

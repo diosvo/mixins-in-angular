@@ -15,6 +15,6 @@ export class MenuItemComponent {
   ) { }
 
   async directItem(groupUrl: string, groupName: string, itemRoute: string): Promise<void> {
-    await this.router.navigate([groupUrl, groupName, itemRoute]);
+    await this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
   }
 }

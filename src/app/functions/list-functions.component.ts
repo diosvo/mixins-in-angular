@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGroupValue } from '@home/models/search.model';
+import { EFunctions } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subject, throwError } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-functions',
@@ -23,36 +23,22 @@ import { filter, map, takeUntil, tap } from 'rxjs/operators';
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 
-  showFilterIcon: boolean = false;
+  showFilterIcon = false;
+  errorMessage: string;
 
   functionsForm: FormGroup = this.fb.group({
     query: [''],
     group: ['all']
   })
-
-  emptyMessage: string;
-  errorMessage: string;
-
-  private destroyed$: Subject<void> = new Subject();
-  loading$: BehaviorSubject<boolean> = this.searchService.getFuncLoading();
-
-  data$: Observable<Array<IGroupValue>> =
-    this.searchService.functionsList$
-      .pipe(
-        filter(item => !!item),
-        tap({
-          error: (): string => this.errorMessage = 'An error occurred. Please try again!'
-        }),
-        takeUntil(this.destroyed$)
-      );
+  groupList = Object.values(EFunctions).sort((prev, next) => prev < next ? -1 : 1)
 
   filteredData$: Observable<Array<IGroupValue>>;
+  private destroyed$: Subject<boolean> = new Subject();
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private snackbar: SnackbarService,
     private searchService: SearchService,
   ) { }
 
@@ -65,7 +51,6 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
         }
         return;
       });
-    await this.onFormChanges();
     this.onFilters();
   }
 
@@ -73,36 +58,34 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
    * @description Search
    */
 
-  async onFormChanges(): Promise<void> {
-    await this.functionsForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(_ => {
-        this.onFilters();
-        this.updateParams();
-      });
-  }
-
   onFilters(): void {
-    this.filteredData$ = this.data$
-      .pipe(
-        map((group: Array<IGroupValue>) => group
-          .filter(item => this.group.value !== 'all' ? item.groupName === this.group.value : 'all')
+    const data$ = this.searchService.functionsList$;
+    const filters$ = this.functionsForm.valueChanges.pipe(
+      startWith(this.functionsForm.value),
+      debounceTime(100),
+      distinctUntilChanged()
+    );
+
+    this.filteredData$ = combineLatest([data$, filters$]).pipe(
+      map(([data, filter]) =>
+        data
+          .filter(item => filter.group !== 'all' ? item.groupName === filter.group : 'all')
           .map(item => ({
             ...item,
-            groupDetails: item.groupDetails.filter(
-              details => details.name.toLowerCase().indexOf(this.query.value.toLowerCase()) !== -1
-            )
+            groupDetails: item.groupDetails.filter(details => {
+              const searchTerm = details.name + details.description + item.groupName;
+              return searchTerm.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1;
+            })
           }))
           .filter(item => item.groupDetails.length > 0)
-        ),
-        tap({
-          next: (data: Array<IGroupValue>): number => setTimeout(_ => {
-            this.emptyMessage = data.length === 0 ? 'No item were found to match your search/filters' : null;
-          }),
-          error: () => this.errorMessage = 'An error occurred. Please try again!'
-        }),
-        takeUntil(this.destroyed$)
-      );
+      ),
+      tap(() => this.updateParams()),
+      takeUntil(this.destroyed$),
+      catchError(({ message }) => {
+        this.errorMessage = message;
+        return throwError(() => message);
+      }),
+    );
   }
 
   async updateParams(): Promise<void> {
@@ -112,23 +95,13 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectedChip($event: string): void {
-    this.group.setValue($event);
-    this.snackbar.info(`Filter by ${$event} was applied.`);
-  }
-
   cleanQuery(): void {
     return this.query.setValue('');
   }
 
-  cleanGroup($event: Event): void {
-    $event.stopPropagation();
-    return this.group.setValue('all');
-  }
-
-  cleanFilters($event: Event): void {
+  cleanFilters(): void {
     this.cleanQuery();
-    this.cleanGroup($event);
+    this.group.setValue('all');
   }
 
   clearAllIconActive(): boolean {
@@ -148,7 +121,6 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next();
     this.destroyed$.complete();
     this.destroyed$.unsubscribe();
   }

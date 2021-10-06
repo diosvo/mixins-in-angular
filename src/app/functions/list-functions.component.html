@@ -1,8 +1,12 @@
-<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
-<alert-message *ngIf="errorMessage" type="error">{{ errorMessage }}</alert-message>
+<ng-template #loadingTmpl>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>
+<alert-message *ngIf="errorMessage" type="error">
+  {{ errorMessage }}
+</alert-message>
 
 <!-- Search -->
-<ng-container *ngIf="(loading$ | async) === false">
+<ng-container *ngIf="filteredData$ | async as filteredData; else loadingTmpl">
   <mat-accordion>
     <mat-expansion-panel>
       <!-- Header -->
@@ -14,7 +18,7 @@
           <button
             mat-icon-button
             *ngIf="clearAllIconActive()"
-            (click)="cleanFilters($event)"
+            (click)="cleanFilters()"
             matTooltip="Clear All Filters"
             matTooltipPosition="left"
           >
@@ -23,36 +27,22 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <!-- Body -->
+      <!-- Content -->
       <ng-template matExpansionPanelContent>
         <form [formGroup]="functionsForm" class="panel-container d-flex gap-1">
-          <!-- Filter by Group Name -->
           <mat-form-field class="search-input filter-group">
             <mat-label>Components</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
-              <mat-option
-                *ngFor="let group of data$ | async"
-                [value]="group.groupName"
-              >
-                {{ group.groupName | titlecase }}
+              <mat-option *ngFor="let group of groupList" [value]="group">
+                {{ group | titlecase }}
               </mat-option>
             </mat-select>
-            <button
-              matSuffix
-              mat-icon-button
-              *ngIf="group.value !== 'all'"
-              matTooltip="Clear"
-              (click)="cleanGroup($event)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
           </mat-form-field>
 
-          <!-- Search by Name -->
           <mat-form-field class="search-input width-100">
             <mat-label>What are you looking for today...</mat-label>
-            <input matInput autocomplete="off" formControlName="query"/>
+            <input matInput autocomplete="off" formControlName="query" />
             <button
               matSuffix
               mat-icon-button
@@ -67,21 +57,17 @@
       </ng-template>
     </mat-expansion-panel>
   </mat-accordion>
-</ng-container>
 
-<!-- Fetch Data -->
-<ng-container [ngTemplateOutlet]="noResults">
-  <menu-item
-    [data]="filteredData$"
-    (selectedChip)="selectedChip($event)"
-  ></menu-item>
+  <ng-container *ngIf="filteredData.length > 0; else notFound">
+    <menu-item [data]="filteredData"></menu-item>
+  </ng-container>
 
-  <ng-template #noResults>
-    <div *ngIf="emptyMessage" class="text-center fs-16">
-      <span>{{ emptyMessage }}</span>
-      <br class="my-1"/>
+  <ng-template #notFound>
+    <div class="text-center my-2">
+      <span>No item was found to match your search/filters</span>
+      <br class="my-1" />
       <a
-        (click)="cleanFilters($event)"
+        (click)="cleanFilters()"
         class="text-light-blue text-deco-underline cursor-pointer"
       >
         Reset your criteria

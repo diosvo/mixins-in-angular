@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, Self, ViewChild } from '@angular/c
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, merge, Subject } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, merge, Subject, throwError } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Filter } from '../../models/filter.model';
 import { GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
@@ -32,6 +32,7 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
   @ViewChild(SearchFilterComponent) searchFilter: SearchFilterComponent;
 
   destroy$ = new Subject<boolean>();
+  error$ = new Subject<boolean>();
 
   constructor(
     @Self() readonly service: GithubRepoIssuesService
@@ -61,10 +62,14 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
 
           this.resultsLength = data.total_count;
           return data.items;
+        }),
+        catchError((error) => {
+          this.error$.next(!error.ok);
+          return throwError(() => new Error(error.message));
         })
       )
       .subscribe({
-        next: (data: Array<GithubIssue>) => this.dataSource = new MatTableDataSource(data)
+        next: (data: Array<GithubIssue>) => this.dataSource = new MatTableDataSource(data),
       });
   }
 

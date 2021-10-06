@@ -35,12 +35,12 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   }
 
   private applyFilter(filter: Filter): void {
-    this.dataSource.filter = JSON.stringify(filter);    
+    this.dataSource.filter = JSON.stringify(filter);
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
-  
+
   private onFilter(): void {
     this.dataSource.filterPredicate = ((data: GithubIssue, filterForm: string) => {
       const filterValues = JSON.parse(filterForm);
@@ -55,7 +55,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
           conditions = conditions && filterValues[key].includes(data[key].trim().toLowerCase());
         }
       }
-      
+
       return conditions;
     });
   }
@@ -64,7 +64,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
     this.filterForm.setValue({
       query: '',
       state: ''
-    });    
+    });
   }
 
   ngOnDestroy(): void {

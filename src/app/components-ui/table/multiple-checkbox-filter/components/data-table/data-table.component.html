@@ -1,13 +1,6 @@
-<div class="position-relative bg-white bd-auto bd-light width-100 p-3">
-  <div class="shade bd-auto" *ngIf="isLoadingResults">
-    <mat-spinner [diameter]="50"></mat-spinner>
-  </div>
-
+<div class="bg-white bd-auto bd-light width-100">
   <!-- Error -->
-  <div
-    [style]="{ display: (service.error$ | async) ? 'block' : 'none' }"
-    class="text-center"
-  >
+  <div *ngIf="error$ | async" class="text-center p-3">
     <span class="text-error">
       GitHub's API rate limit has been reached. It will be reset in one minute.
     </span>
@@ -20,7 +13,14 @@
   </div>
 
   <!-- Table -->
-  <div [style]="{ display: (service.error$ | async) ? 'none' : 'block' }">
+  <div
+    class="position-relative p-3"
+    [style]="{ display: (error$ | async) ? 'none' : 'block' }"
+  >
+    <div class="shade bd-auto" *ngIf="isLoadingResults">
+      <mat-spinner [diameter]="50"></mat-spinner>
+    </div>
+
     <search-filter [dataSource]="dataSource"></search-filter>
 
     <div class="table-container bd-auto">

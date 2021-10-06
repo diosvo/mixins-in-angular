@@ -1,14 +1,13 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
-import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { GithubApi } from '../models/service.model';
 
 @Injectable()
 
 export class GithubRepoIssuesService {
-  error$ = new Subject<boolean>();
 
   constructor(private http: HttpClient) { }
 
@@ -18,10 +17,6 @@ export class GithubRepoIssuesService {
 
     return this.http.get<GithubApi>(requestUrl).pipe(
       shareReplay(),
-      catchError((error: HttpErrorResponse) => {
-        this.error$.next(!error.ok);
-        return throwError(() => error.message);
-      })
     );
   }
 }

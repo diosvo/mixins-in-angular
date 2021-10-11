@@ -46,7 +46,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       const filterValues = JSON.parse(filterForm);
       let conditions = true;
 
-      for (let key in filterValues) {
+      for (const key in filterValues) {
         if (key === 'query') {
           const searchTerm = data.number + data.title;
           conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;

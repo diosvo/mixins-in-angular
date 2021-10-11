@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { HandleServerService } from '@lib/services/base/handle-server.service';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { SearchFilterComponent } from './components/search-filter/search-filter.component';
 import { MultipleCheckboxSearchRoutingModule } from './multiple-checkbox-filter-routing.module';
@@ -29,6 +30,7 @@ import { MultipleCheckboxSearchRoutingModule } from './multiple-checkbox-filter-
     MatFormFieldModule,
     ReactiveFormsModule,
     MultipleCheckboxSearchRoutingModule
-  ]
+  ],
+  providers: [HandleServerService]
 })
 export class MultipleCheckboxFilterModule { }

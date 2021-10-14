@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -109,6 +109,7 @@ export class CrudInOneViewComponent implements OnInit, OnDestroy, DeactivateComp
     this.router.navigate([url ?? this.router.url]);
   }
 
+  @HostListener('window:beforeunload')
   canDeactivate(): boolean {        
     if(this.hasUser()) {
       return !this.hasChanged;

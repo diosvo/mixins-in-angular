@@ -1,4 +1,4 @@
-import { Component, OnInit, Self } from '@angular/core';
+import { Component, HostListener, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -48,6 +48,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
       .subscribe(response => this.hasChanged = response);
   }
 
+  @HostListener('window:beforeunload')
   canDeactivate(): boolean {
     return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }

@@ -11,18 +11,12 @@ import { DeactivateComponent } from '../models/base-form-component';
   providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
-/*   @HostListener('window:popstate', ['$event'])
-  onPopState(): void {
-    this.dialog.closeAll();
-  } */
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private snackbar: SnackbarService
-  ) {
-    // this.onPopState();
-   }
+  ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
     if (!component.canDeactivate()) {
@@ -30,7 +24,6 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         width: '500px',
         disableClose: true
       });
-
 
       dialogRef.afterClosed().subscribe((response: boolean | string) => {
         if (response === false) {

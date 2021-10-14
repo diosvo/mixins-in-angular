@@ -3,3 +3,9 @@
   background-color: rgba($color, $alpha: 0.1);
   border          : 1px solid $color;
 }
+
+@mixin message-config($color, $bgColor) {
+  color           : rgba($color, $alpha: 0.9);
+  background-color: $bgColor;
+  border          : 1px solid $color;
+}

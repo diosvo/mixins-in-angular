@@ -1,8 +1,6 @@
-<div class="severity-{{ type }} d-flex ai-center p-2 bd-radius-2">
+<div class="alert-{{ type }} d-flex ai-center p-2 bd-radius-2">
   <ng-container [ngSwitch]="type">
-    <mat-icon *ngSwitchCase="'success'">check_circle_outline</mat-icon>
     <mat-icon *ngSwitchCase="'info'">help_outline</mat-icon>
-    <mat-icon *ngSwitchCase="'warning'">error_outline</mat-icon>
     <mat-icon *ngSwitchCase="'error'">highlight_off</mat-icon>
   </ng-container>
   <div class="as-center ml-1">

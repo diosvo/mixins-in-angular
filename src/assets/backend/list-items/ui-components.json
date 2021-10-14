@@ -53,11 +53,6 @@
     "groupName": "form",
     "groupDetails": [
       {
-        "name": "Interaction - Order Form",
-        "route": "order-form",
-        "description": "Unsaved Changes Guard w/o initial values, CanActivate and CanLoad Guard"
-      },
-      {
         "name": "Unsaved Form Demo",
         "route": "unsaved-form",
         "description": "Unsaved Changes Guard with given value, CanActivate and CanLoad Guard"

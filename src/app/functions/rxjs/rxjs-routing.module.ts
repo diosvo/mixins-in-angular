@@ -9,6 +9,10 @@ const routes: Routes = [
   {
     path: 'crud-in-one-view',
     loadChildren: () => import('./crud-in-one-view/crud-in-one-view.module').then(m => m.CrudInOneViewModule)
+  },
+  {
+    path: 'basic-operators',
+    loadChildren: () => import('./basic-operators/basic-operators.module').then(m => m.BasicOperatorsModule)
   }
 ];
 

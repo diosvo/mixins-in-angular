@@ -11,6 +11,11 @@
         "name": "CRUD in one view",
         "route": "crud-in-one-view",
         "description": "Use Behavior Subject to handle form"
+      },
+      {
+        "name": "Basic Operators",
+        "route": "basic-operators",
+        "description": "Combination: zip, switchMap, mergeMap"
       }
     ]
   }

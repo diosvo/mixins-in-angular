@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGroupValue } from '@home/models/search.model';
@@ -19,7 +19,8 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
       .filter-group {
         width: 100%;
       }
-    }`]
+    }`],
+  providers: [SearchService]
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
@@ -39,7 +40,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     private router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private searchService: SearchService,
+    @Self() readonly searchService: SearchService,
   ) { }
 
   async ngOnInit(): Promise<void> {

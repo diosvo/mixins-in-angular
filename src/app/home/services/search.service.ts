@@ -5,7 +5,9 @@ import { EUrl } from '@home/models/url.enum';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
 export class SearchService {
 
@@ -25,6 +27,7 @@ export class SearchService {
   constructor(
     private http: HttpClient
   ) { }
+
 
   private path(url: EUrl): string {
     return `/assets/backend/list-items/${url}.json`;

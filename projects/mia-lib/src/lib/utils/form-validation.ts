@@ -3,7 +3,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 
-/***
+/**
 * @description check validations
 * step 1 - create in file TS: matcher = new ErrorMatcher();
 * step 2 - add in Input: [errorStateMatcher]="matcher"
@@ -16,7 +16,7 @@ class ErrorMatcher implements ErrorStateMatcher {
   }
 }
 
-/***
+/**
 * for @username
 */
 
@@ -32,7 +32,7 @@ function usernameValidator(): AsyncValidatorFn {
   };
 }
 
-/***
+/**
 * for @password
 */
 
@@ -46,5 +46,27 @@ function matchPassword(controlA: string, controlB: string): ValidatorFn {
   };
 }
 
-export { ErrorMatcher, usernameExits, usernameValidator, matchPassword };
+
+/**
+* for @cardNumber
+* @description based on Luhn algorithm
+*/
+
+function isCardNumberValid(cardNumber: string): boolean {
+  const { length } = cardNumber;
+  const array = cardNumber.split('').map((char, idx) => {
+    const digit = parseInt(char, 10);
+
+    if ((idx + length) % 2 === 0) {
+      const digitX2 = digit * 2;
+      return digitX2 > 9 ? digitX2 - 9 : digitX2;
+    }
+
+    return digit;
+  });
+
+  return !(array.reduce((prev, next) => prev + next, 0) % 10);
+}
+
+export { ErrorMatcher, usernameValidator, matchPassword, isCardNumberValid };
 

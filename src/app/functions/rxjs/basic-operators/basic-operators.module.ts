@@ -14,7 +14,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [BasicOperatorsComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)

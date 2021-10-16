@@ -1,1 +1,17 @@
-<p>basic-operators works!</p>
+<button (click)="_flatBread.next('flat bread')">Add Flat Bread</button>
+<br />
+<button (click)="_meat.next('meat')">Add Meat</button>
+<br />
+<button (click)="_sauce.next('sauce')">Add Sauce</button>
+<br />
+<button (click)="_tomato.next('tomato')">Add Tomato</button>
+<br />
+<button (click)="_cabbage.next('cabbage')">Add Cabbage</button>
+
+<ng-container *ngIf="durum$ | async as durum">
+  <ng-container *ngIf="durum.length > 0">
+    <h4>Enjoy</h4>
+    <h4>Ingredients:</h4>
+    <pre>{{ durum | json }}</pre>
+  </ng-container>
+</ng-container>

@@ -13,13 +13,6 @@ interface Product {
   customerId: number;
 }
 
-let flatBreadCounter = 0;
-let meatCounter = 0;
-let sauceCounter = 0;
-let tomatoCounter = 0;
-let cabbageCounter = 0;
-let customerId = 0;
-
 @Component({
   selector: 'app-basic-operators',
   templateUrl: './basic-operators.component.html',
@@ -37,29 +30,37 @@ export class BasicOperatorsComponent implements OnInit {
   _tomato = new Subject<'tomato'>();
   _cabbage = new Subject<'cabbage'>();
 
+  flatBreadCounter = 0;
+  meatCounter = 0;
+  sauceCounter = 0;
+  tomatoCounter = 0;
+  cabbageCounter = 0;
+  customerId = 0;
+
   constructor() { }
 
   ngOnInit(): void {
     this.durum$ = zip(
       this._flatBread.pipe(
-        map(ing => `${ing} ${++flatBreadCounter}`),
+        map(ing => `${ing} ${++this.flatBreadCounter}`),
         tap(console.log)
       ),
       this._meat.pipe(
-        map(ing => `${ing} ${++meatCounter}`),
+        map(ing => `${ing} ${++this.meatCounter}`),
         tap(console.log)
       ),
       this._sauce.pipe(
-        map(ing => `${ing} ${++sauceCounter}`),
+        map(ing => `${ing} ${++this.sauceCounter}`),
         tap(console.log)
       ),
       this._tomato.pipe(
-        map(ing => `${ing} ${++tomatoCounter}`),
+        map(ing => `${ing} ${++this.tomatoCounter}`),
         tap(console.log)
       ),
       this._cabbage.pipe(
-        map(ing => `${ing} ${++cabbageCounter}`),
-        tap(console.log)),
+        map(ing => `${ing} ${++this.cabbageCounter}`),
+        tap(console.log)
+      ),
     ).pipe(
       tap(durum => console.log('Enjoy!', durum))
     );
@@ -78,7 +79,7 @@ export class BasicOperatorsComponent implements OnInit {
 
   dispatchOrder(): void {
     const amount = Math.floor(Math.random() * 3) + 1;
-    ++customerId;
-    this._order.next({ amount, customerId });
+    ++this.customerId;
+    this._order.next({ amount, customerId: this.customerId });
   }
 }

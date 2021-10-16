@@ -7,11 +7,13 @@
 <button (click)="_tomato.next('tomato')">Add Tomato</button>
 <br />
 <button (click)="_cabbage.next('cabbage')">Add Cabbage</button>
+<hr />
+<button (click)="dispatchOrder()">Order Durum</button>
 
-<ng-container *ngIf="durum$ | async as durum">
-  <ng-container *ngIf="durum.length > 0">
+<ng-container *ngIf="delivery$ | async as delivery">
+  <ng-container *ngIf="delivery.product.length > 0">
     <h4>Enjoy</h4>
     <h4>Ingredients:</h4>
-    <pre>{{ durum | json }}</pre>
+    <pre>{{ delivery | json }}</pre>
   </ng-container>
 </ng-container>

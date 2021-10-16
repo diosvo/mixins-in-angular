@@ -28,7 +28,6 @@ export class SearchService {
     private http: HttpClient
   ) { }
 
-
   private path(url: EUrl): string {
     return `/assets/backend/list-items/${url}.json`;
   }

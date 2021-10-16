@@ -23,7 +23,7 @@ export class BasicOperatorsComponent implements OnInit {
   durum$: Observable<Durum>;
   delivery$: Observable<Product>;
 
-  _order = new Subject<Order>()
+  _order = new Subject<Order>();
   _flatBread = new Subject<'flat bread'>();
   _meat = new Subject<'meat'>();
   _sauce = new Subject<'sauce'>();

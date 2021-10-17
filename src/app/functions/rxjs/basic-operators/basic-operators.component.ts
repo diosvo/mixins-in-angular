@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoggerService } from '@lib/services/log/logger.service';
 import { map, mergeMap, Observable, Subject, take, tap, zip } from 'rxjs';
 
 type Durum = ['flat bread', 'meat', 'sauce', 'tomato', 'cabbage'];
@@ -35,51 +36,38 @@ export class BasicOperatorsComponent implements OnInit {
   sauceCounter = 0;
   tomatoCounter = 0;
   cabbageCounter = 0;
+
+  amount = 0;
   customerId = 0;
 
-  constructor() { }
+  constructor(private logger: LoggerService) { }
 
   ngOnInit(): void {
     this.durum$ = zip(
-      this._flatBread.pipe(
-        map(ing => `${ing} ${++this.flatBreadCounter}`),
-        tap(console.log)
-      ),
-      this._meat.pipe(
-        map(ing => `${ing} ${++this.meatCounter}`),
-        tap(console.log)
-      ),
-      this._sauce.pipe(
-        map(ing => `${ing} ${++this.sauceCounter}`),
-        tap(console.log)
-      ),
-      this._tomato.pipe(
-        map(ing => `${ing} ${++this.tomatoCounter}`),
-        tap(console.log)
-      ),
-      this._cabbage.pipe(
-        map(ing => `${ing} ${++this.cabbageCounter}`),
-        tap(console.log)
-      ),
+      this._flatBread.pipe(tap(ing => this.logger.log(`${ing} ${++this.flatBreadCounter}`))),
+      this._meat.pipe(tap(ing => this.logger.log(`${ing} ${++this.meatCounter}`))),
+      this._sauce.pipe(tap(ing => this.logger.log(`${ing} ${++this.sauceCounter}`))),
+      this._tomato.pipe(tap(ing => this.logger.log(`${ing} ${++this.tomatoCounter}`))),
+      this._cabbage.pipe(tap(ing => this.logger.log(`${ing} ${++this.cabbageCounter}`))),
     ).pipe(
-      tap(durum => console.log('Enjoy!', durum))
+      tap(durum => this.logger.log('Enjoy!' + JSON.stringify(durum)))
     );
 
     this.delivery$ = this._order.pipe(
-      tap(order => console.log('New Order', order)),
+      tap(order => this.logger.log('New Order:' + JSON.stringify(order))),
       mergeMap(({ amount, customerId }) =>
         this.durum$.pipe(
           take(amount),
           map(durum => ({ product: durum, customerId }))
         )
       ),
-      tap(product => console.log('Delivery Product', product))
+      tap(product => this.logger.log('Delivery Product:' + JSON.stringify(product)))
     );
   }
 
   dispatchOrder(): void {
-    const amount = Math.floor(Math.random() * 3) + 1;
+    this.amount = Math.floor(Math.random() * 3) + 1;
     ++this.customerId;
-    this._order.next({ amount, customerId: this.customerId });
+    this._order.next({ amount: this.amount, customerId: this.customerId });
   }
 }

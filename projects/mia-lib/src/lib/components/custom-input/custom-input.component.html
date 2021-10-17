@@ -18,7 +18,7 @@
       [placeholder]="placeholder"
       (blur)="onTouched()"
     />
-    <span class="custom-input-icon-suffix" matSuffix>
+    <span matSuffix>
       <ng-content select="[suffix]"></ng-content>
     </span>
     <mat-error *ngIf="control?.invalid">

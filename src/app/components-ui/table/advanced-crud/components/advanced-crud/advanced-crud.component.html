@@ -5,7 +5,7 @@
 </ng-template>
 
 <ng-container *ngIf="category$ | async; else loadingTmpl">
-  <div class="bg-white p-3 m-3 bd-auto">
+  <div class="bg-white p-3 m-3 bd-auto bd-light">
     <div class="d-flex jc-between ai-center">
       <h2 [style.margin]="0">Categories</h2>
       <button
@@ -23,8 +23,7 @@
       <ng-container formArrayName="rows">
         <table
           [dataSource]="dataSource"
-          [style.border]="'1px solid lightgray'"
-          class="width-100 mt-2 bd-auto"
+          class="width-100 mt-2 bd-auto bd-light"
           id="mat-table"
           mat-table
         >

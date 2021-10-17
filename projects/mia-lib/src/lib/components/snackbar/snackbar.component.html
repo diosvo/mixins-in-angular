@@ -1,11 +1,11 @@
 <div class="d-flex jc-between ai-center">
-  <span class="text-black opacity-0.8 pr-1" [innerHTML]="data"></span>
+  <span class="pr-1" [innerHTML]="data"></span>
   <button
-    class="bg-none bd-circle"
+    class="bg-none bd-circle w-32 h-32"
     data-toggle="tooltip"
     title="Close message"
     (click)="snackBarRef.dismiss()"
   >
-    <span aria-hidden="true" class="text-secondary">×</span>
+    <span aria-hidden="true" class="text-light-blue">×</span>
   </button>
 </div>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListWebUiComponent } from './list-web-ui.component';
+import { CrudInOneViewComponent } from './crud-in-one-view.component';
 
-describe('ListWebUiComponent', () => {
-  let component: ListWebUiComponent;
-  let fixture: ComponentFixture<ListWebUiComponent>;
+describe('CrudInOneViewComponent', () => {
+  let component: CrudInOneViewComponent;
+  let fixture: ComponentFixture<CrudInOneViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListWebUiComponent ]
+      declarations: [ CrudInOneViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ListWebUiComponent);
+    fixture = TestBed.createComponent(CrudInOneViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,9 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { SnackbarComponent } from '@lib/components/snackbar/snackbar.component';
 import { Observable, race, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { MessageType } from "@lib/models/alert";
-import { SnackbarComponent } from "@lib/components/snackbar/snackbar.component";
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +16,6 @@ export class SnackbarService {
     return this.alertMessage$.asObservable();
   }
 
-  private type: MessageType;
-
   private config: MatSnackBarConfig = {
     duration: 3000,
     verticalPosition: 'top',
@@ -31,26 +28,22 @@ export class SnackbarService {
   ) { }
 
   success(message: string): void {
-    this.type = 'success';
-    return this.show(message, SnackbarService.getStyles(this.type));
+    return this.show(message);
   }
 
   info(message: string): void {
-    this.type = 'info';
-    return this.show(message, SnackbarService.getStyles(this.type));
+    return this.show(message);
   }
 
   warning(message: string): void {
-    this.type = 'warning';
-    return this.show(message, SnackbarService.getStyles(this.type));
+    return this.show(message);
   }
 
   error(message: string): void {
-    this.type = 'error';
-    return this.show(message, SnackbarService.getStyles(this.type));
+    return this.show(message);
   }
 
-  private show(message: string, panelClasses: Array<string>): void {
+  private show(message: string): void {
     this.alertMessage$.next(message);
     const dismissConditions: Observable<any>[] = [this.alertDismissed$, this.hostComponentDestroyed$];
 
@@ -58,7 +51,6 @@ export class SnackbarService {
       const snackbar = this.snackbar.openFromComponent(SnackbarComponent, {
         ...this.config,
         data: message,
-        panelClass: panelClasses
       });
 
       race(...dismissConditions)
@@ -67,9 +59,5 @@ export class SnackbarService {
           complete: () => snackbar.dismiss()
         });
     });
-  }
-
-  private static getStyles(type: MessageType): Array<string> {
-    return [`bg-${ type }`, `bd-${ type }`];
   }
 }

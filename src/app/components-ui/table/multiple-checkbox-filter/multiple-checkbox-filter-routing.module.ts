@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListWebUiComponent } from './list-web-ui.component';
+import { DataTableComponent } from './components/data-table/data-table.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ListWebUiComponent,
+    component: DataTableComponent,
+    data: {
+      title: 'Multiple/ Checkbox Filter'
+    }
   }
 ];
 
@@ -13,4 +16,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class WebUiRoutingModule { }
+export class MultipleCheckboxSearchRoutingModule { }

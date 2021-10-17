@@ -1,4 +1,4 @@
-import { Component, OnInit, Self } from '@angular/core';
+import { Component, HostListener, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -42,21 +42,22 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     // Deep-compare between Primitive Form Value & Form Value Changes
     combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
       .pipe(
-        map(([prev, next]) => JSON.stringify(prev) === JSON.stringify(next)),
-        startWith(true)
+        map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
+        startWith(false)
       )
       .subscribe(response => this.hasChanged = response);
   }
 
+  @HostListener('window:beforeunload')
   canDeactivate(): boolean {
-    return this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
+    return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }
 
   saveChanges(url: string): void {
     return this.onSubmit(url);
   }
 
-  onSubmit(url: string): void {
+  onSubmit(url?: string): void {
     if (this.unsavedForm.invalid) {
       this.snackbar.error('You need to provide all required information.');
       return;

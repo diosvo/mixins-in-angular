@@ -1,1 +1,15 @@
-@use 'message';
+@use 'colors/severity'as severity;
+
+.alert {
+  &-info {
+    $-color     : #2E5AAC;
+    $-background: #89A7E0;
+    @include severity.message-config($-color, $-background);
+  }
+
+  &-error {
+    $-color     : #DA1414;
+    $-background: #FEEFFE;
+    @include severity.message-config($-color, $-background);
+  }
+}

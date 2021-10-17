@@ -18,19 +18,20 @@
   }
 }
 
-.overlay {
-  width: 100%;
+.shade {
+  width : 100%;
   height: 100%;
 
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top     : 0;
+  left    : 0;
+  right   : 0;
+  bottom  : 0;
 
-  overflow: hidden;
-  visibility: hidden;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
 
-  z-index: 100;
-  background: transparent;
+  z-index   : 10000;
+  background: palette.$shade;
 }

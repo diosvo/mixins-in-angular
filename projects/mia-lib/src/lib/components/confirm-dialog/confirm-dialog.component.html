@@ -1,18 +1,11 @@
 <div class="d-flex jc-between">
-  <h2
-    mat-dialog-title
-    class="dialog-title"
-    [innerHTML]="data.header | titlecase"
-  ></h2>
-  <button mat-icon-button class="close-button" mat-dialog-close>
+  <h2 mat-dialog-title [innerHTML]="data.header | titlecase"></h2>
+  <button mat-icon-button class="dialog-close-button" mat-dialog-close>
     <span class="f-20">×</span>
   </button>
 </div>
-<mat-dialog-content
-  class="mat-typography"
-  [innerHTML]="data.body"
-></mat-dialog-content>
-<mat-dialog-actions align="end" class="dialog-actions">
+<mat-dialog-content [innerHTML]="data.body"></mat-dialog-content>
+<mat-dialog-actions align="end">
   <button mat-stroked-button color="warn" mat-dialog-close>Close</button>
   <button
     mat-flat-button

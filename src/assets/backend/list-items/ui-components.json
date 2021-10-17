@@ -5,13 +5,11 @@
       {
         "name": "Micro Interaction",
         "route": "micro-interaction",
-        "image": "",
         "description": "GSAP"
       },
       {
         "name": "Button Toggle Mode",
         "route": "toggle-mode",
-        "image": "",
         "description": "ngClass"
       }
     ]
@@ -22,7 +20,6 @@
       {
         "name": "Animated Counter Card",
         "route": "animated-counter",
-        "image": "",
         "description": "Counter Directive, ViewChild, GSAP"
       }
     ]
@@ -33,7 +30,6 @@
       {
         "name": "Navbar Interaction",
         "route": "navbar",
-        "image": "",
         "description": "ngClass, ngStyle, GSAP"
       }
     ]
@@ -44,8 +40,12 @@
       {
         "name": "Advanced CRUD",
         "route": "advanced-crud",
-        "image": "",
         "description": "UX/UI interaction, handle Form"
+      },
+      {
+        "name": "Multiple Checkbox Filter",
+        "route": "multiple-checkbox-filter",
+        "description": "Persist on URL"
       }
     ]
   },
@@ -53,15 +53,8 @@
     "groupName": "form",
     "groupDetails": [
       {
-        "name": "Interaction - Order Form",
-        "route": "order-form",
-        "image": "",
-        "description": "Unsaved Changes Guard w/o initial values, CanActivate and CanLoad Guard"
-      },
-      {
         "name": "Unsaved Form Demo",
         "route": "unsaved-form",
-        "image": "",
         "description": "Unsaved Changes Guard with given value, CanActivate and CanLoad Guard"
       }
     ]

@@ -21,22 +21,23 @@ export class ToolbarComponent {
     this.dialog.open(LoginComponent);
   }
 
-  async openLogoutDialog(): Promise<void> {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        header: 'logout',
-        body: 'Are you sure you want to logout?',
-        btnConfirm: 'confirm',
-      },
-      disableClose: true,
-      width: '500px'
-    });
-
-    await dialogRef.afterClosed().subscribe(result => {
-      if (!!result) {
-        this.authService.logout();
-        this.router.navigate(['']);
-      }
-    });
+  openLogoutDialog(): void {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          header: 'logout',
+          body: 'Are you sure you want to logout?',
+          btnConfirm: 'confirm',
+        },
+        disableClose: true,
+        width: '500px'
+      })
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (!!result) {
+          this.authService.logout();
+          this.router.navigate(['/ui-components']);
+        }
+      });
   }
 }

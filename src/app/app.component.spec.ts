@@ -3,10 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '@auth/services/auth.service';
+import { FooterModule } from '@home/components/footer/footer.module';
+import { ToolbarModule } from '@home/components/toolbar/toolbar.module';
 import { Observable, of } from 'rxjs';
 import { AppComponent } from './app.component';
-import { ToolbarModule } from '@home/components/toolbar/toolbar.module';
-import { FooterModule } from '@home/components/footer/footer.module';
 
 class MockRouter {
   public navigate = new NavigationEnd(0, 'http://localhost:4200/ui-components', 'http://localhost:4200/ui-components');
@@ -15,6 +15,11 @@ class MockRouter {
     observer.complete();
   });
 }
+
+/* class MockRouter {
+  public router = 'http://localhost:4200/ui-components';
+  public events = of(new NavigationEnd(0, this.router, this.router));
+} */
 
 const titleService = {
   setTitle: jest.fn().mockReturnValue('App')

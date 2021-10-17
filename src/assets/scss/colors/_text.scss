@@ -24,6 +24,10 @@
   &-black {
     color: palette.$black;
   }
+
+  &-error {
+    color: palette.$error;
+  }
 }
 
 .text-hover {

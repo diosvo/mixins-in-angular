@@ -16,8 +16,6 @@ enum EComponentUI {
   FORM = 'form',
 }
 
-enum EWebUI { }
-
 enum EFunctions {
   RXJS = 'rxjs',
 }

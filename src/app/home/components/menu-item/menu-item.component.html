@@ -1,56 +1,30 @@
 <article class="d-grid template-container gap-1 p-2">
-  <ng-container *ngFor="let group of data | async">
-    <mat-card *ngFor="let item of group.groupDetails">
-      <!-- Header -->
-      <ng-container>
-        <div class="d-flex jc-between ai-baseline">
-          <mat-card-title class="f-16">
-            {{ item.name | titlecase }}
-          </mat-card-title>
-          <button
-            mat-icon-button
-            class="button-description"
-            [matTooltipPosition]="'below'"
-            [matTooltip]="item.description ? item.description : 'Updating...'"
-          >
-            <mat-icon
-              class="f-20 text-secondary text-hover-dark-blue opacity-0.8"
-            >
-              info_outline
-            </mat-icon>
+  <ng-container *ngFor="let group of data">
+    <ng-container *ngFor="let item of group.groupDetails">
+      <div
+        class="
+          item
+          d-flex
+          jc-between
+          ai-center
+          p-2
+          bg-white
+          bd-auto
+          bs-light-hover
+          cursor-pointer
+        "
+        (click)="directItem(group.groupUrl, group.groupName, item.route)"
+      >
+        <div>
+          <span class="f-12 text-secondary mb-1"> #{{ group.groupName }} </span>
+          <div class="f-16">{{ item.name | titlecase }}</div>
+        </div>
+        <div>
+          <button mat-icon-button color="warn" aria-label="View Details">
+            <span class="btn-view d-flex jc-center visibility-hidden">»</span>
           </button>
         </div>
-
-        <mat-card-subtitle>
-          <mat-chip-list aria-label="Group name">
-            <mat-chip class="f-13" (click)="onSelect(group.groupName)">
-              {{ group.groupName | titlecase }}
-            </mat-chip>
-          </mat-chip-list>
-        </mat-card-subtitle>
-      </ng-container>
-
-      <!-- Main -->
-      <img
-        alt="Item image"
-        mat-card-image
-        class="cursor-pointer"
-        [src]="item.image ? item.image : emptyImg"
-        (click)="directItem(group.groupUrl, group.groupName, item.route)"
-      />
-
-      <!-- Actions -->
-      <mat-card-actions class="text-right">
-        <button
-          mat-button
-          color="primary"
-          aria-label="View Details"
-          (click)="directItem(group.groupUrl, group.groupName, item.route)"
-        >
-          <mat-icon class="mr-1">play_arrow</mat-icon>
-          <span>View</span>
-        </button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
+    </ng-container>
   </ng-container>
 </article>

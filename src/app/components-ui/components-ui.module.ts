@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,10 +10,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthModule } from '@auth/auth.module';
+import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ComponentsUiRoutingModule } from './components-ui-routing.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
-import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
 
 @NgModule({
   declarations: [
@@ -22,8 +22,6 @@ import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
   imports: [
     CommonModule,
     ComponentsUiRoutingModule,
-
-    FormsModule,
     ReactiveFormsModule,
 
     AuthModule,

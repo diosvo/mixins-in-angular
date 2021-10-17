@@ -2,28 +2,39 @@
   <h2 mat-dialog-title>Login</h2>
 
   <!-- Content -->
-  <mat-dialog-content class="mat-typography">
-    <div>
-      <label for="username">Username</label>
-      <mat-form-field class="width-100">
-        <input matInput type="text" autocomplete="off" formControlName="username" cdkTrapFocus>
-      </mat-form-field>
-    </div>
-    <div>
-      <label for="username">Password</label>
-      <mat-form-field class="width-100">
-        <input matInput [type]="hidePassword ? 'password' : 'text'" autocomplete="off" formControlName="password">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hidePassword">
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
+  <mat-dialog-content>
+    <custom-input
+      type="text"
+      cdkTrapFocus
+      label="Username"
+      formControlName="username"
+    ></custom-input>
+    <custom-input label="Password" type="password" formControlName="password">
+      <button
+        suffix
+        matSuffix
+        mat-icon-button
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePassword"
+        (click)="hidePassword = !hidePassword"
+      >
+        <mat-icon>
+          {{ hidePassword ? "visibility_off" : "visibility" }}
+        </mat-icon>
+      </button>
+    </custom-input>
   </mat-dialog-content>
 
   <!-- Actions -->
-  <mat-dialog-actions align="end" style="padding: 0.5rem 0 1rem;">
+  <mat-dialog-actions align="end">
     <button mat-stroked-button mat-dialog-close>Cancel</button>
-    <button mat-flat-button color="primary" [mat-dialog-close]="true" (click)="onSubmit()">Log In</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [mat-dialog-close]="true"
+    >
+      Log In
+    </button>
   </mat-dialog-actions>
 </form>

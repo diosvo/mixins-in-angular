@@ -2,6 +2,10 @@
   top: $n * 1rem;
 }
 
+@mixin bottom($n) {
+  bottom: $n * 1rem;
+}
+
 @mixin left($n) {
   left: $n * 1rem;
 }
@@ -38,8 +42,13 @@
   }
 }
 
-.left {
+.bottom {
+  &-0 {
+    @include bottom(0);
+  }
+}
 
+.left {
   &-1 {
     @include left(1);
   }

@@ -28,6 +28,9 @@
     "@lib/components/*": [
       "projects/mia-lib/src/lib/components/*"
     ],
+    "@lib/directives/*": [
+      "projects/mia-lib/src/lib/directives/*"
+    ],
     "@lib/guards/*": [
       "projects/mia-lib/src/lib/guards/*"
     ],

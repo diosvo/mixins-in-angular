@@ -31,7 +31,7 @@
       <ng-template matExpansionPanelContent>
         <form [formGroup]="functionsForm" class="panel-container d-flex gap-1">
           <mat-form-field class="search-input filter-group">
-            <mat-label>Components</mat-label>
+            <mat-label>Functions</mat-label>
             <mat-select formControlName="group">
               <mat-option value="all" selected>All</mat-option>
               <mat-option *ngFor="let group of groupList" [value]="group">

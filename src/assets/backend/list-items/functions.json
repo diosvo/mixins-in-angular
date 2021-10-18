@@ -1,6 +1,6 @@
 [
   {
-    "groupName": "RxJS",
+    "groupName": "rxjs",
     "groupDetails": [
       {
         "name": "Data Composition #ng-conf",
@@ -16,6 +16,16 @@
         "name": "Basic Operators",
         "route": "basic-operators",
         "description": "Combination: zip, switchMap, mergeMap"
+      }
+    ]
+  },
+  {
+    "groupName": "algorithm",
+    "groupDetails": [
+      {
+        "name": "Self-Learning",
+        "route": "self-learning",
+        "description": ""
       }
     ]
   }

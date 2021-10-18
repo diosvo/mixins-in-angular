@@ -4,7 +4,6 @@
 
 enum EUrl {
   COMPONENT = 'ui-components',
-  WEB = 'web-ui',
   FUNCTION = 'functions'
 }
 
@@ -18,6 +17,7 @@ enum EComponentUI {
 
 enum EFunctions {
   RXJS = 'rxjs',
+  Algorithm = 'algorithm',
 }
 
 export { EUrl, EComponentUI, EFunctions };

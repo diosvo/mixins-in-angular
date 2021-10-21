@@ -8,8 +8,12 @@ import { Component } from '@angular/core';
 export class SelfLearningComponent {
 
   numbers = [1, 5, 4, 2, 3];
+  nested = [10, [12, 14, [1], [16, [20]]], 10, 11];
+  nestedSum = 0;
 
-  constructor() { }
+  /**
+   * @iterative_sorts
+   */
 
   bubbleSort(numbers: Array<number>): Array<number> {
     for (let idx = 0; idx < numbers.length; idx++) {
@@ -42,5 +46,31 @@ export class SelfLearningComponent {
     }
 
     return numbers;
+  }
+
+  /**
+   * @recursion
+   * @advantage defining problem into smaller versions of the same problem
+   */
+
+  /**
+   * @description takes all the numbers in the array and adds them together.
+   */
+
+  nestedArray(array: Array<any>): number {
+    let sum = 0;
+    for (let idx = 0; idx < array.length; idx++) {
+      const current = array[idx];
+
+      // check current is still array
+      if (Array.isArray(current)) {
+        sum += this.nestedArray(current);
+      } else {
+        sum += current;
+      }
+    }
+
+    this.nestedSum = sum;
+    return sum;
   }
 }

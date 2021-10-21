@@ -1,9 +1,30 @@
 <div class="m-1">
-  <h3>{{ numbers | json }}</h3>
-  <button class="p-1 bg-black text-white bd-auto" (click)="bubbleSort(numbers)">
-    Bubble sort
-  </button>
-  <button class="p-1 bg-black text-white bd-auto" (click)="insertionSort(numbers)">
-    Insertion sort
-  </button>
+  <article>
+    <h2>Iterative Sorts</h2>
+    <h3>{{ numbers | json }}</h3>
+    <button
+      class="p-1 bg-black text-white bd-auto"
+      (click)="bubbleSort(numbers)"
+    >
+      Bubble sort
+    </button>
+    <button
+      class="p-1 bg-black text-white bd-auto ml-1"
+      (click)="insertionSort(numbers)"
+    >
+      Insertion sort
+    </button>
+  </article>
+
+  <article class="mt-2">
+    <h2>Recursion</h2>
+    <h3>{{ nested | json }}</h3>
+    <h3>Sum = {{ nestedSum }}</h3>
+    <button
+      class="p-1 bg-black text-white bd-auto"
+      (click)="nestedArray(nested)"
+    >
+      Nested Array
+    </button>
+  </article>
 </div>

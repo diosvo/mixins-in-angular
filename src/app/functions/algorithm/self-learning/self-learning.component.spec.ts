@@ -39,6 +39,13 @@ describe('SelfLearningComponent', () => {
         expect(component.nestedArray([[[[[[[[[5]]]]]]]]])).toEqual(5);
         expect(component.nestedArray([10, [12, 14, [1], [16, [20]]], 10, 11])).toEqual(94);
       });
+
+      test('factorial()', () => {
+        expect(component.factorial(1)).toEqual(1);
+        expect(component.factorial(2)).toEqual(2);
+        expect(component.factorial(3)).toEqual(6);
+        expect(component.factorial(10)).toEqual(3628800);
+      });
     });
   });
 });

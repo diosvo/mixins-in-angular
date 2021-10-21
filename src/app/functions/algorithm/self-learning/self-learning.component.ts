@@ -8,8 +8,10 @@ import { Component } from '@angular/core';
 export class SelfLearningComponent {
 
   numbers = [1, 5, 4, 2, 3];
+
   nested = [10, [12, 14, [1], [16, [20]]], 10, 11];
   nestedSum = 0;
+  factorialCount = 0;
 
   /**
    * @iterative_sorts
@@ -72,5 +74,14 @@ export class SelfLearningComponent {
 
     this.nestedSum = sum;
     return sum;
+  }
+
+  /**
+   * @description n!
+   */
+
+  factorial(number: number): number {
+    if (number < 2) return 1;
+    return this.factorialCount = number * this.factorial(number - 1);
   }
 }

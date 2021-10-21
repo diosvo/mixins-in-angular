@@ -20,11 +20,16 @@
     <h2>Recursion</h2>
     <h3>{{ nested | json }}</h3>
     <h3>Sum = {{ nestedSum }}</h3>
+    <h3>Factorial count = {{ factorialCount }}</h3>
     <button
       class="p-1 bg-black text-white bd-auto"
       (click)="nestedArray(nested)"
     >
       Nested Array
+    </button>
+
+    <button class="p-1 bg-black text-white bd-auto ml-1" (click)="factorial(10)">
+      Factorial
     </button>
   </article>
 </div>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export abstract class BaseService<T> {
-  protected model!: T;
+  protected model?: T;
 
   all(): Observable<Array<T>> {
     return of(Array(this.model));
@@ -16,11 +16,11 @@ export abstract class BaseService<T> {
     return of(this.model);
   }
 
-  create(id: number): Observable<T> {
+  create(body: T): Observable<T> {
     return of(this.model);
   }
 
-  update(id: number): Observable<T> {
+  update(id: number, body: T): Observable<T> {
     return of(this.model);
   }
 

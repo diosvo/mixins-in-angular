@@ -3,7 +3,7 @@
     <mat-spinner class="m-0-auto"></mat-spinner>
   </ng-template>
 
-  <mat-list *ngIf="products$ | async as products else loadingTmpl">
+  <mat-list *ngIf="products$ | async as products; else loadingTmpl">
     <div class="d-flex jc-between" matSubheader>
       <h3 [style.margin.rem]="0">List of Products</h3>
       <button (click)="onRefresh()" data-toggle="tooltip" mat-icon-button title="Refresh Data">

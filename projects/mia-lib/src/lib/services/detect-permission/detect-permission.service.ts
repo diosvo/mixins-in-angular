@@ -20,7 +20,7 @@ export class DetectPermissionService {
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(_ => this.activatedRoute),
-        mergeMap(route => route.data)
+        mergeMap(({ data }) => data)
       )
       .subscribe({
         next: ({ roles }) => {

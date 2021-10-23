@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-self-learning',
+  selector: 'algorithm-self-learning',
   templateUrl: './self-learning.component.html',
   styleUrls: ['./self-learning.component.scss']
 })
@@ -51,7 +51,7 @@ export class SelfLearningComponent {
   }
 
   /**
-   * @recursion
+   * @recursion_sorts
    * @advantage defining problem into smaller versions of the same problem
    */
 
@@ -64,8 +64,7 @@ export class SelfLearningComponent {
     for (let idx = 0; idx < array.length; idx++) {
       const current = array[idx];
 
-      // check current is still array
-      if (Array.isArray(current)) {
+      if (Array.isArray(current)) {  // check current is still array
         sum += this.nestedArray(current);
       } else {
         sum += current;
@@ -83,5 +82,37 @@ export class SelfLearningComponent {
   factorial(number: number): number {
     if (number < 2) return 1;
     return this.factorialCount = number * this.factorial(number - 1);
+  }
+
+  /**
+   * @description takes those two smaller sorted lists and combine them back into one larger.
+   */
+
+  mergeSort(numbers: Array<number>): Array<number> {
+    if (numbers.length < 2) {
+      return numbers;
+    }
+
+    // break into two smaller arrays
+    const length = numbers.length;
+    const middle = Math.floor(length / 2);
+    const left = numbers.slice(0, middle);
+    const right = numbers.slice(middle);
+
+    return this.numbers = this.merge(this.mergeSort(left), this.mergeSort(right));
+  }
+
+  private merge(left: Array<number>, right: Array<number>): Array<number> {
+    const results = [];
+
+    while (left.length && right.length) {
+      if (left[0] <= right[0]) {
+        results.push(left.shift());
+      } else {
+        results.push(right.shift());
+      }
+    }
+
+    return results.concat(left, right);
   }
 }

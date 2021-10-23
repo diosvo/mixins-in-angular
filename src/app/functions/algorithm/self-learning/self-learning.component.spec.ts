@@ -46,6 +46,10 @@ describe('SelfLearningComponent', () => {
         expect(component.factorial(3)).toEqual(6);
         expect(component.factorial(10)).toEqual(3628800);
       });
+
+       test('mergeSort()', () => {
+        expect(component.mergeSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
     });
   });
 });

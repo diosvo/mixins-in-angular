@@ -4,7 +4,7 @@
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </ng-template>
 
-<ng-container *ngIf="category$ | async; else loadingTmpl">
+<ng-container *ngIf="categories$ | async; else loadingTmpl">
   <div class="bg-white p-3 m-3 bd-auto bd-light">
     <div class="d-flex jc-between ai-center">
       <h2 [style.margin]="0">Categories</h2>
@@ -14,7 +14,7 @@
         color="primary"
         mat-flat-button
       >
-        Add New Row
+        New Category
       </button>
     </div>
 
@@ -35,11 +35,13 @@
               mat-cell
             >
               <custom-input
-                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-                [readonly]="!rows.value[idx].isEditable"
-                [style]="'width: 90%'"
                 formControlName="categoryId"
+                [readonly]="!rows.value[idx].isEditable"
+                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
                 type="text"
+                [required]="true"
+                [style]="'width: 90%'"
+                #focusInput
               ></custom-input>
             </td>
           </ng-container>
@@ -52,11 +54,12 @@
               mat-cell
             >
               <custom-input
-                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-                [readonly]="!rows.value[idx].isEditable"
-                [style]="'width: 90%'"
                 formControlName="categoryName"
+                [readonly]="!rows.value[idx].isEditable"
+                [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
                 type="text"
+                [required]="true"
+                [style]="'width: 90%'"
               ></custom-input>
             </td>
           </ng-container>
@@ -75,7 +78,7 @@
               <button
                 (click)="saveChanges(idx)"
                 *ngIf="rows.value[idx].isEditable"
-                [disabled]="isValidRow(idx)"
+                [disabled]="!isValid(idx)"
                 color="primary"
                 mat-icon-button
                 matTooltip="Save Changes"
@@ -99,7 +102,6 @@
               <button
                 (click)="editItem(idx)"
                 *ngIf="!rows.value[idx].isEditable"
-                [disabled]="isValidRow(idx)"
                 color="primary"
                 mat-icon-button
                 matTooltip="Edit"
@@ -122,7 +124,11 @@
             </td>
           </ng-container>
 
-          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            [style.background-color]="'#F5F6FA'"
+          ></tr>
           <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
           <tr *matNoDataRow class="mat-row text-center">

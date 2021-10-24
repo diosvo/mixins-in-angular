@@ -12,7 +12,7 @@ import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
 })
 export class ProductsService extends BaseService<IProduct> {
   private loading$ = new BehaviorSubject<boolean>(true);
-  
+
   /**
    * @description create an action steam
    */
@@ -65,11 +65,12 @@ export class ProductsService extends BaseService<IProduct> {
       );
 
   constructor(
-    private http: HttpClient,
-    private categoryService: CategoryService,
-    private logger: LoggerService
+    private readonly http: HttpClient,
+    private readonly categoryService: CategoryService,
+    private readonly logger: LoggerService,
+    protected endpoint: '/assets/backend/data/products.json'
   ) {
-    super();
+    super(endpoint);
     this.loading$.next(true);
   }
 
@@ -84,8 +85,7 @@ export class ProductsService extends BaseService<IProduct> {
    */
 
   all(): Observable<Array<IProduct>> {
-    return this.http
-      .get<Array<IProduct>>('/assets/backend/data/products.json');
+    return this.http.get<Array<IProduct>>(this.endpoint);
   }
 
   selectedProduct(productId?: number): void {
@@ -93,10 +93,9 @@ export class ProductsService extends BaseService<IProduct> {
   }
 
   byId(productId: number): Observable<IProduct> {
-    return this.all$
-      .pipe(
-        map(products => products.find(row => row.productId === productId)),
-      );
+    return this.all$.pipe(
+      map(products => products.find(row => row.productId === productId)),
+    );
   }
 
   // Refresh the data.

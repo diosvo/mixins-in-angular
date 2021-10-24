@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { enableProdMode, Injectable, isDevMode } from '@angular/core';
 import { environment } from '@env/environment';
 import { ILogger } from './logger';
 
@@ -15,6 +15,8 @@ export class LoggerService implements ILogger {
   }
 
   info(value: string): void {
+    console.log(environment.production, isDevMode);
+    
     if (environment.production) {
       this.disabledProdMode();
     }
@@ -29,6 +31,7 @@ export class LoggerService implements ILogger {
   }
 
   private disabledProdMode(): void {
+    enableProdMode();
     let disFunc = () => 'Console has been disabled in production mode';
 
     console.log = disFunc;

@@ -34,5 +34,7 @@ export class LoggerService implements ILogger {
     console.log = disFunc;
     console.error = disFunc;
     console.warn = disFunc;
+
+    Object.freeze(console);
   }
 }

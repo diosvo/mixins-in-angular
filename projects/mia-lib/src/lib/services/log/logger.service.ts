@@ -11,21 +11,21 @@ export class LoggerService implements ILogger {
     if (environment.production) {
       this.disabledProdMode();
     }
-    console.log('%c LoggerService:', 'background-color: rgba(0, 0, 0, 0.15)', `${value}`);
+    console.log('%c LoggerService ➡ ', 'background-color: rgba(0, 0, 0, 0.15)', `${value}`);
   }
 
   warn(value: string): void {
     if (environment.production) {
       this.disabledProdMode();
     }
-    console.warn(`LoggerService: ${value}`);
+    console.warn(`LoggerService ➡ ${value}`);
   }
 
   error(value: string): void {
     if (environment.production) {
       this.disabledProdMode();
     }
-    console.error(`LoggerService: ${value}`);
+    console.error(`LoggerService ➡ ${value}`);
   }
 
   private disabledProdMode(): void {

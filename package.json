@@ -1,7 +1,7 @@
 {
   "name": "mixins-in-angular",
   "author": "diosvo",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
-import { HandleServerService } from '@lib/services/base/handle-server.service';
+import { HandleService } from '@lib/services/base/handle.service';
 import { CacheService } from '@lib/services/cache/cache.service';
 import { HttpRequestCache } from '@lib/services/cache/http-request-cache';
 import { Observable, Subject } from 'rxjs';
@@ -16,8 +16,8 @@ export class GithubRepoIssuesService {
 
   constructor(
     private http: HttpClient,
-    readonly handleServer: HandleServerService,
-    private readonly cache: CacheService
+    private readonly cache: CacheService,
+    private readonly handle: HandleService,
   ) { }
 
   @HttpRequestCache<GithubRepoIssuesService>(function () {
@@ -32,7 +32,7 @@ export class GithubRepoIssuesService {
     const requestUrl = `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1}`;
 
     return this.http.get<GithubApi>(requestUrl).pipe(
-      this.handleServer.retryServerErrors(),
+      this.handle.retryServerErrors(),
       shareReplay(),
     );
   }

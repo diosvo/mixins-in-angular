@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { pipe } from 'gsap/all';
-import { interval, mergeMap, retryWhen, take, throwError } from 'rxjs';
+import { interval, mergeMap, retryWhen, take, throwError, TimeoutError } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 
-export class HandleServerService {
+export class HandleService {
   isServerError = (error: HttpErrorResponse) => error.status >= 500;
 
   retryServerErrors = <T>() => {
@@ -22,5 +24,14 @@ export class HandleServerService {
         }))
       )
     );
+  }
+
+  errorHandler = (name: string) => (error: HttpErrorResponse | TimeoutError) => {
+    if (error instanceof TimeoutError) {
+      return throwError(() => new Error(`Request timeout. (${name})`));
+    }
+    if (error instanceof HttpErrorResponse) {      
+      return throwError(() => new Error(`${error.message} (${name})`));
+    }
   }
 }

@@ -13,6 +13,10 @@ const routes: Routes = [
     path: EFunctions.RXJS,
     loadChildren: () => import('./rxjs/rxjs.module').then(m => m.RxjsModule)
   },
+  {
+    path: EFunctions.Algorithm,
+    loadChildren: () => import('./algorithm/algorithm.module').then(m => m.AlgorithmModule)
+  },
 ];
 
 @NgModule({

@@ -1,11 +1,13 @@
 declare type Gender = 'male' | 'female' | 'others';
 
-interface IUserBaseValue {
+interface IUser {
   id: string;
   lastName: string;
   firstName: string;
+  name: string;
   gender: Gender;
+  email: string;
 }
 
-export { IUserBaseValue };
+export { IUser };
 

@@ -25,7 +25,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 export class AdvancedCrudComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'action'];
   dataSource = new MatTableDataSource<unknown>([]);
-  category$: Observable<Array<ICategory>>;
+  categories$: Observable<Array<ICategory>>;
 
   form: FormGroup = this.fb.group({
     rows: this.fb.array([])
@@ -50,7 +50,7 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
   }
 
   getCategories(): void {
-    this.category$ = this.service.all().pipe(
+    this.categories$ = this.service.all().pipe(
       tap({
         next: (data) => {
           this.form = this.fb.group({
@@ -114,8 +114,8 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
     }
   }
 
-  isValidRow(idx: number): boolean {
-    return !this.rows.at(idx).valid;
+  isValid(idx: number): boolean {
+    return this.rows.at(idx).valid;
   }
 
   onFocus(): void {

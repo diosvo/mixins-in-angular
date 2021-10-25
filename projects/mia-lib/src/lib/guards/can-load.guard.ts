@@ -21,7 +21,7 @@ export class CanLoadGuard implements CanLoad {
       tap({
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
-            this.logger.info('CanLoadGuard');
+            this.logger.log('CanLoadGuard');
             this.snackbar.warning('You must log in first');
           }
         }

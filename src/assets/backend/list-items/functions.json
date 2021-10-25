@@ -1,6 +1,6 @@
 [
   {
-    "groupName": "RxJS",
+    "groupName": "rxjs",
     "groupDetails": [
       {
         "name": "Data Composition #ng-conf",
@@ -8,14 +8,19 @@
         "description": "Without subscription, improve performance"
       },
       {
-        "name": "CRUD in one view",
-        "route": "crud-in-one-view",
-        "description": "Use Behavior Subject to handle form"
-      },
-      {
         "name": "Basic Operators",
         "route": "basic-operators",
         "description": "Combination: zip, switchMap, mergeMap"
+      }
+    ]
+  },
+  {
+    "groupName": "algorithm",
+    "groupDetails": [
+      {
+        "name": "Self-Learning",
+        "route": "self-learning",
+        "description": ""
       }
     ]
   }

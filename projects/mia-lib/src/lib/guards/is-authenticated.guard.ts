@@ -22,7 +22,7 @@ export class IsAuthenticatedGuard implements CanActivate {
       tap({
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
-            this.logger.info('IsAuthenticatedGuard');
+            this.logger.log('IsAuthenticatedGuard');
             this.snackbar.warning('You must log in first');
           }
         }

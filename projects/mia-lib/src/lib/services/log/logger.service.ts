@@ -8,26 +8,16 @@ import { ILogger } from './logger';
 export class LoggerService implements ILogger {
 
   log(value: string): void {
-    if (environment.production) {
-      this.disabledProdMode();
+    if (!environment.production) {
+      console.log('%c Logger ', 'background-color: #EEF2FA; color: #2E5AAC', `${value}`);
     }
-    console.log('%c Logger ', 'background-color: #EEF2FA; color: #2E5AAC', `${value}`);
+    return;
   }
 
   error(value: string): void {
-    if (environment.production) {
-      this.disabledProdMode();
+    if (!environment.production) {
+      console.error(`Logger - ${value}`);
     }
-    console.error(`Logger - ${value}`);
-  }
-
-  private disabledProdMode(): void {
-    let disFunc = () => 'Console has been disabled in production mode';
-
-    console.log = disFunc;
-    console.error = disFunc;
-    console.warn = disFunc;
-
-    Object.freeze(console);
+    return;
   }
 }

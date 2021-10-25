@@ -8,26 +8,24 @@ import { ILogger } from './logger';
 export class LoggerService implements ILogger {
 
   log(value: string): void {
-    if (environment.production) {
-      this.disabledProdMode();
+    if (!environment.production) {
+      console.log(`LoggerService: ${value}`);
     }
-    console.log(`LoggerService: ${value}`);
+    return;
   }
 
   info(value: string): void {
-    console.log(environment.production, isDevMode);
-    
-    if (environment.production) {
-      this.disabledProdMode();
+    if (!environment.production) {
+      console.info(`LoggerService: ${value}`);
     }
-    console.info(`LoggerService: ${value}`);
+    return;
   }
 
   error(value: string): void {
-    if (environment.production) {
-      this.disabledProdMode();
+    if (!environment.production) {
+      console.error(`LoggerService: ${value}`);
     }
-    console.error(`LoggerService: ${value}`);
+    return;
   }
 
   private disabledProdMode(): void {

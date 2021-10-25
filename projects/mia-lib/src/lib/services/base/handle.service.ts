@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { pipe } from 'gsap/all';
 import { interval, mergeMap, retryWhen, take, throwError, TimeoutError } from 'rxjs';
 
@@ -28,10 +28,10 @@ export class HandleService {
 
   errorHandler = (name: string) => (error: HttpErrorResponse | TimeoutError) => {
     if (error instanceof TimeoutError) {
-      return throwError(() => new Error(`Request timeout. (${name})`));
+      return throwError(() => new Error(isDevMode() ? `Request timeout. (${name})` : 'Request Timeout'));
     }
-    if (error instanceof HttpErrorResponse) {      
-      return throwError(() => new Error(`${error.message} (${name})`));
+    if (error instanceof HttpErrorResponse) {
+      return throwError(() => new Error(isDevMode() ? `${error.message} (${name})` : `${error.message}`));
     }
   }
 }

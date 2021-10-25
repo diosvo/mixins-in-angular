@@ -1,77 +1,83 @@
-<ng-template #loadingTmpl>
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</ng-template>
-<alert-message *ngIf="errorMessage" type="error">
-  {{ errorMessage }}
-</alert-message>
-
-<!-- Search -->
-<ng-container *ngIf="filteredData$ | async as filteredData; else loadingTmpl">
-  <mat-accordion>
-    <mat-expansion-panel>
-      <!-- Header -->
-      <mat-expansion-panel-header>
-        <mat-panel-title class="ai-center">
-          Reactive programming with RxJS 6+, ...
-        </mat-panel-title>
-        <mat-panel-description class="jc-flex-end">
-          <button
-            mat-icon-button
-            *ngIf="clearAllIconActive()"
-            (click)="cleanFilters()"
-            matTooltip="Clear All Filters"
-            matTooltipPosition="left"
-          >
-            <mat-icon>clear_all</mat-icon>
-          </button>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <!-- Content -->
-      <ng-template matExpansionPanelContent>
-        <form [formGroup]="functionsForm" class="panel-container d-flex gap-1">
-          <mat-form-field class="search-input filter-group">
-            <mat-label>Functions</mat-label>
-            <mat-select formControlName="group">
-              <mat-option value="all" selected>All</mat-option>
-              <mat-option *ngFor="let group of groupList" [value]="group">
-                {{ group | titlecase }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field class="search-input width-100">
-            <mat-label>What are you looking for today...</mat-label>
-            <input matInput autocomplete="off" formControlName="query" />
-            <button
-              matSuffix
-              mat-icon-button
-              *ngIf="query.value !== ''"
-              matTooltip="Clear"
-              (click)="cleanQuery()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-        </form>
-      </ng-template>
-    </mat-expansion-panel>
-  </mat-accordion>
-
-  <ng-container *ngIf="filteredData.length > 0; else notFound">
-    <menu-item [data]="filteredData"></menu-item>
-  </ng-container>
-
-  <ng-template #notFound>
-    <div class="text-center my-2">
-      <span>No item was found to match your search/filters</span>
-      <br class="my-1" />
-      <a
-        (click)="cleanFilters()"
-        class="text-light-blue text-deco-underline cursor-pointer"
-      >
-        Reset your criteria
-      </a>
-    </div>
-  </ng-template>
+<ng-container *ngIf="errorMessage$ | async as message; else noError">
+  <alert-message type="error"> {{ message }} </alert-message>
 </ng-container>
+
+<ng-template #noError>
+  <ng-template #loadingTmpl>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
+
+  <!-- Search -->
+  <ng-container *ngIf="filteredData$ | async as filteredData; else loadingTmpl">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <!-- Header -->
+        <mat-expansion-panel-header>
+          <mat-panel-title class="ai-center">
+            Reactive programming with RxJS 6+, ...
+          </mat-panel-title>
+          <mat-panel-description class="jc-flex-end">
+            <button
+              mat-icon-button
+              *ngIf="clearAllIconActive()"
+              (click)="cleanFilters()"
+              matTooltip="Clear All Filters"
+              matTooltipPosition="left"
+            >
+              <mat-icon>clear_all</mat-icon>
+            </button>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Content -->
+        <ng-template matExpansionPanelContent>
+          <form
+            [formGroup]="functionsForm"
+            class="panel-container d-flex gap-1"
+          >
+            <mat-form-field class="search-input filter-group">
+              <mat-label>Functions</mat-label>
+              <mat-select formControlName="group">
+                <mat-option value="all" selected>All</mat-option>
+                <mat-option *ngFor="let group of groupList" [value]="group">
+                  {{ group | titlecase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="search-input width-100">
+              <mat-label>What are you looking for today...</mat-label>
+              <input matInput autocomplete="off" formControlName="query" />
+              <button
+                matSuffix
+                mat-icon-button
+                *ngIf="query.value !== ''"
+                matTooltip="Clear"
+                (click)="cleanQuery()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </form>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <ng-container *ngIf="filteredData.length > 0; else notFound">
+      <menu-item [data]="filteredData"></menu-item>
+    </ng-container>
+
+    <ng-template #notFound>
+      <div class="text-center my-2">
+        <span>No item was found to match your search/filters</span>
+        <br class="my-1" />
+        <a
+          (click)="cleanFilters()"
+          class="text-light-blue text-deco-underline cursor-pointer"
+        >
+          Reset your criteria
+        </a>
+      </div>
+    </ng-template>
+  </ng-container>
+</ng-template>

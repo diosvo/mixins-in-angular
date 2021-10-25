@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { CanLoad } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
 import { LoggerService } from '@lib/services/log/logger.service';
@@ -22,6 +22,9 @@ export class CanLoadGuard implements CanLoad {
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
             this.logger.log('CanLoadGuard');
+            if (!isDevMode()) {
+              console.log('Test dev mode');
+            }
             this.snackbar.warning('You must log in first');
           }
         }

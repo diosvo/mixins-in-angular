@@ -24,7 +24,7 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   showFilterIcon = false;
-  errorMessage: string;
+  errorMessage$ = new Subject<string>();
 
   componentsForm: FormGroup = this.fb.group({
     query: [''],
@@ -81,10 +81,12 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       ),
       tap(() => this.updateParams()),
       takeUntil(this.destroyed$),
-      catchError(({ message }) => {
-        this.errorMessage = message;
-        return throwError(() => message);
-      }),
+      catchError(({ message }) =>
+        throwError(() => {
+          this.errorMessage$.next(message);
+          return new Error(message);
+        })
+      ),
     );
   }
 

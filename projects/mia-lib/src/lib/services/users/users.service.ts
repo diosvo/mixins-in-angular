@@ -11,12 +11,14 @@ type User = Partial<IUser>;
   providedIn: 'root'
 })
 
-export class UsersService implements BaseService<User> {
+export class UsersService extends BaseService<User> {
   readonly hasError$ = new Subject<boolean>();
 
   constructor(
     private readonly http: HttpClient,
-  ) { }
+  ) { 
+    super();
+  }
 
   all(): Observable<Array<User>> {
     return this.http.get<Array<Required<User>>>(this.url).pipe(
@@ -40,8 +42,8 @@ export class UsersService implements BaseService<User> {
     return this.http.post<Required<User>>(this.url, user);
   }
 
-  update(id: number, user: Required<User>): Observable<User> {
-    return this.http.put<Required<User>>(this.urlById(id), user);
+  update(user: User): Observable<User> {
+    return this.http.put<Required<User>>(this.urlById(user.id), user);
   }
 
   delete(id: number): Observable<User> {

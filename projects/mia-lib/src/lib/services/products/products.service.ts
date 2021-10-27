@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProduct } from '@lib/models/product';
-import { BaseService } from '@lib/services/base/base.service';
 import { CategoryService } from '@lib/services/category/category.service';
 import { LoggerService } from '@lib/services/log/logger.service';
 import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
@@ -10,7 +9,7 @@ import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsService extends BaseService<IProduct> {
+export class ProductsService {
   private loading$ = new BehaviorSubject<boolean>(true);
 
   /**
@@ -68,9 +67,7 @@ export class ProductsService extends BaseService<IProduct> {
     private readonly http: HttpClient,
     private readonly categoryService: CategoryService,
     private readonly logger: LoggerService,
-    protected endpoint: '/assets/backend/data/products.json'
   ) {
-    super(endpoint);
     this.loading$.next(true);
   }
 
@@ -85,7 +82,7 @@ export class ProductsService extends BaseService<IProduct> {
    */
 
   all(): Observable<Array<IProduct>> {
-    return this.http.get<Array<IProduct>>(this.endpoint);
+    return this.http.get<Array<IProduct>>('/assets/backend/data/products.json');
   }
 
   selectedProduct(productId?: number): void {

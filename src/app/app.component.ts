@@ -15,10 +15,10 @@ export class AppComponent {
   showFooter$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private router: Router,
-    private titleService: Title,
+    private readonly router: Router,
     readonly authService: AuthService,
-    private activatedRoute: ActivatedRoute,
+    private readonly titleService: Title,
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.router.events
       .pipe(
@@ -29,7 +29,7 @@ export class AppComponent {
           return route;
         }),
         filter(route => route.outlet === 'primary'),
-        mergeMap(route => route.data)
+        mergeMap(({ data }) => data)
       )
       .subscribe({
         next: ({ title, toolbar, footer }) => {

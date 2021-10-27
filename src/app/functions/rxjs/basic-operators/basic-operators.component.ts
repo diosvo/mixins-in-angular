@@ -40,7 +40,7 @@ export class BasicOperatorsComponent implements OnInit {
   amount = 0;
   customerId = 0;
 
-  constructor(private logger: LoggerService) { }
+  constructor(private readonly logger: LoggerService) { }
 
   ngOnInit(): void {
     this.durum$ = zip(

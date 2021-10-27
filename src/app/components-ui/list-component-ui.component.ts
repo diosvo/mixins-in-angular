@@ -36,10 +36,10 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   private destroyed$: Subject<boolean> = new Subject();
 
   constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private searchService: SearchService,
+    private readonly router: Router,
+    private readonly fb: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly searchService: SearchService,
   ) { }
 
   async ngOnInit(): Promise<void> {

@@ -22,7 +22,7 @@ export class AppComponent {
   ) {
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(_ => this.activatedRoute),
         map(route => {
           while (route.firstChild) route = route.firstChild;

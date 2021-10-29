@@ -3,10 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import {
-  BehaviorSubject, catchError, filter, map,
-  Observable, shareReplay, Subject, switchMap, tap, throwError
-} from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -15,23 +12,18 @@ type User = Partial<IUser>;
   providedIn: 'root'
 })
 
-export class UsersService extends BaseService<User> {
+export class UsersService implements BaseService<User> {
 
   private _user$ = new BehaviorSubject<User>(null);
   readonly currentUser$ = this._user$.asObservable();
-
-  readonly hasError$ = new Subject<boolean>();
 
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute
-  ) {
-    super();
-    this.getUserByRouteParams();
-  }
+  ) { }
 
-  getUserByRouteParams(): void {
+  private getUserByRouteParams(): void {
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -50,7 +42,7 @@ export class UsersService extends BaseService<User> {
               next: (response: User) => this._user$.next(response)
             })
           } else {
-            this._user$.next(null);
+            this._user$.next({ name: '', email: '' });
           }
         }
       });
@@ -59,11 +51,7 @@ export class UsersService extends BaseService<User> {
   all(): Observable<Array<User>> {
     return this.http.get<Array<Required<User>>>(this.url).pipe(
       map(data => data.map(({ id, name, email }) => <User>{ id, name, email })),
-      shareReplay(),
-      catchError(({ ok, message }) => {
-        this.hasError$.next(!ok);
-        return throwError(() => new Error(message));
-      })
+      shareReplay()
     );
   }
 

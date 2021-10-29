@@ -1,7 +1,7 @@
 declare type Gender = 'male' | 'female' | 'others';
 
 interface IUser {
-  id: string;
+  id: string | number;
   lastName: string;
   firstName: string;
   name: string;

@@ -8,6 +8,7 @@ import { DetailsComponent } from './details.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-  ]
+  ],
+  exports: [DetailsComponent],
 })
 export class DetailsModule { }

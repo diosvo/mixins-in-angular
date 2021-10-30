@@ -59,6 +59,6 @@ export class SnackbarService {
   }
 
   private messageConfig(title: string, message: string,): string {
-    return `<span class="fw-500">${title}:</span> <span>${message}</span>`
+    return `<span class="fw-500">${title}:</span> <span>${message}</span>`;
   }
 }

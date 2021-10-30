@@ -34,7 +34,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
         return this.userService.byId(id);
       }),
       takeUntil(this.destroy$)
-    )
+    );
   }
 
   onFormChanged(data: { name: string, email: string }): void {

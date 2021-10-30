@@ -33,7 +33,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
-      .subscribe(response => this.changed.emit(response))
+      .subscribe(response => this.changed.emit(response));
   }
 
   ngOnDestroy(): void {

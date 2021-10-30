@@ -24,6 +24,6 @@ export class ListComponent implements OnInit {
           return new Error(message);
         })
       ),
-    )
+    );
   }
 }

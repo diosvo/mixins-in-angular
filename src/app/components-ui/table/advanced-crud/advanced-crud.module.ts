@@ -15,9 +15,9 @@ import { AdvancedCrudComponent } from './components/advanced-crud/advanced-crud.
   declarations: [AdvancedCrudComponent],
   imports: [
     CommonModule,
-    AdvancedCrudRoutingModule,
     CustomInputModule,
     ReactiveFormsModule,
+    AdvancedCrudRoutingModule,
 
     MatIconModule,
     MatTableModule,

@@ -9,7 +9,11 @@ const routes: Routes = [
   {
     path: 'advanced-crud',
     loadChildren: () => import('./advanced-crud/advanced-crud.module').then(m => m.AdvancedCrudModule)
-  }
+  },
+  {
+    path: 'crud-users',
+    loadChildren: () => import('./crud-users/crud-users.module').then(m => m.CrudUsersModule)
+  },
 ];
 
 @NgModule({

@@ -3,11 +3,11 @@
 
 .chip {
   &-success {
-    @include severity.config(palette.$success);
+    @include severity.chip-config(palette.$success);
   }
 
   &-error {
-    @include severity.config(palette.$error);
+    @include severity.chip-config(palette.$error);
   }
 
   &-spacing {

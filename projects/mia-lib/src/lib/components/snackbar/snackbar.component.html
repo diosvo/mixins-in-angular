@@ -1,11 +1,13 @@
-<div class="d-flex jc-between ai-center">
-  <span class="pr-1" [innerHTML]="data"></span>
+<div class="d-flex jc-between ai-center alert">
+  <span class="message min-width" [innerHTML]="data"></span>
   <button
-    class="bg-none bd-circle w-32 h-32"
+    class="bg-none bd-circle w-32 h-32 ml-1"
     data-toggle="tooltip"
     title="Close message"
     (click)="snackBarRef.dismiss()"
   >
-    <span aria-hidden="true" class="text-light-blue">×</span>
+    <span class="text-secondary f-24" [style]="{ 'font-family': 'wide-font' }">
+      &times;
+    </span>
   </button>
 </div>

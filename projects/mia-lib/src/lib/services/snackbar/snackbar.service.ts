@@ -28,22 +28,18 @@ export class SnackbarService {
   ) { }
 
   success(message: string): void {
-    return this.show(message);
-  }
-
-  info(message: string): void {
-    return this.show(message);
+    return this.show(message, 'alert-success');
   }
 
   warning(message: string): void {
-    return this.show(message);
+    return this.show(message, 'alert-warning');
   }
 
   error(message: string): void {
-    return this.show(message);
+    return this.show(message, 'alert-error');
   }
 
-  private show(message: string): void {
+  private show(message: string, panelClasses?: string | Array<string>): void {
     this.alertMessage$.next(message);
     const dismissConditions: Observable<any>[] = [this.alertDismissed$, this.hostComponentDestroyed$];
 
@@ -51,6 +47,7 @@ export class SnackbarService {
       const snackbar = this.snackbar.openFromComponent(SnackbarComponent, {
         ...this.config,
         data: message,
+        panelClass: panelClasses
       });
 
       race(...dismissConditions)

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
+import { filter, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -13,9 +13,6 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
-
-  private _user$ = new BehaviorSubject<User>(null);
-  readonly currentUser$ = this._user$.asObservable();
 
   constructor(
     private readonly http: HttpClient,
@@ -37,12 +34,8 @@ export class UsersService implements BaseService<User> {
       )
       .subscribe({
         next: (params: { user_id: number }) => {
+
           if (!isNaN(params.user_id)) {
-            this.byId(params.user_id).subscribe({
-              next: (response: User) => this._user$.next(response)
-            })
-          } else {
-            this._user$.next({ name: '', email: '' });
           }
         }
       });
@@ -67,9 +60,7 @@ export class UsersService implements BaseService<User> {
   }
 
   update(user: User): Observable<User> {
-    return this.http.put<Required<User>>(this.urlById(user.id), user).pipe(
-      tap((response: User) => this._user$.next(response))
-    );
+    return this.http.put<Required<User>>(this.urlById(user.id), user);
   }
 
   delete(id: number): Observable<User> {

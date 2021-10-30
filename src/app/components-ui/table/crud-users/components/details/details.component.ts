@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { IUser } from '@lib/models/user';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -9,11 +10,12 @@ type User = Partial<IUser>;
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   form = this.fb.group({
     name: [''],
     email: ['']
   });
+  destroy$ = new Subject<void>();
 
   @Input() user!: User;
   @Output() changed = new EventEmitter<{ name: string, email: string }>();
@@ -22,7 +24,20 @@ export class DetailsComponent implements OnInit {
     private fb: FormBuilder,
   ) { }
 
+
   ngOnInit(): void {
-    this.form.valueChanges.subscribe(response => this.changed.emit(response))
+    this.form.patchValue(this.user);
+    this.form.valueChanges
+      .pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(response => this.changed.emit(response))
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

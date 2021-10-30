@@ -1,4 +1,7 @@
 <ng-container>
-  <user-breadcrumbs>Create User</user-breadcrumbs>
-  <user-details></user-details>
+  <div class="d-flex jc-between">
+    <user-breadcrumbs>Create User</user-breadcrumbs>
+    <button class="p-1 bg-black text-white" (click)="onCreate()">Save</button>
+  </div>
+  <user-details (changed)="onFormChanged($event)"></user-details>
 </ng-container>

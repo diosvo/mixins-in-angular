@@ -1,4 +1,9 @@
-<ng-container>
-  <user-breadcrumbs>Details</user-breadcrumbs>
-  <user-details></user-details>
+<ng-container *ngIf="user$ | async as user; else loadingTmpl">
+  <div class="d-flex jc-between">
+    <user-breadcrumbs [user]="user">Details</user-breadcrumbs>
+    <button class="p-1 bg-black text-white" (click)="onUpdate()">Save</button>
+  </div>
+  <user-details [user]="user" (changed)="onFormChanged($event)"></user-details>
 </ng-container>
+
+<ng-template #loadingTmpl> ...loading </ng-template>

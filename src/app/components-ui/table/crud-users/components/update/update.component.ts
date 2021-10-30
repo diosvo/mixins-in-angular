@@ -18,6 +18,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   user_id: number;
+  isValid = true;
   user = new FormControl({ name: '', email: '' });
 
   constructor(

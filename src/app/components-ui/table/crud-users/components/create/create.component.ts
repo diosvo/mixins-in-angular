@@ -13,6 +13,7 @@ type User = Partial<IUser>;
 })
 export class CreateComponent {
   user: User;
+  isValid = false;
 
   constructor(
     private readonly router: Router,

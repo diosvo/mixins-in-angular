@@ -1,4 +1,14 @@
 <form [formGroup]="form">
-  <input type="text" formControlName="name" />
-  <input type="text" formControlName="email" />
+  <custom-input
+    label="Name"
+    type="text"
+    [required]="true"
+    formControlName="name"
+  ></custom-input>
+  <custom-input
+    label="Email"
+    type="text"
+    [required]="true"
+    formControlName="email"
+  ></custom-input>
 </form>

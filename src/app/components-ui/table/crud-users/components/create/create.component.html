@@ -1,7 +1,20 @@
-<ng-container>
-  <div class="d-flex jc-between">
+<div class="bg-white w-500 bd-auto p-2">
+  <div class="d-flex jc-between ai-center">
     <user-breadcrumbs>Create User</user-breadcrumbs>
-    <button class="p-1 bg-black text-white" (click)="onCreate()">Save</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onCreate()"
+      [disabled]="!isValid"
+    >
+      Save
+    </button>
   </div>
-  <user-details (changed)="onFormChanged($event)"></user-details>
-</ng-container>
+
+  <hr />
+
+  <user-details
+    (isValid)="isValid = $event"
+    (changed)="onFormChanged($event)"
+  ></user-details>
+</div>

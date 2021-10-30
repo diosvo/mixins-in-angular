@@ -23,20 +23,20 @@ export class SnackbarService {
   };
 
   constructor(
-    private snackbar: MatSnackBar,
-    private zone: NgZone
+    private readonly zone: NgZone,
+    private readonly snackbar: MatSnackBar,
   ) { }
 
   success(message: string): void {
-    return this.show(message, 'alert-success');
+    return this.show(this.messageConfig('Success', message), 'alert-success');
   }
 
   warning(message: string): void {
-    return this.show(message, 'alert-warning');
+    return this.show(this.messageConfig('Warning', message), 'alert-warning');
   }
 
   error(message: string): void {
-    return this.show(message, 'alert-error');
+    return this.show(this.messageConfig('Error', message), 'alert-error');
   }
 
   private show(message: string, panelClasses?: string | Array<string>): void {
@@ -56,5 +56,9 @@ export class SnackbarService {
           complete: () => snackbar.dismiss()
         });
     });
+  }
+
+  private messageConfig(title: string, message: string,): string {
+    return `<span class="fw-500">${title}:</span> <span>${message}</span>`
   }
 }

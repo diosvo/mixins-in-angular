@@ -13,7 +13,7 @@ export class RouterInterceptorService {
   constructor(router: Router) {
     this._routeHistory = [];
     router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => this.setURLs(event));
   }
 
@@ -32,7 +32,7 @@ export class RouterInterceptorService {
     return this._currentUrl;
   }
 
-  get routeHistory(): string[] {
+  get routeHistory(): Array<string> {
     return this._routeHistory;
   }
 }

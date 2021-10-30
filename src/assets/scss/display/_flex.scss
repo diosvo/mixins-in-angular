@@ -65,35 +65,35 @@
 .flex-grow {
 
   &-0 {
-    @include flex-grow(0)
+    @include flex-grow(0);
   }
 
   &-1 {
-    @include flex-grow(1)
+    @include flex-grow(1);
   }
 
   &-2 {
-    @include flex-grow(2)
+    @include flex-grow(2);
   }
 }
 
 .flex-shrink {
   &-0 {
-    @include flex-shrink(0)
+    @include flex-shrink(0);
   }
 
   &-1 {
-    @include flex-shrink(1)
+    @include flex-shrink(1);
   }
 
   &-2 {
-    @include flex-shrink(2)
+    @include flex-shrink(2);
   }
 }
 
 .flex {
   &-1 {
-    @include flex(1)
+    @include flex(1);
   }
 
   &-auto {
@@ -109,14 +109,14 @@
 
 .gap {
   &-1 {
-    @include gap(1)
+    @include gap(1);
   }
 
   &-2 {
-    @include gap(2)
+    @include gap(2);
   }
 
   &-3 {
-    @include gap(3)
+    @include gap(3);
   }
 }

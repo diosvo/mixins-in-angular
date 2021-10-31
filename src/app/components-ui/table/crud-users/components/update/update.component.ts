@@ -15,18 +15,21 @@ type User = Partial<IUser>;
   styleUrls: ['./update.component.scss']
 })
 export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
-  user$: Observable<User>;
-  destroy$ = new Subject<boolean>();
-  user = new FormControl({ name: '', email: '' });
-
   user_id: number;
+  user$: Observable<User>;
+  user = new FormControl({ name: '', email: '' });
+  
   isValid = true;
+  isSubmitted = false;
+
   saving = false;
   hasChanged = false;
+  
+  destroy$ = new Subject<boolean>();
 
   constructor(
     private readonly router: Router,
-    private readonly userService: UsersService,
+    readonly userService: UsersService,
     private readonly snackbar: SnackbarService,
   ) { }
 
@@ -55,7 +58,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return !this.hasChanged;
+    return !this.hasChanged || this.isSubmitted;
   }
 
   saveChanges(url?: string): void {

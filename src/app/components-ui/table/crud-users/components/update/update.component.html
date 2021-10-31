@@ -23,6 +23,7 @@
     <user-details
       [user]="user"
       (isValid)="isValid = $event"
+      (isSubmitted)="isSubmitted = $event"
       (changed)="onFormChanged($event)"
     ></user-details>
   </ng-container>

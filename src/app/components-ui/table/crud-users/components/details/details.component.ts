@@ -19,6 +19,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
+  @Output() isSubmitted = new EventEmitter<boolean>();
   @Output() changed = new EventEmitter<{ name: string, email: string }>();
 
   constructor(

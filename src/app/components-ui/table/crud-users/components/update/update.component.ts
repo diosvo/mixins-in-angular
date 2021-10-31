@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DeactivateComponent } from '@lib/models/base-form-component';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
@@ -12,7 +14,7 @@ type User = Partial<IUser>;
   templateUrl: './update.component.html',
   styleUrls: ['./update.component.scss']
 })
-export class UpdateComponent implements OnInit, OnDestroy {
+export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user$: Observable<User>;
   destroy$ = new Subject<boolean>();
   user = new FormControl({ name: '', email: '' });
@@ -23,6 +25,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
   hasChanged = false;
 
   constructor(
+    private readonly router: Router,
     private readonly userService: UsersService,
     private readonly snackbar: SnackbarService,
   ) { }
@@ -51,12 +54,20 @@ export class UpdateComponent implements OnInit, OnDestroy {
     this.user.setValue(data);
   }
 
-  onUpdate(): void {
+  canDeactivate(): boolean {
+    return !this.hasChanged;
+  }
+
+  saveChanges(url?: string): void {
     this.saving = true;
     this.userService.update({ id: this.user_id, ...this.user.value }).subscribe({
       next: () => this.snackbar.success('The user has been updated.'),
       error: ({ message }) => this.snackbar.error(message),
-      complete: () => this.saving = false
+      complete: () => {
+        this.saving = false;
+        this.hasChanged = false;
+        this.router.navigate([url ?? this.router.url]);
+      }
     });
   }
 

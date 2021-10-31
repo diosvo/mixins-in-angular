@@ -11,7 +11,13 @@ import { CreateComponent } from './create.component';
   declarations: [CreateComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: CreateComponent }]),
+    RouterModule.forChild([{
+      path: '',
+      component: CreateComponent,
+      data: {
+        title: 'Create - User'
+      }
+    }]),
 
     DetailsModule,
     BreadcrumbsModule,

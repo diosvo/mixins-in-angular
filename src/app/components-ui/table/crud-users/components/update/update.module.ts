@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
+import { UnsavedChangesGuard } from '@lib/guards/unsaved-changes.guard';
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 import { DetailsModule } from '../details/details.module';
 import { UpdateComponent } from './update.component';
@@ -12,7 +13,14 @@ import { UpdateComponent } from './update.component';
   declarations: [UpdateComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: UpdateComponent }]),
+    RouterModule.forChild([{
+      path: '',
+      component: UpdateComponent,
+      canDeactivate: [UnsavedChangesGuard],
+      data: {
+        title: 'User Details'
+      }
+    }]),
 
     DetailsModule,
     BreadcrumbsModule,

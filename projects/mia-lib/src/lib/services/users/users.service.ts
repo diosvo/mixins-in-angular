@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { filter, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, pluck, shareReplay, switchMap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -13,31 +13,38 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
+  private _user$ = new BehaviorSubject<User>(undefined);
+  currentUser$: Observable<User>;
 
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute
-  ) { }
+  ) {
+    this.getUserByRouteParams();
+  }
 
   private getUserByRouteParams(): void {
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(_ => this.activatedRoute),
-        map(route => {
-          while (route.firstChild) route = route.firstChild;
+        map((): ActivatedRoute => {
+          let route = this.activatedRoute;
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
           return route;
         }),
-        filter(route => route.outlet === 'primary'),
-        switchMap(({ params }) => params)
+        filter((route: ActivatedRoute) => route.outlet === 'primary'),
+        switchMap(({ params }) => params),
+        pluck('user_id')
       )
-      .subscribe({
-        next: (params: { user_id: number }) => {
-
-          if (!isNaN(params.user_id)) {
-          }
+      .subscribe(user_id => {
+        if (user_id) {
+          this.currentUser$ = this.byId(user_id);
         }
+        return;
       });
   }
 
@@ -50,8 +57,7 @@ export class UsersService implements BaseService<User> {
 
   byId(id: number): Observable<User> {
     return this.http.get<Required<User>>(this.urlById(id)).pipe(
-      map(({ id, name, email }) => <User>{ id, name, email }),
-      shareReplay({ bufferSize: 1, refCount: false })
+      map(({ id, name, email }) => <User>{ id, name, email })
     );
   }
 

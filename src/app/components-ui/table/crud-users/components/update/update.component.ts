@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { Observable, pluck, Subject, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -14,8 +14,9 @@ type User = Partial<IUser>;
   styleUrls: ['./update.component.scss']
 })
 export class UpdateComponent implements OnInit, OnDestroy {
+  
   user$: Observable<User>;
-  destroy$ = new Subject<void>();
+  destroy$ = new Subject<boolean>();
 
   user_id: number;
   isValid = true;
@@ -28,12 +29,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.user$ = this.route.params.pipe(
-      pluck('user_id'),
-      switchMap(id => {
-        this.user_id = id;
-        return this.userService.byId(id);
-      }),
+    this.user$ = this.userService.currentUser$.pipe(
       takeUntil(this.destroy$)
     );
   }
@@ -50,7 +46,8 @@ export class UpdateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    this.destroy$.next(true);
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }

@@ -5,7 +5,7 @@ import { DeactivateComponent } from '@lib/models/base-form-component';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, first, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -40,14 +40,14 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   private watchForFormChanged(): void {
     combineLatest([
-      this.user$.pipe(map(({ name, email }) => ({ name, email })), first()),
+      this.user$.pipe(map(({ name, email }) => ({ name, email }))),
       this.user.valueChanges
     ])
       .pipe(
         map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
         startWith(false)
       )
-      .subscribe(response => this.hasChanged = response);
+      .subscribe((changed: boolean) => this.hasChanged = changed);
   }
 
   onFormChanged(data: { name: string, email: string }): void {
@@ -65,7 +65,6 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
       error: ({ message }) => this.snackbar.error(message),
       complete: () => {
         this.saving = false;
-        this.hasChanged = false;
         this.router.navigate([url ?? this.router.url]);
       }
     });

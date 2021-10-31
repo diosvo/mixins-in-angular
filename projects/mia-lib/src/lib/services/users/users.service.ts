@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { filter, map, Observable, pluck, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -13,7 +13,8 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
-  currentUser$: Observable<User>;
+  _user$ = new BehaviorSubject<User>({ });
+  currentUser$ = this._user$.asObservable();
 
   constructor(
     private readonly http: HttpClient,
@@ -41,7 +42,7 @@ export class UsersService implements BaseService<User> {
       )
       .subscribe(user_id => {
         if (user_id !== undefined) {
-          this.currentUser$ = this.byId(user_id);
+          this.byId(user_id).subscribe(response => this._user$.next(response));
         }
         return;
       });
@@ -56,7 +57,8 @@ export class UsersService implements BaseService<User> {
 
   byId(id: number): Observable<User> {
     return this.http.get<Required<User>>(this.urlById(id)).pipe(
-      map(({ id, name, email }) => <User>{ id, name, email })
+      map(({ id, name, email }) => <User>{ id, name, email }),
+      shareReplay()
     );
   }
 
@@ -65,7 +67,9 @@ export class UsersService implements BaseService<User> {
   }
 
   update(user: User): Observable<User> {
-    return this.http.put<Required<User>>(this.urlById(user.id), user);
+    return this.http.put<Required<User>>(this.urlById(user.id), user).pipe(
+      tap(new_user => this._user$.next(new_user))
+    );
   }
 
   delete(id: number): Observable<User> {

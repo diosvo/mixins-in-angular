@@ -18,16 +18,22 @@ export class SelfLearningComponent {
    */
 
   bubbleSort(numbers: Array<number>): Array<number> {
-    for (let idx = 0; idx < numbers.length; idx++) {
-      // if the prev numb is larger than next numb, swap it
-      if (numbers[idx] > numbers[idx + 1]) {
-        const temp = numbers[idx];
-        numbers[idx] = numbers[idx + 1];
-        numbers[idx + 1] = temp;
-      }
+    let swapped = false;
 
-      return numbers;
-    }
+    do {
+      swapped = false;
+      for (let idx = 0; idx < numbers.length; idx++) {
+        // if the prev numb is larger than next numb, swap it
+        if (numbers[idx] > numbers[idx + 1]) {
+          const temp = numbers[idx];
+          numbers[idx] = numbers[idx + 1];
+          numbers[idx + 1] = temp;
+          swapped = true;
+        }
+      }
+    } while (swapped === true);
+
+    return numbers;
   }
 
   /**

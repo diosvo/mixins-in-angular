@@ -50,6 +50,10 @@ describe('SelfLearningComponent', () => {
       test('mergeSort()', () => {
         expect(component.mergeSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
       });
+
+      test('quickSort()', () => {
+        expect(component.quickSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
     });
   });
 });

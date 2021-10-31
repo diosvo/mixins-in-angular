@@ -121,4 +121,32 @@ export class SelfLearningComponent {
 
     return results.concat(left, right);
   }
+
+  /**
+   * @description the last element in the list and call that the "pivot"
+   */
+
+  quickSort(numbers: Array<number>): Array<number> {
+    if (numbers.length <= 1) return numbers;
+
+    const pivot = numbers[numbers.length - 1];
+
+    const left = [];
+    const right = [];
+
+    for (let idx = 0; idx < numbers.length - 1; idx++) {
+      if (numbers[idx] < pivot) {
+        left.push(numbers[idx]);
+      } else {
+        right.push(numbers[idx]);
+      }
+    }
+
+    // const sortedLeft = this.quickSort(left);
+    // const sortedRight = this.quickSort(right);
+
+    // return sortedLeft.concat(pivot, sortedRight);
+
+    return this.numbers = [...this.quickSort(left), pivot, ...this.quickSort(right)];
+  }
 }

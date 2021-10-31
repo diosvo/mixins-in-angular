@@ -18,18 +18,19 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user_id: number;
   user$: Observable<User>;
   user = new FormControl({ name: '', email: '' });
-  
+
   isValid = true;
   isSubmitted = false;
 
   saving = false;
   hasChanged = false;
-  
+
   destroy$ = new Subject<boolean>();
+  loading$: Observable<boolean> = this.userService.loading$;
 
   constructor(
     private readonly router: Router,
-    readonly userService: UsersService,
+    private readonly userService: UsersService,
     private readonly snackbar: SnackbarService,
   ) { }
 
@@ -62,11 +63,16 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   }
 
   saveChanges(url?: string): void {
+    if (!this.isValid) {
+      this.snackbar.error('You need to provide all required fields.');
+      return;
+    }
+
     this.saving = true;
     this.userService.update({ id: this.user_id, ...this.user.value }).subscribe({
       next: () => this.snackbar.success('The user has been updated.'),
       error: ({ message }) => this.snackbar.error(message),
-      complete: () => {
+      complete: () => {        
         this.saving = false;
         this.router.navigate([url ?? this.router.url]);
       }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -13,12 +13,15 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
-  _user$ = new BehaviorSubject<User>({ });
-  currentUser$ = this._user$.asObservable();
+  private _user$ = new BehaviorSubject<User>({});
+  readonly currentUser$ = this._user$.asObservable();
+
+  private _loading$ = new BehaviorSubject<boolean>(false);
+  readonly loading$ = this._loading$.asObservable();
 
   constructor(
-    private readonly http: HttpClient,
     private readonly router: Router,
+    private readonly http: HttpClient,
     private readonly activatedRoute: ActivatedRoute
   ) {
     this.getUserByRouteParams();
@@ -28,7 +31,7 @@ export class UsersService implements BaseService<User> {
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        map(_ => this.activatedRoute),
+        map((): ActivatedRoute => this.activatedRoute),
         map((): ActivatedRoute => {
           let route = this.activatedRoute;
           while (route.firstChild) {
@@ -42,7 +45,11 @@ export class UsersService implements BaseService<User> {
       )
       .subscribe(user_id => {
         if (user_id !== undefined) {
-          this.byId(user_id).subscribe(response => this._user$.next(response));
+          this._loading$.next(true);
+
+          this.byId(user_id)
+            .pipe(finalize(() => this._loading$.next(false)))
+            .subscribe(response => this._user$.next(response));
         }
         return;
       });

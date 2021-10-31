@@ -1,4 +1,10 @@
 <div class="bg-white w-500 bd-auto p-2">
+  <mat-progress-bar
+    mode="indeterminate"
+    class="mb-1"
+    [style]="{ display: saving ? 'block' : ' none' }"
+  ></mat-progress-bar>
+
   <ng-container *ngIf="user$ | async as user; else loadingTmpl">
     <div class="d-flex jc-between ai-center">
       <user-breadcrumbs [user]="user">Details</user-breadcrumbs>
@@ -6,7 +12,7 @@
         mat-flat-button
         color="primary"
         (click)="onUpdate()"
-        [disabled]="!isValid || !hasChanged"
+        [disabled]="!(isValid && hasChanged)"
       >
         Save
       </button>

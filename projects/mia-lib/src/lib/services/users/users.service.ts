@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, map, Observable, pluck, shareReplay, switchMap } from 'rxjs';
+import { filter, map, Observable, pluck, shareReplay, switchMap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -13,7 +13,6 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
-  private _user$ = new BehaviorSubject<User>(undefined);
   currentUser$: Observable<User>;
 
   constructor(
@@ -41,7 +40,7 @@ export class UsersService implements BaseService<User> {
         pluck('user_id')
       )
       .subscribe(user_id => {
-        if (user_id) {
+        if (user_id !== undefined) {
           this.currentUser$ = this.byId(user_id);
         }
         return;

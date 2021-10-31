@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, first, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { combineLatest, first, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -13,14 +13,14 @@ type User = Partial<IUser>;
   styleUrls: ['./update.component.scss']
 })
 export class UpdateComponent implements OnInit, OnDestroy {
-
   user$: Observable<User>;
   destroy$ = new Subject<boolean>();
+  user = new FormControl({ name: '', email: '' });
 
   user_id: number;
   isValid = true;
+  saving = false;
   hasChanged = false;
-  user = new FormControl({ name: '', email: '' });
 
   constructor(
     private readonly userService: UsersService,
@@ -29,6 +29,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user$ = this.userService.currentUser$.pipe(
+      tap(({ id }) => this.user_id = id as number),
       takeUntil(this.destroy$)
     );
     this.watchForFormChanged();
@@ -51,9 +52,11 @@ export class UpdateComponent implements OnInit, OnDestroy {
   }
 
   onUpdate(): void {
+    this.saving = true;
     this.userService.update({ id: this.user_id, ...this.user.value }).subscribe({
       next: () => this.snackbar.success('The user has been updated.'),
-      error: ({ message }) => this.snackbar.success(message),
+      error: ({ message }) => this.snackbar.error(message),
+      complete: () => this.saving = false
     });
   }
 

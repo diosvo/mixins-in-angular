@@ -13,6 +13,7 @@ type User = Partial<IUser>;
 })
 export class CreateComponent {
   user: User;
+  saving = false;
   isValid = false;
 
   constructor(
@@ -26,10 +27,14 @@ export class CreateComponent {
   }
 
   onCreate(): void {
+    this.saving = true;
     this.userService.create(this.user).subscribe({
       next: () => this.snackbar.success('The user has been created.'),
-      error: ({ message }) => this.snackbar.success(message),
-      complete: () => this.router.navigate(['ui-components/table/crud-users'])
+      error: ({ message }) => this.snackbar.error(message),
+      complete: () => {
+        this.saving = false;
+        this.router.navigate(['ui-components/table/crud-users']);
+      }
     });
   }
 }

@@ -6,7 +6,7 @@
         mat-flat-button
         color="primary"
         (click)="onUpdate()"
-        [disabled]="!isValid"
+        [disabled]="!isValid || !hasChanged"
       >
         Save
       </button>

@@ -204,4 +204,26 @@ export class SelfLearningComponent {
 
     return longest;
   }
+
+  /**
+   * @binary_search
+   */
+
+  /**
+   * @description Keeps cutting the half until eventually landing on the item I'm looking for
+   */
+
+  linearSearch(id: number, array: Array<any>): void {
+    for (let idx = 0; idx < array.length; idx++) {
+      if(id === array[idx].id) {
+        return array[idx];
+      }
+    }
+
+    return undefined;
+  }
+
+  /* binarySearch(id: string, array: Array<unknown>) {
+
+  } */
 }

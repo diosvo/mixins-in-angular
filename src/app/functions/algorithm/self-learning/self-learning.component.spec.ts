@@ -61,5 +61,12 @@ describe('SelfLearningComponent', () => {
         expect(component.radixSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
       });
     });
+
+    describe('Search', () => {
+      test('linearSearch()', () => {
+        const lookingFor = { id: 9, name: 'Dios Vo' };
+        expect(component.linearSearch(9, [{ id: 26, name: 'Thu' }, lookingFor])).toBe(lookingFor);
+      });
+    });
   });
 });

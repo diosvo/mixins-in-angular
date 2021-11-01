@@ -32,7 +32,7 @@ describe('SelfLearningComponent', () => {
       });
     });
 
-    describe('Recursion', () => {
+    describe('Recursion Sorts', () => {
       test('nestedArray()', () => {
         expect(component.nestedArray([1, 2, 3])).toEqual(6);
         expect(component.nestedArray([1, [2], 3])).toEqual(6);
@@ -53,6 +53,12 @@ describe('SelfLearningComponent', () => {
 
       test('quickSort()', () => {
         expect(component.quickSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
+    });
+
+    describe('Non-Comparison Sorts', () => {
+      test('radixSort()', () => {
+        expect(component.radixSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
       });
     });
   });

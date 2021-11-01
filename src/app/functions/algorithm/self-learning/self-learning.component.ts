@@ -149,4 +149,59 @@ export class SelfLearningComponent {
 
     return this.numbers = [...this.quickSort(left), pivot, ...this.quickSort(right)];
   }
+
+
+  /**
+   * @non_comparison_sorts
+   */
+
+  /**
+   * @description the order of the numbers based on asking the question is this element bigger than 
+   * That one over-and-over again until numbers are in order and the rest of the algorithm is just optimizing.
+   */
+
+  radixSort(numbers: Array<number>): Array<number> {
+    // find longest number
+    const longestNumber = this.getLongestNumber(numbers);
+
+    // create buckets:  an array of 10 arrays
+    const buckets = new Array(10).fill(0).map(() => []);
+
+    // while loop => enqueue the numbers into their buckets
+    for (let idx = longestNumber - 1; idx >= 0; idx--) {
+      while (numbers.length) {
+        const current = numbers.shift();
+        buckets[this.getDigit(current, idx, longestNumber)].push(current);
+      }
+
+      // dequeue all of the items out of the bucket 
+      for (let j = 0; j < buckets.length; j++) {
+        while (buckets[j].length) {
+          numbers.push(buckets[j].shift());
+        }
+      }
+    }
+
+    return this.numbers = numbers;
+  }
+
+  private getDigit(number: number, place: number, longestNumber: number): string | number {
+    //  number = 1391, place = 0, longestNumber = 4 => returns 1
+    const string = number.toString();
+    const size = string.length;
+    const mod = longestNumber - size;
+
+    return string[place - mod] || 0;
+  }
+
+  private getLongestNumber(numbers: Array<number>): number {
+    let longest = 0;
+
+    for (let idx = 0; idx < numbers.length; idx++) {
+      const currentLength = numbers[idx].toString().length;
+      longest = currentLength > longest ? currentLength : longest;
+    }
+
+    return longest;
+  }
 }

@@ -67,6 +67,11 @@ describe('SelfLearningComponent', () => {
         const lookingFor = { id: 9, name: 'Dios Vo' };
         expect(component.linearSearch(9, [{ id: 26, name: 'Thu' }, lookingFor])).toBe(lookingFor);
       });
+
+      test('binarySearch()', () => {
+        const lookingFor = { id: 9, name: 'Dios Vo' };
+        expect(component.binarySearch(9, [{ id: 26, name: 'Thu' }, lookingFor])).toBe(lookingFor);
+      });
     });
   });
 });

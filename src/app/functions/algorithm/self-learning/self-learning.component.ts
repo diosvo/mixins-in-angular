@@ -245,3 +245,45 @@ export class SelfLearningComponent {
     return undefined; // not there; return void 0
   }
 }
+
+export class ArrayList {
+  data: unknown;
+  length: number;
+
+  constructor() {
+    this.data = {};
+    this.length = 0;
+  }
+
+  push(value): void { // add an item to the end of the array
+    this.data[this.length] = value;
+    this.length++;
+  }
+
+  pop(): void { // remove the last item in the array and returns it
+    const response = this.data[this.length - 1];
+    delete this.data[this.length - 1];
+    this.length--;
+    return response;
+
+    // or return this.delete(this.length - 1);
+  }
+
+  get(index: number): void {
+    return this.data[index];
+  }
+
+  delete(index): void { // remove item from the array and collapses the array
+    const response = this.data[index];
+    this._collapseTo(index);
+    return response;
+  }
+
+  private _collapseTo(index): void {
+    for (let idx = index; idx < this.length; idx++) {
+      this.data[idx] = this.data[idx + 1];
+    }
+    delete this.data[this.length - 1];
+    this.length--;
+  }
+}

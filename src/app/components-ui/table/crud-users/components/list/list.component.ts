@@ -18,12 +18,10 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.users$ = this.userService.all().pipe(
-      catchError(({ message }) =>
-        throwError(() => {
-          this.errorMessage$.next(message);
-          return new Error(message);
-        })
-      ),
+      catchError(({ message }) => {
+        this.errorMessage$.next(message);
+        return throwError(() => new Error(message));
+      }),
     );
   }
 }

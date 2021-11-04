@@ -81,12 +81,10 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       ),
       tap(() => this.updateParams()),
       takeUntil(this.destroyed$),
-      catchError(({ message }) =>
-        throwError(() => {
-          this.errorMessage$.next(message);
-          return new Error(message);
-        })
-      ),
+      catchError(({ message }) => {
+        this.errorMessage$.next(message);
+        return throwError(() => new Error(message));
+      }),
     );
   }
 

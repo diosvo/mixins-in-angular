@@ -19,15 +19,15 @@
     </div>
 
     <!-- Table -->
-    <form [formGroup]="form">
+    <form class="container" [formGroup]="form">
       <ng-container formArrayName="rows">
         <table
           [dataSource]="dataSource"
-          class="width-100 mt-2 bd-auto bd-light"
+          class="width-100 mt-2 bd-light"
           id="mat-table"
           mat-table
         >
-          <ng-container matColumnDef="id">
+          <ng-container matColumnDef="id" sticky>
             <th *matHeaderCellDef mat-header-cell>Category ID</th>
             <td
               *matCellDef="let element; let idx = index"

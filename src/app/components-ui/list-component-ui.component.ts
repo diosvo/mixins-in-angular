@@ -42,8 +42,26 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     private readonly searchService: SearchService,
   ) { }
 
-  async ngOnInit(): Promise<void> {
-    await this.route.queryParams
+  ngOnInit(): void {
+    this.setDefault();
+    this.onFilters();
+  }
+
+  private setDefault(): void {
+    if (!localStorage.getItem('ListComponentUiComponent')) {
+      localStorage.setItem('ListComponentUiComponent', 'Loaded');
+      this.componentsForm.patchValue({ group: EComponentUI.TABLE });
+    } else {
+      this.watchForQueryParams();
+    }
+  }
+
+  /**
+   * @description Search
+   */
+
+  private watchForQueryParams(): void {
+    this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
         if ((params.query && params.group) !== undefined) {
@@ -51,14 +69,9 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
         }
         return;
       });
-    this.onFilters();
   }
 
-  /**
-   * @description Search
-   */
-
-  onFilters(): void {
+  private onFilters(): void {
     const data$ = this.searchService.uiComponentsList$;
     const filters$ = this.componentsForm.valueChanges.pipe(
       startWith(this.componentsForm.value),
@@ -94,6 +107,10 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
       queryParams: this.componentsForm.value
     });
   }
+
+  /**
+   * @description Support
+   */
 
   cleanQuery(): void {
     return this.query.setValue('');

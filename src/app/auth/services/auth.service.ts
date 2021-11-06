@@ -44,6 +44,6 @@ export class AuthService {
 
   logout(): void {
     this.isLoggedIn$.next(false);
-    localStorage.removeItem(this.TOKEN_NAME);
+    localStorage.clear();
   }
 }

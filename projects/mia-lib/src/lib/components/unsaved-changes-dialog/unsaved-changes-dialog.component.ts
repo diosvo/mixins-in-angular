@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-unsaved-changes-dialog',
+  selector: 'unsaved-changes-dialog',
   templateUrl: './unsaved-changes-dialog.component.html',
   styles: [`
     .dialog-title {
@@ -22,9 +22,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 export class UnsavedChangesDialogComponent {
   constructor(
-    readonly location: LocationStrategy,
-    private dialog: MatDialogRef<UnsavedChangesDialogComponent>,
+    private readonly location: LocationStrategy,
+    private readonly dialog: MatDialogRef<UnsavedChangesDialogComponent>,
   ) { 
-    location.onPopState(() => this.dialog.close());
+    this.location.onPopState(() => this.dialog.close());
   }
 }

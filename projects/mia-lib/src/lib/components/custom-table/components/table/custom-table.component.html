@@ -1,0 +1,68 @@
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container
+    *ngFor="let column of columnDefinition"
+    matColumnDef="{{ column.name }}"
+  >
+    <ng-container
+      *ngIf="column.name === 'select'; then checkbox; else noCheckbox"
+    ></ng-container>
+
+    <!-- Checkbox -->
+    <ng-template #checkbox>
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+        >
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null; rowSelect()"
+          [checked]="selection.isSelected(row)"
+        >
+        </mat-checkbox>
+      </mat-cell>
+    </ng-template>
+
+    <!-- No Checkbox -->
+    <ng-template #noCheckbox>
+      <mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [disabled]="column.disableSorting"
+      >
+        {{ column.displayName }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element[column.name] }}
+      </mat-cell>
+    </ng-template>
+  </ng-container>
+
+  <!-- Columns -->
+  <mat-header-row *matHeaderRowDef="columnNames"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: columnNames"
+    (click)="
+      enableCheckbox === false && allowMultiSelect === false
+        ? onClick(row)
+        : false;
+      selection.toggle(row);
+      rowSelect()
+    "
+  >
+  </mat-row>
+</mat-table>
+
+<!-- Pagination -->
+<ng-container *ngIf="paginationConfig && paginationConfig.enablePagination">
+  <mat-paginator
+    [pageSize]="paginationConfig.pageSize"
+    [pageSizeOptions]="paginationConfig.pageSizeOptions"
+    [showFirstLastButtons]="paginationConfig.showFirstLastButtons"
+  >
+  </mat-paginator>
+</ng-container>

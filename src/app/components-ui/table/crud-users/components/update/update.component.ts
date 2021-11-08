@@ -5,7 +5,7 @@ import { DeactivateComponent } from '@lib/models/base-form-component';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, finalize, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -69,14 +69,13 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
     }
 
     this.saving = true;
-    this.userService.update({ id: this.user_id, ...this.user.value }).subscribe({
-      next: () => this.snackbar.success('The user has been updated.'),
-      error: ({ message }) => this.snackbar.error(message),
-      complete: () => {        
-        this.saving = false;
-        this.router.navigate([url ?? this.router.url]);
-      }
-    });
+    this.userService.update({ id: this.user_id, ...this.user.value })
+      .pipe(finalize(() => this.saving = false))
+      .subscribe({
+        next: () => this.snackbar.success('The user has been updated.'),
+        error: ({ message }) => this.snackbar.error(message),
+        complete: () => this.router.navigate([url ?? this.router.url])
+      });
   }
 
   ngOnDestroy(): void {

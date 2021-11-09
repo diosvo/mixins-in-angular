@@ -13,27 +13,48 @@ import { Table } from '../../models/custom-table.interface';
 })
 export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
   selectedRowIndex = -1;
-  columnNames: Array<string> = [];
-
-  selection = new SelectionModel<{}>(); // store selection data
+  
+  selection = new SelectionModel<{}>(true, []); // store selection data
   dataSource: MatTableDataSource<{}>;
+  displayedColumns: Array<string> = [];
 
   @Input() enableCheckbox: boolean;
   @Input() allowMultiSelect: boolean;
 
   @Input() data: Array<object>;
-  @Input() columnDefinition: Array<Table.Column>;
-  @Input() paginationConfig: Table.Pagination;
+  @Input() columns: Array<Table.Column>;
 
   @Output() selectedRows = new EventEmitter();
 
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor() { }
 
   ngOnChanges(): void {
     this.dataSource = new MatTableDataSource(this.data);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit(): void {
+    // check box column
+    this.displayedColumns.push('select');
+
+    // table columns
+    this.displayedColumns = this.displayedColumns.concat(this.columns.map(item => item.columnDef));
+
+    // action buttons
+    this.displayedColumns.push('action');
+
+    // paginator
+    this.dataSource.paginator = this.paginator;
+
+    this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
+    this.dataSource = new MatTableDataSource(this.data);
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
@@ -51,29 +72,6 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
 
   rowSelect(): void {
     this.selectedRows.emit(this.selection.selected);
-  }
-
-
-  ngOnInit(): void {
-    for (const column of this.columnDefinition) {
-      this.columnNames.push(column.name);
-    }
-
-    if (this.enableCheckbox) {
-      this.columnNames.splice(0, 0, 'select');
-      this.columnDefinition.splice(0, 0, {
-        'name': 'select',
-        'displayName': '#'
-      });
-    }
-
-    this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
-    this.dataSource = new MatTableDataSource(this.data);
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   onClick(row: { position: number }): void {

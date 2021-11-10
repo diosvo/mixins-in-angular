@@ -8,6 +8,5 @@ export namespace Table {
   export enum Action {
     EDIT = 'edit',
     DELETE = 'delete',
-    VIEW = 'view',
   }
 }

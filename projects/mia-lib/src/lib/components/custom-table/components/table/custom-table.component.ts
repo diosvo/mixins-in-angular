@@ -24,6 +24,7 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
   @Input() data: Array<object>;
   @Input() columns: Array<Table.Column>;
 
+  @Output() action = new EventEmitter();
   @Output() selectedRows = new EventEmitter();
 
   @ViewChild(MatSort) sort: MatSort;

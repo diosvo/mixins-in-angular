@@ -5,10 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { ActionButtonsComponent } from './components/action-buttons/action-buttons.component';
 import { CustomTableComponent } from './components/table/custom-table.component';
 
 @NgModule({
-  declarations: [CustomTableComponent],
+  declarations: [CustomTableComponent, ActionButtonsComponent],
   imports: [
     CommonModule,
     MatIconModule,

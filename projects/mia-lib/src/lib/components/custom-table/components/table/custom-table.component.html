@@ -26,10 +26,21 @@
         color="primary"
         (click)="$event.stopPropagation()"
         [checked]="selection.isSelected(row)"
-        (change)="$event ? selection.toggle(row) : null"
+        (change)="$event ? selection.toggle(row) : null; rowSelect()"
       >
       </mat-checkbox>
     </mat-cell>
+  </ng-container>
+
+  <!-- Action buttons -->
+  <ng-container matColumnDef="action">
+    <mat-header-cell *cdkHeaderCellDef>Action</mat-header-cell>
+    <mat-cell
+      *cdkCellDef="let item"
+      actions-button
+      [value]="item"
+      (clicked)="action.emit(item)"
+    ></mat-cell>
   </ng-container>
 </mat-table>
 

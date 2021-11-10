@@ -10,7 +10,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthModule } from '@auth/auth.module';
-import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
+import { CardItemModule } from '@home/components/card-item/card-item.component.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ComponentsUiRoutingModule } from './components-ui-routing.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
@@ -26,7 +26,7 @@ import { ListComponentUiComponent } from './list-component-ui.component';
 
     AuthModule,
     AlertModule,
-    MenuItemModule,
+    CardItemModule,
 
     MatIconModule,
     MatInputModule,

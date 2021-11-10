@@ -64,7 +64,7 @@
     </mat-accordion>
 
     <ng-container *ngIf="filteredData.length > 0; else notFound">
-      <menu-item [data]="filteredData"></menu-item>
+      <card-item [data]="filteredData"></card-item>
     </ng-container>
 
     <ng-template #notFound>

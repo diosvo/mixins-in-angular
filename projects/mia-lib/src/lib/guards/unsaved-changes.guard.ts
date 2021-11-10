@@ -13,9 +13,9 @@ import { DeactivateComponent } from '../models/base-form-component';
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
   constructor(
-    private router: Router,
-    private dialog: MatDialog,
-    private snackbar: SnackbarService
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly snackbar: SnackbarService
   ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {

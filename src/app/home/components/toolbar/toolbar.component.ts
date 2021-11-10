@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
@@ -12,9 +13,9 @@ import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-d
 export class ToolbarComponent {
 
   constructor(
-    private router: Router,
-    private dialog: MatDialog,
+    private readonly router: Router,
     readonly authService: AuthService,
+    private readonly dialog: MatDialog,
   ) { }
 
   openLoginDialog(): void {
@@ -29,15 +30,14 @@ export class ToolbarComponent {
           body: 'Are you sure you want to logout?',
           btnConfirm: 'confirm',
         },
+        width: '500px',
         disableClose: true,
-        width: '500px'
       })
       .afterClosed()
-      .subscribe((result: boolean) => {
-        if (!!result) {
-          this.authService.logout();
-          this.router.navigate(['/ui-components']);
-        }
+      .pipe(filter(result => result))
+      .subscribe(() => {
+        this.authService.logout();
+        this.router.navigate(['/ui-components']);
       });
   }
 }

@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterModule } from './home/components/footer/footer.module';
 import { ToolbarModule } from './home/components/toolbar/toolbar.module';
+import { MonitorInterceptor } from './interceptors/monitor.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,11 @@ import { ToolbarModule } from './home/components/toolbar/toolbar.module';
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: 'outline', floatLabel: 'never' }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MonitorInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

@@ -13,7 +13,7 @@ type User = Partial<IUser>;
 })
 
 export class UsersService implements BaseService<User> {
-  private _user$ = new BehaviorSubject<User>(null);
+  private _user$ = new BehaviorSubject<User>({});
   readonly currentUser$ = this._user$.asObservable();
 
   private _loading$ = new BehaviorSubject<boolean>(false);
@@ -50,9 +50,8 @@ export class UsersService implements BaseService<User> {
           this.byId(user_id)
             .pipe(finalize(() => this._loading$.next(false)))
             .subscribe(response => this._user$.next(response));
-        } else {
-          this._user$.next(null);
         }
+        return;
       });
   }
 

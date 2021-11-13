@@ -15,21 +15,21 @@ export class AppComponent {
   showFooter$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private router: Router,
-    private titleService: Title,
+    private readonly router: Router,
     readonly authService: AuthService,
-    private activatedRoute: ActivatedRoute,
+    private readonly titleService: Title,
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         map(_ => this.activatedRoute),
         map(route => {
           while (route.firstChild) route = route.firstChild;
           return route;
         }),
         filter(route => route.outlet === 'primary'),
-        mergeMap(route => route.data)
+        mergeMap(({ data }) => data)
       )
       .subscribe({
         next: ({ title, toolbar, footer }) => {

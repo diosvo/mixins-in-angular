@@ -6,27 +6,27 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export abstract class BaseService<T> {
-  protected model?: T;
+  model?: T;
 
-  constructor(protected endpoint: string) { }
+  constructor() { }
 
-  protected all(): Observable<Array<T>> {
+  all(): Observable<Array<T>> {
     return of(Array(this.model));
   }
 
-  protected byId(id: number | string): Observable<T> {
+  byId(id: number | string): Observable<T> {
     return of(this.model);
   }
 
-  protected create<TParams>(params: TParams): Observable<T> {
+  create(params: T): Observable<T> {
     return of(this.model);
   }
 
-  protected update<TParams>(id: number | string, params: TParams): Observable<T> {
+  update(params: T): Observable<T> {
     return of(this.model);
   }
 
-  protected delete(id: number | string): Observable<T> {
+  delete(id: number | string): Observable<T> {
     return of(this.model);
   }
 }

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { BackButtonModule } from '@lib/components/back-button/back-button.module';
 import { ToggleModeRoutingModule } from './toggle-mode-routing.module';
 import { ToggleModeComponent } from './toggle-mode.component';
 
@@ -10,7 +9,6 @@ import { ToggleModeComponent } from './toggle-mode.component';
   imports: [
     CommonModule,
     MatButtonModule,
-    BackButtonModule,
     ToggleModeRoutingModule
   ]
 })

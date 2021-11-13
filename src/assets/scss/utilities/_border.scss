@@ -39,3 +39,11 @@
     border: 1px solid lightgray;
   }
 }
+
+// for: <hr />
+
+hr {
+  height: 1px;
+  margin: 1rem -1rem;
+  color : rgba($color: palette.$light, $alpha: 0.3);
+}

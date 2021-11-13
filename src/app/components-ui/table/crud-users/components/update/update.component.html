@@ -1,0 +1,38 @@
+<div class="bg-white w-500 bd-auto p-2">
+  <mat-progress-bar
+    mode="indeterminate"
+    class="mb-1"
+    [style]="{ display: saving ? 'block' : ' none' }"
+  ></mat-progress-bar>
+
+  <ng-container *ngIf="loading$ | async; else details">
+    <div class="d-flex jc-center">
+      <mat-spinner [diameter]="50"></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-template #details>
+    <ng-container *ngIf="user$ | async as user">
+      <div class="d-flex jc-between ai-center">
+        <user-breadcrumbs [user]="user">Details</user-breadcrumbs>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="saveChanges()"
+          [disabled]="canDeactivate() || !isValid"
+        >
+          Save
+        </button>
+      </div>
+
+      <hr />
+
+      <user-details
+        [user]="user"
+        (isValid)="isValid = $event"
+        (isSubmitted)="isSubmitted = $event"
+        (changed)="onFormChanged($event)"
+      ></user-details>
+    </ng-container>
+  </ng-template>
+</div>

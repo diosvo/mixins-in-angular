@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthModule } from '@auth/auth.module';
-import { MenuItemModule } from '@home/components/menu-item/menu-item.module';
+import { MenuItemModule } from '@home/components/card-item/card-item.component.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
 

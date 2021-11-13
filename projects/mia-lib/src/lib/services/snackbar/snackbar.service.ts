@@ -23,27 +23,23 @@ export class SnackbarService {
   };
 
   constructor(
-    private snackbar: MatSnackBar,
-    private zone: NgZone
+    private readonly zone: NgZone,
+    private readonly snackbar: MatSnackBar,
   ) { }
 
   success(message: string): void {
-    return this.show(message);
-  }
-
-  info(message: string): void {
-    return this.show(message);
+    return this.show(this.messageConfig('Success', message), 'alert-success');
   }
 
   warning(message: string): void {
-    return this.show(message);
+    return this.show(this.messageConfig('Warning', message), 'alert-warning');
   }
 
   error(message: string): void {
-    return this.show(message);
+    return this.show(this.messageConfig('Error', message), 'alert-error');
   }
 
-  private show(message: string): void {
+  private show(message: string, panelClasses?: string | Array<string>): void {
     this.alertMessage$.next(message);
     const dismissConditions: Observable<any>[] = [this.alertDismissed$, this.hostComponentDestroyed$];
 
@@ -51,6 +47,7 @@ export class SnackbarService {
       const snackbar = this.snackbar.openFromComponent(SnackbarComponent, {
         ...this.config,
         data: message,
+        panelClass: panelClasses
       });
 
       race(...dismissConditions)
@@ -59,5 +56,9 @@ export class SnackbarService {
           complete: () => snackbar.dismiss()
         });
     });
+  }
+
+  private messageConfig(title: string, message: string,): string {
+    return `<span class="fw-500">${title}:</span> <span>${message}</span>`;
   }
 }

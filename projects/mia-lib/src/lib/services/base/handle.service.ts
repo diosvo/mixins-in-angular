@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
-import { pipe } from 'gsap/all';
-import { interval, mergeMap, retryWhen, take, throwError, TimeoutError } from 'rxjs';
+import { interval, mergeMap, pipe, retryWhen, take, throwError, TimeoutError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

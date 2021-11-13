@@ -33,16 +33,36 @@
             "style": "kebab-case"
           }
         ],
-        "eqeqeq": ["error", "smart"],
-        "semi": ["error", "always"],
-        "quotes": ["error", "single"],
+        "eqeqeq": [
+          "error",
+          "smart"
+        ],
+        "semi": [
+          "error",
+          "always"
+        ],
+        "quotes": [
+          "error",
+          "single"
+        ],
         "dot-notation": "off",
         "id-blacklist": "off",
         "id-match": "off",
         "no-empty-function": "off",
         "no-magic-numbers": "off",
         "no-underscore-dangle": "off",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": [
+          "error",
+          {
+            "allowTaggedTemplates": true,
+            "allowShortCircuit": true,
+            "allowTernary": true
+          }
+        ],
+        "object-curly-spacing": [
+          "error",
+          "always"
+        ],
         "radix": "off"
       }
     },

@@ -30,7 +30,7 @@
     <a
       title="Logged In"
       mat-icon-button
-      *ngIf="(authService.isLoggedIn | async) === true"
+      *ngIf="authService.isLoggedIn | async"
       class="text-white"
       data-toggle="tooltip"
       (click)="openLogoutDialog()"

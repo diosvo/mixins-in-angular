@@ -9,3 +9,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - Smoothy animation with SVG, GSAP,...
 - Use RxJS fluently.
 - And more...
+
+### Profiling Change Detection Time 
+
+`ng.profiler.timeChangeDetection()`

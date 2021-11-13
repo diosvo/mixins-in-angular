@@ -24,7 +24,7 @@ describe('SelfLearningComponent', () => {
   describe('Check algorithm: ', () => {
     describe('Iterative Sorts', () => {
       test('bubbleSort()', () => {
-        component.bubbleSort([1, 5, 4, 2, 3]);
+        expect(component.bubbleSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
       });
 
       test('insertionSort()', () => {
@@ -32,7 +32,7 @@ describe('SelfLearningComponent', () => {
       });
     });
 
-    describe('Recursion', () => {
+    describe('Recursion Sorts', () => {
       test('nestedArray()', () => {
         expect(component.nestedArray([1, 2, 3])).toEqual(6);
         expect(component.nestedArray([1, [2], 3])).toEqual(6);
@@ -47,8 +47,30 @@ describe('SelfLearningComponent', () => {
         expect(component.factorial(10)).toEqual(3628800);
       });
 
-       test('mergeSort()', () => {
+      test('mergeSort()', () => {
         expect(component.mergeSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
+
+      test('quickSort()', () => {
+        expect(component.quickSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
+    });
+
+    describe('Non-Comparison Sorts', () => {
+      test('radixSort()', () => {
+        expect(component.radixSort([1, 5, 4, 2, 3])).toEqual([1, 2, 3, 4, 5]);
+      });
+    });
+
+    describe('Search', () => {
+      test('linearSearch()', () => {
+        const lookingFor = { id: 9, name: 'Dios Vo' };
+        expect(component.linearSearch(9, [{ id: 26, name: 'Thu' }, lookingFor])).toBe(lookingFor);
+      });
+
+      test('binarySearch()', () => {
+        const lookingFor = { id: 9, name: 'Dios Vo' };
+        expect(component.binarySearch(9, [{ id: 26, name: 'Thu' }, lookingFor])).toBe(lookingFor);
       });
     });
   });

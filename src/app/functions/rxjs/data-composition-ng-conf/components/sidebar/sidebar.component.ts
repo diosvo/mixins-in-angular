@@ -21,9 +21,9 @@ export class SidebarComponent implements OnInit {
     );
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private productsService: ProductsService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly productsService: ProductsService,
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +38,6 @@ export class SidebarComponent implements OnInit {
   }
 
   async onSelected(productId: number): Promise<void> {
-    await this.router.navigate([`${ EUrl.FUNCTION }/${ EFunctions.RXJS }/data-composition-ng-conf`, productId]);
+    await this.router.navigate([`${EUrl.FUNCTION}/${EFunctions.RXJS}/data-composition-ng-conf`, productId]);
   }
 }

@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MenuItemComponent } from './menu-item.component';
+import { CardItemComponent } from './card-item.component.spec';
 
 @NgModule({
-  declarations: [MenuItemComponent],
+  declarations: [CardItemComponent],
   imports: [
     CommonModule,
     MatButtonModule,
   ],
-  exports: [MenuItemComponent]
+  exports: [CardItemComponent]
 })
-export class MenuItemModule { }
+export class CardItemModule { }

@@ -1,11 +1,15 @@
-@mixin config($color) {
-  color           : rgba($color, $alpha: 0.9);
+@mixin mutual-config($color) {
+  border: 1px solid $color;
+  color : rgba($color, $alpha: 0.9);
+}
+
+@mixin chip-config($color) {
+  @include mutual-config($color);
   background-color: rgba($color, $alpha: 0.1);
-  border          : 1px solid $color;
+
 }
 
 @mixin message-config($color, $bgColor) {
-  color           : rgba($color, $alpha: 0.9);
+  @include mutual-config($color);
   background-color: $bgColor;
-  border          : 1px solid $color;
 }

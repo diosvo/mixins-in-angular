@@ -1,0 +1,25 @@
+<ng-container *ngIf="errorMessage$ | async; else noError"> error </ng-container>
+
+<ng-template #noError>
+  <ng-container *ngIf="users$ | async as users; else loadingTmpl">
+    <div>
+      <button [routerLink]="['create']" class="p-1 bg-black text-white">
+        Create
+      </button>
+    </div>
+
+    <ng-container *ngFor="let user of users">
+      <div class="d-flex mb-1">
+        <p>{{ user.name }}</p>
+        <button
+          [routerLink]="['details', user.id]"
+          class="p-1 bg-black text-white ml-1"
+        >
+          Details
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loadingTmpl> ...loading </ng-template>
+</ng-template>

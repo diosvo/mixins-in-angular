@@ -12,16 +12,5 @@ interface IGroupValue {
   groupUrl: EUrl;
 }
 
-interface IMenu {
-  name: string;
-  route: EUrl;
-  active: boolean;
-}
-
-class IPanel {
-  subTitle: string;
-  openState: boolean;
-}
-
-export { IGroupValue, IBaseValue, IMenu, IPanel };
+export { IGroupValue, IBaseValue };
 

@@ -46,6 +46,11 @@
         "name": "Multiple Checkbox Filter",
         "route": "multiple-checkbox-filter",
         "description": "Persist on URL"
+      },
+      {
+        "name": "CRUD - List Users",
+        "route": "crud-users",
+        "description": "Basic concept"
       }
     ]
   },

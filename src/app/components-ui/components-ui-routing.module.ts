@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EComponentUI } from '@home/models/url.enum';
 import { CanLoadGuard } from '@lib/guards/can-load.guard';
 import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
 import { ListComponentUiComponent } from './list-component-ui.component';
-import { EComponentUI } from '@home/models/url.enum';
 
 const routes: Routes = [
   {

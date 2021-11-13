@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, Self } from '@angular/core';
+import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
@@ -27,9 +27,9 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   });
 
   constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private snackbar: SnackbarService,
+    private readonly router: Router,
+    private readonly fb: FormBuilder,
+    private readonly snackbar: SnackbarService,
     @Self() readonly detectPermission: DetectPermissionService,
   ) { }
 
@@ -48,8 +48,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
       .subscribe(response => this.hasChanged = response);
   }
 
-  @HostListener('window:beforeunload')
-  canDeactivate(): boolean {
+  canDeactivate(): boolean {    
     return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }
 

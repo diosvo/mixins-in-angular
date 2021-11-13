@@ -1,5 +1,4 @@
-import { Component, Output } from '@angular/core';
-import { EventEmitter } from 'stream';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'action-buttons',

@@ -1,7 +1,7 @@
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table [dataSource]="dataSource" multiTemplateDataRows >
   <!-- Dynamic Columns -->
   <ng-container
-    *ngFor="let column of columns"
+    *ngFor="let column of columns; let i = index; trackBy: trackByIdx"
     [matColumnDef]="column.columnDef"
   >
     <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
@@ -19,7 +19,7 @@
         (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()"
         [indeterminate]="selection.hasValue() && !isAllSelected()"
-      ></mat-checkbox>
+      ></mat-checkbox> 
     </mat-header-cell>
     <mat-cell *cdkCellDef="let row">
       <mat-checkbox

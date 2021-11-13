@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,7 +12,7 @@ import { Table } from '../../models/custom-table.interface';
 })
 export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
   selectedRowIndex = -1;
-  
+
   selection = new SelectionModel<{}>(true, []); // store selection data
   dataSource: MatTableDataSource<{}>;
   displayedColumns: Array<string> = [];
@@ -21,14 +20,14 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
   @Input() enableCheckbox: boolean;
   @Input() allowMultiSelect: boolean;
 
-  @Input() data: Array<object>;
+  @Input() data: Array<object> = [];
   @Input() columns: Array<Table.Column>;
 
   @Output() action = new EventEmitter();
   @Output() selectedRows = new EventEmitter();
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor() { }
 
@@ -48,9 +47,6 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
     // action buttons
     this.displayedColumns.push('action');
 
-    // paginator
-    this.dataSource.paginator = this.paginator;
-
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
     this.dataSource = new MatTableDataSource(this.data);
   }
@@ -59,6 +55,10 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
+
+  /**
+   * @description Checkbox
+   */
 
   private isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
@@ -77,5 +77,9 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
 
   onClick(row: { position: number }): void {
     this.selectedRowIndex = row.position;
+  }
+
+  trackByIdx(idx: number): number {
+    return idx;
   }
 }

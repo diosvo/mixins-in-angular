@@ -7,7 +7,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, SortDirection } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { Table } from '../../models/custom-table.interface';
 import { ColumnComponent } from '../column/column.component';
 
 @Component({
@@ -25,7 +24,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
   /** Definitions: columns and data */
 
   @Input() columns: Array<string>;
-  @Input() dataSource: Observable<Table.DataSource<T>>;
+  @Input() dataSource: Observable<Array<T>>;
 
   /** Pagination */
 
@@ -75,8 +74,8 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
     this.dataSource
       .pipe(takeUntil(this.destroy$))
-      .subscribe((response: Table.DataSource<T>) => {
-        this.data = new MatTableDataSource<T>(response.data);
+      .subscribe((response: Array<T>) => {
+        this.data = new MatTableDataSource<T>(response);
         this.data.sort = this.sort;
         this.data.paginator = this.pagination ? this.paginator : null;
 

@@ -2,9 +2,8 @@ import {
   ChangeDetectorRef, Component, ContentChild, Directive, EventEmitter, Input,
   OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild
 } from '@angular/core';
-import { MatSortHeader, SortDirection } from '@angular/material/sort';
+import { SortDirection } from '@angular/material/sort';
 import { MatColumnDef, MatTable } from '@angular/material/table';
-import { startCase } from 'lodash-es';
 
 @Directive({
   selector: '[dtCell]'
@@ -27,7 +26,7 @@ export class DataTableCellDirective {
  */
 
 @Component({
-  selector: 'lib-column',
+  selector: 'dt-column',
   templateUrl: './column.component.html',
   styleUrls: ['./column.component.scss']
 })
@@ -39,13 +38,13 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    * @description column name: used to reference this column
    */
 
-  _name: string;
+  private _name: string;
 
   get name(): string {
     return this._name;
   }
 
-  set name(name: string) {
+  private set name(name: string) {
     this._name = name;
     this.columnDef.name = name;
   }
@@ -70,11 +69,10 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
   @Output() sortUpdate = new EventEmitter<string>();
 
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
-  @ViewChild(MatSortHeader, { static: true }) sortHeader: MatSortHeader;
-  @ContentChild(DataTableCellDirective, { static: true, read: TemplateRef }) template;
+  @ContentChild(DataTableCellDirective, { static: true, read: TemplateRef }) readonly template;
 
   constructor(
-    private cdr: ChangeDetectorRef,
+    private readonly cdr: ChangeDetectorRef,
     @Optional() public table: MatTable<unknown>,
   ) { }
 
@@ -83,7 +81,7 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    */
 
   getTitle(): string {
-    return this.label || startCase(this.name);
+    return this.label;
   }
 
   getData(data: T): unknown {

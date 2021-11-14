@@ -1,25 +1,16 @@
-<mat-table [dataSource]="dataSource" multiTemplateDataRows >
-  <!-- Dynamic Columns -->
-  <ng-container
-    *ngFor="let column of columns; let i = index; trackBy: trackByIdx"
-    [matColumnDef]="column.columnDef"
-  >
-    <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
-    <mat-cell *cdkCellDef="let row">{{ row[column.columnDef] }}</mat-cell>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  </ng-container>
+<mat-table [dataSource]="data" [trackBy]="trackByIdx">
+  <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columns"></mat-row>
 
   <!-- Check-box -->
-  <ng-container matColumnDef="select">
+  <ng-container *ngIf="enableCheckbox" matColumnDef="select">
     <mat-header-cell *matHeaderRowDef>
       <mat-checkbox
         color="primary"
         (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()"
         [indeterminate]="selection.hasValue() && !isAllSelected()"
-      ></mat-checkbox> 
+      ></mat-checkbox>
     </mat-header-cell>
     <mat-cell *cdkCellDef="let row">
       <mat-checkbox
@@ -31,21 +22,11 @@
       </mat-checkbox>
     </mat-cell>
   </ng-container>
-
-  <!-- Action buttons -->
-  <ng-container matColumnDef="action">
-    <mat-header-cell *cdkHeaderCellDef>Action</mat-header-cell>
-    <mat-cell
-      *cdkCellDef="let item"
-      actions-button
-      [value]="item"
-      (clicked)="action.emit(item)"
-    ></mat-cell>
-  </ng-container>
 </mat-table>
 
 <!-- Pagination -->
 <mat-paginator
+  *ngIf="pagination"
   showFirstLastButtons
-  [pageSizeOptions]="[5, 10, 20]"
+  [pageSizeOptions]="pageSizeOptions"
 ></mat-paginator>

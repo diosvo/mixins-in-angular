@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { ActionButtonsComponent } from './components/action-buttons/action-buttons.component';
 import { ColumnComponent, DataTableCellDirective } from './components/column/column.component';
 import { CustomTableComponent } from './components/table/custom-table.component';
 
@@ -13,7 +12,6 @@ import { CustomTableComponent } from './components/table/custom-table.component'
   declarations: [
     ColumnComponent,
     CustomTableComponent,
-    ActionButtonsComponent,
     DataTableCellDirective,
   ],
   imports: [
@@ -24,6 +22,9 @@ import { CustomTableComponent } from './components/table/custom-table.component'
     MatCheckboxModule,
     MatPaginatorModule
   ],
-  exports: [CustomTableComponent],
+  exports: [
+    ColumnComponent,
+    CustomTableComponent,
+  ],
 })
 export class CustomTableModule { }

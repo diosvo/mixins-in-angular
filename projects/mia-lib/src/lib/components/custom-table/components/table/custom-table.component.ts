@@ -1,59 +1,124 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input,
+  OnDestroy, OnInit, Output, QueryList, ViewChild
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortable, SortDirection } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Table } from '../../models/custom-table.interface';
+import { ColumnComponent } from '../column/column.component';
 
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss']
 })
-export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
+export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   selectedRowIndex = -1;
 
-  selection = new SelectionModel<{}>(true, []); // store selection data
-  dataSource: MatTableDataSource<{}>;
   displayedColumns: Array<string> = [];
+  data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
+  private selection = new SelectionModel<{}>(true, []); // store selection data
 
-  @Input() enableCheckbox: boolean;
+  /** Definitions: columns and data */
+
+  @Input() columns: Array<string>;
+  @Input() dataSource: Observable<Table.DataSource<T>>;
+
+  /** Pagination */
+
+  @Input() pagination: boolean = true;
+  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
+  @ViewChild(MatPaginator) private paginator: MatPaginator;
+
+  /** Sort */
+
+  sort: MatSort = new MatSort();
+
+  @Input() sortable: boolean = true;
+  @Input() defaultSortColumn: string;
+  @Input() defaultSortDirection: SortDirection = 'asc';
+
+  /** Filter */
+
+  @Input() filterable: boolean = true;
+
+  /** Checkbox */
+
+  @Input() enableCheckbox: boolean = false;
   @Input() allowMultiSelect: boolean;
-
-  @Input() data: Array<object> = [];
-  @Input() columns: Array<Table.Column>;
 
   @Output() action = new EventEmitter();
   @Output() selectedRows = new EventEmitter();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  /** Column definitions added via dt-column.component */
 
-  constructor() { }
+  @ContentChildren(ColumnComponent) private dtColumns: QueryList<ColumnComponent<T>>;
 
-  ngOnChanges(): void {
-    this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
+  /** References to the table in this template */
+
+  @ViewChild(MatTable) private table: MatTable<T>;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // check box column
     this.displayedColumns.push('select');
-
-    // table columns
-    this.displayedColumns = this.displayedColumns.concat(this.columns.map(item => item.columnDef));
-
-    // action buttons
-    this.displayedColumns.push('action');
-
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
-    this.dataSource = new MatTableDataSource(this.data);
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.columns = this.columns || this.dtColumns.map(({ name }) => name);
+
+    this.dataSource
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Table.DataSource<T>) => {
+        this.data = new MatTableDataSource<T>(response.data);
+        this.data.sort = this.sort;
+        this.data.paginator = this.pagination ? this.paginator : null;
+
+        // If there's sorting, default sort must also be set for table interactions to work
+        if (this.sortable) {
+          const sortableColumns = this.dtColumns
+            .filter(({ sortable, name }) => sortable && this.columns.includes(name))
+            .map(({ name }) => name);
+
+          // Only implement sorting if there are sortable columns 
+          if (sortableColumns.length > 0) {
+            this.data.sort = this.sort;
+            this.sort.sort(<MatSortable>{
+              id: this.defaultSortColumn && sortableColumns.includes(this.defaultSortColumn) ? this.defaultSortColumn : sortableColumns[0],
+              start: this.defaultSortDirection
+            });
+          }
+        }
+      });
+
+    /** dt-column.component to the table */
+
+    this.dtColumns.forEach(({ columnDef, sortable, name }) => {
+      this.table.addColumnDef(columnDef);
+
+      /** Sort header for each sortable column */
+
+      if (sortable) {
+        this.sort.register(<MatSortable>{
+          id: name,
+          start: this.defaultSortDirection
+        });
+      }
+    });
+
+    /** Update sort direction information back to the column for display update, when sorting event occurs */
+
+    this.sort.sortChange.subscribe(({ active, direction }) =>
+      this.dtColumns.find(({ name }) => name === active).sortDirection = direction
+    );
+
+    this.cdr.detectChanges();
   }
 
   /**
@@ -62,12 +127,12 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
 
   private isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.data.data.length;
     return numSelected === numRows;
   }
 
   masterToggle(): void {
-    this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.data.data.forEach(row => this.selection.select(row));
     this.selectedRows.emit(this.selection.selected);
   }
 
@@ -81,5 +146,10 @@ export class CustomTableComponent implements OnChanges, OnInit, AfterViewInit {
 
   trackByIdx(idx: number): number {
     return idx;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

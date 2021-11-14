@@ -6,10 +6,16 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { ActionButtonsComponent } from './components/action-buttons/action-buttons.component';
+import { ColumnComponent, DataTableCellDirective } from './components/column/column.component';
 import { CustomTableComponent } from './components/table/custom-table.component';
 
 @NgModule({
-  declarations: [CustomTableComponent, ActionButtonsComponent],
+  declarations: [
+    ColumnComponent,
+    CustomTableComponent,
+    ActionButtonsComponent,
+    DataTableCellDirective,
+  ],
   imports: [
     CommonModule,
     MatIconModule,

@@ -1,4 +1,8 @@
 export namespace Table {
+  export interface DataSource<T> {
+    data: T[];
+  }
+
   export interface Column {
     header: string;
     columnDef: string;

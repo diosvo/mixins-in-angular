@@ -1,16 +1,16 @@
 <ng-container matColumnDef>
-  <mat-header-cell *cdkHeaderCellDef (click)="sort()">
-    <span>{{ getTitle() }}</span>
+  <mat-header-cell *matHeaderCellDef (click)="sort()">
+    <span>{{ getTitle() | titlecase }}</span>
     <ng-container *ngIf="sortable">
-      <mat-icon *ngIf="sortDirection === 'asc'">arrow_upward</mat-icon>
-      <mat-icon *ngIf="sortDirection === 'desc'">arrow_downward</mat-icon>
+      <mat-icon *ngIf="sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+      <mat-icon *ngIf="sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
     </ng-container>
   </mat-header-cell>
 
-  <mat-cell *cdkCellDef="let data">
+  <mat-cell *matCellDef="let data">
     <ng-container *ngIf="!template">{{ getData(data) }}</ng-container>
-    <ng-container *ngTemplateOutlet="template; context: { $implicit: data }">
-      {{ getData(data) }}
-    </ng-container>
+    <ng-container
+      *ngTemplateOutlet="template; context: { $implicit: data }"
+    ></ng-container>
   </mat-cell>
 </ng-container>

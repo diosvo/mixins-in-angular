@@ -17,12 +17,12 @@ import { ColumnComponent } from '../column/column.component';
 export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   selectedRowIndex = -1;
 
-  displayedColumns: Array<string> = [];
   data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
   /** Definitions: columns and data */
 
+  @Input() tableName: string;
   @Input() columns: Array<string>;
   @Input() dataSource: Observable<Array<T>>;
 
@@ -42,7 +42,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
   /** Filter */
 
-  @Input() filterable: boolean = true;
+  @Input() filterable: boolean = false;
 
   /** Checkbox */
 
@@ -99,10 +99,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
     /** dt-column.component to the table */
 
     this.dtColumns.forEach(({ name, columnDef, sortable, sortUpdate }) => {
-      this.table.addColumnDef(columnDef);
-
-      console.log(columnDef);
-      
+      this.table.addColumnDef(columnDef);      
 
       /** Sort header for each sortable column */
 

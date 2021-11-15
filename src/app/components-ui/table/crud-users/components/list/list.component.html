@@ -3,8 +3,10 @@
 <ng-template #noError>
   <custom-table
     [dataSource]="users$"
+    tableName="List Users"
+    defaultSortColumn="name"
   >
-    <dt-column [name]="'id'">
+    <dt-column [name]="'id'" label="#">
       <ng-container *dtCell="let user">{{ user.id }}</ng-container>
     </dt-column>
 
@@ -16,12 +18,4 @@
       <ng-container *dtCell="let user">{{ user.email }}</ng-container>
     </dt-column>
   </custom-table>
-
-  <ng-template #loadingTmpl> ...loading </ng-template>
 </ng-template>
-
-<!-- <div>
-  <button [routerLink]="['create']" class="p-1 bg-black text-white">
-    Create
-  </button>
-</div> -->

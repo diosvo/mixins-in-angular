@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef, Component, ContentChild, Directive, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild
 } from '@angular/core';
@@ -63,12 +62,8 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
 
   /* sort */
 
-  @Input()
-  get sortable(): boolean { return this._sortable; }
-  set sortable(sortable: boolean) {
-    this._sortable = coerceBooleanProperty(sortable);
-  }
-  _sortable: boolean;
+  @Input() sortable: boolean = true;
+
   @Output() sortUpdate = new EventEmitter<string>();
 
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
@@ -84,7 +79,7 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    */
 
   getTitle(): string {
-    return this.label; // and titleCase
+    return this.label || this.columnDef.name;
   }
 
   getData(data: T): unknown {

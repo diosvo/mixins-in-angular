@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AlertModule } from '@lib/components/alert/alert.module';
+import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { ListComponent } from './list.component';
 
 @NgModule({
@@ -14,6 +16,9 @@ import { ListComponent } from './list.component';
         title: 'List - Users'
       }
     }]),
+
+    AlertModule,
+    CustomTableModule,
   ]
 })
 export class ListModule { }

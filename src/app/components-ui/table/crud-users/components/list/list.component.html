@@ -1,25 +1,27 @@
 <ng-container *ngIf="errorMessage$ | async; else noError"> error </ng-container>
 
 <ng-template #noError>
-  <ng-container *ngIf="users$ | async as users; else loadingTmpl">
-    <div>
-      <button [routerLink]="['create']" class="p-1 bg-black text-white">
-        Create
-      </button>
-    </div>
+  <custom-table
+    [dataSource]="users$"
+  >
+    <dt-column [name]="'id'">
+      <ng-container *dtCell="let user">{{ user.id }}</ng-container>
+    </dt-column>
 
-    <ng-container *ngFor="let user of users">
-      <div class="d-flex mb-1">
-        <p>{{ user.name }}</p>
-        <button
-          [routerLink]="['details', user.id]"
-          class="p-1 bg-black text-white ml-1"
-        >
-          Details
-        </button>
-      </div>
-    </ng-container>
-  </ng-container>
+    <dt-column [name]="'name'">
+      <ng-container *dtCell="let user">{{ user.name }}</ng-container>
+    </dt-column>
+
+    <dt-column [name]="'email'">
+      <ng-container *dtCell="let user">{{ user.email }}</ng-container>
+    </dt-column>
+  </custom-table>
 
   <ng-template #loadingTmpl> ...loading </ng-template>
 </ng-template>
+
+<!-- <div>
+  <button [routerLink]="['create']" class="p-1 bg-black text-white">
+    Create
+  </button>
+</div> -->

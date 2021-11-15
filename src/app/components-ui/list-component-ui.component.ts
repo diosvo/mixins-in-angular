@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { IGroupValue } from '@home/models/search.model';
 import { EComponentUI } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'list-component-ui',
@@ -48,12 +48,12 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   private setDefault(): void {
-    if (!localStorage.getItem('ListComponentUiComponent')) {
-      localStorage.setItem('ListComponentUiComponent', 'Loaded');
-      this.componentsForm.patchValue({ group: EComponentUI.TABLE });
-    } else {
-      this.watchForQueryParams();
-    }
+    this.router.events.pipe(
+      filter((event): event is NavigationStart => event instanceof NavigationStart),
+    ).subscribe((res: any) => {
+      console.log(res);
+      
+    });
   }
 
   /**

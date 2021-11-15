@@ -1,6 +1,6 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  ChangeDetectorRef, Component, ContentChild, Directive, EventEmitter, Input,
-  OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild
+  ChangeDetectorRef, Component, ContentChild, Directive, EventEmitter, Input, OnDestroy, OnInit, Optional, Output, TemplateRef, ViewChild
 } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { MatColumnDef, MatTable } from '@angular/material/table';
@@ -38,16 +38,14 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    * @description column name: used to reference this column
    */
 
-  private _name: string;
 
-  get name(): string {
-    return this._name;
-  }
-
-  private set name(name: string) {
+  @Input()
+  get name(): string { return this._name; }
+  set name(name: string) {
     this._name = name;
     this.columnDef.name = name;
   }
+  private _name: string;
 
   /**
    * @description label for the column header. 
@@ -61,11 +59,16 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    * If it's not set, the data cells will assume that the column name is the same as data property the cells should display.
    */
 
-  @Input() dataAccessor: ((data: T, name: string) => string);
+  @Input() dataAccessor: (data: T, name: string) => string;
 
   /* sort */
 
-  @Input() sortable: boolean = true;
+  @Input()
+  get sortable(): boolean { return this._sortable; }
+  set sortable(sortable: boolean) {
+    this._sortable = coerceBooleanProperty(sortable);
+  }
+  _sortable: boolean;
   @Output() sortUpdate = new EventEmitter<string>();
 
   @ViewChild(MatColumnDef, { static: true }) columnDef: MatColumnDef;
@@ -92,10 +95,14 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    * @description trigger a sort action on this column by emitting a sort update action to the parent table
    */
 
+  sort(): void {
+    this.sortUpdate.emit(this.name);
+  }
+
   ngOnInit(): void {
     if (this.table) {
-      this.table.addColumnDef(this.columnDef);
       this.cdr.detectChanges();
+      this.table.addColumnDef(this.columnDef);
     }
   }
 

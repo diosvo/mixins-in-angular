@@ -65,7 +65,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
   constructor(private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.displayedColumns.push('select');
+    // this.displayedColumns.push('select');
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
   }
 
@@ -98,8 +98,11 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
     /** dt-column.component to the table */
 
-    this.dtColumns.forEach(({ columnDef, sortable, name }) => {
+    this.dtColumns.forEach(({ name, columnDef, sortable, sortUpdate }) => {
       this.table.addColumnDef(columnDef);
+
+      console.log(columnDef);
+      
 
       /** Sort header for each sortable column */
 
@@ -108,6 +111,15 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
           id: name,
           start: this.defaultSortDirection
         });
+
+        sortUpdate
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((column: string) =>
+            this.sort.sort(<MatSortable>{
+              id: column,
+              start: this.defaultSortDirection
+            })
+          );
       }
     });
 

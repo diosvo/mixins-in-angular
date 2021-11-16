@@ -1,11 +1,12 @@
 @use 'palette';
 
-$-hover : rgba(0, 0, 0, .04);
-
+$-hover    : rgba(0, 0, 0, .04);
 $-bd-radius: 0.25rem;
 
-$-row-height: 3.25rem;
-$-row-pd    : 0 1rem;
+.table-name {
+  color         : palette.$black;
+  padding-bottom: 0.25rem;
+}
 
 .custom-table {
   overflow-x     : auto;
@@ -20,27 +21,9 @@ $-row-pd    : 0 1rem;
 
   mat-table {
 
-    /** Header */
-    mat-header-row {
-      mat-header-cell {
-        padding: $-row-pd;
-
-        span {
-          font-size: 14px;
-          color    : palette.$black;
-        }
-      }
-    }
-
-    /** Row */
     mat-row {
       &:hover {
         background-color: $-hover;
-      }
-
-      mat-cell {
-        height : $-row-height;
-        padding: $-row-pd;
       }
     }
   }

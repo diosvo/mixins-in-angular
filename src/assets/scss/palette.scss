@@ -1,10 +1,12 @@
-$secondary  : #737373;
 $light-blue : #5175FB;
 $dark-blue  : #3F51B5;
 $white      : #FFFFFF;
-$black      : rgba(0, 0, 0, .87);
 $light      : #F5F6FA;
-$grey       : #858B93;
 $error      : #E14A4A;
 $success    : #4ABB4A;
-$shade      : rgba(0, 0, 0, 0.15);
+
+/* Dark: use RGBA instead of HEX */
+
+$shade : rgba(0, 0, 0, .15);
+$black : rgba(0, 0, 0, .87);
+$secondary : rgba(115, 115, 115, 1);

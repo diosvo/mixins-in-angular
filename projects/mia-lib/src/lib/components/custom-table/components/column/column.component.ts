@@ -79,7 +79,7 @@ export class ColumnComponent<T> implements OnInit, OnDestroy {
    */
 
   getTitle(): string {
-    return this.label || this.columnDef.name;
+    return this.label || this.columnDef.name; // and titleCase
   }
 
   getData(data: T): unknown {

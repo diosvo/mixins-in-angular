@@ -1,0 +1,55 @@
+@use 'palette';
+
+$-hover : rgba(0, 0, 0, .04);
+
+$-bd-radius: 0.25rem;
+
+$-row-height: 3.25rem;
+$-row-pd    : 0 1rem;
+
+.custom-table {
+  overflow-x     : auto;
+  white-space    : nowrap;
+  border-collapse: collapse;
+
+  border       : 1px solid palette.$shade;
+  border-bottom: none;
+
+  border-top-left-radius : $-bd-radius;
+  border-top-right-radius: $-bd-radius;
+
+  mat-table {
+
+    /** Header */
+    mat-header-row {
+      mat-header-cell {
+        padding: $-row-pd;
+
+        span {
+          font-size: 14px;
+          color    : palette.$black;
+        }
+      }
+    }
+
+    /** Row */
+    mat-row {
+      &:hover {
+        background-color: $-hover;
+      }
+
+      mat-cell {
+        height : $-row-height;
+        padding: $-row-pd;
+      }
+    }
+  }
+}
+
+.mat-paginator-container {
+  border    : 1px solid palette.$shade;
+  border-top: none;
+
+  border-bottom-left-radius : $-bd-radius;
+  border-bottom-right-radius: $-bd-radius;
+}

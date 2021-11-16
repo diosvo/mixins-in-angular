@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, ViewChild
+  OnDestroy, OnInit, Output, QueryList, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable, SortDirection } from '@angular/material/sort';
@@ -12,7 +12,8 @@ import { ColumnComponent } from '../column/column.component';
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
-  styleUrls: ['./custom-table.component.scss']
+  styleUrls: ['./custom-table.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   selectedRowIndex = -1;
@@ -29,6 +30,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
   /** Pagination */
 
   @Input() pagination: boolean = true;
+  @Input() showFirstLastButtons: boolean = false;
   @Input() pageSizeOptions: Array<number> = [5, 10, 20];
   @ViewChild(MatPaginator) private paginator: MatPaginator;
 

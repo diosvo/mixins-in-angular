@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { ListComponent } from './list.component';
 
@@ -17,7 +16,6 @@ import { ListComponent } from './list.component';
       }
     }]),
 
-    AlertModule,
     CustomTableModule,
   ]
 })

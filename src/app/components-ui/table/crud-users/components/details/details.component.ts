@@ -26,6 +26,11 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     private fb: FormBuilder,
   ) { }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const { user: { currentValue } } = changes;
+    this.form.patchValue(currentValue);
+  }
+
   ngOnInit(): void {
     this.form.valueChanges
       .pipe(
@@ -37,11 +42,6 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         this.changed.emit(details);
         this.isValid.emit(this.form.valid);
       });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    const { user: { currentValue } } = changes;
-    this.form.patchValue(currentValue);
   }
 
   ngOnDestroy(): void {

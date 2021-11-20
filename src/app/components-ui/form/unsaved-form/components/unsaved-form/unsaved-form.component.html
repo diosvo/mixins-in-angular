@@ -23,7 +23,10 @@
     </custom-input>
 
     <!-- Actions -->
-    <div class="d-flex jc-flex-end">
+    <div
+      *hasPermission="['Customer', 'Guest']; op: 'OR'"
+      class="d-flex jc-flex-end"
+    >
       <button
         mat-flat-button
         color="primary"

@@ -101,7 +101,7 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
     /** dt-column.component to the table */
 
     this.dtColumns.forEach(({ name, columnDef, sortable, sortUpdate }) => {
-      this.table.addColumnDef(columnDef);      
+      this.table.addColumnDef(columnDef);
 
       /** Sort header for each sortable column */
 
@@ -124,9 +124,10 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
     /** Update sort direction information back to the column for display update, when sorting event occurs */
 
-    this.sort.sortChange.subscribe(({ active, direction }) =>
-      this.dtColumns.find(({ name }) => name === active).sortDirection = direction
-    );
+    this.sort.sortChange.subscribe(({ active, direction }) => {
+      this.dtColumns.find(({ name }) => name === active).sortDirection = direction;
+      this.dtColumns.filter(({ name }) => name !== active).forEach(column => column.sortDirection = '')
+    });
 
     this.cdr.detectChanges();
   }

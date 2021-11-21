@@ -1,14 +1,21 @@
 <main class="bg-white bd-auto m-2 px-3 py-2">
-  <h2 class="text-black">{{ tableName }}</h2>
+  <ng-content select="[header]"></ng-content>
 
   <!-- Table -->
   <div class="custom-table">
-    <mat-table [dataSource]="data" [trackBy]="trackByIdx">
+    <mat-table
+      [dataSource]="data"
+      [trackBy]="trackByIdx"
+      matSort
+      matSortDisableClear
+      [matSortActive]="defaultSortColumn"
+      [matSortDirection]="defaultSortDirection"
+    >
       <ng-container
         *ngFor="let column of dynamicColumns"
         [matColumnDef]="column"
       >
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
           <span class="truncate-cell">{{ column | uppercase }}</span>
         </mat-header-cell>
         <mat-cell *matCellDef="let data">

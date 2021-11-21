@@ -9,7 +9,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CustomTableAbstractDirective } from './custom-table-abstract.directive';
 
-
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
@@ -22,9 +21,8 @@ export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> imp
   data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
-  /** Definitions: columns and data */
-
-  @Input() tableName: string;
+  /** Definitions: data */
+  
   @Input() dataSource!: Observable<Array<T>>;
 
   /** Pagination */
@@ -36,11 +34,9 @@ export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> imp
 
   /** Sort */
 
-  sort: MatSort = new MatSort();
-
-  @Input() sortable: boolean = true;
   @Input() defaultSortColumn: string;
   @Input() defaultSortDirection: SortDirection = 'asc';
+  @ViewChild(MatSort) private sort: MatSort;
 
   /** Filter */
 
@@ -69,6 +65,7 @@ export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> imp
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Array<T>) => {
         this.data = new MatTableDataSource<T>(response);
+        this.data.sort = this.sort;
         this.data.paginator = this.pageable ? this.paginator : null;
       });
 

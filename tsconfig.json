@@ -36,9 +36,6 @@
       "@lib/components/*": [
         "projects/mia-lib/src/lib/components/*"
       ],
-      "@lib/helpers/*": [
-        "projects/mia-lib/src/lib/helpers/*"
-      ],
       "@lib/directives/*": [
         "projects/mia-lib/src/lib/directives/*"
       ],

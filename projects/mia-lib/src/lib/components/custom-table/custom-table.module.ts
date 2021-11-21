@@ -6,15 +6,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { ColumnComponent, DataTableCellDirective } from './components/column/column.component';
-import { CustomTableComponent } from './components/table/custom-table.component';
+import { CustomTableComponent } from './custom-table.component';
 
 @NgModule({
-  declarations: [
-    ColumnComponent,
-    CustomTableComponent,
-    DataTableCellDirective,
-  ],
+  declarations: [CustomTableComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -24,9 +19,6 @@ import { CustomTableComponent } from './components/table/custom-table.component'
     MatPaginatorModule,
     MatProgressSpinnerModule
   ],
-  exports: [
-    ColumnComponent,
-    CustomTableComponent,
-  ],
+  exports: [CustomTableComponent],
 })
 export class CustomTableModule { }

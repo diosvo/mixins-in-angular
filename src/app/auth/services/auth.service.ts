@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   private getUser(token: string): AuthUser {
-    return JSON.parse(Buffer.from((token.split('.')[1])).toString('base64')) as AuthUser;
+    return JSON.parse(atob((token.split('.')[1]))) as AuthUser;
   }
 
   logout(): void {

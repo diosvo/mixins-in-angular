@@ -1,0 +1,37 @@
+<main class="bg-white bd-auto m-2 px-3 py-2">
+  <h2 class="text-black">{{ tableName }}</h2>
+
+  <!-- Table -->
+  <div class="custom-table">
+    <mat-table [dataSource]="data" [trackBy]="trackByIdx">
+      <ng-container
+        *ngFor="let column of dynamicColumns"
+        [matColumnDef]="column"
+      >
+        <mat-header-cell *matHeaderCellDef>
+          <span class="truncate-cell">{{ column | uppercase }}</span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let data">
+          <span class="truncate-cell">{{ data[column] }}</span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="_columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: _columns"></mat-row>
+
+      <!-- Loading spinner -->
+      <div *matNoDataRow>
+        <div class="d-flex jc-center ai-center my-2">
+          <mat-spinner [diameter]="50"></mat-spinner>
+        </div>
+      </div>
+    </mat-table>
+  </div>
+
+  <!-- Pagination -->
+  <mat-paginator
+    *ngIf="pageable"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="showFirstLastButtons"
+  ></mat-paginator>
+</main>

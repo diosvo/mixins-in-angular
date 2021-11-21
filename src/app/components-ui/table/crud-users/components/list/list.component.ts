@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
   users$: Observable<Array<User>>;
   errorMessage$ = new Subject<string>();
 
-  constructor(readonly userService: UsersService) { }
+  constructor(private readonly userService: UsersService) { }
 
   ngOnInit(): void {
     this.users$ = this.userService.all().pipe(

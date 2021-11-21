@@ -1,21 +1,18 @@
-<ng-container *ngIf="errorMessage$ | async; else noError"> error </ng-container>
+<ng-container *ngIf="errorMessage$ | async as message; else noError">
+  <alert-message type="error"> {{ message }} </alert-message>
+</ng-container>
 
 <ng-template #noError>
   <custom-table
     [dataSource]="users$"
-    tableName="List Users"
-    defaultSortColumn="name"
+    [columns]="['id', 'name', 'email']"
+    [defaultSortColumn]="'name'"
   >
-    <dt-column [name]="'id'" label="#">
-      <ng-container *dtCell="let user">{{ user.id }}</ng-container>
-    </dt-column>
-
-    <dt-column [name]="'name'">
-      <ng-container *dtCell="let user">{{ user.name }}</ng-container>
-    </dt-column>
-
-    <dt-column [name]="'email'">
-      <ng-container *dtCell="let user">{{ user.email }}</ng-container>
-    </dt-column>
+    <div header class="d-flex ai-baseline jc-between mb-1">
+      <h2 class="text-black">List Users</h2>
+      <button mat-flat-button color="primary" [routerLink]="['create']">
+        Create User
+      </button>
+    </div>
   </custom-table>
 </ng-template>

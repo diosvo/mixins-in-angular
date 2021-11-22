@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Attribute, Component } from '@angular/core';
 import { MessageType } from '../../models/alert';
 
 @Component({
@@ -7,5 +7,8 @@ import { MessageType } from '../../models/alert';
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent {
-  @Input() type: MessageType;
+
+  constructor(
+    @Attribute('type') public type: MessageType
+  ) { }
 }

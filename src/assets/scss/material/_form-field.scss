@@ -6,7 +6,7 @@
   }
 
   .mat-form-field-outline-thick {
-    color: palette.$grey;
+    color: palette.$secondary;
   }
 
   .mat-select-arrow-wrapper {
@@ -16,10 +16,6 @@
 
 .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon-button {
   margin-top: 0.5em;
-}
-
-.mb-0\.25 {
-  margin-bottom: 0.25rem;
 }
 
 // for only: search input

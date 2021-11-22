@@ -43,17 +43,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.setDefault();
+    this.watchForQueryParams();
     this.onFilters();
-  }
-
-  private setDefault(): void {
-    if (!localStorage.getItem('ListComponentUiComponent')) {
-      localStorage.setItem('ListComponentUiComponent', 'Loaded');
-      this.componentsForm.patchValue({ group: EComponentUI.TABLE });
-    } else {
-      this.watchForQueryParams();
-    }
   }
 
   /**

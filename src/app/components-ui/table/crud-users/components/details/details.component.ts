@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { IUser } from '@lib/models/user';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
@@ -26,9 +27,8 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     private fb: FormBuilder,
   ) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const { user: { currentValue } } = changes;
-    this.form.patchValue(currentValue);
+  ngOnChanges(changes: NgChanges<DetailsComponent>): void {    
+    this.form.patchValue(changes.user.currentValue);
   }
 
   ngOnInit(): void {

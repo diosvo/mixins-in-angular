@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'animated-counter',
-    loadChildren: () => import('./animated-counter/animated-counter.module').then(m => m.AnimatedCounterModule)
+    loadChildren: () => import('./animated-counter/animated-counter.module').then(({ AnimatedCounterModule }) => AnimatedCounterModule)
   },
 ];
 

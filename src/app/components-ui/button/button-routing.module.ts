@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'micro-interaction',
-    loadChildren: () => import('./micro-interaction/micro-interaction.module').then(m => m.MicroInteractionModule),
+    loadChildren: () => import('./micro-interaction/micro-interaction.module').then(({ MicroInteractionModule }) => MicroInteractionModule),
   },
   {
     path: 'toggle-mode',
-    loadChildren: () => import('./toggle-mode/toggle-mode.module').then(m => m.ToggleModeModule),
+    loadChildren: () => import('./toggle-mode/toggle-mode.module').then(({ ToggleModeModule }) => ToggleModeModule),
   },
 ];
 

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'navbar',
-    loadChildren: () => import('./navbar/navbar.module').then(m => m.NavbarModule)
+    loadChildren: () => import('./navbar/navbar.module').then(({ NavbarModule }) => NavbarModule)
   },
 ];
 

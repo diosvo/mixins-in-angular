@@ -1,5 +1,7 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { IUser } from '@lib/models/user';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -14,20 +16,23 @@ type User = Partial<IUser>;
 export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   form = this.fb.group({
     name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]]
+    email: ['', [Validators.required, Validators.email]],
+    hobbies: []
   });
   destroy$ = new Subject<void>();
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
   @Output() isSubmitted = new EventEmitter<boolean>();
-  @Output() changed = new EventEmitter<{ name: string, email: string }>();
+  @Output() changed = new EventEmitter<{ name: string, email: string, hobbies: Array<string> }>();
+
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
   ) { }
 
-  ngOnChanges(changes: NgChanges<DetailsComponent>): void {    
+  ngOnChanges(changes: NgChanges<DetailsComponent>): void {
     this.form.patchValue(changes.user.currentValue);
   }
 
@@ -42,6 +47,20 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         this.changed.emit(details);
         this.isValid.emit(this.form.valid);
       });
+  }
+
+  addHobby($event: MatChipInputEvent): void {
+    const value = ($event.value || '').trim();
+    if (value) this.hobbies.setValue([...this.hobbies.value, value]);
+    $event.chipInput.clear();
+  }
+
+  removeHobby(index: number): void {
+    this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => index !== idx));
+  }
+
+  get hobbies(): FormControl {
+    return this.form.get('hobbies') as FormControl;
   }
 
   ngOnDestroy(): void {

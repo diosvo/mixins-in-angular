@@ -56,7 +56,7 @@ export class UsersService implements BaseService<User> {
   }
 
   all(): Observable<Array<User>> {
-    return this.http.get<Array<Required<User>>>(this.url).pipe(
+    return this.http.get<Array<Required<User>>>(this.endpoint).pipe(
       map(data => data.map(({ id, name, email }) => <User>{ id, name, email })),
       shareReplay()
     );
@@ -64,18 +64,18 @@ export class UsersService implements BaseService<User> {
 
   byId(id: number): Observable<User> {
     return this.http.get<Required<User>>(this.urlById(id)).pipe(
-      map(({ id, name, email }) => <User>{ id, name, email }),
+      map(({ id, name, email }) => <User>{ id, name, email, hobbies: ['coding', 'basketball'] }),
       shareReplay()
     );
   }
 
   create(user: User): Observable<User> {
-    return this.http.post<Required<User>>(this.url, user);
+    return this.http.post<Required<User>>(this.endpoint, user);
   }
 
   update(user: User): Observable<User> {
     return this.http.put<Required<User>>(this.urlById(user.id), user).pipe(
-      tap(new_user => this._user$.next(new_user))
+      tap((data: User) => this._user$.next(data))
     );
   }
 
@@ -83,11 +83,11 @@ export class UsersService implements BaseService<User> {
     return this.http.delete<Required<User>>(this.urlById(id));
   }
 
-  private get url(): string {
-    return environment.jsonPlaceHolderUrl + 'users';
+  private urlById(id: number | string): string {
+    return this.endpoint + `/${id}`;
   }
 
-  private urlById(id: number | string): string {
-    return this.url + `/${id}`;
+  private get endpoint(): string {
+    return environment.jsonPlaceHolderUrl + 'users';
   }
 }

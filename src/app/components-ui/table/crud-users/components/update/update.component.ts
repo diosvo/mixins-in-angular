@@ -20,8 +20,6 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user = new FormControl({ name: '', email: '' });
 
   isValid = true;
-  isSubmitted = false;
-
   saving = false;
   hasChanged = false;
 
@@ -59,7 +57,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return !this.hasChanged || this.isSubmitted;
+    return !this.hasChanged;
   }
 
   saveChanges(url?: string): void {

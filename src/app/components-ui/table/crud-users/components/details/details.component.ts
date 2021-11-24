@@ -19,11 +19,10 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     email: ['', [Validators.required, Validators.email]],
     hobbies: []
   });
-  destroy$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
-  @Output() isSubmitted = new EventEmitter<boolean>();
   @Output() changed = new EventEmitter<{ name: string, email: string, hobbies: Array<string> }>();
 
   readonly separatorKeysCodes = [ENTER, COMMA] as const;

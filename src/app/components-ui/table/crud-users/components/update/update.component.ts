@@ -44,7 +44,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   private watchForFormChanged(): void {
     combineLatest([
-      this.user$.pipe(map(({ name, email }) => ({ name, email }))),
+      this.user$.pipe(map(({ name, email, hobbies }) => ({ name, email, hobbies }))),
       this.user.valueChanges
     ])
       .pipe(
@@ -54,7 +54,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
       .subscribe((changed: boolean) => this.hasChanged = changed);
   }
 
-  onFormChanged(data: { name: string, email: string }): void {
+  onFormChanged(data: { name: string, email: string, hobbies: Array<string> }): void {
     this.user.setValue(data);
   }
 

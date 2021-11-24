@@ -11,4 +11,22 @@
     [required]="true"
     formControlName="email"
   ></custom-input>
+  <mat-form-field class="width-100">
+    <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
+      <mat-chip
+        *ngFor="let item of hobbies.value; let idx = index"
+        [removable]="true"
+        (removed)="removeHobby(idx)"
+      >
+        {{ item }}
+        <button matChipRemove>&times;</button>
+      </mat-chip>
+      <input
+        [matChipInputFor]="chipList"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="addHobby($event)"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      />
+    </mat-chip-list>
+  </mat-form-field>
 </form>

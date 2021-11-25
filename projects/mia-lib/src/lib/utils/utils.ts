@@ -1,8 +1,6 @@
 import { inject, InjectionToken } from '@angular/core';
 
-const coerceToArray = <T>(value: T | Array<T>): Array<T> => (
-  Array.isArray(value) ? value : [value]
-);
+const hasDuplicates = (array: Array<unknown>) => new Set(array).size !== array.length;
 
 const LOCAL_STORAGE = new InjectionToken<Storage>(
   'An abstraction over window.localStorage object',
@@ -11,5 +9,5 @@ const LOCAL_STORAGE = new InjectionToken<Storage>(
   }
 );
 
-export { coerceToArray, LOCAL_STORAGE };
+export { hasDuplicates, LOCAL_STORAGE };
 

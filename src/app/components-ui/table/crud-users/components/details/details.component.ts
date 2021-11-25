@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { IUser } from '@lib/models/user';
+import { Regex } from '@lib/utils/form-validation';
+import { hasDuplicates } from '@lib/utils/utils';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 type User = Partial<IUser>;
@@ -23,7 +25,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
-  @Output() changed = new EventEmitter<{ name: string, email: string, hobbies: Array<string> }>();
+  @Output() changed = new EventEmitter<User>();
 
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
@@ -42,20 +44,36 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
-      .subscribe(details => {
+      .subscribe((details: User) => {
         this.changed.emit(details);
         this.isValid.emit(this.form.valid);
       });
   }
 
-  addHobby($event: MatChipInputEvent): void {
-    const value = ($event.value || '').trim();
-    if (value) this.hobbies.setValue([...this.hobbies.value, value]);
-    $event.chipInput.clear();
+  addHobby(event: MatChipInputEvent): void {
+    const { value, chipInput } = event;
+    const currentValue = (value || '').trim();
+
+    if (currentValue) {
+      this.hobbies.setValue([...this.hobbies.value, currentValue]);
+    };
+    chipInput.clear();
+    this.hobbyValidator(currentValue);
   }
 
   removeHobby(index: number): void {
     this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => index !== idx));
+    this.hobbies.value.forEach((item: string) => this.hobbyValidator(item));
+  }
+
+  hobbyValidator(hobby: string): void {
+    const regex = new RegExp(Regex.Text);
+
+    if (hasDuplicates(this.hobbies.value)) {
+      this.hobbies.setErrors({ duplicate: true });
+    } else if (!regex.test(hobby)) {
+      this.hobbies.setErrors({ invalid: true });
+    }
   }
 
   get hobbies(): FormControl {

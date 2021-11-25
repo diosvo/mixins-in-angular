@@ -11,7 +11,7 @@
     [required]="true"
     formControlName="email"
   ></custom-input>
-  <mat-form-field class="width-100">
+  <mat-form-field class="width-100" appearance="standard">
     <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
       <mat-chip
         *ngFor="let item of hobbies.value; let idx = index"
@@ -28,5 +28,11 @@
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       />
     </mat-chip-list>
+    <mat-error *ngIf="hobbies.hasError('duplicate')">
+      Duplicated values.
+    </mat-error>
+    <mat-error *ngIf="hobbies.hasError('invalid')">
+      Value should be string
+    </mat-error>
   </mat-form-field>
 </form>

@@ -4,6 +4,14 @@ import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 
 /**
+* @description check property pattern
+*/
+
+class Regex {
+  static Text = /^[a-zA-Z ]*$/
+}
+
+/**
 * @description check validations
 * step 1 - create in file TS: matcher = new ErrorMatcher();
 * step 2 - add in Input: [errorStateMatcher]="matcher"
@@ -68,5 +76,4 @@ function isCardNumberValid(cardNumber: string): boolean {
   return !(array.reduce((prev, next) => prev + next, 0) % 10);
 }
 
-export { ErrorMatcher, usernameValidator, matchPassword, isCardNumberValid };
-
+export { ErrorMatcher, Regex, usernameValidator, matchPassword, isCardNumberValid };

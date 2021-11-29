@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -12,7 +12,9 @@ type User = Partial<IUser>;
   providedIn: 'root'
 })
 
-export class UsersService implements BaseService<User> {
+export class UsersService implements BaseService<User>, OnDestroy {
+  private _destroyed$ = new Subject<boolean>();
+
   private _user$ = new BehaviorSubject<User>({});
   readonly currentUser$ = this._user$.asObservable();
 
@@ -41,7 +43,8 @@ export class UsersService implements BaseService<User> {
         }),
         filter((route: ActivatedRoute) => route.outlet === 'primary'),
         switchMap(({ params }) => params),
-        pluck('user_id')
+        pluck('user_id'),
+        takeUntil(this._destroyed$)
       )
       .subscribe(user_id => {
         if (user_id !== undefined) {
@@ -49,7 +52,9 @@ export class UsersService implements BaseService<User> {
 
           this.byId(user_id)
             .pipe(finalize(() => this._loading$.next(false)))
-            .subscribe(response => this._user$.next(response));
+            .subscribe({
+              next: (response: User) => this._user$.next(response)
+            });
         }
         return;
       });
@@ -89,5 +94,10 @@ export class UsersService implements BaseService<User> {
 
   private get endpoint(): string {
     return environment.jsonPlaceHolderUrl + 'users';
+  }
+
+  ngOnDestroy(): void {
+    this._destroyed$.next(true);
+    this._destroyed$.complete();
   }
 }

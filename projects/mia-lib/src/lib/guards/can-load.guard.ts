@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanLoad } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
-import { LoggerService } from '@lib/services/log/logger.service';
+import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,10 +10,12 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CanLoadGuard implements CanLoad {
+  private logger = this.loggerFactory.createLogger('CanLoadGuard');
+
   constructor(
-    private logger: LoggerService,
-    private authService: AuthService,
-    private snackbar: SnackbarService,
+    private readonly authService: AuthService,
+    private readonly snackbar: SnackbarService,
+    private readonly loggerFactory: LoggerFactory,
   ) { }
 
   canLoad(): Observable<boolean> {
@@ -21,7 +23,7 @@ export class CanLoadGuard implements CanLoad {
       tap({
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
-            this.logger.log('CanLoadGuard');
+            this.logger.log('activated');
             this.snackbar.warning('You must log in first');
           }
         }

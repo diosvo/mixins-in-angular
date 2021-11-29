@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@lib/services/log/logger.service';
+import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { concatMap, delay, finalize, Observable, of, retryWhen, throwError } from 'rxjs';
 
 const retry = {
@@ -10,8 +10,9 @@ const retry = {
 
 @Injectable()
 export class MonitorInterceptor implements HttpInterceptor {
+  private logger = this.loggerFactory.createLogger('MonitorInterceptor');
 
-  constructor(private logger: LoggerService) { }
+  constructor(private loggerFactory: LoggerFactory) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 

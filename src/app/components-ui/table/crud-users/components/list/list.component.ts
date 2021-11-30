@@ -7,8 +7,7 @@ type User = Partial<IUser>;
 
 @Component({
   selector: 'list-users',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit {
   users$: Observable<Array<User>>;

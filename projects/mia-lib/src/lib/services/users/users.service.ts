@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, Subject, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -12,24 +12,21 @@ type User = Partial<IUser>;
   providedIn: 'root'
 })
 
-export class UsersService implements BaseService<User>, OnDestroy {
+export class UsersService implements BaseService<User>, Resolve<User>, OnDestroy {
   private _destroyed$ = new Subject<boolean>();
 
   private _user$ = new BehaviorSubject<User>({});
   readonly currentUser$ = this._user$.asObservable();
-
-  private _loading$ = new BehaviorSubject<boolean>(false);
-  readonly loading$ = this._loading$.asObservable();
-
+  
   constructor(
-    private readonly router: Router,
     private readonly http: HttpClient,
-    private readonly activatedRoute: ActivatedRoute
-  ) {
-    this.getUserByRouteParams();
+  ) { }
+
+  resolve(route: ActivatedRouteSnapshot): Observable<User> {
+    return this.byId(route.params['user_id']);
   }
 
-  private getUserByRouteParams(): void {
+  /* private getUserByRouteParams(): void {
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -58,7 +55,7 @@ export class UsersService implements BaseService<User>, OnDestroy {
         }
         return;
       });
-  }
+  } */
 
   all(): Observable<Array<User>> {
     return this.http.get<Array<Required<User>>>(this.endpoint).pipe(

@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
 type User = Partial<IUser>;
@@ -44,6 +44,7 @@ export class UsersService implements BaseService<User>, OnDestroy {
         filter((route: ActivatedRoute) => route.outlet === 'primary'),
         switchMap(({ params }) => params),
         pluck('user_id'),
+        take(1),
         takeUntil(this._destroyed$)
       )
       .subscribe(user_id => {
@@ -89,11 +90,11 @@ export class UsersService implements BaseService<User>, OnDestroy {
   }
 
   private urlById(id: number | string): string {
-    return this.endpoint + `/${id}`;
+    return this.endpoint + `${id}`;
   }
 
   private get endpoint(): string {
-    return environment.jsonPlaceHolderUrl + 'users';
+    return environment.jsonPlaceHolderUrl + 'users/';
   }
 
   ngOnDestroy(): void {

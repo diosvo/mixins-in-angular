@@ -12,8 +12,7 @@ type User = Partial<IUser>;
 
 @Component({
   selector: 'user-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  templateUrl: './details.component.html'
 })
 export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   form = this.fb.group({

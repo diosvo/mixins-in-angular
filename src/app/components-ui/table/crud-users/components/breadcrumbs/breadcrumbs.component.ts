@@ -5,8 +5,7 @@ type User = Partial<IUser>;
 
 @Component({
   selector: 'user-breadcrumbs',
-  templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.scss']
+  templateUrl: './breadcrumbs.component.html'
 })
 export class BreadcrumbsComponent {
   @Input() user: User;

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, finalize, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, finalize, map, Observable, startWith, Subject, tap } from 'rxjs';
 
 type User = Partial<IUser>;
 
@@ -24,18 +24,19 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   hasChanged = false;
 
   destroy$ = new Subject<boolean>();
-  loading$: Observable<boolean> = this.userService.loading$;
+  loading$ = new Subject<boolean>();
 
   constructor(
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly userService: UsersService,
     private readonly snackbar: SnackbarService,
   ) { }
 
   ngOnInit(): void {
-    this.user$ = this.userService.currentUser$.pipe(
+    this.user$ = this.route.data.pipe(
+      map(({ user }): User => user),
       tap(({ id }) => this.user_id = id as number),
-      takeUntil(this.destroy$)
     );
     this.watchForFormChanged();
   }
@@ -74,6 +75,5 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 }

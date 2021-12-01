@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CanLoadGuard implements CanLoad {
-  private logger = this.loggerFactory.createLogger('CanLoadGuard');
+  private logger = this.loggerFactory.createLogger('CanLoadGuard', 'auth');
 
   constructor(
     private readonly authService: AuthService,

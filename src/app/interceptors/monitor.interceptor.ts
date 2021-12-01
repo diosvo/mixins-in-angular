@@ -10,7 +10,7 @@ const retry = {
 
 @Injectable()
 export class MonitorInterceptor implements HttpInterceptor {
-  private logger = this.loggerFactory.createLogger('MonitorInterceptor');
+  private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
 
   constructor(private loggerFactory: LoggerFactory) { }
 

@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class IsAuthenticatedGuard implements CanActivate {
-  private logger = this.loggerFactory.createLogger('IsAuthenticatedGuard');
+  private logger = this.loggerFactory.createLogger('IsAuthenticatedGuard', 'auth');
 
   constructor(
     private readonly authService: AuthService,

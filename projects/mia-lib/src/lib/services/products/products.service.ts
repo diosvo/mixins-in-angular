@@ -10,7 +10,7 @@ import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductsService {
-  private logger = this.loggerFactory.createLogger('ProductsService');
+  private logger = this.loggerFactory.createLogger('ProductsService', 'service');
 
   private loading$ = new BehaviorSubject<boolean>(true);
 

@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewEncapsulation
+  OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -18,7 +18,6 @@ export interface TableColumn {
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 
 export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {

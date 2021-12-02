@@ -44,9 +44,10 @@
   </div>
 
   <!-- Pagination -->
-  <mat-paginator
-    *ngIf="pageable"
-    [pageSizeOptions]="pageSizeOptions"
-    [showFirstLastButtons]="showFirstLastButtons"
-  ></mat-paginator>
+  <div *ngIf="pageable" [class.custom-pagination]="pageable">
+    <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [showFirstLastButtons]="showFirstLastButtons"
+    ></mat-paginator>
+  </div>
 </main>

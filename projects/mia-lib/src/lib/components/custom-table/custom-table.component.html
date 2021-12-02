@@ -12,19 +12,27 @@
       [matSortDirection]="defaultSortDirection"
     >
       <ng-container
-        *ngFor="let column of dynamicColumns"
-        [matColumnDef]="column"
+        *ngFor="let column of columns; let idx = index"
+        [matColumnDef]="column?.key"
       >
         <mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-          <span class="truncate-cell">{{ column | uppercase }}</span>
+          <span class="truncate-cell">
+            {{ column?.header || column?.key | uppercase }}
+          </span>
         </mat-header-cell>
-        <mat-cell *matCellDef="let data">
-          <span class="truncate-cell">{{ data[column] }}</span>
+        <mat-cell *matCellDef="let row; let idx = index">
+          <ng-container
+            [ngTemplateOutlet]="columnTemplates[column?.key] || noTemplates"
+            [ngTemplateOutletContext]="{ $implicit: row }"
+          ></ng-container>
+          <ng-template #noTemplates>
+            <span class="truncate-cell">{{ row[column.key] }}</span>
+          </ng-template>
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="_columns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: _columns"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
       <!-- Loading spinner -->
       <div *matNoDataRow>
@@ -36,9 +44,10 @@
   </div>
 
   <!-- Pagination -->
-  <mat-paginator
-    *ngIf="pageable"
-    [pageSizeOptions]="pageSizeOptions"
-    [showFirstLastButtons]="showFirstLastButtons"
-  ></mat-paginator>
+  <div *ngIf="pageable" [class.custom-pagination]="pageable">
+    <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [showFirstLastButtons]="showFirstLastButtons"
+    ></mat-paginator>
+  </div>
 </main>

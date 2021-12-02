@@ -5,7 +5,7 @@
 <ng-template #noError>
   <custom-table
     [dataSource]="users$"
-    [columns]="['id', 'name', 'email']"
+    [columns]="columns"
     [defaultSortColumn]="'name'"
   >
     <div header class="d-flex ai-baseline jc-between mb-1">
@@ -14,5 +14,11 @@
         Create User
       </button>
     </div>
+
+    <custom-column columnName="email">
+      <ng-template let-user>
+        {{ user.email | lowercase }}
+      </ng-template>
+    </custom-column>
   </custom-table>
 </ng-template>

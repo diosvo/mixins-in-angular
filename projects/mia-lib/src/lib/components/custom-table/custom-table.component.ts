@@ -1,29 +1,34 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input,
-  OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation
+  AfterViewInit, Component, ContentChildren, EventEmitter, Input,
+  OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { CustomTableAbstractDirective } from './custom-table-abstract.directive';
+import { TableColumnDirective } from './custom-table-abstract.directive';
+
+export interface TableColumn {
+  key: string;
+  header?: string;
+}
 
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 
-export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> implements OnInit, AfterViewInit, OnDestroy {
+export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
   /** Definitions: data */
-  
+
   @Input() dataSource!: Observable<Array<T>>;
+  @Input() columns: Array<TableColumn> = [];
 
   /** Pagination */
 
@@ -50,26 +55,50 @@ export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> imp
   @Output() action = new EventEmitter();
   @Output() selectedRows = new EventEmitter();
 
-  private destroy$ = new Subject<void>();
+  private _destroyed$ = new Subject<boolean>();
 
-  constructor(private readonly cdr: ChangeDetectorRef) {
-    super([]);
+  /** construct columns definitions  */
+
+  @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
+  get columnTemplates(): { [key: string]: TemplateRef<any> } {
+    if (this.columnDefs !== null) {
+      const columnTemplates: { [key: string]: TemplateRef<any> } = {};
+      for (const column of this.columnDefs.toArray()) {
+        columnTemplates[column.columnName] = column.columnTemplate;
+      }
+      return columnTemplates;
+    }
+    return {};
   }
+  get displayColumns(): Array<string> {
+    return this.columns.map(({ key }) => key);
+  }
+
+  constructor() { }
 
   ngOnInit(): void {
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
   }
 
   ngAfterViewInit(): void {
+    this.configColumns();
+    this.getDataSource();
+  }
+
+  private getDataSource(): void {
     this.dataSource
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this._destroyed$))
       .subscribe((response: Array<T>) => {
         this.data = new MatTableDataSource<T>(response);
         this.data.sort = this.sort;
         this.data.paginator = this.pageable ? this.paginator : null;
       });
+  }
 
-    this.cdr.detectChanges();
+  private configColumns(): void {
+    for (const column of this.columnDefs.toArray()) {
+      this.columnTemplates[column.columnName] = column.columnTemplate;
+    }
   }
 
   /**
@@ -96,7 +125,7 @@ export class CustomTableComponent<T> extends CustomTableAbstractDirective<T> imp
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this._destroyed$.next(true);
+    this._destroyed$.complete();
   }
 }

@@ -21,10 +21,12 @@
           </span>
         </mat-header-cell>
         <mat-cell *matCellDef="let row; let idx = index">
-          <ng-container
-            [ngTemplateOutlet]="columnTemplates[column?.key] || noTemplates"
-            [ngTemplateOutletContext]="{ $implicit: row }"
-          ></ng-container>
+          <span class="truncate-cell">
+            <ng-container
+              [ngTemplateOutlet]="columnTemplates[column?.key] || noTemplates"
+              [ngTemplateOutletContext]="{ $implicit: row }"
+            ></ng-container>
+          </span>
           <ng-template #noTemplates>
             <span class="truncate-cell">{{ row[column.key] }}</span>
           </ng-template>

@@ -21,7 +21,9 @@
 
     <custom-column columnName="actions">
       <ng-template let-user>
-        <custom-button type="icon">edit</custom-button>
+        <custom-button type="icon" [routerLink]="['details', user.id]">
+          edit
+        </custom-button>
         <custom-button type="icon">delete_outline</custom-button>
       </ng-template>
     </custom-column>

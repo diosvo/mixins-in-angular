@@ -18,7 +18,7 @@ export class ListComponent implements OnInit {
     { key: 'id' },
     { key: 'name' },
     { key: 'email' },
-    { key: 'action' },
+    { key: 'actions', disableSorting: true },
   ];
 
   constructor(private readonly userService: UsersService) { }

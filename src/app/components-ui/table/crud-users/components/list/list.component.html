@@ -7,7 +7,6 @@
     [dataSource]="users$"
     [columns]="columns"
     [defaultSortColumn]="'name'"
-    [disableSortColumn]="'action'"
   >
     <div header class="d-flex ai-baseline jc-between mb-1">
       <h2 class="text-black">List Users</h2>
@@ -20,7 +19,7 @@
       </ng-template>
     </custom-column>
 
-    <custom-column columnName="action">
+    <custom-column columnName="actions">
       <ng-template let-user>
         <custom-button type="icon">edit</custom-button>
         <custom-button type="icon">delete_outline</custom-button>

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { AlertModule } from '@lib/components/alert/alert.module';
+import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { ListComponent } from './list.component';
 
@@ -20,8 +20,7 @@ import { ListComponent } from './list.component';
 
     AlertModule,
     CustomTableModule,
-
-    MatButtonModule,
+    CustomButtonModule
   ]
 })
 export class ListModule { }

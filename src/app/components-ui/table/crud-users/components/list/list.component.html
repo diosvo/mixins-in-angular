@@ -3,6 +3,12 @@
 </ng-container>
 
 <ng-template #noError>
+  <mat-progress-bar
+    *ngIf="loading"
+    class="mb-1"
+    mode="indeterminate"
+  ></mat-progress-bar>
+
   <custom-table
     [dataSource]="users$"
     [columns]="columns"
@@ -24,7 +30,9 @@
         <custom-button type="icon" [routerLink]="['details', user.id]">
           edit
         </custom-button>
-        <custom-button type="icon">delete_outline</custom-button>
+        <custom-button type="icon" (click)="openConfirmDialog(user)">
+          delete_outline
+        </custom-button>
       </ng-template>
     </custom-column>
   </custom-table>

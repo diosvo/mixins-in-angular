@@ -1,0 +1,14 @@
+<ng-container
+  *ngComponentOutlet="buttonComponentType; content: [[buttonContent]]"
+></ng-container>
+
+<div #buttonContent>
+  <ng-content></ng-content>
+</div>
+
+<!-- 
+buttonComponentType: which holds the component that we want to instantiate
+content: which takes a list of nodes to inject into ng-content element/s inside the component
+(the type is any[][]: we can inject more than one node (text, div, span,..) elements into the component)
+buttonContent: local variables that references the div element
+ -->

@@ -13,18 +13,25 @@
     >
       <ng-container
         *ngFor="let column of columns; let idx = index"
-        [matColumnDef]="column?.key"
+        [matColumnDef]="column.key"
       >
-        <mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+        <mat-header-cell
+          *matHeaderCellDef
+          disableClear
+          mat-sort-header
+          [disabled]="column.disableSorting"
+        >
           <span class="truncate-cell">
             {{ column?.header || column?.key | uppercase }}
           </span>
         </mat-header-cell>
         <mat-cell *matCellDef="let row; let idx = index">
-          <ng-container
-            [ngTemplateOutlet]="columnTemplates[column?.key] || noTemplates"
-            [ngTemplateOutletContext]="{ $implicit: row }"
-          ></ng-container>
+          <span class="truncate-cell">
+            <ng-container
+              [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
+              [ngTemplateOutletContext]="{ $implicit: row }"
+            ></ng-container>
+          </span>
           <ng-template #noTemplates>
             <span class="truncate-cell">{{ row[column.key] }}</span>
           </ng-template>

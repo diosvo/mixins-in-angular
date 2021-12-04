@@ -13,23 +13,23 @@ const routes: Routes = [
   },
   {
     path: EComponentUI.BUTTON,
-    loadChildren: () => import('./button/button.module').then(m => m.ButtonModule)
+    loadChildren: () => import('./button/button.module').then(({ ButtonModule }) => ButtonModule)
   },
   {
     path: EComponentUI.CARD,
-    loadChildren: () => import('./card/card.module').then(m => m.CardModule)
+    loadChildren: () => import('./card/card.module').then(({ CardModule }) => CardModule)
   },
   {
     path: EComponentUI.MENU,
-    loadChildren: () => import('./menu/menu.module').then(m => m.MenuModule)
+    loadChildren: () => import('./menu/menu.module').then(({ MenuModule }) => MenuModule)
   },
   {
     path: EComponentUI.TABLE,
-    loadChildren: () => import('./table/table.module').then(m => m.TableModule)
+    loadChildren: () => import('./table/table.module').then(({ TableModule }) => TableModule)
   },
   {
     path: EComponentUI.FORM,
-    loadChildren: () => import('./form/form.module').then(m => m.FormModule),
+    loadChildren: () => import('./form/form.module').then(({ FormModule }) => FormModule),
     canActivate: [IsAuthenticatedGuard],
     canLoad: [CanLoadGuard]
   }

@@ -17,11 +17,9 @@ type User = Partial<IUser>;
 export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user_id: number;
   user$: Observable<User>;
-  user = new FormControl({ name: '', email: '' });
+  user = new FormControl({});
 
   isValid = true;
-  isSubmitted = false;
-
   saving = false;
   hasChanged = false;
 
@@ -44,7 +42,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   private watchForFormChanged(): void {
     combineLatest([
-      this.user$.pipe(map(({ name, email }) => ({ name, email }))),
+      this.user$.pipe(map(({ name, email, hobbies }) => ({ name, email, hobbies }))),
       this.user.valueChanges
     ])
       .pipe(
@@ -54,20 +52,15 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
       .subscribe((changed: boolean) => this.hasChanged = changed);
   }
 
-  onFormChanged(data: { name: string, email: string }): void {
+  onFormChanged(data: User): void {
     this.user.setValue(data);
   }
 
   canDeactivate(): boolean {
-    return !this.hasChanged || this.isSubmitted;
+    return !this.hasChanged;
   }
 
   saveChanges(url?: string): void {
-    if (!this.isValid) {
-      this.snackbar.error('You need to provide all required fields.');
-      return;
-    }
-
     this.saving = true;
     this.userService.update({ id: this.user_id, ...this.user.value })
       .pipe(finalize(() => this.saving = false))

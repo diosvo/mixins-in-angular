@@ -16,8 +16,7 @@ describe('ConfirmDialogComponent', () => {
           provide: MAT_DIALOG_DATA,
           useValue: {
             header: 'logout',
-            body: 'Are you sure you want to logout?',
-            btnConfirm: 'confirm',
+            body: 'Are you sure you want to logout?'
           }
         },
         {

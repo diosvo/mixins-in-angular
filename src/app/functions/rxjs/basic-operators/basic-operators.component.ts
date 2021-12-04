@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoggerService } from '@lib/services/log/logger.service';
+import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { map, mergeMap, Observable, Subject, take, tap, zip } from 'rxjs';
 
 type Durum = ['flat bread', 'meat', 'sauce', 'tomato', 'cabbage'];
@@ -20,6 +20,7 @@ interface Product {
   styleUrls: ['./basic-operators.component.scss']
 })
 export class BasicOperatorsComponent implements OnInit {
+  private logger = this.loggerFactory.createLogger('BasicOperatorsComponent');
 
   durum$: Observable<Durum>;
   delivery$: Observable<Product>;
@@ -40,7 +41,7 @@ export class BasicOperatorsComponent implements OnInit {
   amount = 0;
   customerId = 0;
 
-  constructor(private readonly logger: LoggerService) { }
+  constructor(private readonly loggerFactory: LoggerFactory) { }
 
   ngOnInit(): void {
     this.durum$ = zip(

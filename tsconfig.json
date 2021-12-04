@@ -42,6 +42,9 @@
       "@lib/guards/*": [
         "projects/mia-lib/src/lib/guards/*"
       ],
+      "@lib/helpers/*": [
+        "projects/mia-lib/src/lib/helpers/*"
+      ],
       "@lib/models/*": [
         "projects/mia-lib/src/lib/models/*"
       ],

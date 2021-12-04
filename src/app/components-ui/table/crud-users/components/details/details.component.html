@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="isSubmitted.emit(true)">
+<form [formGroup]="form">
   <custom-input
     label="Name"
     type="text"
@@ -11,4 +11,28 @@
     [required]="true"
     formControlName="email"
   ></custom-input>
+  <mat-form-field class="width-100" appearance="standard">
+    <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
+      <mat-chip
+        *ngFor="let item of hobbies.value; let idx = index"
+        [removable]="true"
+        (removed)="removeHobby(idx)"
+      >
+        {{ item }}
+        <button matChipRemove>&times;</button>
+      </mat-chip>
+      <input
+        [matChipInputFor]="chipList"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="addHobby($event)"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      />
+    </mat-chip-list>
+    <mat-error *ngIf="hobbies.hasError('duplicate')">
+      Duplicated values.
+    </mat-error>
+    <mat-error *ngIf="hobbies.hasError('invalid')">
+      Value should be string
+    </mat-error>
+  </mat-form-field>
 </form>

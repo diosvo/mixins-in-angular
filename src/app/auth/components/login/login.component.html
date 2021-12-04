@@ -9,7 +9,11 @@
       label="Username"
       formControlName="username"
     ></custom-input>
-    <custom-input label="Password" type="password" formControlName="password">
+    <custom-input
+      label="Password"
+      [type]="hidePassword ? 'password' : 'text'"
+      formControlName="password"
+    >
       <button
         suffix
         matSuffix
@@ -26,8 +30,8 @@
   </mat-dialog-content>
 
   <!-- Actions -->
-  <mat-dialog-actions align="end">
-    <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <mat-dialog-actions class="d-flex jc-between">
+    <button mat-button color="warn" mat-dialog-close>Cancel</button>
     <button
       mat-flat-button
       color="primary"

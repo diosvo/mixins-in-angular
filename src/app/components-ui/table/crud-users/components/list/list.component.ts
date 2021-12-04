@@ -1,27 +1,36 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { IUser } from '@lib/models/user';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UsersService } from '@lib/services/users/users.service';
-import { catchError, Observable, Subject, throwError } from 'rxjs';
+import { catchError, filter, finalize, Observable, Subject, throwError } from 'rxjs';
 
 type User = Partial<IUser>;
 
 @Component({
   selector: 'list-users',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit {
   users$: Observable<Array<User>>;
+
+  loading = false;
   errorMessage$ = new Subject<string>();
 
   columns: Array<TableColumn> = [
     { key: 'id' },
     { key: 'name' },
     { key: 'email' },
+    { key: 'actions', disableSorting: true },
   ];
 
-  constructor(private readonly userService: UsersService) { }
+  constructor(
+    private readonly dialog: MatDialog,
+    private readonly snackbar: SnackbarService,
+    private readonly userService: UsersService,
+  ) { }
 
   ngOnInit(): void {
     this.users$ = this.userService.all().pipe(
@@ -30,5 +39,34 @@ export class ListComponent implements OnInit {
         return throwError(() => new Error(message));
       }),
     );
+  }
+
+  openConfirmDialog(user: User): void {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          header: 'Delete',
+          body: `Are you sure you want to delete ${user.name}?`,
+          btnClose: false
+        },
+        width: '500px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(filter(result => result))
+      .subscribe(() => this.delete(user));
+  }
+
+  private delete(user: User): void {
+    this.loading = true;
+
+    this.userService.delete(user.id as number)
+      .pipe(
+        finalize(() => this.loading = false)
+      )
+      .subscribe({
+        next: () => this.snackbar.success(`${user.name} has been deleted.`),
+        error: ({ message }) => this.snackbar.error(message)
+      });
   }
 }

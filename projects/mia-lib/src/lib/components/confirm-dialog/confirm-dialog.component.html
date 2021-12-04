@@ -1,6 +1,11 @@
 <div class="d-flex jc-between">
   <h2 mat-dialog-title [innerHTML]="data.header | titlecase"></h2>
-  <button mat-icon-button class="dialog-close-button" mat-dialog-close>
+  <button
+    mat-icon-button
+    mat-dialog-close
+    *ngIf="data.btnClose"
+    class="dialog-close-button"
+  >
     <span class="text-secondary f-20" [style]="{ 'font-family': 'wide-font' }">
       &times;
     </span>
@@ -8,12 +13,11 @@
 </div>
 <mat-dialog-content [innerHTML]="data.body"></mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-stroked-button color="warn" mat-dialog-close>Close</button>
+  <button mat-button color="warn" mat-dialog-close>Close</button>
   <button
     mat-flat-button
     color="primary"
-    cdkFocusInitial
     [mat-dialog-close]="true"
-    [innerHTML]="data.btnConfirm | titlecase"
+    [innerHTML]="'Confirm'"
   ></button>
 </mat-dialog-actions>

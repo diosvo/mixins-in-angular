@@ -7,6 +7,7 @@ interface IUser {
   name: string;
   gender: Gender;
   email: string;
+  hobbies: Array<string>;
 }
 
 export { IUser };

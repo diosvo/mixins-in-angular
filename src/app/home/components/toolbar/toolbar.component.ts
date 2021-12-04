@@ -31,7 +31,6 @@ export class ToolbarComponent {
         data: {
           header: 'logout',
           body: 'Are you sure you want to logout?',
-          btnConfirm: 'confirm',
           btnClose: false
         },
         width: '425px',

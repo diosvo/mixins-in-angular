@@ -3,6 +3,10 @@ import { Component, Input } from '@angular/core';
 type ButtonType = 'primary' | 'secondary' | 'text' | 'icon';
 type ButtonComponentType = typeof PrimaryButtonComponent | typeof IconButtonComponent;
 
+// Missing features:
+// secondary | text button
+// disabled state
+
 @Component({
   selector: 'custom-button',
   templateUrl: './custom-button.component.html'

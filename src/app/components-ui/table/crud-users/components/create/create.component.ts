@@ -23,7 +23,7 @@ export class CreateComponent {
     private readonly userService: UsersService
   ) { }
 
-  onFormChanged(data: { name: string, email: string }): void {
+  onFormChanged(data: User): void {
     this.user = data;
   }
 

@@ -18,7 +18,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    hobbies: []
+    hobbies: [[]]
   });
   private destroy$ = new Subject<void>();
 

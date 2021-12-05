@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CustomButtonComponent } from './custom-button.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CustomButtonComponent, IconButtonComponent, PrimaryButtonComponent } from './custom-button.component';
 
 describe('CustomButtonComponent', () => {
   let component: CustomButtonComponent;
@@ -8,9 +9,17 @@ describe('CustomButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CustomButtonComponent ]
+      declarations: [
+        IconButtonComponent,
+        CustomButtonComponent,
+        PrimaryButtonComponent,
+      ],
+      imports: [
+        MatIconModule,
+        MatButtonModule,
+      ],
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +30,19 @@ describe('CustomButtonComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('should call get buttonComponentType() when type is', () => {
+    test('primary', () => {
+      component.type = 'primary';
+      jest.spyOn(component, 'buttonComponentType').mockReturnValue(PrimaryButtonComponent);
+      expect(component.buttonComponentType).toBeDefined();
+    });
+
+    test('icon', () => {
+      component.type = 'icon';
+      jest.spyOn(component, 'buttonComponentType').mockReturnValue(IconButtonComponent);
+      expect(component.buttonComponentType).toBeDefined();
+    });
   });
 });

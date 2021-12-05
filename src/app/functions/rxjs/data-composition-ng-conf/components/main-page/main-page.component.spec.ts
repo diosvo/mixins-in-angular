@@ -28,9 +28,10 @@ describe('MainPageComponent', () => {
         MatCardModule,
         MatIconModule,
         MatButtonModule,
+        MatProgressSpinnerModule,
+
         HttpClientModule,
         RouterTestingModule,
-        MatProgressSpinnerModule,
       ]
     })
       .compileComponents();

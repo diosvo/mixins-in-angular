@@ -37,16 +37,20 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.watchForFormChanged();
+  }
+
+  private watchForFormChanged(): void {
     this.form.valueChanges
-      .pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((details: User) => {
-        this.changed.emit(details);
-        this.isValid.emit(this.form.valid);
-      });
+    .pipe(
+      debounceTime(100),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    )
+    .subscribe((details: User) => {
+      this.changed.emit(details);
+      this.isValid.emit(this.form.valid);
+    });
   }
 
   addHobby(event: MatChipInputEvent): void {
@@ -65,7 +69,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     this.hobbies.value.forEach((item: string) => this.hobbyValidator(item));
   }
 
-  hobbyValidator(hobby: string): void {
+  private hobbyValidator(hobby: string): void {
     const regex = new RegExp(Regex.Text);
 
     if (hasDuplicates(this.hobbies.value)) {

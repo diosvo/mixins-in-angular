@@ -14,31 +14,16 @@
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
     >
-      <button
-        suffix
-        matSuffix
-        mat-icon-button
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hidePassword"
-        (click)="hidePassword = !hidePassword"
-      >
-        <mat-icon>
-          {{ hidePassword ? "visibility_off" : "visibility" }}
-        </mat-icon>
-      </button>
+      <custom-button suffix type="icon" (click)="hidePassword = !hidePassword">
+        {{ hidePassword ? "visibility_off" : "visibility" }}
+      </custom-button>
     </custom-input>
   </mat-dialog-content>
 
   <!-- Actions -->
-  <mat-dialog-actions class="d-flex jc-between">
-    <button mat-button color="warn" mat-dialog-close>Cancel</button>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="onSubmit()"
-      [mat-dialog-close]="true"
-    >
+  <mat-dialog-actions class="d-flex jc-flex-end">
+    <custom-button [mat-dialog-close]="true" (click)="onSubmit()">
       Log In
-    </button>
+    </custom-button>
   </mat-dialog-actions>
 </form>

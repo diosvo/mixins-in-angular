@@ -18,6 +18,8 @@ const user = {
   hobbies: ['coding', 'basketball']
 };
 
+const list_users = [user];
+
 const snackbar = {
   success: jest.fn(),
   error: jest.fn()
@@ -29,7 +31,7 @@ describe('ListComponent', () => {
   let dialog: MatDialog;
 
   const service = {
-    all: jest.fn().mockReturnValue(of([])),
+    all: jest.fn().mockReturnValue(of(list_users)),
     delete: jest.fn().mockReturnValue(of({}))
   };
 
@@ -73,14 +75,28 @@ describe('ListComponent', () => {
     fixture = TestBed.createComponent(ListComponent);
     component = fixture.componentInstance;
     dialog = TestBed.inject(MatDialog);
-    fixture.detectChanges();
   });
 
   test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('openConfirmDialog() when the user press on', () => {
+  describe('call list users when the API returns', () => {
+    test('success', () => {
+      component.ngOnInit();
+      component.users$.subscribe(response => expect(response).toEqual(list_users));
+    });
+
+    test('error', () => {
+      jest.spyOn(component.errorMessage$, 'next');
+      service.all.mockReturnValue(throwError(() => new Error('ERROR_MESSAGE')));
+
+      component.ngOnInit();
+      component.users$.subscribe(() => expect(component.errorMessage$.next).toHaveBeenCalledWith('ERROR_MESSAGE'));
+    });
+  });
+
+  describe('openConfirmDialog() when the user presses on', () => {
     test('Confirm button', () => {
       jest.spyOn(component as any, 'delete');
       jest.spyOn(dialog, 'open').mockReturnValue(

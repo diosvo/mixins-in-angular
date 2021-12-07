@@ -4,8 +4,8 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { IUser } from '@lib/models/user';
+import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
-import { hasDuplicates } from '@lib/utils/utils';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 type User = Partial<IUser>;
@@ -42,15 +42,15 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   private watchForFormChanged(): void {
     this.form.valueChanges
-    .pipe(
-      debounceTime(100),
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    )
-    .subscribe((details: User) => {
-      this.changed.emit(details);
-      this.isValid.emit(this.form.valid);
-    });
+      .pipe(
+        debounceTime(100),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((details: User) => {
+        this.changed.emit(details);
+        this.isValid.emit(this.form.valid);
+      });
   }
 
   addHobby(event: MatChipInputEvent): void {

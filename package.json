@@ -12,6 +12,7 @@
     "analyze": "webpack-bundle-analyzer dist/mixins-in-angular/stats.json",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
+    "jest:cache": "jest --clearCache",
     "test:coverage": "jest --coverage",
     "lint": "ng lint"
   },

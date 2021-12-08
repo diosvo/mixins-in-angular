@@ -41,8 +41,16 @@ $-bd-radius: calc($-unit-px * 3);
     }
 
     mat-row {
+      mat-cell.mat-column-actions {
+        visibility: hidden;
+      }
+
       &:hover {
         background-color: $-hover;
+
+        mat-cell.mat-column-actions {
+          visibility: visible;
+        }
       }
     }
   }

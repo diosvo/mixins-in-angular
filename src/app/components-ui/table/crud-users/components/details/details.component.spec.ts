@@ -118,10 +118,10 @@ describe('DetailsComponent', () => {
     component.hobbies.value.forEach((item: string) => expect(component['hobbyValidator']).toBeCalledWith(item));
   });
 
-  describe('hobbyValidator() to check hobby to be', () => {
+  describe('hobbyValidator() to check hobby when it is', () => {
     beforeEach(() => jest.spyOn(component.hobbies, 'setErrors'));
 
-    test('invalid', () => {
+    test('duplicated', () => {
       component.hobbies.setValue([...user.hobbies, 'us']);
       component['hobbyValidator']('us');
       expect(component.hobbies.setErrors).toBeCalledWith({ duplicate: true });

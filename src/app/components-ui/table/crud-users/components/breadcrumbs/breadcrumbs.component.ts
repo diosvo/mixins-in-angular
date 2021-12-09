@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IUser } from '@lib/models/user';
-
-type User = Partial<IUser>;
+import { User } from '@lib/services/users/users.service';
 
 @Component({
   selector: 'user-breadcrumbs',

@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
+import { User, UsersService } from '@lib/services/users/users.service';
 import { finalize } from 'rxjs';
-
-type User = Partial<IUser>;
 
 @Component({
   selector: 'create-user',

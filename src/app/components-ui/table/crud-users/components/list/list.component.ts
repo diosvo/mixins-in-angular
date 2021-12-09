@@ -2,12 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
+import { User, UsersService } from '@lib/services/users/users.service';
 import { catchError, filter, finalize, Observable, Subject, throwError } from 'rxjs';
-
-type User = Partial<IUser>;
 
 @Component({
   selector: 'list-users',

@@ -3,19 +3,18 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 
-type User = Partial<IUser>;
+export type User = Partial<IUser>;
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class UsersService implements BaseService<User> {
-  private _destroyed$ = new Subject<boolean>();
 
-  private _user$ = new BehaviorSubject<User>({});
+  private _user$ = new BehaviorSubject<User>(null);
   readonly currentUser$ = this._user$.asObservable();
 
   private _loading$ = new BehaviorSubject<boolean>(false);

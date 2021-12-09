@@ -2,12 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, finalize, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
-
-type User = Partial<IUser>;
+import { User, UsersService } from '@lib/services/users/users.service';
+import { combineLatest, finalize, map, Observable, startWith, Subject, takeUntil, takeWhile, tap } from 'rxjs';
 
 @Component({
   selector: 'update-user',
@@ -34,6 +31,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   ngOnInit(): void {
     this.user$ = this.userService.currentUser$.pipe(
+      takeWhile(data => data !== null),
       tap(({ id }) => this.user_id = id as number),
       takeUntil(this.destroy$)
     );

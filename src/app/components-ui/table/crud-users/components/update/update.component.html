@@ -1,8 +1,8 @@
 <div class="bg-white w-500 bd-auto p-2">
   <mat-progress-bar
+    *ngIf="saving"
     mode="indeterminate"
     class="mb-1"
-    [style]="{ display: saving ? 'block' : ' none' }"
   ></mat-progress-bar>
 
   <ng-container *ngIf="loading$ | async; else details">

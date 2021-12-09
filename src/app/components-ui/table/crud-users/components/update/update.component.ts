@@ -72,6 +72,5 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 }

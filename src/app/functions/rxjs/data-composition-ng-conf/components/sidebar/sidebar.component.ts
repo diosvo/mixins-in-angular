@@ -36,7 +36,7 @@ export class SidebarComponent implements OnInit {
     this.productsService.refreshData();
   }
 
-  async onSelected(productId: number): Promise<void> {
-    await this.router.navigate([`${EUrl.FUNCTION}/${EFunctions.RXJS}/data-composition-ng-conf`, productId]);
+  onSelected(productId: number): void {
+    this.router.navigate([`${EUrl.FUNCTION}/${EFunctions.RXJS}/data-composition-ng-conf`, productId]);
   }
 }

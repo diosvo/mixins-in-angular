@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CustomButtonComponent, IconButtonComponent, PrimaryButtonComponent } from './custom-button.component';
+import { CustomButtonComponent, IconButtonComponent, PrimaryButtonComponent, TextButtonComponent } from './custom-button.component';
 
 describe('CustomButtonComponent', () => {
   let component: CustomButtonComponent;
@@ -10,6 +10,7 @@ describe('CustomButtonComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
+        TextButtonComponent,
         IconButtonComponent,
         CustomButtonComponent,
         PrimaryButtonComponent,
@@ -42,6 +43,12 @@ describe('CustomButtonComponent', () => {
     test('icon', () => {
       component.type = 'icon';
       jest.spyOn(component, 'buttonComponentType').mockReturnValue(IconButtonComponent);
+      expect(component.buttonComponentType).toBeDefined();
+    });
+
+    test('text', () => {
+      component.type = 'text';
+      jest.spyOn(component, 'buttonComponentType').mockReturnValue(TextButtonComponent);
       expect(component.buttonComponentType).toBeDefined();
     });
   });

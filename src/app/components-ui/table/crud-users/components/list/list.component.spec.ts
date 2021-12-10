@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -8,11 +8,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
+import { User, UsersService } from '@lib/services/users/users.service';
 import { of, throwError } from 'rxjs';
 import { ListComponent } from './list.component';
 
-const user = {
+const user: User = {
   name: 'Dios Vo',
   email: 'vtmn1212@gmail.com',
   hobbies: ['coding', 'basketball']
@@ -84,7 +84,7 @@ describe('ListComponent', () => {
   describe('call list users when the API returns', () => {
     test('success', () => {
       component.ngOnInit();
-      component.users$.subscribe(response => expect(response).toEqual(list_users));
+      component.users$.subscribe((response: Array<User>) => expect(response).toEqual(list_users));
     });
 
     test('error', () => {
@@ -135,10 +135,17 @@ describe('ListComponent', () => {
   });
 
   describe('delete() when the API returns', () => {
-    test('success', () => {
+    test('success', fakeAsync(() => {
       component['delete'](user);
-      expect(snackbar.success).toBeCalledWith(`${user.name} has been deleted.`);
-    });
+      fixture.detectChanges();
+      tick();
+
+      component.users$.subscribe((response: Array<User>) => {
+        expect(response).toEqual([]);
+        expect(response.length).toBe(0);
+        expect(snackbar.success).toBeCalledWith(`${user.name} has been deleted.`);
+      });
+    }));
 
     test('error', () => {
       service.delete.mockReturnValue(throwError(() => new Error('ERROR_MESSAGE')));

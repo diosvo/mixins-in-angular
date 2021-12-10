@@ -4,7 +4,7 @@ import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-d
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { User, UsersService } from '@lib/services/users/users.service';
-import { catchError, filter, finalize, Observable, Subject, throwError } from 'rxjs';
+import { catchError, filter, finalize, map, Observable, Subject, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'list-users',
@@ -34,7 +34,7 @@ export class ListComponent implements OnInit {
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
-      }),
+      })
     );
   }
 
@@ -59,6 +59,9 @@ export class ListComponent implements OnInit {
 
     this.userService.delete(user.id as number)
       .pipe(
+        switchMap(() => this.users$ = this.users$.pipe(
+          map((data: Array<User>) => data.filter(item => item.id !== user.id))
+        )),
         finalize(() => this.loading = false)
       )
       .subscribe({

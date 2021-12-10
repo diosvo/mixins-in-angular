@@ -1,11 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
+  OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
@@ -21,7 +22,7 @@ export interface TableColumn {
   styleUrls: ['./custom-table.component.scss'],
 })
 
-export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
@@ -77,13 +78,18 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
   constructor() { }
 
+  ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
+    if (changes.dataSource && changes.dataSource.currentValue) {
+      this.getDataSource();
+    }
+  }
+
   ngOnInit(): void {
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
   }
 
   ngAfterViewInit(): void {
     this.configColumns();
-    this.getDataSource();
   }
 
   private getDataSource(): void {

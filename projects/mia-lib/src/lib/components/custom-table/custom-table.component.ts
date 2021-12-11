@@ -24,12 +24,12 @@ export interface TableColumn {
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
-  data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
+  source: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
   /** Definitions: data */
 
-  @Input() dataSource!: Observable<Array<T>>;
+  @Input() data!: Observable<Array<T>>;
   @Input() columns: Array<TableColumn> = [];
 
   /** Pagination */
@@ -77,8 +77,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   constructor() { }
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.dataSource && changes.dataSource.currentValue) {
-      this.getDataSource();
+    if (changes.data && changes.data.currentValue) {
+      this.getData();
     }
   }
 
@@ -91,13 +91,13 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.configColumnTemplates();
   }
 
-  private getDataSource(): void {
-    this.dataSource
+  private getData(): void {
+    this.data
       .pipe(takeUntil(this._destroyed$))
       .subscribe((response: Array<T>) => {
-        this.data = new MatTableDataSource<T>(response);
-        this.data.sort = this.sort;
-        this.data.paginator = this.pageable ? this.paginator : null;
+        this.source = new MatTableDataSource<T>(response);
+        this.source.sort = this.sort;
+        this.source.paginator = this.pageable ? this.paginator : null;
       });
   }
 
@@ -124,12 +124,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numRows = this.data.data.length;
+    const numRows = this.source.data.length;
     return numSelected === numRows;
   }
 
   masterToggle(): void {
-    this.isAllSelected() ? this.selection.clear() : this.data.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
     this.selectedRows.emit(this.selection.selected);
   }
 

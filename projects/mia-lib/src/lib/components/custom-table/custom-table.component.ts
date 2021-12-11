@@ -51,10 +51,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Checkbox */
 
-  @Input() enableCheckbox: boolean = false;
-  @Input() allowMultiSelect: boolean;
-
-  @Output() action = new EventEmitter();
+  readonly select = 'select';
+  @Input() enableCheckbox: boolean = true;
   @Output() selectedRows = new EventEmitter();
 
   private _destroyed$ = new Subject<boolean>();
@@ -84,7 +82,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngOnInit(): void {
     this.configDisplayColumns();
-    this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
   }
 
   ngAfterViewInit(): void {
@@ -99,15 +96,17 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
         this.source.sort = this.sort;
         this.source.paginator = this.pageable ? this.paginator : null;
       });
+
+    this.selection = new SelectionModel<{}>(true, []);
   }
 
   private configDisplayColumns(): void {
     this.displayColumns = this.columns.map(({ key }) => key);
 
-    if (this.enableCheckbox && this.displayColumns.indexOf('select') < 0) {
-      this.displayColumns.splice(0, 0, 'select');
+    if (this.enableCheckbox && this.displayColumns.indexOf(this.select) < 0) {
+      this.displayColumns.splice(0, 0, this.select);
       this.columns.splice(0, 0, {
-        key: 'select'
+        key: this.select
       });
     }
   }
@@ -130,11 +129,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   masterToggle(): void {
     this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
-    this.selectedRows.emit(this.selection.selected);
-  }
-
-  rowSelect(): void {
-    this.selectedRows.emit(this.selection.selected);
   }
 
   trackByIdx(idx: number): number {

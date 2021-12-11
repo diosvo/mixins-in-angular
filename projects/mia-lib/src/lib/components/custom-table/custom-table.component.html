@@ -16,14 +16,17 @@
         [matColumnDef]="column.key"
       >
         <ng-container
-          *ngIf="column.key === 'select'; then checkbox; else noCheckbox"
+          *ngIf="column.key === select; then checkbox; else noCheckbox"
         ></ng-container>
 
         <!-- Checkbox -->
         <ng-template #checkbox>
           <mat-header-cell *matHeaderCellDef>
             <mat-checkbox
-              (change)="$event ? masterToggle() : null"
+              (change)="
+                $event ? masterToggle() : null;
+                selectedRows.emit(selection.selected)
+              "
               [checked]="selection.hasValue() && isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()"
             >
@@ -32,7 +35,10 @@
           <mat-cell *matCellDef="let row">
             <mat-checkbox
               (click)="$event.stopPropagation()"
-              (change)="$event ? selection.toggle(row) : null; rowSelect()"
+              (change)="
+                $event ? selection.toggle(row) : null;
+                selectedRows.emit(selection.selected)
+              "
               [checked]="selection.isSelected(row)"
             >
             </mat-checkbox>

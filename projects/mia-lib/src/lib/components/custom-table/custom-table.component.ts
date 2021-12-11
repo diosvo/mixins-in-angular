@@ -52,7 +52,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   /** Checkbox */
 
   readonly select = 'select';
-  @Input() enableCheckbox: boolean = true;
+  @Input() enableCheckbox: boolean = false;
   @Output() selectedRows = new EventEmitter();
 
   private _destroyed$ = new Subject<boolean>();

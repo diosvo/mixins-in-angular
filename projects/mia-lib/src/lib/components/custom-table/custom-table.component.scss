@@ -21,6 +21,10 @@ $-bd-radius: calc($-unit-px * 3);
     mat-header-cell {
       padding: $-cell-pd;
 
+      &.mat-column-select {
+        flex: 0 0 3rem;
+      }
+
       span {
         font-size: calc($-unit-px * 6);
         color    : palette.$black;
@@ -41,8 +45,14 @@ $-bd-radius: calc($-unit-px * 3);
     }
 
     mat-row {
-      mat-cell.mat-column-actions {
-        visibility: hidden;
+      mat-cell.mat-column {
+        &-select {
+          flex: 0 0 3rem;
+        }
+
+        &-actions {
+          visibility: hidden;
+        }
       }
 
       &:hover {

@@ -72,9 +72,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     }
     return {};
   }
-  get displayColumns(): Array<string> {
-    return this.columns.map(({ key }) => key);
-  }
+  displayColumns: Array<string>;
 
   constructor() { }
 
@@ -85,11 +83,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   ngOnInit(): void {
+    this.configDisplayColumns();
     this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
   }
 
   ngAfterViewInit(): void {
-    this.configColumns();
+    this.configColumnTemplates();
   }
 
   private getDataSource(): void {
@@ -102,7 +101,18 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
       });
   }
 
-  private configColumns(): void {
+  private configDisplayColumns(): void {
+    this.displayColumns = this.columns.map(({ key }) => key);
+
+    if (this.enableCheckbox && this.displayColumns.indexOf('select') < 0) {
+      this.displayColumns.splice(0, 0, 'select');
+      this.columns.splice(0, 0, {
+        key: 'select'
+      });
+    }
+  }
+
+  private configColumnTemplates(): void {
     for (const column of this.columnDefs.toArray()) {
       this.columnTemplates[column.columnName] = column.columnTemplate;
     }
@@ -112,7 +122,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
    * @description Checkbox
    */
 
-  private isAllSelected(): boolean {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.data.data.length;
     return numSelected === numRows;

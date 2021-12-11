@@ -43,7 +43,7 @@ describe('DetailsComponent', () => {
     fixture.destroy();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 

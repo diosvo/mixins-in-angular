@@ -4,7 +4,7 @@ import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-d
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { User, UsersService } from '@lib/services/users/users.service';
-import { catchError, filter, finalize, map, Observable, Subject, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, map, Observable, Subject, switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'list-users',
@@ -12,6 +12,7 @@ import { catchError, filter, finalize, map, Observable, Subject, switchMap, thro
 })
 export class ListComponent implements OnInit {
   users$: Observable<Array<User>>;
+  refreshUsers$ = new BehaviorSubject<boolean>(true);
 
   loading = false;
   errorMessage$ = new Subject<string>();

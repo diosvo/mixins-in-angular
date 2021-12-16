@@ -9,7 +9,7 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private isLoggedIn$ = new BehaviorSubject<boolean>(false);
-  isLoggedIn = this.isLoggedIn$.asObservable();
+  readonly isLoggedIn = this.isLoggedIn$.asObservable();
   user!: AuthUser;
 
   private readonly TOKEN_NAME = 'dv_token';

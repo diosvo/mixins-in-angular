@@ -2,7 +2,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthService } from '@auth/services/auth.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { of } from 'rxjs';
 import { IsAuthenticatedGuard } from './is-authenticated.guard';
 
 describe('IsAuthenticatedGuard', () => {
@@ -32,7 +31,7 @@ describe('IsAuthenticatedGuard', () => {
   });
 
   it('should allow to access if user has logged in', (done) => {
-    service.isLoggedIn = of(true);
+    service['isLoggedIn$'].next(true);
 
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {
@@ -44,7 +43,7 @@ describe('IsAuthenticatedGuard', () => {
   });
 
   it('should NOT allow to access if user has NOT logged in', (done) => {
-    service.isLoggedIn = of(false);
+    service['isLoggedIn$'].next(false);
 
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {

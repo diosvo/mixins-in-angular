@@ -1,17 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AdvancedCrudComponent } from './advanced-crud.component';
 
 describe('AdvancedCrudComponent', () => {
   let component: AdvancedCrudComponent;
   let fixture: ComponentFixture<AdvancedCrudComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ AdvancedCrudComponent ]
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [AdvancedCrudComponent],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ],
     })
-    .compileComponents();
-  });
+      .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AdvancedCrudComponent);

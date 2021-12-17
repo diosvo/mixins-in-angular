@@ -14,21 +14,22 @@ import { MultipleCheckboxSearchRoutingModule } from './multiple-checkbox-filter-
 
 @NgModule({
   declarations: [
+    DataTableComponent,
     SearchFilterComponent,
-    DataTableComponent
   ],
   imports: [
     CommonModule,
-    MatSortModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
+    MultipleCheckboxSearchRoutingModule,
 
     MatInputModule,
+    MatSortModule,
+    MatTableModule,
     MatSelectModule,
+    MatPaginatorModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
+
     ReactiveFormsModule,
-    MultipleCheckboxSearchRoutingModule
   ]
 })
 export class MultipleCheckboxFilterModule { }

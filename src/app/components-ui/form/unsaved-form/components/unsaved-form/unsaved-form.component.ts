@@ -1,12 +1,12 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EUrl } from '@home/models/url.enum';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { EUrl } from 'src/app/home/models/url.enum';
 
 @Component({
   selector: 'app-unsaved-form',
@@ -48,7 +48,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
       .subscribe(response => this.hasChanged = response);
   }
 
-  canDeactivate(): boolean {    
+  canDeactivate(): boolean {
     return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
   }
 

@@ -8,9 +8,8 @@
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
   >
-    <div header class="d-flex ai-baseline jc-between">
-      <h2>Github: Angular Issues</h2>
-    </div>
+    <h2 header>Github: Angular Issues</h2>
+    <search-filter filters (filters)="filteredIssues($event)"></search-filter>
 
     <custom-column columnName="created_at">
       <ng-template let-issue>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Self, ViewChild } from '@angular/core';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subject, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Filter } from '../../models/filter.model';
 import { GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
@@ -10,7 +10,7 @@ import { SearchFilterComponent } from '../search-filter/search-filter.component'
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss'],
+  styles: ['@use \'chip\';'],
   providers: [GithubRepoIssuesService]
 })
 
@@ -23,10 +23,11 @@ export class DataTableComponent implements OnInit {
     { key: 'number' },
     { key: 'title' },
   ];
-  filters$ = new BehaviorSubject<Partial<Filter>>({
+  private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
     state: ''
   });
+  readonly filters$ = this._filters$.asObservable();
 
   isLoadingResults = true;
 
@@ -43,7 +44,26 @@ export class DataTableComponent implements OnInit {
 
   private getIssues(): void {
     // should show all of items: about 20000
-    this.issues$ = this.service.getRepoIssues().pipe(
+
+    this.issues$ = combineLatest([this.service.getRepoIssues(), this.filters$]).pipe(
+      map(([data, params]) =>
+        data.filter((item: GithubIssue) => {
+          let conditions = true;
+          const filterValues = JSON.parse(JSON.stringify(params));
+
+          for (const key in filterValues) {
+            if (key === 'query') {
+              const searchTerm = item.number + item.title;
+              conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
+            }
+            else if (filterValues[key] !== null && filterValues[key].length) {
+              conditions = conditions && filterValues[key].includes(data[key].trim().toLowerCase());
+            }
+          }
+
+          return conditions;
+        })
+      ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
@@ -51,11 +71,7 @@ export class DataTableComponent implements OnInit {
     );
   }
 
-  resetPage(): void {
-    window.location.reload();
-  }
-
-  resetFilters(): void {
-    this.searchFilter.resetForm();
+  filteredIssues($event: Filter): void {
+    this._filters$.next($event);
   }
 }

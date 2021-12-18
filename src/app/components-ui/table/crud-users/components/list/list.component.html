@@ -3,19 +3,13 @@
 </ng-container>
 
 <ng-template #noError>
-  <mat-progress-bar
-    *ngIf="loading"
-    class="mb-1"
-    mode="indeterminate"
-  ></mat-progress-bar>
-
   <custom-table
     [data]="users$"
     [columns]="columns"
     [defaultSortColumn]="'name'"
   >
-    <div header class="d-flex ai-baseline jc-between mb-1">
-      <div class="text-black f-20">List Users</div>
+    <div header class="d-flex ai-baseline jc-between">
+      <h2>List Users</h2>
       <custom-button [routerLink]="['create']"> Create User</custom-button>
     </div>
 

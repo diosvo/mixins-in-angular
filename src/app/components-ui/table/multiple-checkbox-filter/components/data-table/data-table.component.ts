@@ -1,9 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, Self, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, merge, Subject, throwError } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Component, OnInit, Self, ViewChild } from '@angular/core';
+import { TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Filter } from '../../models/filter.model';
 import { GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
@@ -16,61 +14,41 @@ import { SearchFilterComponent } from '../search-filter/search-filter.component'
   providers: [GithubRepoIssuesService]
 })
 
-export class DataTableComponent implements OnDestroy, AfterViewInit {
-  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  dataSource: MatTableDataSource<GithubIssue>;
+export class DataTableComponent implements OnInit {
+  issues$: Observable<Array<GithubIssue>>;
+
+  columns: Array<TableColumn> = [
+    { key: 'created_at', header: 'Created At' },
+    { key: 'state' },
+    { key: 'number' },
+    { key: 'title' },
+  ];
   filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
     state: ''
   });
 
-  resultsLength = 0;
   isLoadingResults = true;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(SearchFilterComponent) searchFilter: SearchFilterComponent;
-
-  destroy$ = new Subject<boolean>();
-  error$ = new Subject<boolean>();
+  errorMessage$ = new Subject<boolean>();
 
   constructor(
     @Self() readonly service: GithubRepoIssuesService
-  ) {
-    this.dataSource = new MatTableDataSource([]);
-  }
+  ) { }
 
-  ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  ngOnInit(): void {
     this.getIssues();
   }
 
   private getIssues(): void {
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.service!.getRepoIssues(this.sort.active, this.sort.direction, this.paginator.pageIndex);
-        }),
-        map(data => {
-          this.isLoadingResults = false;
-
-          if (data === null) {
-            return [];
-          }
-
-          this.resultsLength = data.total_count;
-          return data.items;
-        }),
-        catchError((error) => {
-          this.error$.next(!error.ok);
-          return throwError(() => new Error(error.message));
-        })
-      )
-      .subscribe({
-        next: (data: Array<GithubIssue>) => this.dataSource = new MatTableDataSource(data),
-      });
+    // should show all of items: about 20000
+    this.issues$ = this.service.getRepoIssues().pipe(
+      catchError(({ message }) => {
+        this.errorMessage$.next(message);
+        return throwError(() => new Error(message));
+      })
+    );
   }
 
   resetPage(): void {
@@ -79,10 +57,5 @@ export class DataTableComponent implements OnDestroy, AfterViewInit {
 
   resetFilters(): void {
     this.searchFilter.resetForm();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 }

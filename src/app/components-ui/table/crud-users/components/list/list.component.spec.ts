@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
@@ -46,6 +47,8 @@ describe('ListComponent', () => {
         HttpClientModule,
         RouterTestingModule,
         BrowserAnimationsModule,
+
+        MatProgressBarModule
       ],
       providers: [
         {

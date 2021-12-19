@@ -3,6 +3,12 @@
 </ng-container>
 
 <ng-template #noError>
+  <mat-progress-bar
+    *ngIf="loading"
+    class="mb-1"
+    mode="indeterminate"
+  ></mat-progress-bar>
+
   <custom-table
     [data]="users$"
     [columns]="columns"

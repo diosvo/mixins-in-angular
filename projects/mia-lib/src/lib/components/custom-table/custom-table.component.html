@@ -89,8 +89,12 @@
   <!-- Pagination -->
   <div *ngIf="pageable" [class.custom-pagination]="pageable">
     <mat-paginator
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
       [pageSizeOptions]="pageSizeOptions"
       [showFirstLastButtons]="showFirstLastButtons"
+      (page)="pageChanges.emit($event)"
     ></mat-paginator>
   </div>
 </main>

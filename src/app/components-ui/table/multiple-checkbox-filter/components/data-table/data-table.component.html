@@ -7,6 +7,8 @@
     [data]="issues$"
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
+    [length]="resultsLength"
+    (pageChanges)="pageChanges($event)"
   >
     <h2 header>Github: Angular Issues</h2>
     <search-filter filters (filters)="filteredIssues($event)"></search-filter>

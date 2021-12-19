@@ -1,11 +1,10 @@
-import { Component, OnInit, Self, ViewChild } from '@angular/core';
+import { Component, OnInit, Self } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { BehaviorSubject, combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
 import { Filter } from '../../models/filter.model';
-import { GithubIssue } from '../../models/service.model';
+import { GithubApi, GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
-import { SearchFilterComponent } from '../search-filter/search-filter.component';
 
 @Component({
   selector: 'app-data-table',
@@ -15,6 +14,7 @@ import { SearchFilterComponent } from '../search-filter/search-filter.component'
 })
 
 export class DataTableComponent implements OnInit {
+  errorMessage$ = new Subject<boolean>();
   issues$: Observable<Array<GithubIssue>>;
 
   columns: Array<TableColumn> = [
@@ -29,10 +29,8 @@ export class DataTableComponent implements OnInit {
   });
   readonly filters$ = this._filters$.asObservable();
 
-  isLoadingResults = true;
-
-  @ViewChild(SearchFilterComponent) searchFilter: SearchFilterComponent;
-  errorMessage$ = new Subject<boolean>();
+  resultsLength: number;
+  private _pageIndex$ = new Subject<number>();
 
   constructor(
     @Self() readonly service: GithubRepoIssuesService
@@ -43,9 +41,20 @@ export class DataTableComponent implements OnInit {
   }
 
   private getIssues(): void {
-    // should show all of items: about 20000
+    const data$ = this._pageIndex$.pipe(
+      startWith(0),
+      switchMap((page: number) => this.service.getRepoIssues(page)),
+      map((data: GithubApi): Array<GithubIssue> => {
+        if (data === null) {
+          return [];
+        }
 
-    this.issues$ = combineLatest([this.service.getRepoIssues(), this.filters$]).pipe(
+        this.resultsLength = data.total_count;
+        return data.items;
+      }),
+    );
+
+    this.issues$ = combineLatest([data$, this.filters$]).pipe(
       map(([data, params]) =>
         data.filter((item: GithubIssue) => {
           let conditions = true;
@@ -57,7 +66,7 @@ export class DataTableComponent implements OnInit {
               conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
             }
             else if (filterValues[key] !== null && filterValues[key].length) {
-              conditions = conditions && filterValues[key].includes(data[key].trim().toLowerCase());
+              conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
             }
           }
 
@@ -69,6 +78,10 @@ export class DataTableComponent implements OnInit {
         return throwError(() => new Error(message));
       })
     );
+  }
+
+  pageChanges({ pageIndex }: PageEvent): void {
+    this._pageIndex$.next(pageIndex);
   }
 
   filteredIssues($event: Filter): void {

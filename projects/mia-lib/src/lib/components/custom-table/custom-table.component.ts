@@ -1,9 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, Component, ContentChildren, EventEmitter, Input,
+  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, EventEmitter, Input,
   OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
@@ -20,6 +20,7 @@ export interface TableColumn {
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
@@ -36,8 +37,13 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() pageable: boolean = true;
   @Input() showFirstLastButtons: boolean = false;
-  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
   @ViewChild(MatPaginator) private paginator: MatPaginator;
+
+  @Input() length: number;
+  @Input() pageIndex: number = 0;
+  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
+  @Input() pageSize: number = this.pageSizeOptions[0];
+  @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
 
@@ -75,9 +81,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   constructor() { }
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.data && changes.data.currentValue) {
+    if (changes?.data?.currentValue) {
       this.getData();
-    }
+    };
   }
 
   ngOnInit(): void {

@@ -8,6 +8,7 @@
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
     [length]="resultsLength"
+    [pageSizeOptions]="[30]"
     (pageChanges)="pageChanges($event)"
   >
     <h2 header>Github: Angular Issues</h2>

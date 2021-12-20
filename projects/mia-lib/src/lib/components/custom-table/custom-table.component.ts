@@ -40,9 +40,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @ViewChild(MatPaginator) private paginator: MatPaginator;
 
   @Input() length: number;
+  @Input() pageSize: number;
   @Input() pageIndex: number = 0;
   @Input() pageSizeOptions: Array<number> = [5, 10, 20];
-  @Input() pageSize: number = this.pageSizeOptions[0];
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -84,6 +84,10 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     if (changes?.data?.currentValue) {
       this.getData();
     };
+
+    if (changes?.pageSizeOptions?.currentValue) {
+      this.pageSize = changes.pageSizeOptions.currentValue[0];
+    }
   }
 
   ngOnInit(): void {
@@ -121,6 +125,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     for (const column of this.columnDefs.toArray()) {
       this.columnTemplates[column.columnName] = column.columnTemplate;
     }
+  }
+
+  onPageChanged(event: PageEvent): void {
+    this.pageChanges.emit(event);
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
 
   /**

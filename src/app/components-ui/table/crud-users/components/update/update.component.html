@@ -19,7 +19,7 @@
           mat-flat-button
           color="primary"
           (click)="saveChanges()"
-          [disabled]="canDeactivate() || !isValid"
+          [disabled]="canDeactivate() || saving || !isValid"
         >
           Save
         </button>

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
-import { BehaviorSubject, filter, finalize, map, Observable, pluck, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, shareReplay, tap } from 'rxjs';
+import { ActivatedParamsService } from '../activated-params/activated-params.service';
 import { BaseService } from '../base/base.service';
 
 export type User = Partial<IUser>;
@@ -21,41 +21,24 @@ export class UsersService implements BaseService<User> {
   readonly loading$ = this._loading$.asObservable();
 
   constructor(
-    private readonly router: Router,
     private readonly http: HttpClient,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly route: ActivatedParamsService
   ) {
     this.getUserByRouteParams();
   }
 
   private getUserByRouteParams(): void {
-    this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        map((): ActivatedRoute => this.activatedRoute),
-        map((): ActivatedRoute => {
-          let route = this.activatedRoute;
-          while (route.firstChild) {
-            route = route.firstChild;
-          }
-          return route;
-        }),
-        filter((route: ActivatedRoute) => route.outlet === 'primary'),
-        switchMap(({ params }) => params),
-        pluck('user_id')
-      )
-      .subscribe(user_id => {
-        if (user_id !== undefined) {
-          this._loading$.next(true);
+    this.route.paramsMap$.subscribe({
+      next: ({ user_id }) => {
+        this._loading$.next(true);
 
-          this.byId(user_id)
-            .pipe(finalize(() => this._loading$.next(false)))
-            .subscribe({
-              next: (response: User) => this._user$.next(response)
-            });
-        }
-        return;
-      });
+        this.byId(+user_id)
+          .pipe(finalize(() => this._loading$.next(false)))
+          .subscribe({
+            next: (response: User) => this._user$.next(response)
+          });
+      }
+    });
   }
 
   all(): Observable<Array<User>> {

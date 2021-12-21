@@ -1,18 +1,20 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, filter, map, merge, of } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { BehaviorSubject, filter, map, mergeMap, Observable, Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActivatedParamsService {
+export class ActivatedParamsService implements OnDestroy {
   private _param$ = new BehaviorSubject<Record<string, string>>({});
   readonly paramsMap$ = this._param$.asObservable();
 
-  private _path$ = new BehaviorSubject<Array<string>>([]);
-  readonly pathSegment$ = this._path$.asObservable();
+  private _path$ = new BehaviorSubject<string>('');
+  readonly pathMap$ = this._path$.asObservable();
 
-  private isShallowEqual<A = Array<string> | Record<string, string>>(a: A, b: A): boolean {
+  private _destroyed$ = new Subject<boolean>();
+
+  private isShallowEqual<A = string | Record<string, string>>(a: A, b: A): boolean {
     return a === b;
   }
 
@@ -24,28 +26,26 @@ export class ActivatedParamsService {
   }
 
   private getParams(): void {
-    const mappedRoute = merge(
-      of(this.route),
-      this.router.events.pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        map((): ActivatedRoute => this.route),
-      )
+    const mappedRoute = this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((): ActivatedRoute => this.route),
+      map((route: ActivatedRoute): ActivatedRoute => {
+        while (route.firstChild) route = route.firstChild;
+        return route;
+      }),
+      filter(route => route.outlet === 'primary'),
+      mergeMap(({ params }): Observable<Params> => params),
+      takeUntil(this._destroyed$)
     );
 
     mappedRoute.subscribe({
-      next: (route: ActivatedRoute) => {
-        const paths = this.router.routerState.snapshot.url
-          .replace(/^\//, '').replace(/(\?|#).*$/, '').split('/');
+      next: (params) => {
+        const paths = this.router.routerState.snapshot.url;
 
-        let snapshot = route.snapshot;
         const paramMap: Record<string, string> = {};
-        while (snapshot) {
-          Object.assign(paramMap, snapshot.params);
-          snapshot = snapshot.children?.[0];
-        }
+        Object.assign(paramMap, params);
 
         // add leaf child params
-
         if (!this.isShallowEqual(this._param$.getValue(), paramMap)) {
           this._param$.next(paramMap);
         }
@@ -56,9 +56,9 @@ export class ActivatedParamsService {
       }
     });
   }
-}
 
-/** Existed issues
- * 1. catch 2 params (same) at the first snapshot
- * 2.handle case is NaN
- */
+  ngOnDestroy(): void {
+    this._destroyed$.next(true);
+    this._destroyed$.complete();
+  }
+}

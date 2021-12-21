@@ -14,7 +14,7 @@
   <ng-template #details>
     <ng-container *ngIf="user$ | async as user">
       <div class="d-flex jc-between ai-center">
-        <user-breadcrumbs [user]="user">Details</user-breadcrumbs>
+        <user-breadcrumbs>Details</user-breadcrumbs>
         <button
           mat-flat-button
           color="primary"

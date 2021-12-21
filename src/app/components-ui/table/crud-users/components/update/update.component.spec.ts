@@ -6,7 +6,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { User, UsersService } from '@lib/services/users/users.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
 import { combineLatest, of, throwError } from 'rxjs';
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 import { DetailsModule } from '../details/details.module';
@@ -50,7 +51,7 @@ describe('UpdateComponent', () => {
       ],
       providers: [
         {
-          provide: UsersService,
+          provide: UserDetailsService,
           useValue: service
         },
         {

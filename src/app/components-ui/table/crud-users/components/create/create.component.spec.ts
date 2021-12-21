@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
-import { UsersService } from '@lib/services/users/users.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { of, throwError } from 'rxjs';
 import { CreateComponent } from './create.component';
 
@@ -33,7 +33,7 @@ describe('CreateComponent', () => {
       ],
       providers: [
         {
-          provide: UsersService,
+          provide: UserDetailsService,
           useValue: service
         }
       ]

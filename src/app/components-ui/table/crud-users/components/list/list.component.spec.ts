@@ -9,7 +9,8 @@ import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dial
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { User, UsersService } from '@lib/services/users/users.service';
+import { User } from '@lib/services/users/user-service.model';
+import { UsersService } from '@lib/services/users/users.service';
 import { of, throwError } from 'rxjs';
 import { ListComponent } from './list.component';
 

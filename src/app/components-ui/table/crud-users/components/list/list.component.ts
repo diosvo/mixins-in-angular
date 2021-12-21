@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { User, UsersService } from '@lib/services/users/users.service';
+import { User } from '@lib/services/users/user-service.model';
+import { UsersService } from '@lib/services/users/users.service';
 import { catchError, filter, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
 
 @Component({

@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { User } from '@lib/services/users/users.service';
+import { User } from '@lib/services/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';

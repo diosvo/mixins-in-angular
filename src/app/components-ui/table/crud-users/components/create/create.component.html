@@ -11,7 +11,7 @@
       mat-flat-button
       color="primary"
       (click)="onCreate()"
-      [disabled]="!isValid"
+      [disabled]="saving || !isValid"
     >
       Save
     </button>

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { User, UsersService } from '@lib/services/users/users.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -17,7 +18,7 @@ export class CreateComponent {
   constructor(
     private readonly router: Router,
     private readonly snackbar: SnackbarService,
-    private readonly userService: UsersService
+    private readonly service: UserDetailsService,
   ) { }
 
   onFormChanged(data: User): void {
@@ -26,7 +27,7 @@ export class CreateComponent {
 
   onCreate(): void {
     this.saving = true;
-    this.userService.create(this.user)
+    this.service.create(this.user)
       .pipe(finalize(() => this.saving = false))
       .subscribe({
         next: () => this.snackbar.success('The user has been created.'),

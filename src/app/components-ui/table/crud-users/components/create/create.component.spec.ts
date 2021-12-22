@@ -1,10 +1,13 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { of, throwError } from 'rxjs';
+import { DetailsModule } from '../details/details.module';
 import { CreateComponent } from './create.component';
 
 const user = {
@@ -21,13 +24,22 @@ describe('CreateComponent', () => {
     create: jest.fn().mockReturnValue(of(user))
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [CreateComponent],
       imports: [
         HttpClientModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          {
+            path: 'ui-components/table/crud-users',
+            component: CreateComponent
+          }
+        ]),
+        BrowserAnimationsModule,
 
+        DetailsModule,
+
+        MatButtonModule,
         MatSnackBarModule,
         MatProgressBarModule
       ],
@@ -39,7 +51,7 @@ describe('CreateComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateComponent);

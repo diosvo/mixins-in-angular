@@ -18,7 +18,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     email: ['', [Validators.required, Validators.email]],
     hobbies: [[]]
   });
-  private destroy$ = new Subject<void>();
+  private destroyed$ = new Subject<void>();
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
@@ -43,7 +43,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroyed$)
       )
       .subscribe((details: User) => {
         this.changed.emit(details);
@@ -82,7 +82,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

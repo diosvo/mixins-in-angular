@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, finalize, map, Observable, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, zip } from 'rxjs';
 import { ActivatedParamsService } from '../activated-params/activated-params.service';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
@@ -24,21 +24,24 @@ export class UserDetailsService implements OnDestroy {
   }
 
   private getUserByRouteParams(): void {
-    this.route.paramsMap$
-      .pipe(takeUntil(this._destroyed$))
-      .subscribe({
-        next: ({ user_id }) => {
-          if (!isNaN(+user_id)) {
-            this._loading$.next(true);
+    zip([this.route.pathMap$, this.route.paramsMap$]).subscribe({
+      next: ([path, params]) => {
+        const user_id = +params.user_id;
 
-            this.byId(+user_id)
-              .pipe(finalize(() => this._loading$.next(false)))
-              .subscribe({
-                next: (response: User) => this._user$.next(response)
-              });
-          }
+        if (!isNaN(user_id) && !path.includes('create')) {
+          this._loading$.next(true);
+
+          this.byId(user_id)
+            .pipe(
+              finalize(() => this._loading$.next(false)),
+              takeUntil(this._destroyed$)
+            )
+            .subscribe({
+              next: (response: User) => this._user$.next(response)
+            });
         }
-      });
+      }
+    });
   }
 
   byId(id: number): Observable<User> {

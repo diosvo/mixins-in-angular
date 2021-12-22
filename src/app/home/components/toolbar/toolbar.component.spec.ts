@@ -20,11 +20,17 @@ describe('ToolbarComponent', () => {
       declarations: [ToolbarComponent],
       imports: [
         HttpClientModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          {
+            path: 'ui-components',
+            component: ToolbarComponent
+          }
+        ]),
+
         MatIconModule,
+        MatDialogModule,
         MatButtonModule,
         MatToolbarModule,
-        MatDialogModule
       ],
       providers: [
         {

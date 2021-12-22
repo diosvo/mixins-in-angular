@@ -5,7 +5,7 @@ import { CardItemComponent } from './card-item.component';
 
 const item: IBaseValue = {
   name: 'RxJS',
-  route: 'rxjs',
+  route: 'data-composition-ng-conf',
   description: ''
 };
 
@@ -16,7 +16,14 @@ describe('CardItemComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CardItemComponent],
-      imports: [RouterTestingModule]
+      imports: [
+        RouterTestingModule.withRoutes([
+          {
+            path: 'functions/rxjs/' + item.route,
+            component: CardItemComponent
+          }
+        ])
+      ]
     })
       .compileComponents();
   }));

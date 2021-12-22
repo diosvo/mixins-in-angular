@@ -1,17 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BasicOperatorsComponent } from './basic-operators.component';
 
 describe('BasicOperatorsComponent', () => {
   let component: BasicOperatorsComponent;
   let fixture: ComponentFixture<BasicOperatorsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ BasicOperatorsComponent ]
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [BasicOperatorsComponent],
+      imports: [
+        MatButtonModule,
+        MatTooltipModule,
+      ]
     })
-    .compileComponents();
-  });
+      .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BasicOperatorsComponent);

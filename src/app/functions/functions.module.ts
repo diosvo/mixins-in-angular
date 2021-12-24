@@ -24,7 +24,7 @@ import { ListFunctionsComponent } from './list-functions.component';
     FormsModule,
     ReactiveFormsModule,
 
-    AuthModule,   
+    AuthModule,
     AlertModule,
     CardItemModule,
 

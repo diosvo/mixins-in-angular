@@ -1,5 +1,5 @@
 <form [formGroup]="filterForm" class="d-flex width-100">
-  <mat-form-field class="search-input mr-2">
+  <mat-form-field class="mr-2">
     <mat-label>State</mat-label>
     <mat-select formControlName="state" multiple>
       <mat-option *ngFor="let state of ['open', 'closed']" [value]="state">
@@ -8,7 +8,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="search-input width-100">
+  <mat-form-field class="width-100">
     <mat-label>Search</mat-label>
     <input matInput formControlName="query" autocomplete="off" />
   </mat-form-field>

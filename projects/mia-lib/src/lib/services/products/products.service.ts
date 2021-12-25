@@ -4,7 +4,7 @@ import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { IProduct } from '@lib/models/product';
 import { CategoryService } from '@lib/services/category/category.service';
 import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
+import { catchError, finalize, map, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,23 +45,22 @@ export class ProductsService {
   withCategory$ =
     combineLatest([this.all$, this.categoryService.all$]) // [ Array<IProduct>, Array<ICategory> ]
       .pipe(
-        map(([products, categories]) => {
-          return products.map(
+        map(([products, categories]) =>
+          products.map(
             product => ({
               ...product,
               categoryName: categories.find(category => product.categoryId === category.categoryId).categoryName
-            }) as IProduct);
-        }),
+            }) as IProduct)
+        ),
         shareReplay()
       );
 
   selected$ =
     combineLatest([this.productSelectedAction$, this.withCategory$]) // [ IProduct, [ Array<IProduct>, Array<ICategory> ] ]
       .pipe(
-        map(([selectedProductId, products]) => {
-          return products.find(product => product.productId === selectedProductId);
-        }),
-        tap(product => this.logger.log('Change selected product: ' + JSON.stringify(product))),
+        map(([selectedProductId, products]) =>
+          products.find(product => product.productId === selectedProductId)
+        ),
         shareReplay({ bufferSize: 1, refCount: false })
       );
 

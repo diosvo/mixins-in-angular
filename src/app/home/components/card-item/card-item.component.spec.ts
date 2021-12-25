@@ -1,24 +1,50 @@
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { IBaseValue, IGroupValue } from '../../models/search.model';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IBaseValue } from '@home/models/search.model';
+import { CardItemComponent } from './card-item.component';
 
-@Component({
-  selector: 'card-item',
-  styleUrls: ['./card-item.component.scss'],
-  templateUrl: './card-item.component.html',
-})
-export class CardItemComponent {
-  @Input() data: Array<IGroupValue>;
+const item: IBaseValue = {
+  name: 'RxJS',
+  route: 'data-composition-ng-conf',
+  description: ''
+};
 
-  constructor(
-    private readonly router: Router
-  ) { }
+describe('CardItemComponent', () => {
+  let component: CardItemComponent;
+  let fixture: ComponentFixture<CardItemComponent>;
 
-  directItem(groupUrl: string, groupName: string, itemRoute: string): void {
-    this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
-  }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [CardItemComponent],
+      imports: [
+        RouterTestingModule.withRoutes([
+          {
+            path: 'functions/rxjs/' + item.route,
+            component: CardItemComponent
+          }
+        ])
+      ]
+    })
+      .compileComponents();
+  }));
 
-  trackByItemName(idx: number, item: IBaseValue): string {
-    return item.name;
-  }
-}
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CardItemComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  test('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  test('directItem()', () => {
+    jest.spyOn(component['router'], 'navigate');
+    component.directItem('functions', 'rxjs', item.route);
+    expect(component['router'].navigate).toBeCalledWith(['functions', 'rxjs', item.route]);
+  });
+
+  test('trackByItemName()', () => {
+    expect(component.trackByItemName(null, item)).toBe(item.name);
+  });
+});

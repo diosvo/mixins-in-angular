@@ -7,8 +7,8 @@ export class DetectPermissionService {
   hasPermission: boolean;
 
   constructor(
-    private authService: AuthService,
-    private activatedRoute: ActivatedRoute
+    private readonly authService: AuthService,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.isAuthorized();
   }

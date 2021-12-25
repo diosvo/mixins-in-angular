@@ -1,98 +1,38 @@
-<div class="bg-white bd-auto bd-light width-100">
-  <!-- Error -->
-  <div *ngIf="error$ | async" class="text-center p-3">
-    <span class="text-error">
-      GitHub's API rate limit has been reached. It will be reset in one minute.
-    </span>
-    <a
-      (click)="resetPage()"
-      class="d-block text-light-blue text-deco-underline cursor-pointer"
-    >
-      Reset page
-    </a>
-  </div>
+<ng-container *ngIf="errorMessage$ | async as message; else noError">
+  <alert-message type="error"> {{ message }} </alert-message>
+</ng-container>
 
-  <!-- Table -->
-  <div
-    class="position-relative p-3"
-    [style]="{ display: (error$ | async) ? 'none' : 'block' }"
+<ng-template #noError>
+  <custom-table
+    [data]="issues$"
+    [columns]="columns"
+    [defaultSortColumn]="'created_at'"
+    [length]="resultsLength"
+    [pageSizeOptions]="[30]"
+    (pageChanges)="pageChanges($event)"
+    [style]="{ 'max-height': '300px' }"
   >
-    <div class="shade bd-auto" *ngIf="isLoadingResults">
-      <mat-spinner [diameter]="50"></mat-spinner>
-    </div>
+    <h2 header>Github: Angular Issues</h2>
+    <search-filter filters (filters)="filteredIssues($event)"></search-filter>
 
-    <search-filter [dataSource]="dataSource"></search-filter>
+    <custom-column columnName="created_at">
+      <ng-template let-issue>
+        {{ issue.created_at | date }}
+      </ng-template>
+    </custom-column>
 
-    <div class="table-container bd-auto">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        class="width-100"
-        matSort
-        matSortActive="created"
-        matSortDisableClear
-        matSortDirection="desc"
-      >
-        <ng-container matColumnDef="created">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
-            Created
-          </th>
-          <td mat-cell *matCellDef="let row">{{ row.created_at | date }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="state">
-          <th mat-header-cell *matHeaderCellDef>State</th>
-          <td mat-cell *matCellDef="let row">
-            <span
-              class="chip-spacing f-13"
-              [class]="{
-                'chip-success': row.state === 'open',
-                'chip-error': row.state === 'closed'
-              }"
-            >
-              {{ row.state }}
-            </span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="number">
-          <th mat-header-cell *matHeaderCellDef>#</th>
-          <td mat-cell *matCellDef="let row">{{ row.number }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>Title</th>
-          <td mat-cell *matCellDef="let row">{{ row.title }}</td>
-        </ng-container>
-
-        <tr
-          mat-header-row
-          *matHeaderRowDef="displayedColumns; sticky: true"
-          [style.background-color]="'#F5F6FA'"
-        ></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">
-            <ng-container *ngIf="isLoadingResults; else noResults">
-              <div class="text-center">Loading...</div>
-            </ng-container>
-            <ng-template #noResults>
-              <div class="my-1 text-center">
-                <span>No issue was found to match your search/filters.</span>
-                <br class="my-1" />
-                <a
-                  (click)="resetFilters()"
-                  class="text-light-blue text-deco-underline cursor-pointer"
-                >
-                  Reset your criteria
-                </a>
-              </div>
-            </ng-template>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
-  </div>
-</div>
+    <custom-column columnName="state">
+      <ng-template let-issue>
+        <span
+          class="chip-spacing f-13"
+          [class]="{
+            'chip-success': issue.state === 'open',
+            'chip-error': issue.state === 'closed'
+          }"
+        >
+          {{ issue.state }}
+        </span>
+      </ng-template>
+    </custom-column>
+  </custom-table>
+</ng-template>

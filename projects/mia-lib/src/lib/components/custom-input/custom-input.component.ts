@@ -30,7 +30,6 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
   @Input() pattern?: string;
   @Input() placeholder?: string;
   @Input() required = false;
-  @Input() showAsterisk = false;
   @Input() readonly?: boolean;
 
   disabled = false;

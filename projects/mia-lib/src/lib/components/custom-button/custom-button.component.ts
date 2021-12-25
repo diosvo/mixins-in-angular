@@ -20,6 +20,8 @@ export class CustomButtonComponent {
         return PrimaryButtonComponent;
       case 'icon':
         return IconButtonComponent;
+      case 'text':
+        return TextButtonComponent;
     }
   }
 }
@@ -43,3 +45,14 @@ export class PrimaryButtonComponent { }
   `
 })
 export class IconButtonComponent { }
+
+@Component({
+  selector: 'text-button',
+  styleUrls: ['./custom-button.component.scss'],
+  template: `
+    <button class="button-text" mat-button>
+      <ng-content></ng-content>
+    </button>
+  `
+})
+export class TextButtonComponent { }

@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,8 +15,8 @@ describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [
         MainPageComponent,
         SidebarComponent,
@@ -28,13 +28,14 @@ describe('MainPageComponent', () => {
         MatCardModule,
         MatIconModule,
         MatButtonModule,
+        MatProgressSpinnerModule,
+
         HttpClientModule,
         RouterTestingModule,
-        MatProgressSpinnerModule,
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MainPageComponent);
@@ -47,7 +48,7 @@ describe('MainPageComponent', () => {
     fixture.destroy();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 });

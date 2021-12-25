@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
 import { finalize } from 'rxjs';
-
-type User = Partial<IUser>;
 
 @Component({
   selector: 'create-user',
@@ -20,16 +18,16 @@ export class CreateComponent {
   constructor(
     private readonly router: Router,
     private readonly snackbar: SnackbarService,
-    private readonly userService: UsersService
+    private readonly service: UserDetailsService,
   ) { }
 
-  onFormChanged(data: { name: string, email: string }): void {
+  onFormChanged(data: User): void {
     this.user = data;
   }
 
   onCreate(): void {
     this.saving = true;
-    this.userService.create(this.user)
+    this.service.create(this.user)
       .pipe(finalize(() => this.saving = false))
       .subscribe({
         next: () => this.snackbar.success('The user has been created.'),

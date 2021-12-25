@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CardItemComponent } from './card-item.component.spec';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { IBaseValue, IGroupValue } from '../../models/search.model';
 
+@Component({
+  selector: 'card-item',
+  styleUrls: ['./card-item.component.scss'],
+  templateUrl: './card-item.component.html',
+})
+export class CardItemComponent {
+  @Input() data: Array<IGroupValue>;
 
-describe('CardItemComponent', () => {
-  let component: CardItemComponent;
-  let fixture: ComponentFixture<CardItemComponent>;
+  constructor(
+    private readonly router: Router
+  ) { }
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ CardItemComponent ]
-    })
-    .compileComponents();
-  });
+  directItem(groupUrl: string, groupName: string, itemRoute: string): void {
+    this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
+  }
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CardItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  trackByItemName(_: number, item: IBaseValue): string {
+    return item.name;
+  }
+}

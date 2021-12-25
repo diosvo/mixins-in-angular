@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -12,7 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthModule } from '@auth/auth.module';
-import { MenuItemModule } from '@home/components/card-item/card-item.component.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
 
@@ -20,16 +19,17 @@ describe('ListComponentUiComponent', () => {
   let component: ListComponentUiComponent;
   let fixture: ComponentFixture<ListComponentUiComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ListComponentUiComponent],
       imports: [
         AuthModule,
         AlertModule,
-        MenuItemModule,
+
         HttpClientModule,
         ReactiveFormsModule,
         RouterTestingModule,
+
         MatIconModule,
         MatInputModule,
         MatButtonModule,
@@ -47,7 +47,7 @@ describe('ListComponentUiComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListComponentUiComponent);
@@ -61,24 +61,5 @@ describe('ListComponentUiComponent', () => {
 
   test('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('should call', () => {
-    test('onFormChanges()', async () => {
-      jest.spyOn(component, 'onFilters');
-      jest.spyOn(component, 'updateParams');
-
-      await component.onFormChanges();
-      component.componentsForm.setValue({
-        query: 'button',
-        group: 'button'
-      });
-
-      component.componentsForm.valueChanges.subscribe(_ => {
-        fixture.detectChanges();
-        expect(component.onFilters).toBeCalled();
-        expect(component.updateParams).toBeCalled();
-      });
-    });
   });
 });

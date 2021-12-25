@@ -1,88 +1,90 @@
-import { AfterViewInit, Component, OnDestroy, Self, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, merge, Subject, throwError } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Component, OnInit, Self } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
+import { TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
 import { Filter } from '../../models/filter.model';
-import { GithubIssue } from '../../models/service.model';
+import { GithubApi, GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
-import { SearchFilterComponent } from '../search-filter/search-filter.component';
 
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss'],
+  styles: ['@use \'chip\';'],
   providers: [GithubRepoIssuesService]
 })
 
-export class DataTableComponent implements OnDestroy, AfterViewInit {
-  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  dataSource: MatTableDataSource<GithubIssue>;
-  filters$ = new BehaviorSubject<Partial<Filter>>({
+export class DataTableComponent implements OnInit {
+  errorMessage$ = new Subject<boolean>();
+  issues$: Observable<Array<GithubIssue>>;
+
+  columns: Array<TableColumn> = [
+    { key: 'created_at', header: 'Created At', flex: '10%' },
+    { key: 'state', disableSorting: true, flex: '10%' },
+    { key: 'number', flex: '10%' },
+    { key: 'title', flex: '70%' },
+  ];
+  private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
     state: ''
   });
+  readonly filters$ = this._filters$.asObservable();
 
-  resultsLength = 0;
-  isLoadingResults = true;
-
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(SearchFilterComponent) searchFilter: SearchFilterComponent;
-
-  destroy$ = new Subject<boolean>();
-  error$ = new Subject<boolean>();
+  resultsLength: number;
+  private _pageIndex$ = new Subject<number>();
 
   constructor(
     @Self() readonly service: GithubRepoIssuesService
-  ) {
-    this.dataSource = new MatTableDataSource([]);
-  }
+  ) { }
 
-  ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+  ngOnInit(): void {
     this.getIssues();
   }
 
   private getIssues(): void {
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.service!.getRepoIssues(this.sort.active, this.sort.direction, this.paginator.pageIndex);
-        }),
-        map(data => {
-          this.isLoadingResults = false;
+    const data$ = this._pageIndex$.pipe(
+      startWith(0),
+      switchMap((page: number) => this.service.getRepoIssues(page)),
+      map((data: GithubApi): Array<GithubIssue> => {
+        if (data === null) {
+          return [];
+        }
 
-          if (data === null) {
-            return [];
+        this.resultsLength = data.total_count;
+        return data.items;
+      }),
+    );
+
+    this.issues$ = combineLatest([data$, this.filters$]).pipe(
+      map(([data, params]) =>
+        data.filter((item: GithubIssue) => {
+          let conditions = true;
+          const filterValues = JSON.parse(JSON.stringify(params));
+
+          for (const key in filterValues) {
+            if (key === 'query') {
+              const searchTerm = item.number + item.title;
+              conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
+            }
+            else if (filterValues[key] !== null && filterValues[key].length) {
+              conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
+            }
           }
 
-          this.resultsLength = data.total_count;
-          return data.items;
-        }),
-        catchError((error) => {
-          this.error$.next(!error.ok);
-          return throwError(() => new Error(error.message));
+          return conditions;
         })
-      )
-      .subscribe({
-        next: (data: Array<GithubIssue>) => this.dataSource = new MatTableDataSource(data),
-      });
+      ),
+      catchError(({ message }) => {
+        this.errorMessage$.next(message);
+        return throwError(() => new Error(message));
+      })
+    );
   }
 
-  resetPage(): void {
-    window.location.reload();
+  pageChanges({ pageIndex }: PageEvent): void {
+    this._pageIndex$.next(pageIndex);
   }
 
-  resetFilters(): void {
-    this.searchFilter.resetForm();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+  filteredIssues($event: Filter): void {
+    this._filters$.next($event);
   }
 }

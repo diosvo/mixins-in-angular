@@ -1,10 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { LoginComponent } from '@auth/components/login/login.component';
+import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { of } from 'rxjs';
 import { ToolbarComponent } from './toolbar.component';
 
@@ -13,26 +15,32 @@ describe('ToolbarComponent', () => {
   let fixture: ComponentFixture<ToolbarComponent>;
   let dialog: MatDialog;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ToolbarComponent],
       imports: [
         HttpClientModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          {
+            path: 'ui-components',
+            component: ToolbarComponent
+          }
+        ]),
+
         MatIconModule,
+        MatDialogModule,
         MatButtonModule,
         MatToolbarModule,
-        MatDialogModule
       ],
       providers: [
         {
           provide: MatDialog,
-          useValue: { open: () => of() }
+          useValue: { open: jest.fn() }
         }
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ToolbarComponent);
@@ -45,24 +53,51 @@ describe('ToolbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('should call', () => {
-    test('openLoginDialog()', () => {
-      jest.spyOn(dialog, 'open');
-      component.openLoginDialog();
-      expect(dialog.open).toHaveBeenCalled();
+  test('openLoginDialog()', () => {
+    jest.spyOn(dialog, 'open');
+    component.openLoginDialog();
+    expect(dialog.open).toBeCalledWith(LoginComponent, {
+      width: '375px',
+      disableClose: true,
+    });
+  });
+
+  describe('openLogoutDialog() when user clicks on', () => {
+    test('Logout button', () => {
+      jest.spyOn(dialog, 'open').mockReturnValue({
+        afterClosed: () => of(true)
+      } as MatDialogRef<typeof ToolbarComponent>);
+      jest.spyOn(component['router'], 'navigate');
+      jest.spyOn(component['authService'], 'logout');
+
+      component.openLogoutDialog();
+
+      expect(dialog.open).toBeCalledWith(ConfirmDialogComponent, {
+        data: {
+          header: 'logout',
+          body: 'Are you sure you want to logout?',
+          btnClose: false
+        },
+        width: '425px',
+        disableClose: true,
+      });
+      expect(component['authService'].logout).toBeCalled();
+      expect(component['router'].navigate).toBeCalledWith(['/ui-components']);
     });
 
-    describe('openLogoutDialog() when result returns', () => {
-      test('true', () => {
-        jest.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as MatDialogRef<typeof ToolbarComponent>);
-        component.openLogoutDialog();
-        expect(dialog.open).toHaveBeenCalled();
-      });
-
-      test('false', () => {
-        jest.spyOn(dialog, 'open').mockReturnValue({ afterClosed: () => of(false) } as MatDialogRef<typeof ToolbarComponent>);
-        component.openLogoutDialog();
-        expect(dialog.open).toHaveBeenCalled();
+    test('Cancel button', () => {
+      jest.spyOn(dialog, 'open').mockReturnValue({
+        afterClosed: () => of(false)
+      } as MatDialogRef<typeof ToolbarComponent>);
+      component.openLogoutDialog();
+      expect(dialog.open).toBeCalledWith(ConfirmDialogComponent, {
+        data: {
+          header: 'logout',
+          body: 'Are you sure you want to logout?',
+          btnClose: false
+        },
+        width: '425px',
+        disableClose: true,
       });
     });
   });

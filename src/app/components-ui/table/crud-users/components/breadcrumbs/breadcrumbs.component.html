@@ -1,6 +1,4 @@
-<ng-container>
-  <ng-container *ngIf="user">
-    <span class="text-secondary">{{ user.name }} / </span>
-  </ng-container>
-  <ng-content></ng-content>
+<ng-container *ngIf="user$ | async as user">
+  <span class="text-secondary">{{ user.name }} / </span>
 </ng-container>
+<ng-content></ng-content>

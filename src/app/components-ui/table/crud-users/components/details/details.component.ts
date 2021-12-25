@@ -3,12 +3,10 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { IUser } from '@lib/models/user';
+import { User } from '@lib/services/users/user-service.model';
+import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
-import { hasDuplicates } from '@lib/utils/utils';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-
-type User = Partial<IUser>;
 
 @Component({
   selector: 'user-details',
@@ -18,9 +16,9 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    hobbies: []
+    hobbies: [[]]
   });
-  private destroy$ = new Subject<void>();
+  private destroyed$ = new Subject<void>();
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
@@ -29,7 +27,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
-    private readonly fb: FormBuilder,
+    private readonly fb: FormBuilder
   ) { }
 
   ngOnChanges(changes: NgChanges<DetailsComponent>): void {
@@ -37,11 +35,15 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.watchForFormChanged();
+  }
+
+  private watchForFormChanged(): void {
     this.form.valueChanges
       .pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroyed$)
       )
       .subscribe((details: User) => {
         this.changed.emit(details);
@@ -65,7 +67,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     this.hobbies.value.forEach((item: string) => this.hobbyValidator(item));
   }
 
-  hobbyValidator(hobby: string): void {
+  private hobbyValidator(hobby: string): void {
     const regex = new RegExp(Regex.Text);
 
     if (hasDuplicates(this.hobbies.value)) {
@@ -80,7 +82,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

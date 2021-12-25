@@ -13,7 +13,7 @@ export class ContentComponent {
   pageTitle: string;
   hasError = false;
 
-  product$ = this.productsService.selected$
+  product$ = this.service.selected$
     .pipe(
       tap({
         next: (product: IProduct) => this.displayProduct(product),
@@ -21,7 +21,7 @@ export class ContentComponent {
       })
     );
 
-  selectedProductId$ = this.productsService.productSelectedAction$;
+  selectedProductId$ = this.service.productSelectedAction$;
 
   combination$ = combineLatest([this.product$, this.selectedProductId$])
     .pipe(
@@ -29,11 +29,11 @@ export class ContentComponent {
       map(([product, selectedProductId]) => ({ product, selectedProductId }))
     );
 
-  constructor(private productsService: ProductsService) { }
+  constructor(private readonly service: ProductsService) { }
 
   displayProduct(product: IProduct): void {
     if (product) {
-      this.pageTitle = `Product Detail ➡ ${product.productName}`;
+      this.pageTitle = `Product Details ➡ ${product.productName}`;
     } else {
       this.pageTitle = 'No product found';
     }

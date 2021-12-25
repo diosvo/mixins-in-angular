@@ -1,16 +1,18 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
+  OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
   key: string;
+  flex?: string;
   header?: string;
   disableSorting?: boolean;
 }
@@ -18,25 +20,31 @@ export interface TableColumn {
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
-  styleUrls: ['./custom-table.component.scss'],
+  styleUrls: ['./custom-table.component.scss']
 })
 
-export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
-  data: MatTableDataSource<T> = new MatTableDataSource<T>([]);
+  source: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
   /** Definitions: data */
 
-  @Input() dataSource!: Observable<Array<T>>;
+  @Input() data!: Observable<Array<T>>;
   @Input() columns: Array<TableColumn> = [];
+  @Input() style: Record<string, string>;
 
   /** Pagination */
 
   @Input() pageable: boolean = true;
   @Input() showFirstLastButtons: boolean = false;
-  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
   @ViewChild(MatPaginator) private paginator: MatPaginator;
+
+  @Input() length: number;
+  @Input() pageSize: number;
+  @Input() pageIndex: number = 0;
+  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
+  @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
 
@@ -50,10 +58,8 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
 
   /** Checkbox */
 
+  readonly select = 'select';
   @Input() enableCheckbox: boolean = false;
-  @Input() allowMultiSelect: boolean;
-
-  @Output() action = new EventEmitter();
   @Output() selectedRows = new EventEmitter();
 
   private _destroyed$ = new Subject<boolean>();
@@ -71,54 +77,75 @@ export class CustomTableComponent<T> implements OnInit, AfterViewInit, OnDestroy
     }
     return {};
   }
-  get displayColumns(): Array<string> {
-    return this.columns.map(({ key }) => key);
-  }
+  displayColumns: Array<string>;
 
   constructor() { }
 
+  ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
+    if (changes.data && changes.data.currentValue) {
+      this.getData();
+    };
+
+    if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
+      this.pageSize = changes.pageSizeOptions.currentValue[0];
+    }
+  }
+
   ngOnInit(): void {
-    this.selection = new SelectionModel<{}>(this.allowMultiSelect, []);
+    this.configDisplayColumns();
   }
 
   ngAfterViewInit(): void {
-    this.configColumns();
-    this.getDataSource();
+    this.configColumnTemplates();
   }
 
-  private getDataSource(): void {
-    this.dataSource
+  private getData(): void {
+    this.data
       .pipe(takeUntil(this._destroyed$))
       .subscribe((response: Array<T>) => {
-        this.data = new MatTableDataSource<T>(response);
-        this.data.sort = this.sort;
-        this.data.paginator = this.pageable ? this.paginator : null;
+        this.source = new MatTableDataSource<T>(response);
+        this.source.sort = this.sort;
+        this.source.paginator = this.pageable ? this.paginator : null;
       });
+
+    this.selection = new SelectionModel<{}>(true, []);
   }
 
-  private configColumns(): void {
+  private configDisplayColumns(): void {
+    this.displayColumns = this.columns.map(({ key }) => key);
+
+    if (this.enableCheckbox && this.displayColumns.indexOf(this.select) < 0) {
+      this.displayColumns.splice(0, 0, this.select);
+      this.columns.splice(0, 0, {
+        key: this.select
+      });
+    }
+  }
+
+  private configColumnTemplates(): void {
     for (const column of this.columnDefs.toArray()) {
       this.columnTemplates[column.columnName] = column.columnTemplate;
     }
+  }
+
+  onPageChanged(event: PageEvent): void {
+    this.pageChanges.emit(event);
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
 
   /**
    * @description Checkbox
    */
 
-  private isAllSelected(): boolean {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numRows = this.data.data.length;
+    const numRows = this.source.data.length;
     return numSelected === numRows;
   }
 
   masterToggle(): void {
-    this.isAllSelected() ? this.selection.clear() : this.data.data.forEach(row => this.selection.select(row));
-    this.selectedRows.emit(this.selection.selected);
-  }
-
-  rowSelect(): void {
-    this.selectedRows.emit(this.selection.selected);
+    this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
   }
 
   trackByIdx(idx: number): number {

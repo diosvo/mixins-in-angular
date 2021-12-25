@@ -2,12 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UsersService } from '@lib/services/users/users.service';
-import { combineLatest, finalize, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
-
-type User = Partial<IUser>;
+import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
+import { combineLatest, filter, finalize, map, Observable, startWith, Subject, take, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'update-user',
@@ -23,19 +21,19 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   saving = false;
   hasChanged = false;
 
-  destroy$ = new Subject<boolean>();
-  loading$: Observable<boolean> = this.userService.loading$;
+  destroyed$ = new Subject<boolean>();
+  readonly loading$: Observable<boolean> = this.service.loading$;
 
   constructor(
     private readonly router: Router,
-    private readonly userService: UsersService,
     private readonly snackbar: SnackbarService,
+    private readonly service: UserDetailsService,
   ) { }
 
   ngOnInit(): void {
-    this.user$ = this.userService.currentUser$.pipe(
-      tap(({ id }) => this.user_id = id as number),
-      takeUntil(this.destroy$)
+    this.user$ = this.service.currentUser$.pipe(
+      filter(data => data !== null),
+      tap(({ id }) => this.user_id = id as number)
     );
     this.watchForFormChanged();
   }
@@ -47,7 +45,8 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
     ])
       .pipe(
         map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
-        startWith(false)
+        startWith(false),
+        takeUntil(this.destroyed$)
       )
       .subscribe((changed: boolean) => this.hasChanged = changed);
   }
@@ -62,8 +61,11 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   saveChanges(url?: string): void {
     this.saving = true;
-    this.userService.update({ id: this.user_id, ...this.user.value })
-      .pipe(finalize(() => this.saving = false))
+    this.service.update({ id: this.user_id, ...this.user.value })
+      .pipe(
+        take(1),
+        finalize(() => this.saving = false)
+      )
       .subscribe({
         next: () => this.snackbar.success('The user has been updated.'),
         error: ({ message }) => this.snackbar.error(message),
@@ -72,8 +74,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

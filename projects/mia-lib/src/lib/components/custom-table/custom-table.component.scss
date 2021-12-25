@@ -4,7 +4,7 @@ $-unit-px : 2px;
 $-cell-pd : 0 calc($-unit-px * 8);
 
 $-hover    : rgba(0, 0, 0, .04);
-$-bd-radius: calc($-unit-px * 3);
+$-bd-radius: calc($-unit-px * 2);
 
 .custom-table {
   overflow-x     : auto;
@@ -18,14 +18,33 @@ $-bd-radius: calc($-unit-px * 3);
   border-top-right-radius: $-bd-radius;
 
   mat-table {
-    mat-header-cell {
-      padding: $-cell-pd;
 
-      span {
-        font-size: calc($-unit-px * 6);
-        color    : palette.$black;
+    // Header
+
+    mat-header {
+      &-row {
+        z-index: 1 !important;
+      }
+
+      &-cell {
+        padding: $-cell-pd;
+
+        &.mat-column-select {
+          flex: 0 0 3rem;
+        }
+
+        span {
+          font-size: calc($-unit-px * 6);
+        }
       }
     }
+
+    [aria-sort="ascending"],
+    [aria-sort="descending"] {
+      color: palette.$black;
+    }
+
+    // Cell
 
     mat-cell {
       height : calc($-unit-px * 21);
@@ -41,16 +60,33 @@ $-bd-radius: calc($-unit-px * 3);
     }
 
     mat-row {
+      mat-cell.mat-column {
+        &-select {
+          flex: 0 0 3rem;
+        }
+
+        &-actions {
+          visibility: hidden;
+        }
+      }
+
       &:hover {
         background-color: $-hover;
+
+        mat-cell.mat-column-actions {
+          visibility: visible;
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
       }
     }
   }
 }
 
 .custom-pagination {
-  border    : 1px solid palette.$shade;
-  border-top: none;
+  border: 1px solid palette.$shade;
 
   border-bottom-left-radius : $-bd-radius;
   border-bottom-right-radius: $-bd-radius;

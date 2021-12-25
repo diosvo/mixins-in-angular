@@ -5,8 +5,7 @@ import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 
 @Component({
   selector: 'dv-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
   loginForm = this.fb.group({

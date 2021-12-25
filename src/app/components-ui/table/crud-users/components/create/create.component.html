@@ -1,17 +1,17 @@
-<div class="bg-white w-500 bd-auto p-2">
+<div class="bg-white w-500 bd-auto p-2 m-2">
   <mat-progress-bar
-    mode="indeterminate"
+    *ngIf="saving"
     class="mb-1"
-    [style]="{ display: saving ? 'block' : ' none' }"
+    mode="indeterminate"
   ></mat-progress-bar>
 
   <div class="d-flex jc-between ai-center">
-    <user-breadcrumbs>Create User</user-breadcrumbs>
+    <div>Create User</div>
     <button
       mat-flat-button
       color="primary"
       (click)="onCreate()"
-      [disabled]="!isValid"
+      [disabled]="saving || !isValid"
     >
       Save
     </button>

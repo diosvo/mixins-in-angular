@@ -1,16 +1,19 @@
 {
   "name": "mixins-in-angular",
   "author": "diosvo",
-  "version": "1.1.6",
+  "version": "1.1.7",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --hmr -o",
     "build:app": "ng build",
     "build:lib": "ng build mia-lib",
     "build:stats": "ng build --stats-json",
     "analyze": "webpack-bundle-analyzer dist/mixins-in-angular/stats.json",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
+    "jest:cache": "jest --clearCache",
     "test:coverage": "jest --coverage",
     "lint": "ng lint"
   },
@@ -47,7 +50,7 @@
     "eslint": "^7.26.0",
     "gsap": "^3.7.1",
     "jest": "^27.3.1",
-    "jest-preset-angular": "^10.1.0",
+    "jest-preset-angular": "11.0.0-rc.3",
     "ng-packagr": "^13.0.3",
     "typescript": "^4.4.4",
     "webpack-bundle-analyzer": "^4.5.0"

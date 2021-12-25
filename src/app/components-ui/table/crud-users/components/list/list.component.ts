@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { IUser } from '@lib/models/user';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
-import { catchError, filter, finalize, Observable, Subject, throwError } from 'rxjs';
-
-type User = Partial<IUser>;
+import { catchError, filter, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'list-users',
@@ -36,8 +34,8 @@ export class ListComponent implements OnInit {
     this.users$ = this.userService.all().pipe(
       catchError(({ message }) => {
         this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      }),
+        return of(message);
+      })
     );
   }
 
@@ -62,6 +60,9 @@ export class ListComponent implements OnInit {
 
     this.userService.delete(user.id as number)
       .pipe(
+        switchMap(() => this.users$ = this.users$.pipe(
+          map((data: Array<User>) => data.filter(item => item.id !== user.id))
+        )),
         finalize(() => this.loading = false)
       )
       .subscribe({

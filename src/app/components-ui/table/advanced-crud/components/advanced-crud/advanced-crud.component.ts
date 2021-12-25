@@ -14,7 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ICategory } from '@lib/models/category';
 import { CategoryService } from '@lib/services/category/category.service';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-advanced-crud',
@@ -33,23 +33,23 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
   isEdit: boolean;
   rowValue: ICategory;
 
-  private destroy$ = new Subject();
+  private destroyed$ = new Subject();
 
   @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
   @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
 
   constructor(
-    private ngZone: NgZone,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private service: CategoryService
+    private readonly ngZone: NgZone,
+    private readonly fb: FormBuilder,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly service: CategoryService
   ) { }
 
   ngOnInit(): void {
     this.getCategories();
   }
 
-  getCategories(): void {
+  private getCategories(): void {
     this.categories$ = this.service.all().pipe(
       tap({
         next: (data) => {
@@ -64,8 +64,7 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
           });
           this.dataSource = new MatTableDataSource(this.rows.controls);
         }
-      }),
-      takeUntil(this.destroy$)
+      })
     );
   }
 
@@ -155,7 +154,7 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

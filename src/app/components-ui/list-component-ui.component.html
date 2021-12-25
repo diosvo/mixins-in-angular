@@ -35,7 +35,7 @@
             [formGroup]="componentsForm"
             class="panel-container d-flex gap-1"
           >
-            <mat-form-field class="search-input filter-group">
+            <mat-form-field class="filter-group">
               <mat-label>Components</mat-label>
               <mat-select formControlName="group">
                 <mat-option value="all" selected>All</mat-option>
@@ -45,7 +45,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="search-input width-100">
+            <mat-form-field class="width-100">
               <mat-label>What are you looking for today...</mat-label>
               <input matInput autocomplete="off" formControlName="query" />
               <button

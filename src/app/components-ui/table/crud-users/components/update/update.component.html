@@ -1,8 +1,8 @@
-<div class="bg-white w-500 bd-auto p-2">
+<div class="bg-white w-500 bd-auto p-2 m-2">
   <mat-progress-bar
+    *ngIf="saving"
     mode="indeterminate"
     class="mb-1"
-    [style]="{ display: saving ? 'block' : ' none' }"
   ></mat-progress-bar>
 
   <ng-container *ngIf="loading$ | async; else details">
@@ -14,12 +14,12 @@
   <ng-template #details>
     <ng-container *ngIf="user$ | async as user">
       <div class="d-flex jc-between ai-center">
-        <user-breadcrumbs [user]="user">Details</user-breadcrumbs>
+        <user-breadcrumbs>Details</user-breadcrumbs>
         <button
           mat-flat-button
           color="primary"
           (click)="saveChanges()"
-          [disabled]="canDeactivate() || !isValid"
+          [disabled]="canDeactivate() || saving || !isValid"
         >
           Save
         </button>

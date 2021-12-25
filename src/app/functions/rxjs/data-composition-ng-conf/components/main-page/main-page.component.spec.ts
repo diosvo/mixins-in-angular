@@ -35,7 +35,7 @@ describe('MainPageComponent', () => {
       ]
     })
       .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MainPageComponent);

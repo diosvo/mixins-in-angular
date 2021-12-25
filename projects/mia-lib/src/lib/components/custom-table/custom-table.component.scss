@@ -66,13 +66,16 @@ $-bd-radius: calc($-unit-px * 2);
           visibility: visible;
         }
       }
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
   }
 }
 
 .custom-pagination {
-  border    : 1px solid palette.$shade;
-  border-top: none;
+  border: 1px solid palette.$shade;
 
   border-bottom-left-radius : $-bd-radius;
   border-bottom-right-radius: $-bd-radius;

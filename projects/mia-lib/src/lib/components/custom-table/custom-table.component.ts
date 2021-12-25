@@ -32,6 +32,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() data!: Observable<Array<T>>;
   @Input() columns: Array<TableColumn> = [];
+  @Input() style: Record<string, string>;
 
   /** Pagination */
 

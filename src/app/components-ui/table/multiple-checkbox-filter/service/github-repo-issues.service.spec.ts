@@ -15,7 +15,7 @@ describe('GithubRepoIssuesService', () => {
     service = TestBed.inject(GithubRepoIssuesService);
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 });

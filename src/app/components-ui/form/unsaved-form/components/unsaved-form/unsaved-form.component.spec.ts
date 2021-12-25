@@ -11,7 +11,7 @@ describe.skip('UnsavedFormComponent', () => {
   let component: UnsavedFormComponent;
   let fixture: ComponentFixture<UnsavedFormComponent>;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [UnsavedFormComponent],
       imports: [
@@ -34,7 +34,7 @@ describe.skip('UnsavedFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -11,27 +11,58 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "tslib": ["path/to/node_modules/tslib/tslib.d.ts"],
-      "@env/*": ["src/environments/*"],
-      "@auth/*": ["src/app/auth/*"],
-      "@home/*": ["src/app/home/*"],
-      "@lib/animations/*": ["projects/mia-lib/src/lib/animations/*"],
-      "@lib/components/*": ["projects/mia-lib/src/lib/components/*"],
-      "@lib/directives/*": ["projects/mia-lib/src/lib/directives/*"],
-      "@lib/guards/*": ["projects/mia-lib/src/lib/guards/*"],
-      "@lib/helpers/*": ["projects/mia-lib/src/lib/helpers/*"],
-      "@lib/models/*": ["projects/mia-lib/src/lib/models/*"],
-      "@lib/services/*": ["projects/mia-lib/src/lib/services/*"],
-      "@lib/utils/*": ["projects/mia-lib/src/lib/utils/*"],
-      "@backend/api/*": ["src/assets/backend/api/*"],
-      "@backend/data/*": ["src/assets/backend/data/*"],
-      "@backend/list-items/*": ["src/assets/backend/list-items/*"]
+      "tslib": [
+        "path/to/node_modules/tslib/tslib.d.ts"
+      ],
+      "@env/*": [
+        "src/environments/*"
+      ],
+      "@auth/*": [
+        "src/app/auth/*"
+      ],
+      "@home/*": [
+        "src/app/home/*"
+      ],
+      "@lib/animations/*": [
+        "projects/mia-lib/src/lib/animations/*"
+      ],
+      "@lib/components/*": [
+        "projects/mia-lib/src/lib/components/*"
+      ],
+      "@lib/directives/*": [
+        "projects/mia-lib/src/lib/directives/*"
+      ],
+      "@lib/guards/*": [
+        "projects/mia-lib/src/lib/guards/*"
+      ],
+      "@lib/helpers/*": [
+        "projects/mia-lib/src/lib/helpers/*"
+      ],
+      "@lib/models/*": [
+        "projects/mia-lib/src/lib/models/*"
+      ],
+      "@lib/services/*": [
+        "projects/mia-lib/src/lib/services/*"
+      ],
+      "@lib/utils/*": [
+        "projects/mia-lib/src/lib/utils/*"
+      ],
+      "@backend/api/*": [
+        "src/assets/backend/api/*"
+      ],
+      "@backend/data/*": [
+        "src/assets/backend/data/*"
+      ],
+      "@backend/list-items/*": [
+        "src/assets/backend/list-items/*"
+      ]
     },
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
-  }
+  },
 }

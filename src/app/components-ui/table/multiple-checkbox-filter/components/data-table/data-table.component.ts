@@ -19,7 +19,7 @@ export class DataTableComponent implements OnInit {
 
   columns: Array<TableColumn> = [
     { key: 'created_at', header: 'Created At' },
-    { key: 'state' },
+    { key: 'state', disableSorting: true },
     { key: 'number' },
     { key: 'title' },
   ];

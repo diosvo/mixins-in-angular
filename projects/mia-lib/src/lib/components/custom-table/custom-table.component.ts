@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, EventEmitter, Input,
+  AfterViewInit, Component, ContentChildren, EventEmitter, Input,
   OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -19,8 +19,7 @@ export interface TableColumn {
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
-  styleUrls: ['./custom-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./custom-table.component.scss']
 })
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
@@ -82,11 +81,11 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   constructor() { }
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes?.data?.currentValue) {
+    if (changes.data && changes.data.currentValue) {
       this.getData();
     };
 
-    if (changes?.pageSizeOptions?.currentValue) {
+    if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }
   }

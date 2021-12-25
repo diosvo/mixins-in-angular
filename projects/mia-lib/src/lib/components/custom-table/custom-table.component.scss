@@ -18,15 +18,24 @@ $-bd-radius: calc($-unit-px * 2);
   border-top-right-radius: $-bd-radius;
 
   mat-table {
-    mat-header-cell {
-      padding: $-cell-pd;
 
-      &.mat-column-select {
-        flex: 0 0 3rem;
+    // Header
+
+    mat-header {
+      &-row {
+        z-index: 1 !important;
       }
 
-      span {
-        font-size: calc($-unit-px * 6);
+      &-cell {
+        padding: $-cell-pd;
+
+        &.mat-column-select {
+          flex: 0 0 3rem;
+        }
+
+        span {
+          font-size: calc($-unit-px * 6);
+        }
       }
     }
 
@@ -34,6 +43,8 @@ $-bd-radius: calc($-unit-px * 2);
     [aria-sort="descending"] {
       color: palette.$black;
     }
+
+    // Cell
 
     mat-cell {
       height : calc($-unit-px * 21);

@@ -54,13 +54,17 @@
             *matHeaderCellDef
             disableClear
             mat-sort-header
+            [style.flex]="column.flex"
             [disabled]="column.disableSorting"
           >
             <span class="truncate-cell">
               {{ column?.header || column?.key | uppercase }}
             </span>
           </mat-header-cell>
-          <mat-cell *matCellDef="let row; let idx = index">
+          <mat-cell
+            *matCellDef="let row; let idx = index"
+            [style.flex]="column.flex"
+          >
             <span class="truncate-cell">
               <ng-container
                 [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"

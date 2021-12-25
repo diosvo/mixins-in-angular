@@ -12,6 +12,7 @@ import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
   key: string;
+  flex?: string;
   header?: string;
   disableSorting?: boolean;
 }

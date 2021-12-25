@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
+    "start": "ng serve",
     "dev": "ng serve --hmr -o",
     "build:app": "ng build",
     "build:lib": "ng build mia-lib",

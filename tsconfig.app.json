@@ -5,55 +5,22 @@
     "outDir": "./out-tsc/app",
     "types": ["node"]
   },
-  "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ],
+  "files": ["src/main.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.d.ts"],
   "paths": {
-    "@env/*": [
-      "src/environments/*"
-    ],
-    "@auth/*": [
-      "src/app/auth/*"
-    ],
-    "@home/*": [
-      "src/app/home/*"
-    ],
-    "@lib/animations/*": [
-      "projects/mia-lib/src/lib/animations/*"
-    ],
-    "@lib/components/*": [
-      "projects/mia-lib/src/lib/components/*"
-    ],
-    "@lib/directives/*": [
-      "projects/mia-lib/src/lib/directives/*"
-    ],
-    "@lib/guards/*": [
-      "projects/mia-lib/src/lib/guards/*"
-    ],
-    "@lib/helpers/*": [
-      "projects/mia-lib/src/lib/helpers/*"
-    ],
-    "@lib/models/*": [
-      "projects/mia-lib/src/lib/models/*"
-    ],
-    "@lib/services/*": [
-      "projects/mia-lib/src/lib/services/*"
-    ],
-    "@lib/utils/*": [
-      "projects/mia-lib/src/lib/utils/*"
-    ],
-    "@backend/api/*": [
-      "src/assets/backend/api/*"
-    ],
-    "@backend/data/*": [
-      "src/assets/backend/data/*"
-    ],
-    "@backend/list-items/*": [
-      "src/assets/backend/list-items/*"
-    ]
+    "@env/*": ["src/environments/*"],
+    "@auth/*": ["src/app/auth/*"],
+    "@home/*": ["src/app/home/*"],
+    "@lib/animations/*": ["projects/mia-lib/src/lib/animations/*"],
+    "@lib/components/*": ["projects/mia-lib/src/lib/components/*"],
+    "@lib/directives/*": ["projects/mia-lib/src/lib/directives/*"],
+    "@lib/guards/*": ["projects/mia-lib/src/lib/guards/*"],
+    "@lib/helpers/*": ["projects/mia-lib/src/lib/helpers/*"],
+    "@lib/models/*": ["projects/mia-lib/src/lib/models/*"],
+    "@lib/services/*": ["projects/mia-lib/src/lib/services/*"],
+    "@lib/utils/*": ["projects/mia-lib/src/lib/utils/*"],
+    "@backend/api/*": ["src/assets/backend/api/*"],
+    "@backend/data/*": ["src/assets/backend/data/*"],
+    "@backend/list-items/*": ["src/assets/backend/list-items/*"]
   }
 }

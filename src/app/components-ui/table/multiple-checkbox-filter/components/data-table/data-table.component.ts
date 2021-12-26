@@ -26,7 +26,8 @@ export class DataTableComponent implements OnInit {
   ];
   private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
-    state: ''
+    state: '',
+    created_at: ''
   });
   readonly filters$ = this._filters$.asObservable();
 
@@ -57,14 +58,17 @@ export class DataTableComponent implements OnInit {
     );
 
     const schemas = {
-      query: {
-        type: 'string',
-        enums: ['number', 'title']
+      date: {
+        type: 'string'
       },
       state: {
         type: 'array',
         enums: ['open', 'closed']
-      }
+      },
+      query: {
+        type: 'string',
+        enums: ['number', 'title']
+      },
     } as FilterSchema;
 
     this.issues$ = this.handle.filteredData(data$, this.filters$, schemas).pipe(

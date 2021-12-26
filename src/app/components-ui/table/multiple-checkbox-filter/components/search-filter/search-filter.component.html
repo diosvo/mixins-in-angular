@@ -1,5 +1,17 @@
 <form [formGroup]="filterForm" class="d-flex width-100">
-  <mat-form-field class="mr-2">
+  <mat-form-field>
+    <mat-label>Created At</mat-label>
+    <input
+      matInput
+      autocomplete="off"
+      [matDatepicker]="picker"
+      formControlName="created_at"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker disabled="false"></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="mx-2">
     <mat-label>State</mat-label>
     <mat-select formControlName="state" multiple>
       <mat-option *ngFor="let state of ['open', 'closed']" [value]="state">

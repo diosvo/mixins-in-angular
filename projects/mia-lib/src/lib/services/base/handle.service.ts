@@ -42,6 +42,10 @@ export class HandleService {
   }
 
   filteredData = <T>(data$: Observable<Array<T>>, valueChanges$: Observable<Record<string, unknown>>, schemas: FilterSchema) => {
+    const string_values = Object.keys(schemas)
+      .filter((key: string) => schemas[key].type === 'string')
+      .filter((key: string) => key !== 'query');
+
     return combineLatest([data$, valueChanges$, of(schemas)]).pipe(
       map(([data, params, schemas]): Array<T> =>
         data.filter((item: T): boolean => {

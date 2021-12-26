@@ -1,13 +1,20 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
-import { interval, mergeMap, pipe, retryWhen, take, throwError, TimeoutError } from 'rxjs';
+import { combineLatest, interval, map, mergeMap, Observable, of, pipe, retryWhen, take, throwError, TimeoutError } from 'rxjs';
+
+export interface FilterSchema {
+  [property: string]: {
+    type: 'string' | 'number' | 'array' | 'boolean';
+    enums?: Array<string | number>,
+  }
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class HandleService {
-  isServerError = (error: HttpErrorResponse) => error.status >= 500;
+  isServerError = (error: HttpErrorResponse) => error.status >= HttpStatusCode.InternalServerError;
 
   retryServerErrors = <T>() => {
     let tryCount = 2;
@@ -32,5 +39,29 @@ export class HandleService {
     if (error instanceof HttpErrorResponse) {
       return throwError(() => new Error(isDevMode() ? `${error.message} (${name})` : `${error.message}`));
     }
+  }
+
+  filteredData = <T>(data$: Observable<Array<T>>, valueChanges$: Observable<Record<string, unknown>>, schemas: FilterSchema) => {
+    return combineLatest([data$, valueChanges$, of(schemas)]).pipe(
+      map(([data, params, schemas]): Array<T> =>
+        data.filter((item: T): boolean => {
+          let conditions = true;
+          const filterValues = JSON.parse(JSON.stringify(params));
+
+          for (const key in filterValues) {
+            if (key === 'query') {
+              let searchTerm: string = '';
+              schemas.query.enums.forEach((property: string) => { searchTerm += item[property]; });
+              conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues.query.trim().toLowerCase()) !== -1;
+            }
+            else if (filterValues[key] !== null && filterValues[key].length) {
+              conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
+            }
+          }
+
+          return conditions;
+        })
+      )
+    );
   }
 }

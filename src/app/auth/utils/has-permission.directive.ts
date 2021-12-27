@@ -2,7 +2,7 @@ import { Directive, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } fro
 import { AuthUser } from '@auth/models/auth.model';
 import { AuthService } from '@auth/services/auth.service';
 
-enum LogicalOperator {
+export enum LogicalOperator {
   OR = 'OR',
   AND = 'AND',
 }

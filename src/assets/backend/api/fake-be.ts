@@ -6,7 +6,6 @@ export const FAKE_JWT_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
-  constructor() { }
 
   intercept(
     request: HttpRequest<unknown>,

@@ -8,7 +8,7 @@ import { finalize } from 'rxjs';
 @Component({
   selector: 'create-user',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.scss']
+  styles: ['@use \'display/host\';']
 })
 export class CreateComponent {
   user: User;

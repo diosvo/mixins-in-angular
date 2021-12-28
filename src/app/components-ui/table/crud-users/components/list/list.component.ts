@@ -18,10 +18,11 @@ export class ListComponent implements OnInit {
   errorMessage$ = new Subject<string>();
 
   columns: Array<TableColumn> = [
-    { key: 'id' },
-    { key: 'name' },
-    { key: 'email' },
-    { key: 'actions', disableSorting: true },
+    { key: 'id', flex: '10%' },
+    { key: 'name', flex: '20%' },
+    { key: 'email', flex: '20%' },
+    { key: 'phone', flex: '20%' },
+    { key: 'actions', disableSorting: true, flex: '15%' },
   ];
 
   constructor(

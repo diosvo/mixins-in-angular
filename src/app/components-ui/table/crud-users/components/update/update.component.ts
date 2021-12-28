@@ -10,7 +10,7 @@ import { combineLatest, filter, finalize, map, Observable, startWith, Subject, t
 @Component({
   selector: 'update-user',
   templateUrl: './update.component.html',
-  styleUrls: ['./update.component.scss']
+  styles: ['@use \'display/host\';']
 })
 export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user_id: number;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, shareReplay } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
 @Injectable({
@@ -15,7 +15,6 @@ export class UsersService {
 
   all(): Observable<Array<User>> {
     return this.http.get<Array<Required<User>>>(users_endpoint).pipe(
-      map(data => data.map(({ id, name, email }) => <User>{ id, name, email })),
       shareReplay(1)
     );
   }

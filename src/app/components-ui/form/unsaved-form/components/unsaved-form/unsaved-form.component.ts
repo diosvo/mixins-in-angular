@@ -1,7 +1,6 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EUrl } from '@home/models/url.enum';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
@@ -17,7 +16,6 @@ import { map, startWith } from 'rxjs/operators';
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   hasChanged = false;
-  isFormSubmitted = false;
 
   unsavedForm: FormGroup = this.fb.group({
     team_name: ['Dios', Validators.required],
@@ -49,25 +47,17 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   canDeactivate(): boolean {
-    return !this.hasChanged || this.isFormSubmitted || !this.detectPermission.hasPermission;
+    return !this.hasChanged || !this.detectPermission.hasPermission;
   }
 
-  saveChanges(url: string): void {
-    return this.onSubmit(url);
-  }
-
-  onSubmit(url?: string): void {
+  saveChanges(url?: string): void {
+    this.hasChanged = false;
     if (this.unsavedForm.invalid) {
       this.snackbar.error('You need to provide all required information.');
       return;
     }
-    this.isFormSubmitted = true;
     this.snackbar.success('Update successfully!');
-    this.redirectAfterSaving(url).then();
-  }
-
-  private async redirectAfterSaving(url: string): Promise<void> {
-    await this.router.navigate([url ?? EUrl.COMPONENT]);
+    this.router.navigate([url ?? this.router.url]);
   }
 
   private formState(): void {

@@ -30,7 +30,7 @@
       <button
         mat-flat-button
         color="primary"
-        (click)="onSubmit()"
+        (click)="saveChanges()"
         [disabled]="canDeactivate() || !unsavedForm.valid"
       >
         Update

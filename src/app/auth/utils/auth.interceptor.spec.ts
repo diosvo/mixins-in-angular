@@ -1,14 +1,12 @@
-import { HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from '@auth/services/auth.service';
 import { Observable } from 'rxjs';
 import { AuthInterceptor, AuthInterceptorProvider } from './auth.interceptor';
 
 describe('AuthInterceptor', () => {
-  let http: HttpClient;
   let interceptor: AuthInterceptor;
-  let http_testing: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,9 +18,7 @@ describe('AuthInterceptor', () => {
       ]
     });
 
-    http = TestBed.inject(HttpClient);
     interceptor = TestBed.inject(AuthInterceptor);
-    http_testing = TestBed.inject(HttpTestingController);
   });
 
   test('should add an authorization header', () => {

@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let route: ActivatedParamsService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -32,19 +33,14 @@ describe('AppComponent', () => {
           useValue: {
             isLoggedIn: of(true)
           }
-        },
-        {
-          provide: ActivatedParamsService,
-          useValue: {
-            dataMap$: of({ title: 'Page Not Found', toolbar: false, footer: false })
-          }
-        },
+        }
       ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
+    route = TestBed.inject(ActivatedParamsService);
     component = fixture.componentInstance;
   });
 
@@ -58,20 +54,25 @@ describe('AppComponent', () => {
       jest.spyOn(component.showFooter$, 'next');
     });
 
-    it('should show toolbar and footer (for all components as default)', () => {
-      /*  component['route']['_data$'].next({ title: 'App', toolbar: undefined, footer: undefined });
-       component['route'].dataMap$.subscribe(() => {
-         expect(component['titleService'].setTitle).toBeCalledWith('App');
-         expect(component.showToolbar$.next).toBeCalledWith(true);
-         expect(component.showFooter$.next).toBeCalledWith(true);
-       }); */
+    it('should show toolbar and footer (for all components as default)', (done) => {
+      component['route']['_data$'].next({ title: 'App', toolbar: undefined, footer: undefined });
+
+      component['route'].dataMap$.subscribe(() => {
+        expect(component['titleService'].setTitle).toBeCalledWith('App');
+        expect(component.showToolbar$.next).toBeCalledWith(true);
+        expect(component.showFooter$.next).toBeCalledWith(true);
+        done();
+      });
     });
 
-    it('should hide toolbar and footer (eg: PNF)', () => {
-      component['route'].dataMap$.subscribe(() => {
+    it('should hide toolbar and footer (eg: PNF)', (done) => {
+      component['route']['_data$'].next({ title: 'Page Not Found', toolbar: false, footer: false });
+
+      route.dataMap$.subscribe(() => {
         expect(component['titleService'].setTitle).toBeCalledWith('Page Not Found');
         expect(component.showToolbar$.next).toBeCalledWith(false);
         expect(component.showFooter$.next).toBeCalledWith(false);
+        done();
       });
     });
   });

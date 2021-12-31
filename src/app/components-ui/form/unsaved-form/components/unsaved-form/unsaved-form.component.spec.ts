@@ -100,7 +100,7 @@ describe('UnsavedFormComponent', () => {
       expect(component.canDeactivate()).toBe(true);
     });
 
-    test('returns false when there has changes or user has permission to update', () => {
+    test('returns false when there has changed or user has permission to update', () => {
       component.hasChanged = true;
       component['detectPermission'].hasPermission = true;
       expect(component.canDeactivate()).toBe(false);

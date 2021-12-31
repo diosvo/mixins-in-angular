@@ -25,7 +25,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         disableClose: true
       });
 
-      dialogRef.afterClosed().subscribe((response: boolean | string) => {
+      dialogRef.afterClosed().subscribe((response: boolean) => {
         if (response === false) {
           this.router.events
             .pipe(

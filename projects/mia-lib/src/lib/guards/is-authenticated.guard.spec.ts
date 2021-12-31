@@ -7,6 +7,7 @@ import { IsAuthenticatedGuard } from './is-authenticated.guard';
 describe('IsAuthenticatedGuard', () => {
   let guard: IsAuthenticatedGuard;
   let service: AuthService;
+
   const snackbar = {
     warning: jest.fn()
   };
@@ -31,7 +32,7 @@ describe('IsAuthenticatedGuard', () => {
   });
 
   it('should allow to access if user has logged in', (done) => {
-    service['isLoggedIn$'].next(true);
+    service['_isLoggedIn$'].next(true);
 
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {
@@ -43,7 +44,7 @@ describe('IsAuthenticatedGuard', () => {
   });
 
   it('should NOT allow to access if user has NOT logged in', (done) => {
-    service['isLoggedIn$'].next(false);
+    service['_isLoggedIn$'].next(false);
 
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {

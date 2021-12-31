@@ -1,3 +1,5 @@
 <toolbar *ngIf="showToolbar$ | async"></toolbar>
 <router-outlet></router-outlet>
-<app-footer *ngIf="(authService.isLoggedIn | async) && (showFooter$ | async)"></app-footer>
+<app-footer
+  *ngIf="(authService.isLoggedIn$ | async) && (showFooter$ | async)"
+></app-footer>

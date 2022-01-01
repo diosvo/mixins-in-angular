@@ -4,4 +4,3 @@ interface DeactivateComponent {
 }
 
 export { DeactivateComponent };
-

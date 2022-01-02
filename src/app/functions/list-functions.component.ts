@@ -23,7 +23,6 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 
-  showFilterIcon = false;
   errorMessage$ = new Subject<string>();
 
   functionsForm: FormGroup = this.fb.group({
@@ -42,8 +41,17 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     private readonly searchService: SearchService,
   ) { }
 
-  async ngOnInit(): Promise<void> {
-    await this.route.queryParams
+  ngOnInit(): void {
+    this.watchForQueryParams();
+    this.onFilters();
+  }
+
+  /**
+   * @description Search
+   */
+
+  private watchForQueryParams(): void {
+    this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
         if ((params.query && params.group) !== undefined) {
@@ -51,12 +59,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
         }
         return;
       });
-    this.onFilters();
   }
-
-  /**
-   * @description Search
-   */
 
   onFilters(): void {
     const data$ = this.searchService.functionsList$;
@@ -88,8 +91,8 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     );
   }
 
-  async updateParams(): Promise<void> {
-    await this.router.navigate([], {
+  updateParams(): void {
+    this.router.navigate([], {
       relativeTo: this.route,
       queryParams: this.functionsForm.value
     });
@@ -105,7 +108,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = !this.primitiveFilters;
+    return !this.primitiveFilters;
   }
 
   private get primitiveFilters(): boolean {

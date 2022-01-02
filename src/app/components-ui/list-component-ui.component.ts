@@ -23,7 +23,6 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 
-  showFilterIcon = false;
   errorMessage$ = new Subject<string>();
 
   componentsForm: FormGroup = this.fb.group({
@@ -92,8 +91,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     );
   }
 
-  async updateParams(): Promise<void> {
-    await this.router.navigate([], {
+  updateParams(): void {
+    this.router.navigate([], {
       relativeTo: this.route,
       queryParams: this.componentsForm.value
     });
@@ -104,7 +103,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
    */
 
   cleanQuery(): void {
-    return this.query.setValue('');
+    this.query.setValue('');
   }
 
   cleanFilters(): void {
@@ -113,7 +112,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   clearAllIconActive(): boolean {
-    return this.showFilterIcon = !this.primitiveFilters;
+    return !this.primitiveFilters;
   }
 
   private get primitiveFilters(): boolean {

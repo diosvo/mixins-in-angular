@@ -3,16 +3,14 @@ import { Injectable } from '@angular/core';
 import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { IProduct } from '@lib/models/product';
 import { CategoryService } from '@lib/services/category/category.service';
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, finalize, map, shareReplay } from 'rxjs/operators';
+import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, map, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
   private logger = this.loggerFactory.createLogger('ProductsService', 'service');
-
-  private loading$ = new BehaviorSubject<boolean>(true);
 
   /**
    * @description create an action steam
@@ -38,8 +36,7 @@ export class ProductsService {
   all$ = this.http.get<Array<IProduct>>('/assets/backend/data/products.json')
     .pipe(
       shareReplay(),
-      catchError((_) => of(null)),
-      finalize(() => this.loading$.next(false)),
+      catchError(() => of(null))
     );
 
   withCategory$ =
@@ -68,13 +65,7 @@ export class ProductsService {
     private readonly http: HttpClient,
     private readonly loggerFactory: LoggerFactory,
     private readonly categoryService: CategoryService,
-  ) {
-    this.loading$.next(true);
-  }
-
-  getLoading(): Observable<boolean> {
-    return this.loading$;
-  }
+  ) { }
 
   /**
    * @description call methods from the service

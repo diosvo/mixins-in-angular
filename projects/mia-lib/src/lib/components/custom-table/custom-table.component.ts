@@ -38,7 +38,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() pageable: boolean = true;
   @Input() showFirstLastButtons: boolean = false;
-  @ViewChild(MatPaginator) private paginator: MatPaginator;
+  @ViewChild(MatPaginator) private readonly paginator: MatPaginator;
 
   @Input() length: number;
   @Input() pageSize: number;
@@ -50,7 +50,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() defaultSortColumn: string;
   @Input() defaultSortDirection: SortDirection = 'asc';
-  @ViewChild(MatSort) private sort: MatSort;
+  @ViewChild(MatSort) private readonly sort: MatSort;
 
   /** Filter */
 

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -50,39 +50,6 @@ describe('CustomTableComponent', () => {
     });
   });
 
-  test('getData() to set up data on table', () => {
-    component.data = of([{ id: 1 }]);
-    component['getData']();
-    expect(component.source).toBeDefined();
-  });
-
-  describe('configDisplayColumns() to determine what columns will be shown when checkbox is', () => {
-    beforeEach(() => {
-      component.columns = [{ key: 'id' }];
-    });
-
-    test('enable (select column will be the first column on data table)', () => {
-      component.enableCheckbox = true;
-      component['configDisplayColumns']();
-
-      expect(component.displayColumns).toEqual([component.select, 'id']);
-      expect(component.columns).toEqual([
-        { key: component.select },
-        { key: 'id' }
-      ]);
-    });
-
-    test('disable', () => {
-      component.enableCheckbox = false;
-      component['configDisplayColumns']();
-
-      expect(component.displayColumns).toEqual(['id']);
-      expect(component.columns).toEqual([
-        { key: 'id' }
-      ]);
-    });
-  });
-
   describe('ngOnChanges() to detect data changed', () => {
     beforeEach(() => jest.spyOn(component as any, 'getData'));
 
@@ -107,6 +74,76 @@ describe('CustomTableComponent', () => {
       component.ngOnChanges(changes);
       expect(component['getData']).toHaveBeenCalled();
     });
+  });
+
+  test('ngOnInit()', () => {
+    jest.spyOn(component as any, 'configDisplayColumns');
+    component.ngOnInit();
+    expect(component['configDisplayColumns']).toBeCalled();
+  });
+
+  test('ngAfterViewInit()', () => {
+    jest.spyOn(component as any, 'configColumnTemplates');
+    component.ngAfterViewInit();
+    expect(component['configColumnTemplates']).toBeCalled();
+  });
+
+  describe('getData() to define source with sorting and', () => {
+    beforeEach(() => component.data = of([{ id: 1 }]));
+
+    afterEach(() => expect(component.source.sort).toEqual(component['sort']));
+
+    test('paginator as default options', () => {
+      component.data = of([{ id: 1 }]);
+      component['getData']();
+      expect(component.source.paginator).toEqual(component['paginator']);
+    });
+
+    test('hide paginator', () => {
+      component.pageable = false;
+      component['getData']();
+      expect(component.source.paginator).toBeNull();
+    });
+  });
+
+  describe('configDisplayColumns() to determine what columns will be shown when checkbox is', () => {
+    beforeEach(() => component.columns = [{ key: 'id' }]);
+
+    test('enable (select column will be the first column on data table)', () => {
+      component.enableCheckbox = true;
+      component['configDisplayColumns']();
+
+      expect(component.displayColumns).toEqual([component.select, 'id']);
+      expect(component.columns).toEqual([
+        { key: component.select },
+        { key: 'id' }
+      ]);
+    });
+
+    test('disable', () => {
+      component.enableCheckbox = false;
+      component['configDisplayColumns']();
+
+      expect(component.displayColumns).toEqual(['id']);
+      expect(component.columns).toEqual([
+        { key: 'id' }
+      ]);
+    });
+  });
+
+  test('onPageChanged()', () => {
+    jest.spyOn(component.pageChanges, 'emit');
+    const page: PageEvent = {
+      pageIndex: 0,
+      pageSize: 10,
+      length: 10
+    };
+
+    component.onPageChanged(page);
+
+    expect(component.pageChanges.emit).toBeCalledWith(page);
+    expect(component.pageIndex).toBe(page.pageIndex);
+    expect(component.pageSize).toBe(page.pageSize);
   });
 
   describe('isAllSelected() to check master toggle state', () => {

@@ -36,10 +36,46 @@ describe('DataTableComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DataTableComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   test('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  test('ngOnInit()', () => {
+    jest.spyOn(component as any, 'getIssues');
+    component.ngOnInit();
+    expect(component['getIssues']).toBeCalled();
+  });
+
+  describe('getIssues()', () => {
+    test('should return empty data when no data found', () => {
+      component['getIssues']();
+      component['_pageIndex$'].next(0);
+      component['_filters$'].next({ query: 'test', state: ['close'] });
+
+      component.issues$.subscribe(response => {
+        expect(response).toEqual([]);
+      });
+    });
+  });
+
+  test('pageChanges()', () => {
+    const page = { pageIndex: 1 } as any;
+    jest.spyOn(component['_pageIndex$'], 'next');
+
+    component.pageChanges(page);
+    expect(component['_pageIndex$'].next).toBeCalledWith(page.pageIndex);
+  });
+
+  test('filteredIssues()', () => {
+    const params = {
+      query: '',
+      state: ['open']
+    };
+    jest.spyOn(component['_filters$'], 'next');
+
+    component.filteredIssues(params);
+    expect(component['_filters$'].next).toBeCalledWith(params);
   });
 });

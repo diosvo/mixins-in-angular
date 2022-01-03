@@ -1,36 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '@auth/services/auth.service';
 import { FooterModule } from '@home/components/footer/footer.module';
 import { ToolbarModule } from '@home/components/toolbar/toolbar.module';
-import { Observable, of } from 'rxjs';
+import { ActivatedParamsService } from '@lib/services/activated-params/activated-params.service';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
-
-class MockRouter {
-  public navigate = new NavigationEnd(0, 'http://localhost:4200/ui-components', 'http://localhost:4200/ui-components');
-  public events = new Observable(observer => {
-    observer.next(this.navigate);
-    observer.complete();
-  });
-}
-
-/* class MockRouter {
-  public router = 'http://localhost:4200/ui-components';
-  public events = of(new NavigationEnd(0, this.router, this.router));
-} */
-
-const titleService = {
-  setTitle: jest.fn().mockReturnValue('App')
-};
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let route: ActivatedParamsService;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [
         FooterModule,
@@ -39,35 +23,57 @@ describe('AppComponent', () => {
       ],
       providers: [
         {
-          provide: Router,
-          useClass: MockRouter
-        },
-        {
           provide: Title,
-          useValue: titleService
+          useValue: {
+            setTitle: jest.fn().mockReturnValue('App')
+          }
         },
         {
           provide: AuthService,
-          useValue: {}
-        },
-        {
-          provide: ActivatedRoute,
           useValue: {
-            firstChild: null,
-            outlet: 'primary',
-            data: jest.fn().mockReturnValue(of({ title: 'App', toolbar: true, footer: true }))
+            isLoggedIn: of(true)
           }
-        },
+        }
       ]
     }).compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
+    route = TestBed.inject(ActivatedParamsService);
     component = fixture.componentInstance;
   });
 
   test('should create the app', (() => {
     expect(component).toBeTruthy();
   }));
+
+  describe('set up app', () => {
+    beforeEach(() => {
+      jest.spyOn(component.showToolbar$, 'next');
+      jest.spyOn(component.showFooter$, 'next');
+    });
+
+    it('should show toolbar and footer (for all components as default)', (done) => {
+      component['route']['_data$'].next({ title: 'App', toolbar: undefined, footer: undefined });
+
+      component['route'].dataMap$.subscribe(() => {
+        expect(component['titleService'].setTitle).toBeCalledWith('App');
+        expect(component.showToolbar$.next).toBeCalledWith(true);
+        expect(component.showFooter$.next).toBeCalledWith(true);
+        done();
+      });
+    });
+
+    it('should hide toolbar and footer (eg: PNF)', (done) => {
+      component['route']['_data$'].next({ title: 'Page Not Found', toolbar: false, footer: false });
+
+      route.dataMap$.subscribe(() => {
+        expect(component['titleService'].setTitle).toBeCalledWith('Page Not Found');
+        expect(component.showToolbar$.next).toBeCalledWith(false);
+        expect(component.showFooter$.next).toBeCalledWith(false);
+        done();
+      });
+    });
+  });
 });

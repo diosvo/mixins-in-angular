@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 
-enum Type {
+enum Background {
   DEFAULT = 'background-color: #EEF2FA; color: #2E5AAC', // blue
   SERVICE = 'background-color: #FFF4EC; color: #B95000', // yellow
   AUTH = 'background-color: #EDF9F0; color: #287D3C' //green
 }
 
-export type LogType = 'default' | 'service' | 'auth';
+enum ELog {
+  DEFAULT = 'default',
+  SERVICE = 'service',
+  AUTH = 'auth'
+}
+
+type TLog = `${Lowercase<ELog>}`;
 
 @Injectable({
   providedIn: 'root'
@@ -21,30 +27,31 @@ export class LoggerFactory {
    * @type auth (green), for:  interceptor, guard,
    */
 
-  createLogger(name: string, type: LogType = 'default'): Pick<Console, 'log'> {
+  createLogger(name: string, type: TLog = ELog.DEFAULT): Pick<Console, 'log'> {
     return {
       log: (message: Parameters<Console['log']>) => {
         if (!environment.production) {
           switch (type) {
-            case 'default': {
-              console.log(`%c[${name}]`, Type.DEFAULT, `${message}`);
+            case ELog.DEFAULT: {
+              this.log(name, Background.AUTH, message);
               break;
             }
-            case 'service': {
-              console.log(`%c[${name}]`, Type.SERVICE, `${message}`);
+            case ELog.SERVICE: {
+              this.log(name, Background.SERVICE, message);
               break;
             }
-            case 'auth': {
-              console.log(`%c[${name}]`, Type.AUTH, `${message}`);
+            case ELog.AUTH: {
+              this.log(name, Background.AUTH, message);
               break;
             }
-            default:
-              console.log(`%c[${name}]`, Type.DEFAULT, `${message}`);
-              break;
           }
         }
         return;
       }
     };
+  }
+
+  private log(name: string, type: Background, message: Parameters<Console['log']>): void {
+    console.log(`%c[${name}]`, type, `${message}`);
   }
 }

@@ -10,7 +10,7 @@ import { combineLatest, filter, finalize, map, Observable, startWith, Subject, t
 @Component({
   selector: 'update-user',
   templateUrl: './update.component.html',
-  styleUrls: ['./update.component.scss']
+  styles: ['@use \'display/host\';']
 })
 export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   user_id: number;
@@ -22,6 +22,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   hasChanged = false;
 
   destroyed$ = new Subject<boolean>();
+  errorMessage$: Observable<string>;
   readonly loading$: Observable<boolean> = this.service.loading$;
 
   constructor(
@@ -35,6 +36,7 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
       filter(data => data !== null),
       tap(({ id }) => this.user_id = id as number)
     );
+    this.errorMessage$ = this.service.errorMessage$;
     this.watchForFormChanged();
   }
 

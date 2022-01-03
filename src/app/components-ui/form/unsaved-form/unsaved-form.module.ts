@@ -12,13 +12,14 @@ import { UnsavedFormRoutingModule } from './unsaved-form-routing.module';
   declarations: [UnsavedFormComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     UnsavedFormRoutingModule,
-    HasPermissionDirectiveModule,
 
     AlertModule,
-    MatButtonModule,
     CustomInputModule,
-    ReactiveFormsModule,
+    HasPermissionDirectiveModule,
+
+    MatButtonModule,
   ]
 })
 export class UnsavedFormModule { }

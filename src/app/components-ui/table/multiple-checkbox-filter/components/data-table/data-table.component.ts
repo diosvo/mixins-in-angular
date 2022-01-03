@@ -18,10 +18,9 @@ export class DataTableComponent implements OnInit {
   issues$: Observable<Array<GithubIssue>>;
 
   columns: Array<TableColumn> = [
-    { key: 'created_at', header: 'Created At', flex: '10%' },
-    { key: 'state', disableSorting: true, flex: '10%' },
-    { key: 'number', flex: '10%' },
-    { key: 'title', flex: '70%' },
+    { key: 'state', disableSorting: true, flex: '15%' },
+    { key: 'number', flex: '15%' },
+    { key: 'title', flex: '65%' },
   ];
   private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
@@ -65,7 +64,7 @@ export class DataTableComponent implements OnInit {
               const searchTerm = item.number + item.title;
               conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
             }
-            else if (filterValues[key] !== null && filterValues[key].length) {
+            else if (filterValues[key].length) {
               conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
             }
           }

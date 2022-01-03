@@ -2,10 +2,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthService } from '@auth/services/auth.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { IsAuthenticatedGuard } from './is-authenticated.guard';
+import { CanLoadGuard } from './can-load.guard';
 
-describe('IsAuthenticatedGuard', () => {
-  let guard: IsAuthenticatedGuard;
+describe('CanLoadGuard', () => {
+  let guard: CanLoadGuard;
   let service: AuthService;
 
   const snackbar = {
@@ -25,14 +25,14 @@ describe('IsAuthenticatedGuard', () => {
   }));
 
   beforeEach(() => {
-    guard = TestBed.inject(IsAuthenticatedGuard);
+    guard = TestBed.inject(CanLoadGuard);
     service = TestBed.inject(AuthService);
   });
 
   it('should allow to access if user has logged in', (done) => {
     service['_isLoggedIn$'].next(true);
 
-    guard.canActivate().subscribe({
+    guard.canLoad().subscribe({
       next: (allowed: boolean) => {
         expect(allowed).toBe(true);
         done();
@@ -44,7 +44,7 @@ describe('IsAuthenticatedGuard', () => {
   it('should NOT allow to access if user has NOT logged in', (done) => {
     service['_isLoggedIn$'].next(false);
 
-    guard.canActivate().subscribe({
+    guard.canLoad().subscribe({
       next: (allowed: boolean) => {
         expect(allowed).toBe(false);
         expect(snackbar.warning).toBeCalledWith('You must log in first');

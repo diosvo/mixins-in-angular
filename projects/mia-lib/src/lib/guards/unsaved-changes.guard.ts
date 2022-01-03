@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate, GuardsCheckEnd, Router } from '@angular/router';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { Observable, of } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { DeactivateComponent } from '../models/base-form-component';
@@ -14,8 +13,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
   constructor(
     private readonly router: Router,
-    private readonly dialog: MatDialog,
-    private readonly snackbar: SnackbarService
+    private readonly dialog: MatDialog
   ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
@@ -25,7 +23,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         disableClose: true
       });
 
-      dialogRef.afterClosed().subscribe((response: boolean | string) => {
+      dialogRef.afterClosed().subscribe((response: boolean) => {
         if (response === false) {
           this.router.events
             .pipe(
@@ -33,8 +31,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
               take(1)
             )
             .subscribe({
-              next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects),
-              error: ({ message }) => this.snackbar.error(message)
+              next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
             });
         }
       });

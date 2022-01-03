@@ -2,6 +2,8 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+type InputType = 'string' | 'number';
+
 @Component({
   selector: 'custom-input',
   templateUrl: './custom-input.component.html',
@@ -35,31 +37,31 @@ export class CustomInputComponent implements ControlValueAccessor, Validator {
   disabled = false;
 
   /** Callback when the value is changing **/
-  onChange: (value: unknown) => void;
+  onChange: (value: InputType) => void;
   /** Callback when the input is accessed **/
   onTouched: () => void;
 
-  private _value: unknown;
+  private _value: InputType;
   control: FormControl;
 
-  get value(): unknown {
+  get value(): InputType {
     return this._value;
   }
 
-  set value(v: unknown) {
+  set value(v: InputType) {
     if (v !== this._value) {
       this._value = v;
       this.onChange(v);
     }
   }
 
-  writeValue(value: unknown): void {
+  writeValue(value: InputType): void {
     if (value !== undefined) {
       this._value = value;
     }
   }
 
-  registerOnChange(fn: (_: unknown) => {}): void {
+  registerOnChange(fn: (_: InputType) => {}): void {
     this.onChange = fn;
   }
 

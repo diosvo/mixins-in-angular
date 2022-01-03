@@ -2,10 +2,12 @@ import { Directive, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } fro
 import { AuthUser } from '@auth/models/auth.model';
 import { AuthService } from '@auth/services/auth.service';
 
-enum LogicalOperator {
+export enum LogicalOperator {
   OR = 'OR',
   AND = 'AND',
 }
+
+type Operator = `${Uppercase<LogicalOperator>}`;
 
 @Directive({
   selector: '[hasPermission]'
@@ -19,7 +21,7 @@ export class HasPermissionDirective implements OnInit {
   }
 
   @Input()
-  set hasPermissionOp(operator: LogicalOperator) { // prefixed with the name of directive
+  set hasPermissionOp(operator: Operator) { // prefixed with the name of directive
     this._logicalOperator = operator;
     this.updateView();
   }
@@ -27,7 +29,7 @@ export class HasPermissionDirective implements OnInit {
   private _currentUser: AuthUser;
   private _permissions: Array<string> = new Array();
 
-  private _logicalOperator = LogicalOperator.AND;
+  private _logicalOperator: Operator = LogicalOperator.AND;
   private _isHidden = true;
 
   constructor(

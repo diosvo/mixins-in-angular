@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, zip } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
 import { ActivatedParamsService } from '../activated-params/activated-params.service';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
@@ -14,6 +14,7 @@ export class UserDetailsService implements OnDestroy {
   private _loading$ = new BehaviorSubject<boolean>(false);
   readonly loading$ = this._loading$.asObservable();
 
+  readonly errorMessage$ = new Subject<string>()
   private _destroyed$ = new Subject<boolean>();
 
   constructor(
@@ -34,6 +35,10 @@ export class UserDetailsService implements OnDestroy {
           this.byId(user_id)
             .pipe(
               finalize(() => this._loading$.next(false)),
+              catchError(({ message }) => {
+                this.errorMessage$.next(message);
+                return throwError(() => new Error(message));
+              }),
               takeUntil(this._destroyed$)
             )
             .subscribe({

@@ -25,7 +25,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         takeUntil(this.destroyed$)
       )
-      .subscribe((filter: Filter) => this.filters.emit(filter));
+      .subscribe(() => this.filters.emit(this.filterForm.getRawValue()));
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -20,6 +22,8 @@ describe('SearchFilterComponent', () => {
         MatInputModule,
         MatSelectModule,
         MatFormFieldModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
       ],
     })
       .compileComponents();
@@ -31,6 +35,7 @@ describe('SearchFilterComponent', () => {
     component.filterForm = new FormGroup({
       query: new FormControl(''),
       state: new FormControl(['closed']),
+      created_at: new FormControl(''),
     });
     fixture.detectChanges();
   });
@@ -48,7 +53,11 @@ describe('SearchFilterComponent', () => {
     jest.spyOn(component.filters, 'emit');
 
     component.ngOnInit();
-    component.filterForm.patchValue({ query: '1', state: ['open'] });
+    component.filterForm.patchValue({
+      query: '1',
+      state: ['open'],
+      created_at: ''
+    });
     tick(100);
 
     component.filterForm.valueChanges.subscribe(response => expect(component.filters.emit).toBeCalledWith(response));

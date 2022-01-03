@@ -35,7 +35,7 @@ describe('CustomInputComponent', () => {
 
   describe('writeValue() when value is', () => {
     test('defined', () => {
-      component.writeValue('test');
+      component.writeValue('test' as 'string');
       expect(component['_value']).toBe('test');
     });
 

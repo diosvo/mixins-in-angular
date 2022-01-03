@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 import { interval, mergeMap, pipe, retryWhen, take, throwError, TimeoutError } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { interval, mergeMap, pipe, retryWhen, take, throwError, TimeoutError } f
 })
 
 export class HandleService {
-  isServerError = (error: HttpErrorResponse) => error.status >= 500;
+  isServerError = (error: HttpErrorResponse) => error.status >= HttpStatusCode.InternalServerError;
 
   retryServerErrors = <T>() => {
     let tryCount = 2;

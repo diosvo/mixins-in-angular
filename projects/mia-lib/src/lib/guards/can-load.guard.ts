@@ -19,7 +19,7 @@ export class CanLoadGuard implements CanLoad {
   ) { }
 
   canLoad(): Observable<boolean> {
-    return this.authService.isLoggedIn.pipe(
+    return this.authService.isLoggedIn$.pipe(
       tap({
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {

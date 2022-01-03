@@ -12,7 +12,7 @@ const retry = {
 export class MonitorInterceptor implements HttpInterceptor {
   private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
 
-  constructor(private loggerFactory: LoggerFactory) { }
+  constructor(private readonly loggerFactory: LoggerFactory) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 

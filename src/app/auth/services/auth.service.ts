@@ -8,8 +8,8 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn$ = new BehaviorSubject<boolean>(false);
-  readonly isLoggedIn = this.isLoggedIn$.asObservable();
+  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
+  readonly isLoggedIn$ = this._isLoggedIn$.asObservable();
   user!: AuthUser;
 
   private readonly TOKEN_NAME = 'dv_token';
@@ -21,7 +21,7 @@ export class AuthService {
   constructor(
     private http: HttpClient
   ) {
-    this.isLoggedIn$.next(!!this.token);
+    this._isLoggedIn$.next(!!this.token);
     this.user = !!this.token ? this.getUser(this.token) : {} as AuthUser;
   }
 
@@ -30,7 +30,7 @@ export class AuthService {
       .pipe(
         tap({
           next: (response: AuthUser) => {
-            this.isLoggedIn$.next(true);
+            this._isLoggedIn$.next(true);
             localStorage.setItem(this.TOKEN_NAME, response.token);
             this.user = this.getUser(response.token);
           }
@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.isLoggedIn$.next(false);
+    this._isLoggedIn$.next(false);
     localStorage.clear();
   }
 }

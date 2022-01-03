@@ -12,8 +12,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
 
   filterForm: FormGroup = this.fb.group({
     query: [''],
-    state: [''],
-    created_at: [{ value: '', disabled: true }]
+    state: ['']
   })
   private destroyed$ = new Subject<boolean>();
 

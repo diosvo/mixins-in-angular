@@ -1,8 +1,7 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { FilterSchema, HandleService } from '@lib/services/base/handle.service';
-import { BehaviorSubject, catchError, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
 import { Filter } from '../../models/filter.model';
 import { GithubApi, GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
@@ -19,15 +18,13 @@ export class DataTableComponent implements OnInit {
   issues$: Observable<Array<GithubIssue>>;
 
   columns: Array<TableColumn> = [
-    { key: 'created_at', header: 'Created At', flex: '15%' },
-    { key: 'state', disableSorting: true, flex: '10%' },
-    { key: 'number', flex: '10%' },
+    { key: 'state', disableSorting: true, flex: '15%' },
+    { key: 'number', flex: '15%' },
     { key: 'title', flex: '65%' },
   ];
   private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
-    state: '',
-    created_at: ''
+    state: ''
   });
   readonly filters$ = this._filters$.asObservable();
 
@@ -35,7 +32,6 @@ export class DataTableComponent implements OnInit {
   private _pageIndex$ = new Subject<number>();
 
   constructor(
-    private readonly handle: HandleService,
     @Self() readonly service: GithubRepoIssuesService
   ) { }
 
@@ -57,21 +53,25 @@ export class DataTableComponent implements OnInit {
       }),
     );
 
-    const schemas = {
-      date: {
-        type: 'string'
-      },
-      state: {
-        type: 'array',
-        enums: ['open', 'closed']
-      },
-      query: {
-        type: 'string',
-        enums: ['number', 'title']
-      },
-    } as FilterSchema;
+    this.issues$ = combineLatest([data$, this.filters$]).pipe(
+      map(([data, params]) =>
+        data.filter((item: GithubIssue) => {
+          let conditions = true;
+          const filterValues = JSON.parse(JSON.stringify(params));
 
-    this.issues$ = this.handle.filteredData(data$, this.filters$, schemas).pipe(
+          for (const key in filterValues) {
+            if (key === 'query') {
+              const searchTerm = item.number + item.title;
+              conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
+            }
+            else if (filterValues[key].length) {
+              conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
+            }
+          }
+
+          return conditions;
+        })
+      ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));

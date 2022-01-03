@@ -19,7 +19,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   unsavedForm: FormGroup = this.fb.group({
     team_name: ['Dios', Validators.required],
-  })
+  });
   primitiveValue = of({
     team_name: 'Dios',
   });

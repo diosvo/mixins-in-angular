@@ -8,7 +8,7 @@ import { delay, map } from 'rxjs/operators';
 */
 
 class Regex {
-  static Text = /^[a-zA-Z ]*$/
+  static Text = /^[a-zA-Z ]*$/;
 }
 
 /**

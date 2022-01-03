@@ -23,7 +23,7 @@ export class HandleService {
         }))
       )
     );
-  }
+  };
 
   errorHandler = (name: string) => (error: HttpErrorResponse | TimeoutError) => {
     if (error instanceof TimeoutError) {
@@ -32,5 +32,5 @@ export class HandleService {
     if (error instanceof HttpErrorResponse) {
       return throwError(() => new Error(isDevMode() ? `${error.message} (${name})` : `${error.message}`));
     }
-  }
+  };
 }

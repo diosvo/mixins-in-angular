@@ -28,8 +28,8 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   functionsForm: FormGroup = this.fb.group({
     query: [''],
     group: ['all']
-  })
-  groupList = Object.values(EFunctions).sort((prev, next) => prev < next ? -1 : 1)
+  });
+  groupList = Object.values(EFunctions).sort((prev, next) => prev < next ? -1 : 1);
 
   filteredData$: Observable<Array<IGroupValue>>;
   private destroyed$: Subject<boolean> = new Subject();

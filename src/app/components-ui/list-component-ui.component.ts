@@ -28,8 +28,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   componentsForm: FormGroup = this.fb.group({
     query: [''],
     group: ['all']
-  })
-  groupList = Object.values(EComponentUI).sort((prev, next) => prev < next ? -1 : 1)
+  });
+  groupList = Object.values(EComponentUI).sort((prev, next) => prev < next ? -1 : 1);
 
   filteredData$: Observable<Array<IGroupValue>>;
   private destroyed$: Subject<boolean> = new Subject();

@@ -13,7 +13,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
   filterForm: FormGroup = this.fb.group({
     query: [''],
     state: ['']
-  })
+  });
   private destroyed$ = new Subject<boolean>();
 
   constructor(private readonly fb: FormBuilder) { }

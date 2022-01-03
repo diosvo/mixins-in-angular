@@ -14,7 +14,7 @@ export class UserDetailsService implements OnDestroy {
   private _loading$ = new BehaviorSubject<boolean>(false);
   readonly loading$ = this._loading$.asObservable();
 
-  readonly errorMessage$ = new Subject<string>()
+  readonly errorMessage$ = new Subject<string>();
   private _destroyed$ = new Subject<boolean>();
 
   constructor(

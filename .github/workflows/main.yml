@@ -11,21 +11,26 @@ on:
 jobs:
   ci_cd:
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v2
-          with:
-            node-version: 16
-        - name: install dependencies
-        run: yarn install
-        - name: lint
-        run: yarn lint
-        - name: tests
-        run: yarn test
-        - name: build
-        run: yarn build
-        - name: deploy
-        run: |
-          yarn add -g netlify-cli --force
-          netlify deploy
---dir dist/mixins-in-angular
+    
+    steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-node@v2
+       with:
+         node-version: 16
+
+     - name: Install Dependencies
+       run: yarn install
+
+     - name: Lint
+       run: yarn lint
+
+     - name: tests
+       run: yarn test
+
+     - name: Build
+       run: yarn build
+
+     - name: deploy
+       run: |
+         yarn add -g netlify-cli --force
+         netlify deploy --dir dist/mixins-in-angular

@@ -7,7 +7,7 @@ import { interval, mergeMap, pipe, retryWhen, take, throwError, TimeoutError } f
 })
 
 export class HandleService {
-  isServerError = (error: HttpErrorResponse) => error.status >= HttpStatusCode.InternalServerError;
+  isServerError = (error: HttpErrorResponse): boolean => error.status >= HttpStatusCode.InternalServerError;
 
   retryServerErrors = <T>() => {
     let tryCount = 2;

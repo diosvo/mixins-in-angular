@@ -6,11 +6,6 @@
         "name": "Data Composition #ng-conf",
         "route": "data-composition-ng-conf",
         "description": "Without subscription, improve performance"
-      },
-      {
-        "name": "Basic Operators",
-        "route": "basic-operators",
-        "description": "Combination: zip, switchMap, mergeMap"
       }
     ]
   },

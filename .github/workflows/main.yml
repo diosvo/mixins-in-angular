@@ -32,5 +32,5 @@ jobs:
 
       - name: Deploy
         run: |
-          yarn add -g netlify-cli --force
-          netlify deploy --dir dist/mixins-in-angular
+          npm install netlify-cli --save-dev
+          netlify deploy --dir=dist/mixins-in-angular

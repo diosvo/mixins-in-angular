@@ -45,7 +45,12 @@ describe('UpdateComponent', () => {
         MatProgressBarModule,
         MatProgressSpinnerModule,
 
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          {
+            path: 'ui-components',
+            component: UpdateComponent
+          }
+        ]),
         HttpClientTestingModule,
         BrowserAnimationsModule
       ],

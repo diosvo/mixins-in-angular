@@ -29,8 +29,3 @@ jobs:
 
       - name: Build
         run: yarn build
-
-      - name: Deploy
-        run: |
-          npm install netlify-cli --save-dev
-          netlify deploy --dir=dist/mixins-in-angular

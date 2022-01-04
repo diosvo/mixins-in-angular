@@ -18,13 +18,13 @@ export class UsersService {
   all(): Observable<Array<User>> {
     return this.http.get<Array<Required<User>>>(users_endpoint).pipe(
       shareReplay(1),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: all()`))
+      catchError(this.handle.errorHandler(`${this.constructor.name}: all`))
     );
   }
 
   delete(id: number): Observable<User> {
     return this.http.delete<Required<User>>(user_id_endpoint(id)).pipe(
-      catchError(this.handle.errorHandler(`${this.constructor.name}: delete()`))
+      catchError(this.handle.errorHandler(`${this.constructor.name}: delete`))
     );
   }
 }

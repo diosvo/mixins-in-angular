@@ -1,7 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { User, users_endpoint } from './user-service.model';
+import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 import { UsersService } from './users.service';
 
 const user: User = {
@@ -59,7 +59,7 @@ describe('UsersService', () => {
       error: ({ message }) => fail(message)
     });
 
-    const request = http.expectOne(users_endpoint + user.id);
+    const request = http.expectOne(user_id_endpoint(user.id));
     expect(request.request.method).toBe('DELETE');
     request.flush({});
   });

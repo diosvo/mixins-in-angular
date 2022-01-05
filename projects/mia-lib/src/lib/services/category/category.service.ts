@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ICategory } from '@lib/models/category';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { catchError, mergeMap, shareReplay } from 'rxjs/operators';
+import { HandleService } from '../base/handle.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService  {
+export class CategoryService {
   private refresh = new ReplaySubject<void>();
 
   /**
@@ -21,10 +22,13 @@ export class CategoryService  {
   all$: Observable<Array<ICategory>> =
     this.refresh.pipe(
       mergeMap(() => this.http.get<Array<ICategory>>('/assets/backend/data/category.json')),
-      catchError(_ => of(null))
+      catchError(this.handle.errorHandler(`${this.constructor.name}: all$`))
     );
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private readonly http: HttpClient,
+    private readonly handle: HandleService,
+  ) { }
 
   /**
    * @description call methods from the service
@@ -35,7 +39,7 @@ export class CategoryService  {
   all(): Observable<Array<ICategory>> {
     return this.http.get<Array<ICategory>>('/assets/backend/data/category.json').pipe(
       shareReplay(),
-      catchError(_ => of(null))
+      catchError(this.handle.errorHandler(`${this.constructor.name}: all`))
     );
   }
 

@@ -20,9 +20,10 @@ const product: IProduct = {
 describe('ContentComponent', () => {
   let component: ContentComponent;
   let fixture: ComponentFixture<ContentComponent>;
+
   const service = {
     selected$: of(product),
-    productSelectedAction: of(1000)
+    productSelectedAction: of(product.productId)
   };
 
   beforeEach(waitForAsync(() => {
@@ -49,6 +50,14 @@ describe('ContentComponent', () => {
 
   test('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  test('should call selected product; display product title if API returns success', (done) => {
+    jest.spyOn(component, 'displayProduct');
+    component.product$.subscribe((response: IProduct) => {
+      expect(component.displayProduct).toBeCalledWith(response);
+      done();
+    });
   });
 
   describe('should call displayProduct()', () => {

@@ -36,5 +36,5 @@ const difference = (array_1: Array<unknown>, array_2: Array<unknown>): Array<unk
 
 const differenceBy = (array_1: Array<unknown>, array_2: Array<unknown>, fn: Function): Array<unknown> => array_1.filter(item => !new Set(array_2).has(fn(item)));
 
-export { hasDuplicates };
+export { hasDuplicates, deepFlatten };
 

@@ -1,0 +1,20 @@
+$breakpoints: (
+  'extra-small': 576px,
+  'small': 768px,
+  'medium': 960px,
+  'large': 1280px,
+  'extra-large': 1920px,
+) !default;
+
+@mixin screen($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media screen and (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+
+  @else {
+    @error 'Unfortunately, `#{$breakpoint}` can not be found. ' + 
+    'Available breakpoints are: #{map-keys($breakpoints)}'
+  }
+}

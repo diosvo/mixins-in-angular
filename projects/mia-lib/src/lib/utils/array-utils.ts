@@ -36,5 +36,10 @@ const difference = (array_1: Array<unknown>, array_2: Array<unknown>): Array<unk
 
 const differenceBy = (array_1: Array<unknown>, array_2: Array<unknown>, fn: Function): Array<unknown> => array_1.filter(item => !new Set(array_2).has(fn(item)));
 
-export { hasDuplicates, deepFlatten };
+/** 
+ * @returns sorted by key in the array
+ */
 
+const sortBy = (array: Array<unknown>, key: string): Array<unknown> => array.sort((prev, next) => prev[key].localeCompare(next[key]));
+
+export { hasDuplicates, deepFlatten, sortBy };

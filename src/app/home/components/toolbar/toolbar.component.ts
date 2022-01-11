@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
+import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { filter } from 'rxjs';
@@ -12,6 +13,8 @@ import { filter } from 'rxjs';
   templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {
+
+  navigation = Object.values(EUrl);
 
   constructor(
     private readonly router: Router,

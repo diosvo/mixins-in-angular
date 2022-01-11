@@ -6,14 +6,31 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from '@auth/components/login/login.component';
+import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { of } from 'rxjs';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { of, throwError } from 'rxjs';
 import { ToolbarComponent } from './toolbar.component';
+
+const snackbar = {
+  success: jest.fn(),
+  error: jest.fn()
+};
+
+const login_values = {
+  username: 'diosvo',
+  password: '123456'
+};
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
   let fixture: ComponentFixture<ToolbarComponent>;
   let dialog: MatDialog;
+
+  const service = {
+    login: jest.fn().mockReturnValue(of(login_values)),
+    logout: jest.fn()
+  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -36,6 +53,14 @@ describe('ToolbarComponent', () => {
         {
           provide: MatDialog,
           useValue: { open: jest.fn() }
+        },
+        {
+          provide: AuthService,
+          useValue: service
+        },
+        {
+          provide: SnackbarService,
+          useValue: snackbar
         }
       ]
     })
@@ -54,7 +79,9 @@ describe('ToolbarComponent', () => {
   });
 
   test('openLoginDialog()', () => {
-    jest.spyOn(dialog, 'open');
+    jest.spyOn(dialog, 'open').mockReturnValue({
+      afterClosed: () => of(login_values)
+    } as MatDialogRef<typeof ToolbarComponent>);
     component.openLoginDialog();
     expect(dialog.open).toBeCalledWith(LoginComponent, {
       width: '375px',
@@ -99,6 +126,19 @@ describe('ToolbarComponent', () => {
         width: '425px',
         disableClose: true,
       });
+    });
+  });
+
+  describe('login() to login and the API returns', () => {
+    test('success', () => {
+      component['login'](login_values);
+      expect(snackbar.success).toBeCalledWith('Login successfully!');
+    });
+
+    test('error', () => {
+      service.login.mockReturnValue(throwError(() => new Error('Something went wrong. Please try again!')));
+      component['login'](login_values);
+      expect(snackbar.error).toBeCalledWith('Something went wrong. Please try again!');
     });
   });
 });

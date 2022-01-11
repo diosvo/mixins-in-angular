@@ -21,9 +21,8 @@
   </mat-dialog-content>
 
   <!-- Actions -->
-  <mat-dialog-actions class="d-flex jc-flex-end">
-    <custom-button [mat-dialog-close]="true" (click)="onSubmit()">
-      Log In
-    </custom-button>
+  <mat-dialog-actions class="d-flex jc-between">
+    <custom-button type="text" mat-dialog-close>Cancel</custom-button>
+    <custom-button [mat-dialog-close]="loginForm.value">Log In</custom-button>
   </mat-dialog-actions>
 </form>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { filter } from 'rxjs';
 
 @Component({
@@ -16,13 +17,18 @@ export class ToolbarComponent {
     private readonly router: Router,
     readonly authService: AuthService,
     private readonly dialog: MatDialog,
+    private readonly snackbar: SnackbarService,
   ) { }
 
   openLoginDialog(): void {
-    this.dialog.open(LoginComponent, {
-      width: '375px',
-      disableClose: true,
-    });
+    this.dialog
+      .open(LoginComponent, {
+        width: '375px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(filter(info => !!info))
+      .subscribe(data => this.login(data));
   }
 
   openLogoutDialog(): void {
@@ -42,5 +48,12 @@ export class ToolbarComponent {
         this.authService.logout();
         this.router.navigate(['/ui-components']);
       });
+  }
+
+  private login(info: { username: string, password: string }): void {
+    this.authService.login(info).subscribe({
+      next: () => this.snackbar.success('Login successfully!'),
+      error: () => this.snackbar.error('Something went wrong. Please try again!')
+    });
   }
 }

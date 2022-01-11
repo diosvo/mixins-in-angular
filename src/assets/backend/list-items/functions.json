@@ -8,15 +8,5 @@
         "description": "Without subscription, improve performance"
       }
     ]
-  },
-  {
-    "groupName": "algorithm",
-    "groupDetails": [
-      {
-        "name": "Self-Learning",
-        "route": "self-learning",
-        "description": ""
-      }
-    ]
   }
 ]

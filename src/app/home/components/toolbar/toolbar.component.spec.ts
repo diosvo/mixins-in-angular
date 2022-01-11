@@ -5,9 +5,12 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { AuthModule } from '@auth/auth.module';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
+import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { of, throwError } from 'rxjs';
 import { ToolbarComponent } from './toolbar.component';
@@ -43,6 +46,10 @@ describe('ToolbarComponent', () => {
             component: ToolbarComponent
           }
         ]),
+
+        AuthModule,
+        CustomButtonModule,
+        ConfirmDialogModule,
 
         MatIconModule,
         MatDialogModule,
@@ -109,7 +116,7 @@ describe('ToolbarComponent', () => {
         disableClose: true,
       });
       expect(component['authService'].logout).toBeCalled();
-      expect(component['router'].navigate).toBeCalledWith(['/ui-components']);
+      expect(component['router'].navigate).toBeCalledWith(['/core']);
     });
 
     test('Cancel button', () => {

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { AuthModule } from '@auth/auth.module';
 import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { ToolbarComponent } from './toolbar.component';
@@ -14,6 +15,8 @@ import { ToolbarComponent } from './toolbar.component';
   imports: [
     CommonModule,
     RouterModule,
+
+    AuthModule,
     CustomButtonModule,
     ConfirmDialogModule,
 

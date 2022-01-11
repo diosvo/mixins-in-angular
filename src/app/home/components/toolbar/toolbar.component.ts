@@ -49,7 +49,7 @@ export class ToolbarComponent {
       .pipe(filter(result => result))
       .subscribe(() => {
         this.authService.logout();
-        this.router.navigate(['/ui-components']);
+        this.router.navigate(['/core']);
       });
   }
 

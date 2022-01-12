@@ -63,7 +63,7 @@ describe('ContentComponent', () => {
   describe('should call displayProduct()', () => {
     test('should show product details when user select any product', () => {
       component.displayProduct(product);
-      expect(component.pageTitle).toBe(`Product Details ➡ ${product.productName}`);
+      expect(component.pageTitle).toBe(`Product Details: ${product.productName}`);
     });
 
     test('should show no product found when there has no product', () => {

@@ -5,7 +5,7 @@
 
   <div class="bg-white bd-auto p-2">
     <ng-template #loadingTmpl>
-      <mat-spinner class="m-0-auto"></mat-spinner>
+      <mat-spinner [diameter]="75" class="m-0-auto"></mat-spinner>
     </ng-template>
 
     <ng-container *ngIf="products$ | async as products; else loadingTmpl">
@@ -15,11 +15,17 @@
       </div>
 
       <ng-container *ngFor="let product of products">
-        <div class="d-block mt-1">
-          <custom-button type="text" (click)="onSelected(product.productId)">
-            {{ product.productName | titlecase }}
-          </custom-button>
-        </div>
+        <custom-button
+          type="text"
+          class="d-block mb-1 text-secondary"
+          routerLinkActive="text-black"
+          [routerLink]="[
+            '/functions/rxjs/data-composition-ng-conf/',
+            product.productId
+          ]"
+        >
+          {{ product.productName | titlecase }}
+        </custom-button>
       </ng-container>
     </ng-container>
   </div>

@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CoreComponent } from './core.component';
 
 const routes: Routes = [
   {
-    path: 'self-learning',
-    loadChildren: () => import('./self-learning/self-learning.module').then(m => m.SelfLearningModule)
+    path: '',
+    component: CoreComponent,
+    data: { title: 'Base Concept' }
   },
 ];
 
@@ -12,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AlgorithmRoutingModule { }
+export class CoreRoutingModule { }

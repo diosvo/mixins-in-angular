@@ -11,15 +11,16 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
   selector: 'app-list-functions',
   templateUrl: './list-functions.component.html',
   styles: [`
-    @media screen and (max-width: 600px) {
-      .panel-container {
+  @import 'layout/breakpoints';
+  @include screen('extra-small') {
+    .panel-container {
         display: block;
-      }
+    }
 
-      .filter-group {
+    .filter-group {
         width: 100%;
-      }
-    }`]
+    }
+  }`]
 })
 export class ListFunctionsComponent implements OnInit, OnDestroy {
 

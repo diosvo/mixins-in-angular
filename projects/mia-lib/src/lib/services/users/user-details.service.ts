@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
 import { ActivatedParamsService } from '../activated-params/activated-params.service';
+import { HandleService } from '../base/handle.service';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
 @Injectable({
@@ -19,6 +20,7 @@ export class UserDetailsService implements OnDestroy {
 
   constructor(
     private readonly http: HttpClient,
+    private readonly handle: HandleService,
     private readonly route: ActivatedParamsService
   ) {
     this.getUserByRouteParams();
@@ -52,17 +54,21 @@ export class UserDetailsService implements OnDestroy {
   byId(id: number): Observable<User> {
     return this.http.get<Required<User>>(user_id_endpoint(id)).pipe(
       map(({ id, name, email }) => <User>{ id, name, email, hobbies: ['coding', 'basketball'] }),
+      catchError(this.handle.errorHandler(`${this.constructor.name}: byId`)),
       shareReplay()
     );
   }
 
   create(user: User): Observable<User> {
-    return this.http.post<Required<User>>(users_endpoint, user);
+    return this.http.post<Required<User>>(users_endpoint, user).pipe(
+      catchError(this.handle.errorHandler(`${this.constructor.name}: create`)),
+    );
   }
 
   update(user: User): Observable<User> {
     return this.http.put<Required<User>>(user_id_endpoint(user.id), user).pipe(
-      tap((data: User) => this._user$.next(data))
+      tap((data: User) => this._user$.next(data)),
+      catchError(this.handle.errorHandler(`${this.constructor.name}: create`))
     );
   }
 

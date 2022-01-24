@@ -11,15 +11,16 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
   selector: 'list-component-ui',
   templateUrl: './list-component-ui.component.html',
   styles: [`
-    @media screen and (max-width: 600px) {
-      .panel-container {
+  @import 'layout/breakpoints';
+  @include screen('extra-small') {
+    .panel-container {
         display: block;
-      }
+    }
 
-      .filter-group {
+    .filter-group {
         width: 100%;
-      }
-    }`]
+    }
+  }`]
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
 

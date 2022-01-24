@@ -5,19 +5,23 @@ import { EUrl } from '@home/models/url.enum';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: EUrl.COMPONENT, pathMatch: 'full',
+    path: '', redirectTo: EUrl.CORE, pathMatch: 'full',
   },
   {
     path: EUrl.COMPONENT,
-    loadChildren: () => import('./components-ui/components-ui.module').then(m => m.ComponentsUiModule)
+    loadChildren: () => import('./components-ui/components-ui.module').then(({ ComponentsUiModule }) => ComponentsUiModule)
+  },
+  {
+    path: EUrl.CORE,
+    loadChildren: () => import('./core/core.module').then(({ CoreModule }) => CoreModule)
   },
   {
     path: EUrl.FUNCTION,
-    loadChildren: () => import('./functions/functions.module').then(m => m.FunctionsModule)
+    loadChildren: () => import('./functions/functions.module').then(({ FunctionsModule }) => FunctionsModule)
   },
   {
     path: '**',
-    loadChildren: () => import('./home/components/page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)
+    loadChildren: () => import('./home/components/page-not-found/page-not-found.module').then(({ PageNotFoundModule }) => PageNotFoundModule)
   }
 ];
 

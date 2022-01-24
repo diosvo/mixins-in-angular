@@ -1,41 +1,33 @@
 <mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-100">
-  <mat-toolbar-row>
-    <button
-      mat-button
+  <ng-container *ngFor="let item of navigation">
+    <custom-button
+      type="text"
       class="opacity-0.8"
       routerLinkActive="opacity-1"
-      [routerLink]="['/ui-components']"
+      [routerLink]="['/', item]"
     >
-      Components
-    </button>
-    <button
-      mat-button
-      class="opacity-0.8"
-      routerLinkActive="opacity-1"
-      [routerLink]="['/functions']"
-    >
-      Functions
-    </button>
-    <div class="flex-auto"></div>
-    <a
-      title="Login"
-      mat-icon-button
-      *ngIf="(authService.isLoggedIn | async) === false"
-      class="text-white"
-      data-toggle="tooltip"
-      (click)="openLoginDialog()"
-    >
-      <mat-icon>public</mat-icon>
-    </a>
-    <a
-      title="Logged In"
-      mat-icon-button
-      *ngIf="authService.isLoggedIn | async"
-      class="text-white"
-      data-toggle="tooltip"
-      (click)="openLogoutDialog()"
-    >
-      <mat-icon>vpn_lock</mat-icon>
-    </a>
-  </mat-toolbar-row>
+      {{ item | titlecase }}
+    </custom-button>
+  </ng-container>
+  <div class="flex-auto"></div>
+  <a
+    title="Login"
+    mat-icon-button
+    *ngIf="(authService.isLoggedIn$ | async) === false"
+    class="text-white"
+    data-toggle="tooltip"
+    (click)="openLoginDialog()"
+  >
+    <mat-icon>public</mat-icon>
+  </a>
+  <a
+    title="Logged In"
+    mat-icon-button
+    *ngIf="authService.isLoggedIn$ | async"
+    class="text-white"
+    data-toggle="tooltip"
+    (click)="openLogoutDialog()"
+  >
+    <mat-icon>vpn_lock</mat-icon>
+  </a>
 </mat-toolbar>

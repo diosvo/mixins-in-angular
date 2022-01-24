@@ -1,0 +1,12 @@
+[
+  {
+    "groupName": "algorithm",
+    "groupDetails": [
+      {
+        "name": "Base Algorithms",
+        "route": "base-algorithms",
+        "description": "Learning basic concept of algorithms"
+      }
+    ]
+  }
+]

@@ -9,7 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AuthModule } from '@auth/auth.module';
 import { CardItemModule } from '@home/components/card-item/card-item.component.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ComponentsUiRoutingModule } from './components-ui-routing.module';
@@ -24,7 +23,6 @@ import { ListComponentUiComponent } from './list-component-ui.component';
     ComponentsUiRoutingModule,
     ReactiveFormsModule,
 
-    AuthModule,
     AlertModule,
     CardItemModule,
 

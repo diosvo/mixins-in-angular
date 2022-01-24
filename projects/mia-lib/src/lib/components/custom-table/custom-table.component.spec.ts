@@ -51,29 +51,58 @@ describe('CustomTableComponent', () => {
   });
 
   describe('ngOnChanges() to detect data changed', () => {
-    beforeEach(() => jest.spyOn(component as any, 'getData'));
+    describe('data source', () => {
+      beforeEach(() => jest.spyOn(component as any, 'getData'));
 
-    test('should returns empty when data does NOT change', () => {
-      const changes = {
-        data: {
-          currentValue: undefined
-        },
-      } as any;
-      component.ngOnChanges(changes);
-      expect(component['getData']).not.toHaveBeenCalled();
+      test('should returns empty when data does NOT change', () => {
+        const changes = {
+          data: {
+            currentValue: undefined
+          },
+        } as any;
+        component.ngOnChanges(changes);
+        expect(component['getData']).not.toHaveBeenCalled();
+      });
+
+      test('should redefined data when data changed', () => {
+        component.data = of([]);
+        const changes = {
+          data: {
+            currentValue: of([])
+          },
+        } as any;
+
+        component.ngOnChanges(changes);
+        expect(component['getData']).toHaveBeenCalled();
+      });
     });
 
-    test('should redefined data when data changed', () => {
-      component.data = of([]);
-      const changes = {
-        data: {
-          currentValue: of([])
-        },
-      } as any;
+    describe('pageSizeOptions ', () => {
+      beforeEach(() => jest.spyOn(component as any, 'getData'));
 
-      component.ngOnChanges(changes);
-      expect(component['getData']).toHaveBeenCalled();
+      test('should returns default values when pageSizeOptions does NOT change', () => {
+        const changes = {
+          pageSizeOptions: {
+            currentValue: undefined
+          },
+        } as any;
+        component.ngOnChanges(changes);
+        expect(component.pageSizeOptions).toEqual([5, 10, 20]);
+      });
+
+      test('should redefined pageSizeOptions and call the first option when pageSizeOptions changed', () => {
+        component.data = of([]);
+        const changes = {
+          pageSizeOptions: {
+            currentValue: [5, 10]
+          },
+        } as any;
+        component.ngOnChanges(changes);
+        expect(component.pageSize).toEqual(5);
+      });
     });
+
+
   });
 
   test('ngOnInit()', () => {

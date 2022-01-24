@@ -38,7 +38,10 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() pageable: boolean = true;
   @Input() showFirstLastButtons: boolean = false;
-  @ViewChild(MatPaginator) private readonly paginator: MatPaginator;
+  @ViewChild(MatPaginator) private paginator: MatPaginator;
+  @ViewChild(MatPaginator) private set matPaginator(paginator: MatPaginator) {
+    this.paginator = paginator;
+  }
 
   @Input() length: number;
   @Input() pageSize: number;
@@ -105,7 +108,13 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
       .subscribe((response: Array<T>) => {
         this.source = new MatTableDataSource<T>(response);
         this.source.sort = this.sort;
-        this.source.paginator = this.pageable ? this.paginator : null;
+
+        if (!this.pageable) {
+          this.source.paginator = null;
+        } else {
+          // length = calling data from API when page index changes
+          this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
+        }
       });
 
     this.selection = new SelectionModel<{}>(true, []);

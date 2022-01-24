@@ -31,11 +31,6 @@
         "name": "Navbar Interaction",
         "route": "navbar",
         "description": "ngClass, ngStyle, GSAP"
-      },
-      {
-        "name": "Nested Menu",
-        "route": "nested-menu",
-        "description": "Nested menu with dynamic data"
       }
     ]
   },

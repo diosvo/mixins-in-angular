@@ -102,20 +102,10 @@ describe('ListComponentUiComponent', () => {
     });
   });
 
-  test('cleanQuery()', () => {
-    jest.spyOn(component.query, 'setValue');
-    component.cleanQuery();
-    expect(component.query.setValue).toBeCalledWith('');
-  });
-
   test('cleanFilters()', () => {
-    jest.spyOn(component, 'cleanQuery');
-    jest.spyOn(component.group, 'setValue');
-
+    jest.spyOn(component.componentsForm, 'setValue');
     component.cleanFilters();
-
-    expect(component.cleanQuery).toBeCalled();
-    expect(component.group.setValue).toBeCalledWith('all');
+    expect(component.componentsForm.setValue).toBeCalledWith({ query: '', group: 'all' });
   });
 
   describe('clearAllIconActive()', () => {

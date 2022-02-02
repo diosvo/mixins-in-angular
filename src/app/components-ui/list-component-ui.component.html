@@ -35,15 +35,12 @@
             [formGroup]="componentsForm"
             class="panel-container d-flex gap-1"
           >
-            <mat-form-field class="filter-group">
-              <mat-label>Components</mat-label>
-              <mat-select formControlName="group">
-                <mat-option value="all" selected>All</mat-option>
-                <mat-option *ngFor="let group of groupList" [value]="group">
-                  {{ group | titlecase }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <custom-select
+              [items]="groupList"
+              placeholder="Group"
+              formControlName="group"
+              searchPlaceholder="Find the group..."
+            ></custom-select>
 
             <mat-form-field class="width-100">
               <mat-label>What are you looking for today...</mat-label>

@@ -1,0 +1,56 @@
+<mat-form-field [appearance]="appearance">
+  <mat-label>{{ placeholder }}</mat-label>
+  <mat-select [sortComparator]="sortFunc" [formControl]="control">
+    <!-- Search input -->
+    <mat-optgroup class="d-block h-50">
+      <mat-form-field
+        class="width-100"
+        appearance="legacy"
+        [floatLabel]="'never'"
+      >
+        <input
+          matInput
+          [formControl]="filterControl"
+          [placeholder]="searchPlaceholder"
+        />
+        <button
+          matSuffix
+          mat-icon-button
+          *ngIf="filterControl.value !== ''"
+          (click)="filterControl.setValue('')"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-option [disabled]="true" [style.display]="'none'"></mat-option>
+    </mat-optgroup>
+
+    <!-- Options -->
+    <ng-container *ngIf="items | async as retrievedItems; else waitingResponse">
+      <ng-container
+        *ngIf="(bindLabelKey && bindValueKey) === 'default'; else bindKeyValue"
+      >
+        <mat-option *ngFor="let item of retrievedItems" [value]="item">
+          {{ item | titlecase }}
+        </mat-option>
+      </ng-container>
+
+      <ng-template #bindKeyValue>
+        <mat-option
+          *ngFor="let item of retrievedItems"
+          [value]="item[bindValueKey]"
+        >
+          {{ item[bindLabelKey] | titlecase }}
+        </mat-option>
+      </ng-template>
+
+      <ng-container *ngIf="retrievedItems.length === 0">
+        <div class="p-2">No items found.</div>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #waitingResponse>
+      <mat-option [disabled]="true">Please wait...</mat-option>
+    </ng-template>
+  </mat-select>
+</mat-form-field>

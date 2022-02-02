@@ -7,6 +7,11 @@ import { SearchService } from '@home/services/search.service';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
+const DEFAULT_FILTER = {
+  query: '',
+  group: 'all'
+};
+
 @Component({
   selector: 'list-component-ui',
   templateUrl: './list-component-ui.component.html',
@@ -23,8 +28,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   errorMessage$ = new Subject<string>();
 
   componentsForm: FormGroup = this.fb.group({
-    query: [''],
-    group: ['all']
+    query: [DEFAULT_FILTER.query],
+    group: [DEFAULT_FILTER.group]
   });
   groupList = Object.values(EComponentUI);
 
@@ -80,7 +85,6 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
           .filter(item => item.groupDetails.length > 0)
       ),
       tap(() => this.updateParams()),
-      takeUntil(this.destroyed$),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
@@ -99,13 +103,8 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
    * @description Support
    */
 
-  cleanQuery(): void {
-    this.query.setValue('');
-  }
-
   cleanFilters(): void {
-    this.cleanQuery();
-    this.group.setValue('all');
+    this.componentsForm.setValue(DEFAULT_FILTER);
   }
 
   clearAllIconActive(): boolean {
@@ -113,7 +112,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   }
 
   private get primitiveFilters(): boolean {
-    return this.query.value === '' && this.group.value === 'all';
+    return this.query.value === DEFAULT_FILTER.query && this.group.value === DEFAULT_FILTER.group;
   }
 
   get query(): FormControl {

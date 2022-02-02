@@ -17,15 +17,13 @@
             Represent distinct UI elements.
           </mat-panel-title>
           <mat-panel-description class="jc-flex-end">
-            <button
-              mat-icon-button
-              *ngIf="clearAllIconActive()"
+            <custom-button
+              type="icon"
               (click)="cleanFilters()"
-              matTooltip="Clear All Filters"
-              matTooltipPosition="left"
+              *ngIf="clearAllIconActive()"
             >
-              <mat-icon>clear_all</mat-icon>
-            </button>
+              clear_all
+            </custom-button>
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -37,24 +35,25 @@
           >
             <custom-select
               [items]="groupList"
-              placeholder="Group"
+              placeholder="All"
               formControlName="group"
               searchPlaceholder="Find the group..."
             ></custom-select>
 
-            <mat-form-field class="width-100">
-              <mat-label>What are you looking for today...</mat-label>
-              <input matInput autocomplete="off" formControlName="query" />
-              <button
-                matSuffix
-                mat-icon-button
+            <custom-input
+              class="flex-1"
+              formControlName="query"
+              label="What are you looking for today..."
+            >
+              <custom-button
+                suffix
+                type="icon"
                 *ngIf="query.value !== ''"
-                matTooltip="Clear"
-                (click)="cleanQuery()"
+                (click)="query.setValue('')"
               >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
+                close
+              </custom-button>
+            </custom-input>
           </form>
         </ng-template>
       </mat-expansion-panel>

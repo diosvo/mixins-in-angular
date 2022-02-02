@@ -16,10 +16,6 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
     .panel-container {
         display: block;
     }
-
-    .filter-group {
-        width: 100%;
-    }
   }`]
 })
 export class ListComponentUiComponent implements OnInit, OnDestroy {
@@ -30,7 +26,7 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
     query: [''],
     group: ['all']
   });
-  groupList = Object.values(EComponentUI).sort((prev, next) => prev < next ? -1 : 1);
+  groupList = Object.values(EComponentUI);
 
   filteredData$: Observable<Array<IGroupValue>>;
   private destroyed$: Subject<boolean> = new Subject();

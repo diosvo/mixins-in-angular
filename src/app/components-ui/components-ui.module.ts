@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CardItemModule } from '@home/components/card-item/card-item.component.module';
 import { AlertModule } from '@lib/components/alert/alert.module';
+import { CustomSelectModule } from '@lib/components/custom-select/custom-select.module';
 import { ComponentsUiRoutingModule } from './components-ui-routing.module';
 import { ListComponentUiComponent } from './list-component-ui.component';
 
@@ -25,6 +26,7 @@ import { ListComponentUiComponent } from './list-component-ui.component';
 
     AlertModule,
     CardItemModule,
+    CustomSelectModule,
 
     MatIconModule,
     MatInputModule,

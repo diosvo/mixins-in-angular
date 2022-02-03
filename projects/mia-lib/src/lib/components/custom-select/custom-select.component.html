@@ -27,22 +27,17 @@
 
     <!-- Options -->
     <ng-container *ngIf="items | async as retrievedItems; else waitingResponse">
-      <ng-container
-        *ngIf="(bindLabelKey && bindValueKey) === 'default'; else bindKeyValue"
-      >
-        <mat-option *ngFor="let item of retrievedItems" [value]="item">
-          {{ item | titlecase }}
-        </mat-option>
-      </ng-container>
+      <ng-container *ngFor="let item of retrievedItems">
+        <ng-container *ngIf="bindKeyValue; else basicTmpl">
+          <mat-option [value]="item[bindValueKey]">
+            {{ item[bindLabelKey] | titlecase }}
+          </mat-option>
+        </ng-container>
 
-      <ng-template #bindKeyValue>
-        <mat-option
-          *ngFor="let item of retrievedItems"
-          [value]="item[bindValueKey]"
-        >
-          {{ item[bindLabelKey] | titlecase }}
-        </mat-option>
-      </ng-template>
+        <ng-template #basicTmpl>
+          <mat-option [value]="item">{{ item | titlecase }}</mat-option>
+        </ng-template>
+      </ng-container>
 
       <ng-container *ngIf="retrievedItems.length === 0">
         <div class="p-2">No items found.</div>

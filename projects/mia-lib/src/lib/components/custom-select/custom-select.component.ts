@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { sortBy } from '@lib/utils/array-utils';
-import { debounceTime, Observable, of, startWith } from 'rxjs';
+import { debounceTime, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -16,7 +15,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
     }
   ]
 })
-export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
+export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges, OnDestroy {
   @Input() placeholder: string = 'Select';
   @Input() items: Array<T> | Observable<Array<T>> = [];
   @Output() selectedItem = new EventEmitter<string>();
@@ -26,11 +25,11 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() bindValueKey: string = 'default';
   @Input() searchPlaceholder: string = 'Search your item...';
 
-  @Input() sortByKey: string;
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   private isServerSide: boolean = true;
   private currentStaticItems: Array<T> = [];
+  private destroyed$ = new Subject<boolean>();
 
   constructor(injector: Injector) {
     super(injector);
@@ -41,7 +40,9 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
       this.currentStaticItems = this.items;
       this.items = of(this.items);
       this.isServerSide = false;
+      return;
     }
+    throw new Error('The items should be an array.');
   }
 
   ngOnInit(): void {
@@ -52,12 +53,11 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
     this.filterControl.valueChanges
       .pipe(
         startWith(''),
-        debounceTime(200)
+        debounceTime(200),
+        takeUntil(this.destroyed$)
       )
       .subscribe({
-        next: (value: string) => {
-          this.isServerSide ? this.selectedItem.emit(value) : this.filteredItems(value);
-        }
+        next: (value: string) => this.isServerSide ? this.selectedItem.emit(value) : this.filteredItems(value)
       });
   }
 
@@ -77,11 +77,15 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
     return (value as string).toLowerCase().replace(/\s/g, '');
   }
 
-  sortFunc(): number {
-    if (this.sortByKey) {
-      sortBy(this.currentStaticItems, this.sortByKey);
-      return;
+  sortFunc(prev?: T, next?: T): number {
+    if (this.bindLabelKey !== 'default') {
+      return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
     }
     return 1;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

@@ -21,8 +21,9 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Output() selectedItem = new EventEmitter<string>();
   filterControl: FormControl = new FormControl('');
 
-  @Input() bindLabelKey: string = 'default';
-  @Input() bindValueKey: string = 'default';
+  @Input() bindLabelKey: string;
+  @Input() bindValueKey: string;
+  @Input() bindKeyValue: boolean = false;
   @Input() searchPlaceholder: string = 'Search your item...';
 
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
@@ -71,14 +72,14 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   }
 
   private normalizeValue(value: unknown): string {
-    if (typeof value !== 'string') {
-      value = value[this.bindLabelKey];
+    if (this.bindKeyValue && typeof value !== 'string') {
+      return value = value[this.bindLabelKey];
     }
     return (value as string).toLowerCase().replace(/\s/g, '');
   }
 
   sortFunc(prev?: T, next?: T): number {
-    if (this.bindLabelKey !== 'default') {
+    if (this.bindKeyValue) {
       return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
     }
     return 1;

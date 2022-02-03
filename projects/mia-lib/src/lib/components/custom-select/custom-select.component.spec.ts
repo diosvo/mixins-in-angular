@@ -86,16 +86,17 @@ describe('CustomSelectComponent', () => {
       expect(component['normalizeValue'](value)).toBe(value);
     });
 
-    test('if the value is not type string', () => {
+    test('if the value is not type string (the item is an object)', () => {
+      component.bindKeyValue = true;
       component.bindLabelKey = 'name';
       expect(component['normalizeValue']({ [component.bindLabelKey]: value })).toBe(value);
     });
   });
 
   describe('sortFunc() to sort values from select options', () => {
-    describe('if the bindLabelKey is defined', () => {
-
+    describe('if the bindKeyValue is true', () => {
       beforeEach(() => {
+        component.bindKeyValue = true;
         component.bindLabelKey = 'name';
       });
 
@@ -112,7 +113,7 @@ describe('CustomSelectComponent', () => {
       });
     });
 
-    test('return ascending if the items does not include object schema', () => {
+    test('return ascending if the items does not include object schema (bindKeyValue is false as default)', () => {
       expect(component.sortFunc()).toBe(1);
     });
   });

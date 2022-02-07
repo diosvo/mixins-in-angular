@@ -1,16 +1,12 @@
 <mat-form-field [style]="style" [appearance]="appearance">
-  <mat-label *ngIf="label" [innerHTML]="label"></mat-label>
+  <mat-label *ngIf="label" [innerHTML]="label | titlecase"></mat-label>
   <input
     matInput
     [type]="type"
     autocomplete="off"
-    [(ngModel)]="value"
-    [pattern]="pattern"
-    [required]="required"
-    [disabled]="disabled"
     [readonly]="readonly"
+    [formControl]="control"
     [placeholder]="placeholder"
-    (blur)="onTouched()"
   />
   <span matSuffix>
     <ng-content select="[suffix]"></ng-content>

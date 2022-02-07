@@ -11,12 +11,7 @@
 
   <!-- Form -->
   <div class="w-400 bg-white bd-auto bs-light p-3 m-3">
-    <custom-input
-      label="Team Name"
-      type="text"
-      [required]="true"
-      formControlName="team_name"
-    >
+    <custom-input label="Team Name" formControlName="team_name">
       <small error *ngIf="unsavedForm.get('team_name').invalid">
         Required
       </small>

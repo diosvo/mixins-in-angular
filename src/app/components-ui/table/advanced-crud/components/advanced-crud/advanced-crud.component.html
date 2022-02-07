@@ -38,8 +38,6 @@
                 formControlName="categoryId"
                 [readonly]="!rows.value[idx].isEditable"
                 [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-                type="text"
-                [required]="true"
                 [style]="'width: 90%'"
                 #focusInput
               ></custom-input>
@@ -57,8 +55,6 @@
                 formControlName="categoryName"
                 [readonly]="!rows.value[idx].isEditable"
                 [appearance]="rows.value[idx].isEditable ? 'legacy' : 'none'"
-                type="text"
-                [required]="true"
                 [style]="'width: 90%'"
               ></custom-input>
             </td>

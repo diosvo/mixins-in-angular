@@ -14,6 +14,10 @@ const routes: Routes = [
     path: 'crud-users',
     loadChildren: () => import('./crud-users/crud-users.module').then(m => m.CrudUsersModule)
   },
+  {
+    path: 'view-article-page-state',
+    loadChildren: () => import('./view-article-page-state/view-article-page-state.module').then(m => m.ViewArticlePageStateModule)
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,15 @@
+<ng-container
+  *ngIf="errorMessage$ | async as message; else noError"
+></ng-container>
+
+<ng-template #noError>
+  <ng-container *ngIf="state$ | async as state">
+    <ng-container *ngIf="state.loading; else getData">
+      ...loading
+    </ng-container>
+
+    <ng-template #getData>
+      <pre>{{ state | json }}</pre>
+    </ng-template>
+  </ng-container>
+</ng-template>

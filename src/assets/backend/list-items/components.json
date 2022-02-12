@@ -51,6 +51,11 @@
         "name": "CRUD - List Users",
         "route": "crud-users",
         "description": "Basic concept"
+      },
+      {
+        "name": "View Article Page State",
+        "route": "view-article-page-state",
+        "description": "Demo Atom state"
       }
     ]
   },

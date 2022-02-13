@@ -1,7 +1,7 @@
 import { DEFAULT_PAGINATE_PARAMS, PaginateParams } from '@lib/models/table';
 
 interface Comment {
-  post_id: number;
+  postId: number;
   id: number;
   body: string;
 }
@@ -14,19 +14,21 @@ interface Article {
 interface ViewArticleState {
   id: number;
   article: Article;
+  articles: Array<Article>,
   comments: Array<Comment>;
   searchTerm: string;
   loading: boolean;
-  commentsPagination: PaginateParams;
+  paginate: PaginateParams;
 }
 
 const initialArticleState: ViewArticleState = {
   id: undefined,
   article: null,
+  articles: [],
   comments: [],
-  loading: true,
+  loading: false,
   searchTerm: '',
-  commentsPagination: DEFAULT_PAGINATE_PARAMS
+  paginate: DEFAULT_PAGINATE_PARAMS
 };
 
 export { Comment, Article, PaginateParams, ViewArticleState, initialArticleState };

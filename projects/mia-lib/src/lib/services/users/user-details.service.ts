@@ -68,7 +68,7 @@ export class UserDetailsService implements OnDestroy {
   update(user: User): Observable<User> {
     return this.http.put<Required<User>>(user_id_endpoint(user.id), user).pipe(
       tap((data: User) => this._user$.next(data)),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: create`))
+      catchError(this.handle.errorHandler(`${this.constructor.name}: update`))
     );
   }
 

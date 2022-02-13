@@ -5,7 +5,7 @@ import { EUrl } from '@home/models/url.enum';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: EUrl.CORE, pathMatch: 'full',
+    path: '', redirectTo: EUrl.COMPONENT, pathMatch: 'full',
   },
   {
     path: EUrl.COMPONENT,

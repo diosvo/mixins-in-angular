@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { environment } from '@env/environment';
-import { DEFAULT_PAGINATE_PARAMS } from '@lib/models/table';
+import { concatQueries, DEFAULT_PAGINATE_PARAMS, Sorting } from '@lib/models/table';
 import { StateAtom } from '@lib/services/atom/atom.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, finalize, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
 import { Article, Comment, initialArticleState, PaginateParams, ViewArticleState } from '../models/article.model';
@@ -14,20 +14,22 @@ export class ViewArticleStateService {
 
   private id: StateAtom<number> = new StateAtom(initialArticleState.id);
   private article: StateAtom<Article> = new StateAtom(initialArticleState.article);
+  private articles: StateAtom<Array<Article>> = new StateAtom(initialArticleState.articles);
   private comments: StateAtom<Array<Comment>> = new StateAtom(initialArticleState.comments);
   private loading: StateAtom<boolean> = new StateAtom(initialArticleState.loading);
   private searchTerm: StateAtom<string> = new StateAtom(initialArticleState.searchTerm);
-  private commentsPagination: StateAtom<PaginateParams> = new StateAtom(initialArticleState.commentsPagination);
+  private paginate: StateAtom<PaginateParams> = new StateAtom(initialArticleState.paginate);
 
   readonly state$: Observable<ViewArticleState> = combineLatest([
     this.id.value$,
     this.article.value$,
+    this.articles.value$,
     this.comments.value$,
     this.loading.value$,
     this.searchTerm.value$,
-    this.commentsPagination.value$
+    this.paginate.value$
   ]).pipe(
-    map(([id, article, comments, loading, searchTerm, commentsPagination]): ViewArticleState => ({ id, article, comments, loading, searchTerm, commentsPagination })),
+    map(([id, article, articles, comments, loading, searchTerm, paginate]): ViewArticleState => ({ id, article, articles, comments, loading, searchTerm, paginate })),
     tap((state: ViewArticleState) => this.currentState = state)
   );
 
@@ -51,14 +53,15 @@ export class ViewArticleStateService {
     this.id.update(id);
   }
 
-  updateStateFromQueryParams(params: { query, start, limit, sort }): void {
+  updateStateFromQueryParams(params: { query, start, limit, order, sort }): void {
     const searchTerm = params?.query || '';
     const limit = +params?.limit || DEFAULT_PAGINATE_PARAMS.limit;
     const start = +params?.start || DEFAULT_PAGINATE_PARAMS.start;
+    const order = params?.order || DEFAULT_PAGINATE_PARAMS.order;
     const sort = params?.sort || DEFAULT_PAGINATE_PARAMS.sort;
 
     this.searchTerm.update(searchTerm);
-    this.updatePagination(start, limit, sort);
+    this.updatePagination(start, limit, order, sort);
   }
 
   getStateSnapshot(): ViewArticleState {
@@ -68,10 +71,11 @@ export class ViewArticleStateService {
   resetState(): void {
     this.id.reset();
     this.article.reset();
+    this.articles.reset();
     this.comments.reset();
     this.loading.reset();
     this.searchTerm.reset();
-    this.commentsPagination.reset();
+    this.paginate.reset();
   }
 
   /**
@@ -95,39 +99,54 @@ export class ViewArticleStateService {
       });
 
     combineLatest([
-      this.id.value$, this.searchTerm.value$, this.commentsPagination.value$
+      this.id.value$, this.searchTerm.value$, this.paginate.value$
     ])
       .pipe(
         debounceTime(200),
         tap(() => this.loading.update(true)),
-        switchMap(([id, searchTerm, params]): Observable<Array<Comment>> =>
-          this.findCommentsByArticle(id, searchTerm, params).pipe(
-            finalize(() => this.loading.update(false))
-          )
+        switchMap(([id, searchTerm, params]): Observable<Array<Comment | Article>> =>
+          id
+            ? this.findCommentsByArticle(id, searchTerm, params)
+            : this.getArticles(params)
         ),
         shareReplay()
       )
       .subscribe({
-        next: (comments: Array<Comment>) => this.comments.update(comments)
+        next: (response: Array<Article | Comment>) => {
+          this.id.getValue()
+            ? this.comments.update(response as Array<Comment>)
+            : this.articles.update(response as Array<Article>);
+          this.loading.update(false);
+        }
       });
   }
 
   private updatePagination(
     start: number = DEFAULT_PAGINATE_PARAMS.start,
     limit: number = DEFAULT_PAGINATE_PARAMS.limit,
-    sort: string = DEFAULT_PAGINATE_PARAMS.sort,
+    order: Sorting = DEFAULT_PAGINATE_PARAMS.order,
+    sort: string = DEFAULT_PAGINATE_PARAMS.sort
   ): void {
-    this.commentsPagination.update({ start, limit, sort });
+    this.paginate.update({ start, limit, order, sort });
+  }
+
+  /**
+   * @returns the filtered Articles by user id
+  */
+
+  private getArticles(params: PaginateParams, userId?: number): Observable<Array<Article>> {
+    const queries = concatQueries(params);
+    const merged = userId ? queries.concat(`userId=${userId}`) : queries;
+    return this.http.get<Array<Article>>(this.postUrl + merged);
   }
 
   /**
    * @param id article id
    * @returns get Article by id
-   * 
   */
 
   private findById(id: number): Observable<Article> {
-    return this.http.get<Article>(environment.jsonPlaceHolderUrl + 'posts/' + id);
+    return this.http.get<Article>(this.postUrl + id);
   }
 
   /**
@@ -140,5 +159,9 @@ export class ViewArticleStateService {
     return this.http.get<Array<Comment>>(
       environment.jsonPlaceHolderUrl + `comments?postId=${id}&_start=${params.start}&_limit=${params.limit}`
     );
+  }
+
+  private get postUrl(): string {
+    return environment.jsonPlaceHolderUrl + 'posts/';
   }
 }

@@ -40,9 +40,6 @@ export class ViewArticlePageStateComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (id: string) => this.service.updateArticleId(Number(id))
       });
-
-    // remove this line when the logic is set.
-    this.service.updateArticleId(1);
   }
 
   private getState(): void {

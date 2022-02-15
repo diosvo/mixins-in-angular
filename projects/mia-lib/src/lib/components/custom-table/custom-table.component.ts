@@ -30,7 +30,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() data!: Observable<Array<T>>;
+  @Input() data!: Observable<Array<T>> | Array<T>;
   @Input() columns: Array<TableColumn> = [];
   @Input() style: Record<string, string>;
 
@@ -51,7 +51,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Sort */
 
-  @Input() defaultSortColumn: string;
+  @Input() defaultSortColumn: string = 'id';
   @Input() defaultSortDirection: SortDirection = 'asc';
   @ViewChild(MatSort) private readonly sort: MatSort;
 
@@ -100,22 +100,33 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
+
+    if (Array.isArray(this.data)) {
+      this.source.sort = this.sort;
+      this.source.paginator = this.paginator;
+    }
   }
 
   private getData(): void {
-    this.data
-      .pipe(takeUntil(this._destroyed$))
-      .subscribe((response: Array<T>) => {
-        this.source = new MatTableDataSource<T>(response);
-        this.source.sort = this.sort;
+    if (Array.isArray(this.data)) {
+      this.source = new MatTableDataSource(this.data);
+    } else {
+      this.data
+        .pipe(takeUntil(this._destroyed$))
+        .subscribe({
+          next: (response: Array<T>) => {
+            this.source = new MatTableDataSource<T>(response);
+            this.source.sort = this.sort;
 
-        if (!this.pageable) {
-          this.source.paginator = null;
-        } else {
-          // length = calling data from API when page index changes
-          this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
-        }
-      });
+            if (!this.pageable) {
+              this.source.paginator = null;
+            } else {
+              // length = calling data from API when page index changes
+              this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
+            }
+          }
+        });
+    }
 
     this.selection = new SelectionModel<{}>(true, []);
   }

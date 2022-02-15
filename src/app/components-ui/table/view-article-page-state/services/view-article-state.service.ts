@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { SortDirection } from '@angular/material/sort';
 import { environment } from '@env/environment';
-import { concatQueries, DEFAULT_PAGINATE_PARAMS, Sorting } from '@lib/models/table';
+import { concatQueries, DEFAULT_PAGINATE_PARAMS } from '@lib/models/table';
 import { StateAtom } from '@lib/services/atom/atom.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, finalize, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
 import { Article, Comment, initialArticleState, PaginateParams, ViewArticleState } from '../models/article.model';
@@ -124,7 +125,7 @@ export class ViewArticleStateService {
   private updatePagination(
     start: number = DEFAULT_PAGINATE_PARAMS.start,
     limit: number = DEFAULT_PAGINATE_PARAMS.limit,
-    order: Sorting = DEFAULT_PAGINATE_PARAMS.order,
+    order: SortDirection = DEFAULT_PAGINATE_PARAMS.order,
     sort: string = DEFAULT_PAGINATE_PARAMS.sort
   ): void {
     this.paginate.update({ start, limit, order, sort });

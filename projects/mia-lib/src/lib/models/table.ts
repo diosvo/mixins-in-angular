@@ -1,14 +1,14 @@
-declare type Sorting = 'asc' | 'desc';
+import { SortDirection } from '@angular/material/sort';
 
 interface PaginateParams {
   limit: number;
   start: number;
   sort: string; // depended on key
-  order: Sorting;
+  order: SortDirection;
 }
 
 const DEFAULT_PAGINATE_PARAMS: PaginateParams = {
-  limit: 10,
+  limit: 100,
   start: 0,
   sort: 'id',
   order: 'asc'
@@ -20,4 +20,4 @@ function concatQueries(params: PaginateParams): string {
   return params.order && params.sort ? queries.concat(sort) : queries;
 }
 
-export { Sorting, PaginateParams, DEFAULT_PAGINATE_PARAMS, concatQueries };
+export { PaginateParams, DEFAULT_PAGINATE_PARAMS, concatQueries };

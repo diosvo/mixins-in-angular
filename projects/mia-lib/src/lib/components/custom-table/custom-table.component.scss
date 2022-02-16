@@ -48,8 +48,8 @@ $-bd-radius: calc($-unit-px * 2);
     // Cell
 
     mat-cell {
-      height : calc($-unit-px * 21);
-      padding: $-cell-pd;
+      min-height: calc($-unit-px * 21);
+      padding   : $-cell-pd;
     }
 
     // Text that is longer than the column width is truncated with an ellipsis

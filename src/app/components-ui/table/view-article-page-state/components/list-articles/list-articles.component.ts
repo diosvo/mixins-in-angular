@@ -18,8 +18,8 @@ export class ListArticlesComponent implements OnInit {
   columns: Array<TableColumn> = [
     { key: 'userId', flex: '5%', header: 'user id' },
     { key: 'id', flex: '5%' },
-    { key: 'title', flex: '20%' },
-    { key: 'body', flex: '60%' },
+    { key: 'title', flex: '20%', tooltip: true },
+    { key: 'body', flex: '60%', tooltip: true },
     { key: 'actions', disableSorting: true, flex: '10%' },
   ];
 

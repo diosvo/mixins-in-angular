@@ -14,6 +14,7 @@ export interface TableColumn {
   key: string;
   flex?: string;
   header?: string;
+  tooltip?: boolean;
   disableSorting?: boolean;
 }
 

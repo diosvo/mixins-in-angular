@@ -2,8 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, filter, map, Observable, Subject, takeUntil, throwError } from 'rxjs';
-import { ViewArticleState } from '../../models/article.model';
+import { PaginateParams, ViewArticleState } from '../../models/article.model';
 import { ViewArticleStateService } from '../../services/view-article-state.service';
+
+interface Params extends PaginateParams {
+  query: string;
+}
 
 @Component({
   selector: 'app-view-article-page-state',
@@ -55,7 +59,7 @@ export class ViewArticlePageStateComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (params: any) => this.service.updateStateFromQueryParams(params)
+        next: (params: Params) => this.service.updateStateFromQueryParams(params)
       });
   }
 

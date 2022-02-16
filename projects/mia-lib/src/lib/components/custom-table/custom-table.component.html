@@ -64,6 +64,7 @@
           <mat-cell
             *matCellDef="let row; let idx = index"
             [style.flex]="column.flex"
+            [matTooltip]="column.tooltip ? row[column.key] : null"
           >
             <span class="truncate-cell">
               <ng-container

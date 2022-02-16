@@ -5,11 +5,30 @@
 <ng-template #noError>
   <ng-container *ngIf="state$ | async as state">
     <ng-container *ngIf="state.loading; else getData">
-      ...loading
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </ng-container>
 
     <ng-template #getData>
-      <pre>{{ state | json }}</pre>
+      <div class="bg-white bd-auto p-2 m-2">
+        <!-- Header -->
+        <div>
+          <div class="d-flex jc-between ai-center">
+            <h2 [style.margin.px]="0">
+              <span class="text-error mr-1">#{{ state.article.id }}</span>
+              <span>{{ state.article.title }}</span>
+            </h2>
+            <custom-button type="icon" [routerLink]="['..']">
+              list_alt
+            </custom-button>
+          </div>
+          <small class="text-secondary">{{ state.article.body }}</small>
+        </div>
+
+        <hr />
+
+        <!-- Comments -->
+        <pre class="width-100">{{ state.comments | json }}</pre>
+      </div>
     </ng-template>
   </ng-container>
 </ng-template>

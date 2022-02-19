@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { FilterPipeModule } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
@@ -23,6 +24,7 @@ import { AutocompleteDirective } from './utils/autocomplete.directive';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
       {
         path: '',
@@ -34,7 +36,7 @@ import { AutocompleteDirective } from './utils/autocomplete.directive';
     ]),
 
     FilterPipeModule,
-    ReactiveFormsModule
+    MatProgressSpinnerModule
   ]
 })
 export class LookupUsersModule { }

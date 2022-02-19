@@ -1,7 +1,7 @@
 <div class="bg-white bd-auto p-2 m-2">
   <input
-    class="input is-medium"
-    placeholder="Search..."
+    class="bd-light bd-auto p-1"
+    placeholder="Search"
     [formControl]="control"
     [appAutocomplete]="autocomplete"
   />
@@ -22,7 +22,11 @@
         </ng-container>
       </ng-container>
 
-      <ng-template #loading> ...loading </ng-template>
+      <ng-template #loading>
+        <div class="d-flex jc-center ai-center">
+          <mat-spinner [diameter]="50"></mat-spinner>
+        </div>
+      </ng-template>
     </ng-template>
   </app-autocomplete>
 </div>

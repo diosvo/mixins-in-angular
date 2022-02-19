@@ -3,8 +3,7 @@ import { fromEvent, mapTo, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-select-option',
-  templateUrl: './select-option.component.html',
-  styleUrls: ['./select-option.component.scss']
+  templateUrl: './select-option.component.html'
 })
 export class SelectOptionComponent implements OnInit {
 

@@ -1,0 +1,28 @@
+<div class="bg-white bd-auto p-2 m-2">
+  <input
+    class="input is-medium"
+    placeholder="Search..."
+    [formControl]="control"
+    [appAutocomplete]="autocomplete"
+  />
+
+  <app-autocomplete #autocomplete="appAutocomplete">
+    <ng-template appAutocompleteContent>
+      <ng-container *ngIf="users$ | async as users; else loading">
+        <ng-container *ngIf="users | filter: control.value as result">
+          <app-select-option
+            *ngFor="let option of result"
+            [value]="option.username"
+          >
+            {{ option.name }}
+          </app-select-option>
+          <app-select-option class="no-result" *ngIf="!result.length">
+            No result
+          </app-select-option>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #loading> ...loading </ng-template>
+    </ng-template>
+  </app-autocomplete>
+</div>

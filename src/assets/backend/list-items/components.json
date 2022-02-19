@@ -66,6 +66,11 @@
         "name": "Unsaved Form Demo",
         "route": "unsaved-form",
         "description": "Unsaved Changes Guard with given value, CanActivate and CanLoad Guard"
+      },
+      {
+        "name": "Lookup Users",
+        "route": "lookup-users",
+        "description": "Find user and fetch the result into table (Autocomplete)"
       }
     ]
   }

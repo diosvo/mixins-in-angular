@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
-import { fromEvent, mapTo, Observable } from 'rxjs';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { fromEvent, mapTo, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-select-option',
@@ -8,13 +8,15 @@ import { fromEvent, mapTo, Observable } from 'rxjs';
 export class SelectOptionComponent implements OnInit {
 
   @Input() value: string;
+  @Output() emitValue = new EventEmitter<string>();
   click$: Observable<string>;
 
   constructor(private readonly host: ElementRef) { }
 
   ngOnInit(): void {
     this.click$ = fromEvent(this.host.nativeElement, 'click').pipe(
-      mapTo(this.value)
+      mapTo(this.value),
+      tap(() => this.emitValue.emit(this.value))
     );
   }
 }

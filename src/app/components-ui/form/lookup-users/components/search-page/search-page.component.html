@@ -13,6 +13,7 @@
           <app-select-option
             *ngFor="let option of result"
             [value]="option.username"
+            (emitValue)="stateChanges(option.id)"
           >
             {{ option.name }}
           </app-select-option>
@@ -30,3 +31,5 @@
     </ng-template>
   </app-autocomplete>
 </div>
+
+<lookup-users-data-table [users]="imported$"></lookup-users-data-table>

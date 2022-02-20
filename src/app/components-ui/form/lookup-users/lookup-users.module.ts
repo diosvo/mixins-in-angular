@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
+import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { FilterPipeModule } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { DataTableComponent } from './components/data-table/data-table.component';
@@ -36,6 +37,7 @@ import { AutocompleteDirective } from './utils/autocomplete.directive';
     ]),
 
     FilterPipeModule,
+    CustomTableModule,
     MatProgressSpinnerModule
   ]
 })

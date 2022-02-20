@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, shareReplay } from 'rxjs';
+import { catchError, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { HandleService } from '../base/handle.service';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
@@ -9,6 +9,8 @@ import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 })
 
 export class UsersService {
+
+  private imported$: Observable<Array<number>>;
 
   constructor(
     private readonly http: HttpClient,
@@ -25,6 +27,20 @@ export class UsersService {
   delete(id: number): Observable<User> {
     return this.http.delete<Required<User>>(user_id_endpoint(id)).pipe(
       catchError(this.handle.errorHandler(`${this.constructor.name}: delete`))
+    );
+  }
+
+  lookup(data: Observable<Array<User>>, imported: Observable<number[]>): Observable<Array<User>> {
+    this.imported$ = imported;
+    return imported.pipe(
+      startWith([]),
+      switchMap((ids: number[]) =>
+        data.pipe(
+          map((data: Array<User>) =>
+            data.filter((item: User) => ids.includes(item.id as number))
+          )
+        )
+      )
     );
   }
 }

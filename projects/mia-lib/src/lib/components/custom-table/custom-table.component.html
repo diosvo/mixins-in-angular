@@ -1,4 +1,4 @@
-<main class="bg-white m-2 p-2">
+<main class="bg-white bd-auto m-2 p-2">
   <ng-content select="[header]"></ng-content>
   <ng-content select="[filters]"></ng-content>
 
@@ -86,9 +86,7 @@
 
       <!-- Loading spinner -->
       <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">
-          <mat-spinner [diameter]="50"></mat-spinner>
-        </div>
+        <div class="d-flex jc-center ai-center my-2">No data found</div>
       </div>
     </mat-table>
   </div>

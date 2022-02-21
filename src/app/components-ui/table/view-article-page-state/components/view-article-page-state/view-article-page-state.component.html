@@ -9,9 +9,9 @@
     </ng-container>
 
     <ng-template #getData>
-      <div class="bg-white bd-auto p-2 m-2">
+      <div class="m-2">
         <!-- Header -->
-        <div>
+        <div class="bg-white bd-auto p-2 mb-2">
           <div class="d-flex jc-between ai-center">
             <h2 [style.margin.px]="0">
               <span class="text-error mr-1">#{{ state.article.id }}</span>
@@ -24,10 +24,22 @@
           <small class="text-secondary">{{ state.article.body }}</small>
         </div>
 
-        <hr />
-
-        <!-- Comments -->
-        <pre class="width-100">{{ state.comments | json }}</pre>
+        <div class="bg-white bd-auto">
+          <ng-container *ngFor="let item of state.comments">
+            <div class="d-flex px-2 py-1">
+              <div class="text-deco-underline mr-2">
+                {{ item.id }}
+              </div>
+              <div>
+                <div>{{ item.email | lowercase }}</div>
+                <div class="text-secondary mt-1">
+                  💬
+                  <span class="ml-1">{{ item.body }}</span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
       </div>
     </ng-template>
   </ng-container>

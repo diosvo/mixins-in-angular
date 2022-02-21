@@ -92,11 +92,12 @@ export class AutocompleteDirective implements OnInit, OnDestroy {
   }
 
   private closeDropdown(): void {
-    this.overlayRef.detach();
+    this.overlayRef?.detach();
     this.overlayRef = null;
   }
 
   ngOnDestroy(): void {
+    this.closeDropdown();
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }

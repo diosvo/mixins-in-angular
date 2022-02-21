@@ -1,9 +1,13 @@
-<div class="bg-white bd-auto p-2 m-2">
+<div class="bg-white bd-auto w-400 p-2 m-2">
+  <small class="d-block text-secondary mb-1">
+    Autocomplete search with custom directive and portal CDK.
+  </small>
+
   <input
-    class="bd-light bd-auto p-1"
-    placeholder="Search"
     [formControl]="control"
     [appAutocomplete]="autocomplete"
+    placeholder="Lookup users..."
+    class="bd-light bd-auto width-100 p-1"
   />
 
   <app-autocomplete #autocomplete="appAutocomplete">
@@ -17,7 +21,7 @@
           >
             {{ option.name }}
           </app-select-option>
-          <app-select-option class="no-result" *ngIf="!result.length">
+          <app-select-option *ngIf="!result.length">
             No result
           </app-select-option>
         </ng-container>
@@ -30,6 +34,6 @@
       </ng-template>
     </ng-template>
   </app-autocomplete>
-</div>
 
-<lookup-users-data-table [users]="imported$"></lookup-users-data-table>
+  <div *ngIf="control.value" class="mt-1">Selected: {{ control.value }}</div>
+</div>

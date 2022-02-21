@@ -6,7 +6,13 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-search-page',
-  templateUrl: './search-page.component.html'
+  templateUrl: './search-page.component.html',
+  styles: [`
+    :host {
+      display: flex;
+      justify-content: center;
+    }
+  `]
 })
 export class SearchPageComponent implements OnInit {
 
@@ -26,6 +32,6 @@ export class SearchPageComponent implements OnInit {
   }
 
   stateChanges(id: number): void {
-    this.selected.setValue([...this.selected.value, id]);
+    this.selected.setValue([...this.control.value, id]);
   }
 }

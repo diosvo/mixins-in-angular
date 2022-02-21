@@ -7,7 +7,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
@@ -31,7 +31,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() data!: Observable<Array<T>> | Array<T>;
+  @Input() data!: Array<T>;
   @Input() columns: Array<TableColumn> = [];
   @Input() style: Record<string, string>;
 
@@ -87,7 +87,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data && changes.data.currentValue) {
-      this.getData();
+      this.source = new MatTableDataSource(changes.data.currentValue);
+      this.source.sort = this.sort;
     };
 
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
@@ -100,33 +101,16 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   ngAfterViewInit(): void {
+    this.source = new MatTableDataSource(this.data);
+
     this.configColumnTemplates();
 
-    if (Array.isArray(this.data)) {
-      this.source.sort = this.sort;
-      this.source.paginator = this.paginator;
-    }
-  }
-
-  private getData(): void {
-    if (Array.isArray(this.data)) {
-      this.source = new MatTableDataSource(this.data);
+    this.source.sort = this.sort;
+    if (!this.pageable) {
+      this.source.paginator = null;
     } else {
-      this.data
-        .pipe(takeUntil(this._destroyed$))
-        .subscribe({
-          next: (response: Array<T>) => {
-            this.source = new MatTableDataSource<T>(response);
-            this.source.sort = this.sort;
-
-            if (!this.pageable) {
-              this.source.paginator = null;
-            } else {
-              // length = calling data from API when page index changes
-              this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
-            }
-          }
-        });
+      // length = calling data from API when page index changes
+      this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
     }
 
     this.selection = new SelectionModel<{}>(true, []);

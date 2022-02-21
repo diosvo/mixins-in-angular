@@ -55,7 +55,7 @@
             disableClear
             mat-sort-header
             [style.flex]="column.flex"
-            [disabled]="column.disableSorting"
+            [disabled]="column.disableSorting || column.key === 'actions'"
           >
             <span class="truncate-cell">
               {{ column?.header || column?.key | uppercase }}

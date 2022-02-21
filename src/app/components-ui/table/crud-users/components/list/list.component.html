@@ -10,7 +10,8 @@
   ></mat-progress-bar>
 
   <custom-table
-    [data]="users$"
+    *ngIf="users$ | async as data"
+    [data]="data"
     [columns]="columns"
     [defaultSortColumn]="'name'"
   >

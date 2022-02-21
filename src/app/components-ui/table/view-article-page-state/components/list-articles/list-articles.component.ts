@@ -16,11 +16,11 @@ export class ListArticlesComponent implements OnInit {
   errorMessage$ = new Subject<string>();
 
   columns: Array<TableColumn> = [
-    { key: 'userId', flex: '5%', header: 'user id' },
-    { key: 'id', flex: '5%' },
-    { key: 'title', flex: '20%', tooltip: true },
-    { key: 'body', flex: '60%', tooltip: true },
-    { key: 'actions', disableSorting: true, flex: '10%' },
+    { key: 'userId', flex: '10%', header: 'user id' },
+    { key: 'id', flex: '10%' },
+    { key: 'title', flex: '25%' },
+    { key: 'body', flex: '45%' },
+    { key: 'actions', flex: '10%' },
   ];
 
   constructor(

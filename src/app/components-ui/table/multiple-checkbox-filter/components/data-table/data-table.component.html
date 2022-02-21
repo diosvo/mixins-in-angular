@@ -4,7 +4,8 @@
 
 <ng-template #noError>
   <custom-table
-    [data]="issues$"
+    *ngIf="issues$ | async as data; else loadingTmpl"
+    [data]="data"
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
     [length]="resultsLength"
@@ -35,4 +36,8 @@
       </ng-template>
     </custom-column>
   </custom-table>
+
+  <ng-template #loadingTmpl>
+    <div class="d-flex jc-center my-2">...loading</div>
+  </ng-template>
 </ng-template>

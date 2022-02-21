@@ -65,7 +65,6 @@ describe('CustomTableComponent', () => {
       });
 
       test('should redefined data when data changed', () => {
-        component.data = of([]);
         const changes = {
           data: {
             currentValue: of([])
@@ -91,7 +90,6 @@ describe('CustomTableComponent', () => {
       });
 
       test('should redefined pageSizeOptions and call the first option when pageSizeOptions changed', () => {
-        component.data = of([]);
         const changes = {
           pageSizeOptions: {
             currentValue: [5, 10]
@@ -115,24 +113,6 @@ describe('CustomTableComponent', () => {
     jest.spyOn(component as any, 'configColumnTemplates');
     component.ngAfterViewInit();
     expect(component['configColumnTemplates']).toBeCalled();
-  });
-
-  describe('getData() to define source with sorting and', () => {
-    beforeEach(() => component.data = of([{ id: 1 }]));
-
-    afterEach(() => expect(component.source.sort).toEqual(component['sort']));
-
-    test('paginator as default options', () => {
-      component.data = of([{ id: 1 }]);
-      component['getData']();
-      expect(component.source.paginator).toEqual(component['paginator']);
-    });
-
-    test('hide paginator', () => {
-      component.pageable = false;
-      component['getData']();
-      expect(component.source.paginator).toBeNull();
-    });
   });
 
   describe('configDisplayColumns() to determine what columns will be shown when checkbox is', () => {

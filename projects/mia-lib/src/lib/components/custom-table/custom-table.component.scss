@@ -1,7 +1,7 @@
 @use 'palette';
 
 $-unit-px : 2px;
-$-cell-pd : 0 calc($-unit-px * 8);
+$-cell-pd : calc($-unit-px * 4) calc($-unit-px * 8);
 
 $-hover    : rgba(0, 0, 0, .04);
 $-bd-radius: calc($-unit-px * 2);
@@ -55,9 +55,14 @@ $-bd-radius: calc($-unit-px * 2);
     // Text that is longer than the column width is truncated with an ellipsis
 
     :where(mat-header-cell, mat-cell) .truncate-cell {
-      overflow     : hidden;
-      white-space  : nowrap;
       text-overflow: ellipsis;
+
+      display           : -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+
+      line-height: 1.5;
+      overflow   : hidden;
     }
 
     mat-row {
@@ -94,8 +99,10 @@ $-bd-radius: calc($-unit-px * 2);
 }
 
 @media screen and (max-width: 1200px) {
-  .custom-table mat-table {
-    min-width: 100%;
-    display  : inline-grid;
+  .custom-table {
+    mat-table {
+      min-width: 100%;
+      display  : inline-grid;
+    }
   }
 }

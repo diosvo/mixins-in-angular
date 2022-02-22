@@ -24,9 +24,9 @@
           <small class="text-secondary">{{ state.article.body }}</small>
         </div>
 
-        <div class="bg-white bd-auto">
-          <ng-container *ngFor="let item of state.comments">
-            <div class="d-flex px-2 py-1">
+        <div class="bg-white bd-auto p-2">
+          <ng-container *ngFor="let item of state.comments; let last = last">
+            <div class="d-flex" [class.mb-2]="!last">
               <div class="text-deco-underline mr-2">
                 {{ item.id }}
               </div>

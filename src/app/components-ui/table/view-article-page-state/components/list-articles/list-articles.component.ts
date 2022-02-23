@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { ViewArticleState } from '../../models/article.model';
@@ -14,6 +15,8 @@ export class ListArticlesComponent implements OnInit {
 
   state$: Observable<ViewArticleState>;
   errorMessage$ = new Subject<string>();
+
+  query = new FormControl('');
 
   columns: Array<TableColumn> = [
     { key: 'userId', flex: '10%', header: 'user id' },

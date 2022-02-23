@@ -9,10 +9,17 @@
     </ng-container>
 
     <ng-template #getData>
-      <custom-table [data]="state.articles" [columns]="columns">
+      <custom-table
+        [data]="state.articles | filter: query.value"
+        [columns]="columns"
+      >
         <div header class="d-flex ai-baseline jc-between">
           <h2>List Articles</h2>
           <custom-button [routerLink]="['create']">Create</custom-button>
+        </div>
+
+        <div filters>
+          <custom-input label="Search" [formControl]="query"></custom-input>
         </div>
 
         <custom-column columnName="actions">

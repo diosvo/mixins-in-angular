@@ -89,6 +89,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     if (changes.data && changes.data.currentValue) {
       this.source = new MatTableDataSource(changes.data.currentValue);
       this.source.sort = this.sort;
+      this.configPaginator();
     };
 
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
@@ -101,19 +102,20 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   ngAfterViewInit(): void {
-    this.source = new MatTableDataSource(this.data);
-
     this.configColumnTemplates();
 
-    this.source.sort = this.sort;
     if (!this.pageable) {
       this.source.paginator = null;
     } else {
       // length = calling data from API when page index changes
-      this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
+      this.configPaginator();
     }
 
     this.selection = new SelectionModel<{}>(true, []);
+  }
+
+  private configPaginator(): void {
+    this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
   }
 
   private configDisplayColumns(): void {

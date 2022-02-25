@@ -32,7 +32,10 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loading = true;
+
     this.users$ = this.userService.all().pipe(
+      finalize(() => this.loading = false),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return of(message);

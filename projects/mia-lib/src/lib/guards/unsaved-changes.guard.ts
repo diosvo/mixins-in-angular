@@ -19,7 +19,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
     if (!component.canDeactivate()) {
       const dialogRef = this.dialog.open(UnsavedChangesDialogComponent, {
-        width: '500px',
+        width: '400px',
         disableClose: true
       });
 

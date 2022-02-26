@@ -26,7 +26,7 @@ export class ToolbarComponent {
   openLoginDialog(): void {
     this.dialog
       .open(LoginComponent, {
-        width: '375px',
+        width: '400px',
         disableClose: true,
       })
       .afterClosed()
@@ -42,7 +42,7 @@ export class ToolbarComponent {
           body: 'Are you sure you want to logout?',
           btnClose: false
         },
-        width: '425px',
+        width: '400px',
         disableClose: true,
       })
       .afterClosed()

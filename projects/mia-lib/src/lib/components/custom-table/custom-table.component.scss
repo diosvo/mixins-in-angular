@@ -1,4 +1,5 @@
 @use 'palette';
+@import 'layout/breakpoints';
 
 $-unit-px : 2px;
 $-cell-pd : calc($-unit-px * 4) calc($-unit-px * 8);
@@ -9,7 +10,6 @@ $-bd-radius: calc($-unit-px * 2);
 .custom-table {
   display       : flex;
   flex-direction: column;
-  min-width     : 300px;
 
   border       : 1px solid palette.$shade;
   border-bottom: none;
@@ -98,11 +98,12 @@ $-bd-radius: calc($-unit-px * 2);
   border-bottom-right-radius: $-bd-radius;
 }
 
-@media screen and (max-width: 1200px) {
+@include screen('small') {
   .custom-table {
+    overflow: scroll;
+
     mat-table {
-      min-width: 100%;
-      display  : inline-grid;
+      min-width: 1024px;
     }
   }
 }

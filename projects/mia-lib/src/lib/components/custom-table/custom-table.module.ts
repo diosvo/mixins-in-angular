@@ -6,6 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SlugifyPipeModule } from '../../pipes/slugify.pipe';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 import { CustomTableComponent } from './custom-table.component';
 
@@ -18,6 +19,8 @@ import { CustomTableComponent } from './custom-table.component';
     MatTooltipModule,
     MatCheckboxModule,
     MatPaginatorModule,
+
+    SlugifyPipeModule
   ],
   exports: [CustomTableComponent, TableColumnDirective],
   providers: [

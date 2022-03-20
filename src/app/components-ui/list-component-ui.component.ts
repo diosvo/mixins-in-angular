@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGroupValue } from '@home/models/search.model';
 import { EComponentUI } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
@@ -21,11 +22,13 @@ const DEFAULT_FILTER = {
     .panel-container {
         display: block;
     }
-  }`]
+  }`],
+  providers: [DestroyService]
 })
-export class ListComponentUiComponent implements OnInit, OnDestroy {
+export class ListComponentUiComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
+  filteredData$: Observable<Array<IGroupValue>>;
 
   componentsForm: FormGroup = this.fb.group({
     query: [DEFAULT_FILTER.query],
@@ -33,13 +36,11 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
   });
   groupList = Object.values(EComponentUI);
 
-  filteredData$: Observable<Array<IGroupValue>>;
-  private destroyed$: Subject<boolean> = new Subject();
-
   constructor(
     private readonly router: Router,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
+    private readonly destroyed$: DestroyService,
     private readonly searchService: SearchService,
   ) { }
 
@@ -121,10 +122,5 @@ export class ListComponentUiComponent implements OnInit, OnDestroy {
 
   get group(): FormControl {
     return this.componentsForm.get('group') as FormControl;
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.complete();
-    this.destroyed$.unsubscribe();
   }
 }

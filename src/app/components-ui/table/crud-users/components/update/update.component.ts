@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/models/base-form-component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
-import { combineLatest, filter, finalize, map, Observable, startWith, Subject, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, filter, finalize, map, Observable, startWith, take, tap } from 'rxjs';
 
 @Component({
   selector: 'update-user',
   templateUrl: './update.component.html',
   styles: ['@use \'display/host\';']
 })
-export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
+export class UpdateComponent implements OnInit, DeactivateComponent {
   user_id: number;
   user$: Observable<User>;
   user = new FormControl({});
@@ -21,7 +21,6 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
   saving = false;
   hasChanged = false;
 
-  destroyed$ = new Subject<boolean>();
   errorMessage$: Observable<string>;
   readonly loading$: Observable<boolean> = this.service.loading$;
 
@@ -48,7 +47,6 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
       .pipe(
         map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
         startWith(false),
-        takeUntil(this.destroyed$)
       )
       .subscribe((changed: boolean) => this.hasChanged = changed);
   }
@@ -73,10 +71,5 @@ export class UpdateComponent implements OnInit, OnDestroy, DeactivateComponent {
         error: ({ message }) => this.snackbar.error(message),
         complete: () => this.router.navigate([url ?? this.router.url])
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

@@ -38,11 +38,6 @@ describe('DetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.spyOn(component, 'ngOnDestroy');
-    fixture.destroy();
-  });
-
   test('should create', () => {
     expect(component).toBeTruthy();
   });

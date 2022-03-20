@@ -66,10 +66,13 @@
             [style.flex]="column.flex"
             [matTooltip]="column.tooltip ? row[column.key] : null"
           >
-            <span class="truncate-cell">
+            <span [id]="pageIndex * pageSize + idx" class="truncate-cell">
               <ng-container
                 [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
-                [ngTemplateOutletContext]="{ $implicit: row }"
+                [ngTemplateOutletContext]="{
+                  $implicit: row,
+                  index: pageIndex * pageSize + idx
+                }"
               ></ng-container>
             </span>
             <ng-template #noTemplates>

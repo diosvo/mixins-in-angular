@@ -18,9 +18,10 @@ export class DataTableComponent implements OnInit {
   issues$: Observable<Array<GithubIssue>>;
 
   columns: Array<TableColumn> = [
+    { key: 'created_at', flex: '15%' },
     { key: 'state', disableSorting: true, flex: '15%' },
     { key: 'number', flex: '15%' },
-    { key: 'title', flex: '65%' },
+    { key: 'title', flex: '55%' },
   ];
   private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',

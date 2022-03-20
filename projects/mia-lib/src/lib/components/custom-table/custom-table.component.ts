@@ -1,13 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
+  OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { Subject } from 'rxjs';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
@@ -24,7 +23,7 @@ export interface TableColumn {
   styleUrls: ['./custom-table.component.scss']
 })
 
-export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
 
   source: MatTableDataSource<T> = new MatTableDataSource<T>([]);
   private selection = new SelectionModel<{}>(true, []); // store selection data
@@ -45,9 +44,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   @Input() length: number;
-  @Input() pageSize: number;
   @Input() pageIndex: number = 0;
   @Input() pageSizeOptions: Array<number> = [5, 10, 20];
+  @Input() pageSize: number = this.pageSizeOptions[0];
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -66,8 +65,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() enableCheckbox: boolean = false;
   @Output() selectedRows = new EventEmitter();
 
-  private _destroyed$ = new Subject<boolean>();
-
   /** construct columns definitions  */
 
   @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
@@ -83,18 +80,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: Array<string>;
 
-  constructor() { }
-
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data && changes.data.currentValue) {
       this.source = new MatTableDataSource(changes.data.currentValue);
       this.source.sort = this.sort;
       this.configPaginator();
     };
-
-    if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
-      this.pageSize = changes.pageSizeOptions.currentValue[0];
-    }
   }
 
   ngOnInit(): void {
@@ -103,19 +94,13 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-
-    if (!this.pageable) {
-      this.source.paginator = null;
-    } else {
-      // length = calling data from API when page index changes
-      this.configPaginator();
-    }
-
+    this.source.paginator = this.pageable ? this.configPaginator() : null;
     this.selection = new SelectionModel<{}>(true, []);
   }
 
-  private configPaginator(): void {
-    this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
+  private configPaginator(): MatPaginator {
+    // length = calling data from API when page index changes
+    return this.length === undefined ? this.paginator : this.matPaginator;
   }
 
   private configDisplayColumns(): void {
@@ -157,10 +142,5 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   trackByIdx(idx: number): number {
     return idx;
-  }
-
-  ngOnDestroy(): void {
-    this._destroyed$.next(true);
-    this._destroyed$.complete();
   }
 }

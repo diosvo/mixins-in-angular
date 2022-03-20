@@ -27,11 +27,11 @@
     </custom-column>
 
     <custom-column columnName="actions">
-      <ng-template let-user>
+      <ng-template let-user let-index="index">
         <custom-button type="icon" [routerLink]="['details', user.id]">
           edit
         </custom-button>
-        <custom-button type="icon" (click)="openConfirmDialog(user)">
+        <custom-button type="icon" (click)="openConfirmDialog(user, index)">
           delete_outline
         </custom-button>
       </ng-template>

@@ -43,7 +43,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  openConfirmDialog(user: User): void {
+  openConfirmDialog(user: User, index: number): void {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {

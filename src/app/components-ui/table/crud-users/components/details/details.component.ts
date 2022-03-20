@@ -1,24 +1,23 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { User } from '@lib/services/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'user-details',
   templateUrl: './details.component.html'
 })
-export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
+export class DetailsComponent implements OnInit, OnChanges {
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     hobbies: [[]]
   });
-  private destroyed$ = new Subject<void>();
 
   @Input() user: User;
   @Output() isValid = new EventEmitter<boolean>();
@@ -43,7 +42,6 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        takeUntil(this.destroyed$)
       )
       .subscribe((details: User) => {
         this.changed.emit(details);
@@ -79,10 +77,5 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
 
   get hobbies(): FormControl {
     return this.form.get('hobbies') as FormControl;
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }

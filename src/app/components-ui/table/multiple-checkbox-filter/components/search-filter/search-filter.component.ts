@@ -1,20 +1,19 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Filter } from '../../models/filter.model';
 
 @Component({
   selector: 'search-filter',
   templateUrl: './search-filter.component.html'
 })
-export class SearchFilterComponent implements OnInit, OnDestroy {
+export class SearchFilterComponent implements OnInit {
   @Output() filters = new EventEmitter<Filter>();
 
   filterForm: FormGroup = this.fb.group({
     query: [''],
     state: ['']
   });
-  private destroyed$ = new Subject<boolean>();
 
   constructor(private readonly fb: FormBuilder) { }
 
@@ -23,13 +22,7 @@ export class SearchFilterComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        takeUntil(this.destroyed$)
       )
       .subscribe(() => this.filters.emit(this.filterForm.getRawValue()));
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

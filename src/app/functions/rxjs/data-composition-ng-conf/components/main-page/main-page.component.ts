@@ -1,18 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'data-composition-main-page',
   templateUrl: './main-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainPageComponent implements OnDestroy {
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+export class MainPageComponent {
 
   constructor() { }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
-  }
 }

@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { catchError, filter, map, Observable, Subject, takeUntil, throwError } from 'rxjs';
 import { PaginateParams, ViewArticleState } from '../../models/article.model';
 import { ViewArticleStateService } from '../../services/view-article-state.service';
@@ -13,18 +14,18 @@ interface Params extends PaginateParams {
   selector: 'app-view-article-page-state',
   templateUrl: './view-article-page-state.component.html',
   styleUrls: ['./view-article-page-state.component.scss'],
-  providers: [ViewArticleStateService]
+  providers: [ViewArticleStateService, DestroyService]
 })
-export class ViewArticlePageStateComponent implements OnInit, OnDestroy {
+export class ViewArticlePageStateComponent implements OnInit {
 
   state$: Observable<ViewArticleState>;
   errorMessage$ = new Subject<string>();
 
   searchInput: FormControl = this.service.controlSearchTerm();
-  private destroyed$ = new Subject<boolean>();
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly destroyed$: DestroyService,
     private readonly service: ViewArticleStateService,
   ) { }
 
@@ -61,10 +62,5 @@ export class ViewArticlePageStateComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (params: Params) => this.service.updateStateFromQueryParams(params)
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

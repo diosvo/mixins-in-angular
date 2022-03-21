@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
+  AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -25,12 +24,9 @@ export interface TableColumn {
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
 
-  source: MatTableDataSource<T> = new MatTableDataSource<T>([]);
-  private selection = new SelectionModel<{}>(true, []); // store selection data
-
   /** Definitions: data */
 
-  @Input() data!: Array<T>;
+  @Input() data: Array<T>;
   @Input() columns: Array<TableColumn> = [];
   @Input() style: Record<string, string>;
 
@@ -45,8 +41,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() length: number;
   @Input() pageIndex: number = 0;
-  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
-  @Input() pageSize: number = this.pageSizeOptions[0];
+  @Input() pageSize: number;
+  @Input() pageSizeOptions: Array<number>;
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -80,11 +76,16 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: Array<string>;
 
+  source: MatTableDataSource<T>;
+  private selection = new SelectionModel<{}>(true, []); // store selection data
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+  ) { }
+
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data && changes.data.currentValue) {
       this.source = new MatTableDataSource(changes.data.currentValue);
-      this.source.sort = this.sort;
-      this.configPaginator();
     };
   }
 
@@ -94,7 +95,11 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
+
+    this.source.sort = this.sort;
     this.source.paginator = this.pageable ? this.configPaginator() : null;
+    this.cdr.detectChanges();
+
     this.selection = new SelectionModel<{}>(true, []);
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { IProduct } from '@lib/models/product';
 import { ProductsService } from '@lib/services/products/products.service';
 import { combineLatest } from 'rxjs';
@@ -6,8 +6,7 @@ import { filter, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'data-composition-content',
-  templateUrl: './content.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './content.component.html'
 })
 export class ContentComponent {
   pageTitle: string;

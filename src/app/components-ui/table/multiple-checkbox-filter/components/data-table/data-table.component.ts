@@ -33,7 +33,7 @@ export class DataTableComponent implements OnInit {
   private _pageIndex$ = new Subject<number>();
 
   constructor(
-    @Self() readonly service: GithubRepoIssuesService
+    @Self() private readonly service: GithubRepoIssuesService
   ) { }
 
   ngOnInit(): void {

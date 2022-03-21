@@ -42,18 +42,6 @@ describe('DetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  test('ngOnChanges() to watch the values change', () => {
-    const changes = {
-      user: {
-        currentValue: user
-      }
-    } as any;
-    jest.spyOn(component.form, 'patchValue');
-
-    component.ngOnChanges(changes);
-    expect(component.form.patchValue).toBeCalledWith(changes.user.currentValue);
-  });
-
   test('watchForFormChanged()', fakeAsync(() => {
     jest.spyOn(component.changed, 'emit');
     jest.spyOn(component.isValid, 'emit');

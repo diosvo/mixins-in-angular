@@ -1,8 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { User } from '@lib/services/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
@@ -12,7 +11,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   selector: 'user-details',
   templateUrl: './details.component.html'
 })
-export class DetailsComponent implements OnInit, OnChanges {
+export class DetailsComponent implements OnInit {
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -29,11 +28,8 @@ export class DetailsComponent implements OnInit, OnChanges {
     private readonly fb: FormBuilder
   ) { }
 
-  ngOnChanges(changes: NgChanges<DetailsComponent>): void {
-    this.form.patchValue(changes.user.currentValue);
-  }
-
   ngOnInit(): void {
+    this.form.patchValue(this.user);
     this.watchForFormChanged();
   }
 

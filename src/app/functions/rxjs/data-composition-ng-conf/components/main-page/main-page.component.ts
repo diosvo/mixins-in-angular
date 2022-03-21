@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'data-composition-main-page',
-  templateUrl: './main-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './main-page.component.html'
 })
 export class MainPageComponent {
 

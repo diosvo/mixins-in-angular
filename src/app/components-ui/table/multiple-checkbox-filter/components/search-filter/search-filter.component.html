@@ -1,5 +1,5 @@
-<form [formGroup]="filterForm" class="d-flex width-100">
-  <mat-form-field class="mx-2">
+<form [formGroup]="filterForm" class="d-flex gap-1 width-100">
+  <mat-form-field>
     <mat-label>State</mat-label>
     <mat-select formControlName="state" multiple>
       <mat-option *ngFor="let state of ['open', 'closed']" [value]="state">

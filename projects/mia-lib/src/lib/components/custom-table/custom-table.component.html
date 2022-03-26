@@ -72,7 +72,7 @@
                 [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
                 [ngTemplateOutletContext]="{
                   $implicit: row,
-                  index: pageIndex * pageSize + idx
+                  index: getIndex(idx)
                 }"
               ></ng-container>
             </span>
@@ -99,9 +99,9 @@
   <div *ngIf="pageable" [class.custom-pagination]="pageable">
     <mat-paginator
       [length]="length"
-      [pageSize]="pageSize"
       [pageIndex]="pageIndex"
-      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions || [DEFAULT_PAGESIZE]"
       [showFirstLastButtons]="showFirstLastButtons"
       (page)="onPageChanged($event)"
     ></mat-paginator>

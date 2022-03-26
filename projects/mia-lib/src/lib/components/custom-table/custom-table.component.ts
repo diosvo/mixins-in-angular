@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
+  AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input,
+  OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
@@ -40,14 +41,14 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   @Input() length: number;
-  @Input() pageIndex: number = 0;
   @Input() pageSize: number;
+  @Input() pageIndex: number = 0;
   @Input() pageSizeOptions: Array<number>;
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
 
-  @Input() defaultSortColumn: string = 'id';
+  @Input() defaultSortColumn: string;
   @Input() defaultSortDirection: SortDirection = 'asc';
   @ViewChild(MatSort) private readonly sort: MatSort;
 
@@ -76,6 +77,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: Array<string>;
 
+  readonly DEFAULT_PAGESIZE = 5;
   source: MatTableDataSource<T>;
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
@@ -86,7 +88,13 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data && changes.data.currentValue) {
       this.source = new MatTableDataSource(changes.data.currentValue);
+      this.source.sort = this.sort;
+      this.configPaginator();
     };
+
+    if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
+      this.pageSize = changes.pageSizeOptions.currentValue[0];
+    }
   }
 
   ngOnInit(): void {
@@ -101,6 +109,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.cdr.detectChanges();
 
     this.selection = new SelectionModel<{}>(true, []);
+  }
+
+  getIndex(index: number): number {
+    return this.length
+      ? index
+      : this.pageIndex * (this.pageSize || this.DEFAULT_PAGESIZE) + index;
   }
 
   private configPaginator(): MatPaginator {

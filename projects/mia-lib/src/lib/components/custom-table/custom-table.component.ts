@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input,
+  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, EventEmitter, Input,
   OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -20,7 +20,8 @@ export interface TableColumn {
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
-  styleUrls: ['./custom-table.component.scss']
+  styleUrls: ['./custom-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
@@ -33,8 +34,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Pagination */
 
-  @Input() pageable = true;
-  @Input() showFirstLastButtons = false;
+  @Input() showFirstLastButtons: boolean = false;
   @ViewChild(MatPaginator) private paginator: MatPaginator;
   @ViewChild(MatPaginator) private set matPaginator(paginator: MatPaginator) {
     this.paginator = paginator;
@@ -81,10 +81,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   source: MatTableDataSource<T>;
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
-  constructor(
-    private readonly cdr: ChangeDetectorRef,
-  ) { }
-
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data && changes.data.currentValue) {
       this.source = new MatTableDataSource(changes.data.currentValue);
@@ -105,8 +101,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.configColumnTemplates();
 
     this.source.sort = this.sort;
-    this.source.paginator = this.pageable ? this.configPaginator() : null;
-    this.cdr.detectChanges();
+    this.configPaginator();// length = calling data from API when page index changes
 
     this.selection = new SelectionModel<{}>(true, []);
   }
@@ -117,9 +112,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
       : this.pageIndex * (this.pageSize || this.DEFAULT_PAGESIZE) + index;
   }
 
-  private configPaginator(): MatPaginator {
-    // length = calling data from API when page index changes
-    return this.length === undefined ? this.paginator : this.matPaginator;
+  private configPaginator(): void {
+    this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
   }
 
   private configDisplayColumns(): void {

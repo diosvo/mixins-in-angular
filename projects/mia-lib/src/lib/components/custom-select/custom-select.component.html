@@ -2,26 +2,15 @@
   <mat-label>{{ placeholder }}</mat-label>
   <mat-select [sortComparator]="sortFunc" [formControl]="control">
     <!-- Search input -->
-    <mat-optgroup class="d-block h-50">
-      <mat-form-field
+    <mat-optgroup class="d-block my-2">
+      <custom-input
         class="width-100"
-        appearance="legacy"
-        [floatLabel]="'never'"
+        [clearFilter]="true"
+        [appearance]="'legacy'"
+        [formControl]="filterControl"
+        [placeholder]="searchPlaceholder"
       >
-        <input
-          matInput
-          [formControl]="filterControl"
-          [placeholder]="searchPlaceholder"
-        />
-        <button
-          matSuffix
-          mat-icon-button
-          *ngIf="filterControl.value !== ''"
-          (click)="filterControl.setValue('')"
-        >
-          <mat-icon>clear</mat-icon>
-        </button>
-      </mat-form-field>
+      </custom-input>
       <mat-option [disabled]="true" [style.display]="'none'"></mat-option>
     </mat-optgroup>
 

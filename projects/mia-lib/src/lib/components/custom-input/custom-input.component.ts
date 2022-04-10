@@ -1,6 +1,6 @@
 import { Component, forwardRef, Injector, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { FloatLabelType, MatFormFieldAppearance } from '@angular/material/form-field';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -18,6 +18,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
 export class CustomInputComponent extends FormControlValueAccessorConnector {
   // Field
   @Input() style = 'width: 100%';
+  @Input() floatLabel: FloatLabelType = 'auto';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   // Input
@@ -25,6 +26,9 @@ export class CustomInputComponent extends FormControlValueAccessorConnector {
   @Input() label?: string;
   @Input() placeholder?: string;
   @Input() readonly: boolean = false;
+  @Input() clearFilter: boolean = false;
+
+  readonly EMPTY_VALUE = '';
 
   constructor(injector: Injector) {
     super(injector);

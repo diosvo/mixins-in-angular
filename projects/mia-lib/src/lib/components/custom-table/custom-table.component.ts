@@ -30,6 +30,10 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() data: Array<T>;
   @Input() columns: Array<TableColumn> = [];
+
+  /** Styles */
+
+  @Input() truncate: boolean = true;
   @Input() style: Record<string, string>;
 
   /** Pagination */

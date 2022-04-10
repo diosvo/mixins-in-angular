@@ -57,7 +57,7 @@
             [style.flex]="column.flex"
             [disabled]="column.disableSorting || column.key === 'actions'"
           >
-            <span class="truncate-cell">
+            <span [class.truncate-cell]="truncate">
               {{ column?.header || column?.key | uppercase }}
             </span>
           </mat-header-cell>
@@ -67,7 +67,7 @@
             [matTooltip]="column.tooltip ? row[column.key] : null"
             [id]="column.key + '-row-' + getIndex(idx)"
           >
-            <span class="truncate-cell">
+            <span [class.truncate-cell]="truncate">
               <ng-container
                 [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
                 [ngTemplateOutletContext]="{

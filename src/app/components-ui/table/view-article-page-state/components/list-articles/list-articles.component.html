@@ -12,6 +12,7 @@
       <custom-table
         [data]="state.articles | filter: query.value"
         [columns]="columns"
+        [truncate]="false"
       >
         <div header class="d-flex ai-baseline jc-between">
           <h2>List Articles</h2>
@@ -25,6 +26,12 @@
             [clearFilter]="true"
           ></custom-input>
         </div>
+
+        <custom-column columnName="body">
+          <ng-template let-article>
+            <div [innerHTML]="article.body | lineBreak"></div>
+          </ng-template>
+        </custom-column>
 
         <custom-column columnName="actions">
           <ng-template let-article>

@@ -19,7 +19,11 @@
         </div>
 
         <div filters>
-          <custom-input label="Search" [formControl]="query"></custom-input>
+          <custom-input
+            label="Search"
+            [formControl]="query"
+            [clearFilter]="true"
+          ></custom-input>
         </div>
 
         <custom-column columnName="actions">

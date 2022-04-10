@@ -35,7 +35,6 @@
           >
             <custom-select
               [items]="groupList"
-              placeholder="All"
               formControlName="group"
               searchPlaceholder="Find the group..."
             ></custom-select>
@@ -43,17 +42,10 @@
             <custom-input
               class="flex-1"
               label="search"
+              [clearFilter]="true"
               formControlName="query"
               placeholder="What are you looking for today..."
             >
-              <custom-button
-                suffix
-                type="icon"
-                *ngIf="query.value !== ''"
-                (click)="query.setValue('')"
-              >
-                close
-              </custom-button>
             </custom-input>
           </form>
         </ng-template>

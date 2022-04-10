@@ -6,17 +6,22 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 export class FilterPipe<T> implements PipeTransform {
 
   transform(data: Array<T>, searchTerm: string): Array<T> {
-    if (!data || !searchTerm) {
+    const modifySearch = searchTerm.trim().toLowerCase();
+
+    if (!data || !modifySearch) {
       return data;
     }
 
-    return data.filter((item: T) => this.filterFn(item, searchTerm));
+    return data.filter((item: T) => this.filterFn(item, modifySearch));
   }
 
   private filterFn(data: T, value: string): boolean {
-    return Object.keys(data)
-      .map((key: string) => new RegExp(value, 'gi').test(data[key]))
-      .some((results: boolean) => results);
+    const predicate = (text: T) =>
+      new RegExp(value, 'gi').test(text.toString().trim().toLowerCase());
+
+    return data instanceof Object
+      ? Object.keys(data).map((key: string) => predicate(data[key])).some((results: boolean) => results)
+      : predicate(data);
   }
 }
 

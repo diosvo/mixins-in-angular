@@ -65,7 +65,7 @@
             *matCellDef="let row; let idx = index"
             [style.flex]="column.flex"
             [matTooltip]="column.tooltip ? row[column.key] : null"
-            [id]="column.key + '-row-' + (pageIndex * pageSize + idx) | slugify"
+            [id]="column.key + '-row-' + getIndex(idx)"
           >
             <span class="truncate-cell">
               <ng-container
@@ -76,9 +76,7 @@
                 }"
               ></ng-container>
             </span>
-            <ng-template #noTemplates>
-              <span class="truncate-cell">{{ row[column.key] }}</span>
-            </ng-template>
+            <ng-template #noTemplates>{{ row[column.key] }}</ng-template>
           </mat-cell>
         </ng-template>
       </ng-container>

@@ -109,7 +109,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   getIndex(index: number): number {
     return this.length
       ? index
-      : this.pageIndex * (this.pageSize || this.DEFAULT_PAGESIZE) + index;
+      : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
   }
 
   private configPaginator(): void {

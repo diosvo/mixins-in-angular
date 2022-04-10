@@ -23,7 +23,6 @@ const DEFAULT_FILTER = {
         display: block;
     }
   }`],
-  providers: [DestroyService]
 })
 export class ListComponentUiComponent implements OnInit {
 

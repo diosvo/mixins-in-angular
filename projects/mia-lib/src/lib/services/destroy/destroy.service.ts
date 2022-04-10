@@ -1,17 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject, Subscriber } from 'rxjs';
+import { Subject } from 'rxjs';
 
-@Injectable()
-export class DestroyService extends Observable<void> implements OnDestroy {
-
-  private life$ = new Subject<void>();
-
-  constructor() {
-    super((subscriber: Subscriber<void>) => this.life$.subscribe(subscriber));
-  }
+@Injectable({
+  providedIn: 'root'
+})
+export class DestroyService extends Subject<void> implements OnDestroy {
 
   ngOnDestroy(): void {
-    this.life$.next();
-    this.life$.complete();
+    this.next();
+    this.complete();
   }
 }

@@ -14,7 +14,7 @@ interface Params extends PaginateParams {
   selector: 'app-view-article-page-state',
   templateUrl: './view-article-page-state.component.html',
   styleUrls: ['./view-article-page-state.component.scss'],
-  providers: [ViewArticleStateService, DestroyService]
+  providers: [ViewArticleStateService]
 })
 export class ViewArticlePageStateComponent implements OnInit {
 

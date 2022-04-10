@@ -8,7 +8,6 @@ import { AutocompleteComponent } from '../components/autocomplete/autocomplete.c
 
 @Directive({
   selector: '[appAutocomplete]',
-  providers: [DestroyService]
 })
 export class AutocompleteDirective implements OnInit, OnDestroy {
 

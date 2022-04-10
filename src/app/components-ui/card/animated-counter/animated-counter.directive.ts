@@ -7,7 +7,6 @@ const DEFAULT_ANIMATION_SPEED = 8;
 
 @Directive({
   selector: '[appAnimatedCounter]',
-  providers: [DestroyService]
 })
 export class AnimatedCounterDirective implements OnInit {
   @Input('appAnimatedCounter') value: number;

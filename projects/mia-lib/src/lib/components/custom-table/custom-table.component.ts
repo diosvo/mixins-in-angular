@@ -14,6 +14,7 @@ export interface TableColumn {
   flex?: string;
   header?: string;
   tooltip?: boolean;
+  truncate?: boolean;
   disableSorting?: boolean;
 }
 
@@ -33,7 +34,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Styles */
 
-  @Input() truncate: boolean = true;
   @Input() style: Record<string, string>;
 
   /** Pagination */

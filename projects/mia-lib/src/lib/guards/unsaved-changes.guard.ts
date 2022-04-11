@@ -2,18 +2,24 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate, GuardsCheckEnd, Router } from '@angular/router';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { Observable, of } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
-import { DeactivateComponent } from '../models/base-form-component';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
+
+export interface DeactivateComponent {
+  canDeactivate: () => boolean;
+  saveChanges: (url: string) => void;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
   constructor(
     private readonly router: Router,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly destroy$: DestroyService
   ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
@@ -23,16 +29,19 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         disableClose: true
       });
 
-      dialogRef.afterClosed().subscribe((response: boolean) => {
-        if (response === false) {
-          this.router.events
-            .pipe(
-              filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd),
-              take(1)
-            )
-            .subscribe({
-              next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
-            });
+      dialogRef.afterClosed().subscribe({
+        next: (response: boolean) => {
+          if (response === false) {
+            this.router.events
+              .pipe(
+                filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd),
+                take(1),
+                takeUntil(this.destroy$)
+              )
+              .subscribe({
+                next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
+              });
+          }
         }
       });
 

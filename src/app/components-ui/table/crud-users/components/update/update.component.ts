@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DeactivateComponent } from '@lib/models/base-form-component';
+import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
@@ -29,6 +29,7 @@ export class UpdateComponent implements OnInit, DeactivateComponent {
     private readonly snackbar: SnackbarService,
     private readonly service: UserDetailsService,
   ) { }
+  isAllowed: boolean;
 
   ngOnInit(): void {
     this.user$ = this.service.currentUser$.pipe(

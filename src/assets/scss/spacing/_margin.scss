@@ -1,6 +1,6 @@
-$maximum_size: 8;
+$-maximum: 8;
 
-@for $i from 0 through $maximum_size {
+@for $i from 0 through $-maximum {
 
   .m-#{$i} {
     margin: 0.5rem * $i;
@@ -27,7 +27,7 @@ $maximum_size: 8;
   }
 
   .my-#{$i} {
-    margin-block   : 0.5rem * $i;
+    margin-block: 0.5rem * $i;
   }
 }
 

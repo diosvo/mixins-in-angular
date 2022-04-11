@@ -1,43 +1,38 @@
 @use 'palette';
 
+$-colors: ('white': palette.$white,
+  'black': palette.$black,
+  'error': palette.$error,
+  'light': palette.$light,
+  'secondary': palette.$secondary,
+  'dark-blue': palette.$dark-blue,
+  'light-blue': palette.$light-blue,
+);
+
 .text {
-  &-white {
-    color: palette.$white;
+
+  @each $name,
+  $color in $-colors {
+    &-#{$name} {
+      color: $color;
+    }
   }
 
-  &-light {
-    color: palette.$light;
-  }
-
-  &-light-blue {
-    color: palette.$light-blue;
-  }
-
-  &-dark-blue {
-    color: palette.$dark-blue;
-  }
-
-  &-secondary {
-    color: palette.$secondary;
-  }
-
-  &-black {
-    color: palette.$black;
-  }
-
-  &-error {
-    color: palette.$error;
-  }
 }
 
+$-colors-hovered: ('dark-blue': palette.$dark-blue,
+  'light-blue': palette.$light-blue,
+);
+
 .text-hover {
-  &-light-blue:hover {
-    color: palette.$light-blue;
+
+  @each $name,
+  $color in $-colors-hovered {
+    &-#{$name}:hover {
+      color: $color;
+    }
   }
 
-  &-dark-blue:hover {
-    color: palette.$dark-blue;
-  }
 }
 
 .title-required {

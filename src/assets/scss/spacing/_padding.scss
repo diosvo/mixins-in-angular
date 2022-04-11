@@ -1,6 +1,6 @@
-$maximum_size: 8;
+$-maximum: 8;
 
-@for $i from 0 through $maximum_size {
+@for $i from 0 through $-maximum {
 
   .p-#{$i} {
     padding: 0.5rem * $i;
@@ -23,12 +23,10 @@ $maximum_size: 8;
   }
 
   .px-#{$i} {
-    padding-right: 0.5rem * $i;
-    padding-left : 0.5rem * $i;
+    padding-inline: 0.5rem * $i;
   }
 
   .py-#{$i} {
-    padding-top   : 0.5rem * $i;
-    padding-bottom: 0.5rem * $i;
+    padding-block: 0.5rem * $i;
   }
 }

@@ -1,37 +1,16 @@
-@mixin font-size($n) {
-  font-size: $n * 1px;
-}
+$-sizes: 12,
+13,
+14,
+16,
+20,
+24,
+32,
+48;
 
 .f {
-  &-12 {
-    @include font-size(12);
-  }
-
-  &-13 {
-    @include font-size(13);
-  }
-
-  &-14 {
-    @include font-size(14);
-  }
-
-  &-16 {
-    @include font-size(16);
-  }
-
-  &-20 {
-    @include font-size(20);
-  }
-
-  &-24 {
-    @include font-size(24);
-  }
-
-  &-32 {
-    @include font-size(32);
-  }
-
-  &-48 {
-    @include font-size(48);
+  @each $size in $-sizes {
+    &-#{$size} {
+      font-size: $size * 1px;
+    }
   }
 }

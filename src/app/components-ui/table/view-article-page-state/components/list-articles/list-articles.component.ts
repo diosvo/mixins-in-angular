@@ -22,7 +22,7 @@ export class ListArticlesComponent implements OnInit {
     { key: 'userId', flex: '10%', header: 'user id' },
     { key: 'id', flex: '10%' },
     { key: 'title', flex: '25%' },
-    { key: 'body', flex: '45%' },
+    { key: 'body', flex: '45%', truncate: false },
     { key: 'actions', flex: '10%' },
   ];
 

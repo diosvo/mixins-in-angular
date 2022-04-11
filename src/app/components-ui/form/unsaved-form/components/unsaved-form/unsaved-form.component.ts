@@ -1,7 +1,7 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DeactivateComponent } from '@lib/models/base-form-component';
+import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { combineLatest, of } from 'rxjs';
@@ -30,6 +30,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     private readonly snackbar: SnackbarService,
     @Self() readonly detectPermission: DetectPermissionService,
   ) { }
+  isAllowed: boolean;
 
   ngOnInit(): void {
     this.formState();
@@ -52,10 +53,6 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   saveChanges(url?: string): void {
     this.hasChanged = false;
-    if (this.unsavedForm.invalid) {
-      this.snackbar.error('You need to provide all required information.');
-      return;
-    }
     this.snackbar.success('Update successfully!');
     this.router.navigate([url ?? this.router.url]);
   }

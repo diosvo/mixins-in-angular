@@ -4,9 +4,8 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { GuardsCheckEnd, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
-import { DeactivateComponent } from '@lib/models/base-form-component';
 import { Observable, of } from 'rxjs';
-import { UnsavedChangesGuard } from './unsaved-changes.guard';
+import { DeactivateComponent, UnsavedChangesGuard } from './unsaved-changes.guard';
 
 class MockRouter {
   public navigate = new GuardsCheckEnd(

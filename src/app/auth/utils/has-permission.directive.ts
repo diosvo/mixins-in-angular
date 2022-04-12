@@ -27,7 +27,7 @@ export class HasPermissionDirective implements OnInit {
   }
 
   private _currentUser: AuthUser;
-  private _permissions: Array<string> = new Array();
+  private _permissions: Array<string> = [];
 
   private _logicalOperator: Operator = LogicalOperator.AND;
   private _isHidden = true;

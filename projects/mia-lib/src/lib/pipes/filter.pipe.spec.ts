@@ -19,6 +19,7 @@ describe('FilterPipe', () => {
   describe('transform()', () => {
     test('returns primitive data if data is not found or query string is empty', () => {
       expect(pipe.transform([], 'diosvo')).toEqual([]);
+      expect(pipe.transform([data], null)).toEqual([data]);
       expect(pipe.transform([data], '')).toEqual([data]);
     });
 
@@ -57,6 +58,7 @@ describe('FilterPipe', () => {
       const message = 'The type of query should be string.';
       expect(() => pipe['errorsHandler']([], new FormControl(null))).toThrow(message);
       expect(() => pipe['errorsHandler']([], 'diosvo')).not.toThrow(message);
+      expect(() => pipe['errorsHandler']([], null)).not.toThrow(message);
     });
   });
 });

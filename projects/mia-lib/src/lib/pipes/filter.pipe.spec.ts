@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { FilterPipe } from './filter.pipe';
 
 const data = {
@@ -36,6 +37,26 @@ describe('FilterPipe', () => {
     test('should filter data without object key', () => {
       expect(pipe['filterFn']('diosvo', 'd')).toEqual(true);
       expect(pipe['filterFn']('diosvo', 'aaa')).toEqual(false);
+    });
+  });
+
+  describe('errorsHandler() to handle error cases', () => {
+    test('should check provided data', () => {
+      const message = 'Provided data should be an array.';
+      expect(() => pipe['errorsHandler']({} as any, 'diosvo')).toThrow(message);
+      expect(() => pipe['errorsHandler']([], 'diosvo')).not.toThrow(message);
+    });
+
+    test('should check query is provided or not', () => {
+      const message = 'Query has not been provided.';
+      expect(() => pipe['errorsHandler']([], undefined)).toThrow(message);
+      expect(() => pipe['errorsHandler']([], 'diosvo')).not.toThrow(message);
+    });
+
+    test('should check type of Query', () => {
+      const message = 'The type of query should be string.';
+      expect(() => pipe['errorsHandler']([], new FormControl(null))).toThrow(message);
+      expect(() => pipe['errorsHandler']([], 'diosvo')).not.toThrow(message);
     });
   });
 });

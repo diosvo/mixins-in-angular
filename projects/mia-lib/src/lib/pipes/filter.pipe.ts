@@ -11,7 +11,7 @@ export class FilterPipe<T> implements PipeTransform {
   private modify = (text: unknown): string => !this.isNull(text) && text.toString().trim().toLowerCase();
 
   transform(data: Array<T>, searchTerm: unknown): Array<T> {
-    this.errorsHandler(data, searchTerm);
+    this.errorHandler(data, searchTerm);
 
     if (!data || !this.modify(searchTerm)) {
       return data;
@@ -28,7 +28,7 @@ export class FilterPipe<T> implements PipeTransform {
       : predicate(data);
   }
 
-  private errorsHandler(data: Array<T>, searchTerm: unknown): void {
+  private errorHandler(data: Array<T>, searchTerm: unknown): void {
     if (!Array.isArray(data)) {
       throw new Error('Provided data should be an array.');
     }

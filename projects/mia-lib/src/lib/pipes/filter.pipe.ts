@@ -5,7 +5,10 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe<T> implements PipeTransform {
 
-  private modify = (text: unknown): string => text.toString().trim().toLowerCase();
+  private isNull = (text: unknown) => text === null;
+  private isUndefined = (text: unknown) => text === undefined;
+
+  private modify = (text: unknown): string => !this.isNull(text) && text.toString().trim().toLowerCase();
 
   transform(data: Array<T>, searchTerm: unknown): Array<T> {
     this.errorsHandler(data, searchTerm);
@@ -30,11 +33,11 @@ export class FilterPipe<T> implements PipeTransform {
       throw new Error('Provided data should be an array.');
     }
 
-    if (searchTerm === undefined) {
+    if (this.isUndefined(searchTerm)) {
       throw new Error('Query has not been provided.');
     }
 
-    if (typeof searchTerm !== 'string') {
+    if (!this.isNull(searchTerm) && typeof searchTerm !== 'string') {
       throw new Error('The type of query should be string.');
     }
   }

@@ -36,8 +36,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Pagination */
 
-  @Input() pageable: boolean = true;
-  @Input() showFirstLastButtons: boolean = false;
+  @Input() pageable = true;
+  @Input() showFirstLastButtons = false;
   @ViewChild(MatPaginator) private paginator: MatPaginator;
   @ViewChild(MatPaginator) private set matPaginator(paginator: MatPaginator) {
     this.paginator = paginator;
@@ -45,7 +45,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() length: number;
   @Input() pageSize: number;
-  @Input() pageIndex: number = 0;
+  @Input() pageIndex = 0;
   @Input() pageSizeOptions: Array<number> = [5, 10, 20];
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
@@ -57,12 +57,12 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Filter */
 
-  @Input() filterable: boolean = false;
+  @Input() filterable = false;
 
   /** Checkbox */
 
   readonly select = 'select';
-  @Input() enableCheckbox: boolean = false;
+  @Input() enableCheckbox = false;
   @Output() selectedRows = new EventEmitter();
 
   private _destroyed$ = new Subject<boolean>();

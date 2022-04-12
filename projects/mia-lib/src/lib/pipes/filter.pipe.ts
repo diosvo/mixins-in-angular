@@ -5,9 +5,10 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe<T> implements PipeTransform {
 
-  private modify = (text: string | T) => text.toString().trim().toLowerCase();
+  private modify = (text: unknown): string => text.toString().trim().toLowerCase();
 
-  transform(data: Array<T>, searchTerm: string): Array<T> {
+  transform(data: Array<T>, searchTerm: unknown): Array<T> {
+    this.errorsHandler(data, searchTerm);
 
     if (!data || !this.modify(searchTerm)) {
       return data;
@@ -22,6 +23,20 @@ export class FilterPipe<T> implements PipeTransform {
     return data instanceof Object
       ? Object.keys(data).map((key: string) => predicate(data[key])).some((results: boolean) => results)
       : predicate(data);
+  }
+
+  private errorsHandler(data: Array<T>, searchTerm: unknown): void {
+    if (!Array.isArray(data)) {
+      throw new Error('Provided data should be an array.');
+    }
+
+    if (searchTerm === undefined) {
+      throw new Error('Query has not been provided.');
+    }
+
+    if (typeof searchTerm !== 'string') {
+      throw new Error('The type of query should be string.');
+    }
   }
 }
 

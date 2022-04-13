@@ -74,7 +74,7 @@ export class ListComponentUiComponent implements OnInit {
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filter]) =>
         data
-          .filter(item => filter.group !== 'all' ? item.groupName === filter.group : 'all')
+          .filter(item => filter.group !== DEFAULT_FILTER.group ? item.groupName === filter.group : DEFAULT_FILTER.group)
           .map(item => ({
             ...item,
             groupDetails: item.groupDetails.filter(details => {

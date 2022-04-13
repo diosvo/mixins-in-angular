@@ -13,19 +13,17 @@
       <mat-expansion-panel>
         <!-- Header -->
         <mat-expansion-panel-header>
-          <mat-panel-title class="ai-center">
+          <mat-panel-title>
             Reactive programming with RxJS 6+, ...
           </mat-panel-title>
           <mat-panel-description class="jc-flex-end">
-            <button
-              mat-icon-button
-              *ngIf="clearAllIconActive()"
+            <custom-button
+              type="icon"
               (click)="cleanFilters()"
-              matTooltip="Clear All Filters"
-              matTooltipPosition="left"
+              *ngIf="clearAllIconActive()"
             >
-              <mat-icon>clear_all</mat-icon>
-            </button>
+              clear_all
+            </custom-button>
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -35,29 +33,20 @@
             [formGroup]="functionsForm"
             class="panel-container d-flex gap-1"
           >
-            <mat-form-field class="filter-group">
-              <mat-label>Functions</mat-label>
-              <mat-select formControlName="group">
-                <mat-option value="all" selected>All</mat-option>
-                <mat-option *ngFor="let group of groupList" [value]="group">
-                  {{ group | titlecase }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <custom-select
+              [items]="groupList"
+              formControlName="group"
+              searchPlaceholder="Find the group..."
+            ></custom-select>
 
-            <mat-form-field class="width-100">
-              <mat-label>What are you looking for today...</mat-label>
-              <input matInput autocomplete="off" formControlName="query" />
-              <button
-                matSuffix
-                mat-icon-button
-                *ngIf="query.value !== ''"
-                matTooltip="Clear"
-                (click)="cleanQuery()"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
-            </mat-form-field>
+            <custom-input
+              class="flex-1"
+              label="search"
+              [clearFilter]="true"
+              formControlName="query"
+              placeholder="What are you looking for today..."
+            >
+            </custom-input>
           </form>
         </ng-template>
       </mat-expansion-panel>

@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
 import { ActivatedParamsService } from '../activated-params/activated-params.service';
 import { HandleService } from '../base/handle.service';
+import { DestroyService } from '../destroy/destroy.service';
 import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserDetailsService implements OnDestroy {
+export class UserDetailsService {
   private _user$ = new BehaviorSubject<User>(null);
   readonly currentUser$ = this._user$.asObservable();
 
@@ -16,11 +17,11 @@ export class UserDetailsService implements OnDestroy {
   readonly loading$ = this._loading$.asObservable();
 
   readonly errorMessage$ = new Subject<string>();
-  private _destroyed$ = new Subject<boolean>();
 
   constructor(
     private readonly http: HttpClient,
     private readonly handle: HandleService,
+    private readonly destroy$: DestroyService,
     private readonly route: ActivatedParamsService
   ) {
     this.getUserByRouteParams();
@@ -41,7 +42,7 @@ export class UserDetailsService implements OnDestroy {
                 this.errorMessage$.next(message);
                 return throwError(() => new Error(message));
               }),
-              takeUntil(this._destroyed$)
+              takeUntil(this.destroy$)
             )
             .subscribe({
               next: (response: User) => this._user$.next(response)
@@ -70,10 +71,5 @@ export class UserDetailsService implements OnDestroy {
       tap((data: User) => this._user$.next(data)),
       catchError(this.handle.errorHandler(`${this.constructor.name}: update`))
     );
-  }
-
-  ngOnDestroy(): void {
-    this._destroyed$.next(true);
-    this._destroyed$.complete();
   }
 }

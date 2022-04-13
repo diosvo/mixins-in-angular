@@ -1,14 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '@lib/components/snackbar/snackbar.component';
-import { Subject } from 'rxjs';
+
+export declare type MessageType = 'success' | 'info' | 'warning' | 'error';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SnackbarService implements OnDestroy {
-  private dismissed$ = new Subject<boolean>();
-  private destroyed$ = new Subject<boolean>();
+export class SnackbarService {
 
   private config: MatSnackBarConfig = {
     duration: 3000,
@@ -38,10 +37,5 @@ export class SnackbarService implements OnDestroy {
       data: message,
       panelClass: panelClasses
     });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

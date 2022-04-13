@@ -1,5 +1,6 @@
 import { Attribute, Component } from '@angular/core';
-import { MessageType } from '../../models/alert';
+import { MessageType } from '@lib/services/snackbar/snackbar.service';
+
 
 @Component({
   selector: 'alert-message',

@@ -86,8 +86,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   private selection = new SelectionModel<{}>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.data && changes.data.currentValue) {
-      this.source = new MatTableDataSource(changes.data.currentValue);
+    if (changes.data.currentValue && !changes.data.firstChange) {
+      this.source.data = changes.data.currentValue;
       this.source.sort = this.sort;
       this.configPaginator();
     };
@@ -104,8 +104,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   ngAfterViewInit(): void {
     this.configColumnTemplates();
 
+    this.source = new MatTableDataSource(this.data);
     this.source.sort = this.sort;
-    this.configPaginator();// length = calling data from API when page index changes
+    this.configPaginator();
 
     this.selection = new SelectionModel<{}>(true, []);
   }
@@ -117,6 +118,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   private configPaginator(): void {
+    // length = calling data from API when page index changes
     this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
   }
 

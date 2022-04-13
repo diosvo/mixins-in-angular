@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { debounceTime, Observable, of, startWith, Subject, takeUntil } from 'rxjs';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { debounceTime, Observable, of, startWith, takeUntil } from 'rxjs';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -15,7 +16,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
     }
   ]
 })
-export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges, OnDestroy {
+export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
   @Input() placeholder: string = 'Select';
   @Input() items: Array<T> | Observable<Array<T>> = [];
   @Output() selectedItem = new EventEmitter<string>();
@@ -30,9 +31,11 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
 
   private isServerSide: boolean = true;
   private currentStaticItems: Array<T> = [];
-  private destroyed$ = new Subject<boolean>();
 
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    private readonly destroyed$: DestroyService
+  ) {
     super(injector);
   }
 
@@ -83,10 +86,5 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
       return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
     }
     return 1;
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

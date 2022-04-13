@@ -8,6 +8,11 @@ import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
+const DEFAULT_FILTER = {
+  query: '',
+  group: 'all'
+};
+
 @Component({
   selector: 'app-list-functions',
   templateUrl: './list-functions.component.html',
@@ -17,19 +22,15 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
     .panel-container {
         display: block;
     }
-
-    .filter-group {
-        width: 100%;
-    }
-  }`]
+  }`],
 })
 export class ListFunctionsComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
 
   functionsForm: FormGroup = this.fb.group({
-    query: [''],
-    group: ['all']
+    query: [DEFAULT_FILTER.query],
+    group: [DEFAULT_FILTER.group]
   });
   groupList = Object.values(EFunctions).sort();
 
@@ -74,7 +75,7 @@ export class ListFunctionsComponent implements OnInit {
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filter]) =>
         data
-          .filter(item => filter.group !== 'all' ? item.groupName === filter.group : 'all')
+          .filter(item => filter.group !== DEFAULT_FILTER.group ? item.groupName === filter.group : DEFAULT_FILTER.group)
           .map(item => ({
             ...item,
             groupDetails: item.groupDetails.filter(details => {
@@ -85,7 +86,6 @@ export class ListFunctionsComponent implements OnInit {
           .filter(item => item.groupDetails.length > 0)
       ),
       tap(() => this.updateParams()),
-      takeUntil(this.destroyed$),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
@@ -100,13 +100,8 @@ export class ListFunctionsComponent implements OnInit {
     });
   }
 
-  cleanQuery(): void {
-    return this.query.setValue('');
-  }
-
   cleanFilters(): void {
-    this.cleanQuery();
-    this.group.setValue('all');
+    this.functionsForm.setValue(DEFAULT_FILTER);
   }
 
   clearAllIconActive(): boolean {

@@ -18,8 +18,8 @@ import { ListComponentUiComponent } from './list-component-ui.component';
   ],
   imports: [
     CommonModule,
-    ComponentsUiRoutingModule,
     ReactiveFormsModule,
+    ComponentsUiRoutingModule,
 
     AlertModule,
     CardItemModule,

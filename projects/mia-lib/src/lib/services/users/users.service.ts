@@ -10,8 +10,6 @@ import { User, users_endpoint, user_id_endpoint } from './user-service.model';
 
 export class UsersService {
 
-  private imported$: Observable<Array<number>>;
-
   constructor(
     private readonly http: HttpClient,
     private readonly handle: HandleService
@@ -31,7 +29,6 @@ export class UsersService {
   }
 
   lookup(data: Observable<Array<User>>, imported: Observable<number[]>): Observable<Array<User>> {
-    this.imported$ = imported;
     return imported.pipe(
       startWith([]),
       switchMap((ids: number[]) =>

@@ -11,7 +11,7 @@ $-bg-colors: ('none': none,
   @each $name,
   $color in $-bg-colors {
     &-#{$name} {
-      background-color: $color;
+      background: $color;
     }
   }
 

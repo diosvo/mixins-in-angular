@@ -104,6 +104,7 @@ $-bd-radius: calc($-unit-px * 2);
 
     mat-table {
       min-width: 1024px;
+      overflow : initial;
     }
   }
 }

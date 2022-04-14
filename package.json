@@ -12,7 +12,8 @@
     "test": "jest",
     "jest:cache": "jest --clearCache",
     "test:co": "jest --coverage --silent",
-    "lint": "ng lint",
+    "lint": "eslint --color --ext .ts \"src/**/*.+(ts)\"",
+    "lint:fix": "yarn lint --fix",
     "build:source-map": "ng build --configuration=production --source-map",
     "source-map-explorer": "source-map-explorer dist/mixins-in-angular/**/*.js"
   },
@@ -46,7 +47,7 @@
     "@typescript-eslint/eslint-plugin": "5.8.1",
     "@typescript-eslint/experimental-utils": "^5.8.1",
     "@typescript-eslint/parser": "5.8.1",
-    "eslint": "^8.6.0",
+    "eslint": "^8.13.0",
     "gsap": "^3.9.1",
     "jest": "^27.4.5",
     "jest-preset-angular": "11.0.0-rc.3",

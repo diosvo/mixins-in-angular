@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { Filter } from '../../models/filter.model';
+import { Filter } from '../../models/service.model';
 
 @Component({
   selector: 'search-filter',

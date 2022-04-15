@@ -1,14 +1,13 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import isEmpty from 'lodash/isempty';
+import isUndefined from 'lodash/isundefined';
 
 @Pipe({
   name: 'filter'
 })
 export class FilterPipe<T> implements PipeTransform {
 
-  private isNull = (text: unknown) => text === null;
-  private isUndefined = (text: unknown) => text === undefined;
-
-  private modify = (text: unknown): string => !this.isNull(text) && text.toString().trim().toLowerCase();
+  private modify = (text: unknown): string => !isEmpty(text) && text.toString().trim().toLowerCase();
 
   transform(data: Array<T>, searchTerm: unknown): Array<T> {
     this.errorHandler(data, searchTerm);
@@ -33,11 +32,11 @@ export class FilterPipe<T> implements PipeTransform {
       throw new Error('Provided data should be an array.');
     }
 
-    if (this.isUndefined(searchTerm)) {
+    if (isUndefined(searchTerm)) {
       throw new Error('Query has not been provided.');
     }
 
-    if (!this.isNull(searchTerm) && typeof searchTerm !== 'string') {
+    if (!isEmpty(searchTerm) && typeof searchTerm !== 'string') {
       throw new Error('The type of query should be string.');
     }
   }

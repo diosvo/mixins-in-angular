@@ -5,6 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { User } from '@lib/services/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
+import isEqual from 'lodash.isequal';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -57,7 +58,7 @@ export class DetailsComponent implements OnInit {
   }
 
   removeHobby(index: number): void {
-    this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => index !== idx));
+    this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => !isEqual(index, idx)));
     this.hobbies.value.forEach((item: string) => this.hobbyValidator(item));
   }
 

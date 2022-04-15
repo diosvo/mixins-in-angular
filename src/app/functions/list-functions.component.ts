@@ -5,6 +5,8 @@ import { IGroupValue } from '@home/models/search.model';
 import { EFunctions } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
+import isEqual from 'lodash.isequal';
+import isUndefined from 'lodash/isundefined';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
@@ -57,7 +59,7 @@ export class ListFunctionsComponent implements OnInit {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
-        if ((params.query && params.group) !== undefined) {
+        if (!isUndefined(params.query && params.group)) {
           this.functionsForm.patchValue(params);
         }
         return;
@@ -75,7 +77,7 @@ export class ListFunctionsComponent implements OnInit {
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filter]) =>
         data
-          .filter(item => filter.group !== DEFAULT_FILTER.group ? item.groupName === filter.group : DEFAULT_FILTER.group)
+          .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
           .map(item => ({
             ...item,
             groupDetails: item.groupDetails.filter(details => {
@@ -109,7 +111,7 @@ export class ListFunctionsComponent implements OnInit {
   }
 
   private get primitiveFilters(): boolean {
-    return this.query.value === '' && this.group.value === 'all';
+    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value, DEFAULT_FILTER.group);
   }
 
   get query(): FormControl {

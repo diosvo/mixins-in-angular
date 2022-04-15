@@ -7,6 +7,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
+import isEmpty from 'lodash.isempty';
+import isEqual from 'lodash.isequal';
+import isUndefined from 'lodash.isundefined';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
@@ -70,7 +73,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
   get columnTemplates(): { [key: string]: TemplateRef<any> } {
-    if (this.columnDefs !== null) {
+    if (isEmpty(this.columnDefs)) {
       const columnTemplates: { [key: string]: TemplateRef<any> } = {};
       for (const column of this.columnDefs.toArray()) {
         columnTemplates[column.columnName] = column.columnTemplate;
@@ -119,7 +122,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   private configPaginator(): void {
     // length = calling data from API when page index changes
-    this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
+    this.source.paginator = isUndefined(this.length) ? this.paginator : this.matPaginator;
   }
 
   private configDisplayColumns(): void {
@@ -152,7 +155,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.source.data.length;
-    return numSelected === numRows;
+    return isEqual(numSelected, numRows);
   }
 
   masterToggle(): void {

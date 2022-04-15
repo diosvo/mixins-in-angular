@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
 import { ActivatedParamsService } from '../activated-params/activated-params.service';
+import { BaseService } from '../base/base.service';
 import { HandleService } from '../base/handle.service';
 import { DestroyService } from '../destroy/destroy.service';
-import { User, users_endpoint, user_id_endpoint } from './user-service.model';
+import { endpoint, id_endpoint, User } from './user-service.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UserDetailsService {
+@Injectable()
+export class UserDetailsService extends BaseService {
   private _user$ = new BehaviorSubject<User>(null);
   readonly currentUser$ = this._user$.asObservable();
 
@@ -19,11 +18,12 @@ export class UserDetailsService {
   readonly errorMessage$ = new Subject<string>();
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly handle: HandleService,
+    protected readonly http: HttpClient,
+    protected readonly handle: HandleService,
     private readonly destroy$: DestroyService,
     private readonly route: ActivatedParamsService
   ) {
+    super(http, handle);
     this.getUserByRouteParams();
   }
 
@@ -52,24 +52,23 @@ export class UserDetailsService {
     });
   }
 
-  byId(id: number): Observable<User> {
-    return this.http.get<Required<User>>(user_id_endpoint(id)).pipe(
+  private byId(id: number): Observable<User> {
+    return this.get(id_endpoint(id)).pipe(
       map(({ id, name, email }) => <User>{ id, name, email, hobbies: ['coding', 'basketball'] }),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: byId`)),
-      shareReplay()
     );
   }
 
   create(user: User): Observable<User> {
-    return this.http.post<Required<User>>(users_endpoint, user).pipe(
-      catchError(this.handle.errorHandler(`${this.constructor.name}: create`)),
-    );
+    return this.post(endpoint, { body: user });
   }
 
   update(user: User): Observable<User> {
-    return this.http.put<Required<User>>(user_id_endpoint(user.id), user).pipe(
-      tap((data: User) => this._user$.next(data)),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: update`))
+    return this.put(id_endpoint(user.id), { body: user }).pipe(
+      tap((data: User) => this._user$.next(data))
     );
+  }
+
+  remove(id: number): Observable<User> {
+    return this.delete(id_endpoint(id));
   }
 }

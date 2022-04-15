@@ -100,7 +100,8 @@ $-bd-radius: calc($-unit-px * 2);
 
 @include screen('small') {
   .custom-table {
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: auto;
 
     mat-table {
       min-width: 1024px;

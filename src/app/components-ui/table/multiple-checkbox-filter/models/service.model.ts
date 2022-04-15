@@ -9,3 +9,8 @@ export interface GithubIssue {
   state: string;
   title: string;
 }
+
+export interface Filter {
+  query: string;
+  state: Array<string>;
+}

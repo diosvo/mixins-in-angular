@@ -1,9 +1,9 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
+import isEmpty from 'lodash/isempty';
 import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
-import { Filter } from '../../models/filter.model';
-import { GithubApi, GithubIssue } from '../../models/service.model';
+import { Filter, GithubApi, GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class DataTableComponent implements OnInit {
   ];
   private _filters$ = new BehaviorSubject<Partial<Filter>>({
     query: '',
-    state: ''
+    state: []
   });
   readonly filters$ = this._filters$.asObservable();
 
@@ -45,7 +45,7 @@ export class DataTableComponent implements OnInit {
       startWith(0),
       switchMap((page: number) => this.service.getRepoIssues(page)),
       map((data: GithubApi): Array<GithubIssue> => {
-        if (data === null) {
+        if (isEmpty(data)) {
           return [];
         }
 

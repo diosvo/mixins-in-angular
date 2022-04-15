@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import isEqual from 'lodash.isequal';
 import { BehaviorSubject, filter, map, of, switchMap, takeUntil } from 'rxjs';
 import { DestroyService } from '../destroy/destroy.service';
 
@@ -17,7 +18,7 @@ export class ActivatedParamsService {
   readonly pathMap$ = this._path$.asObservable();
 
   private isShallowEqual<V = string | Record<string, unknown>>(prev: V, curr: V): boolean {
-    return prev === curr;
+    return isEqual(prev, curr);
   }
 
   constructor(
@@ -36,7 +37,7 @@ export class ActivatedParamsService {
         while (route.firstChild) route = route.firstChild;
         return route;
       }),
-      filter(route => route.outlet === 'primary'),
+      filter(route => isEqual(route.outlet, 'primary')),
       switchMap(({ params, data }) => of({ params, data })),
       takeUntil(this.destroy$)
     );

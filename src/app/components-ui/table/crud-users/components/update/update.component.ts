@@ -5,6 +5,7 @@ import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
+import isEqual from 'lodash.isequal';
 import { combineLatest, filter, finalize, map, Observable, startWith, take, tap } from 'rxjs';
 
 @Component({
@@ -46,7 +47,7 @@ export class UpdateComponent implements OnInit, DeactivateComponent {
       this.user.valueChanges
     ])
       .pipe(
-        map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
+        map(([prev, next]) => !isEqual(prev, next)),
         startWith(false),
       )
       .subscribe((changed: boolean) => this.hasChanged = changed);

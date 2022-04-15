@@ -3,6 +3,7 @@ import {
   HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode, HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import isEqual from 'lodash.isequal';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -18,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === HttpStatusCode.Unauthorized) {
+        if (isEqual(error.status, HttpStatusCode.Unauthorized)) {
           this.service.logout();
         }
         return throwError(() => new Error(error.message));

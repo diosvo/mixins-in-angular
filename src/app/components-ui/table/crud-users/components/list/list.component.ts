@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
 import { catchError, filter, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
@@ -27,14 +28,15 @@ export class ListComponent implements OnInit {
 
   constructor(
     private readonly dialog: MatDialog,
+    private readonly service: UsersService,
     private readonly snackbar: SnackbarService,
-    private readonly userService: UsersService,
+    private readonly details: UserDetailsService,
   ) { }
 
   ngOnInit(): void {
     this.loading = true;
 
-    this.users$ = this.userService.all().pipe(
+    this.users$ = this.service.all().pipe(
       finalize(() => this.loading = false),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
@@ -62,7 +64,7 @@ export class ListComponent implements OnInit {
   private delete(user: User): void {
     this.loading = true;
 
-    this.userService.delete(user.id as number)
+    this.details.remove(user.id)
       .pipe(
         switchMap(() => this.users$ = this.users$.pipe(
           map((data: Array<User>) => data.filter(item => item.id !== user.id))

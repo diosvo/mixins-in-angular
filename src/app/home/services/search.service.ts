@@ -2,30 +2,31 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IGroupValue } from '@home/models/search.model';
 import { EUrl } from '@home/models/url.enum';
+import { BaseService } from '@lib/services/base/base.service';
 import { HandleService } from '@lib/services/base/handle.service';
 import { Observable } from 'rxjs';
-import { catchError, map, shareReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class SearchService {
+export class SearchService extends BaseService {
 
-  uiComponentsList$ = this.getFetch(EUrl.COMPONENT, 'uiComponentsList');
-  functionsList$ = this.getFetch(EUrl.FUNCTION, 'functionsList');
-  core$ = this.getFetch(EUrl.CORE, 'core');
+  uiComponentsList$ = this.getFetch(EUrl.COMPONENT);
+  functionsList$ = this.getFetch(EUrl.FUNCTION);
+  core$ = this.getFetch(EUrl.CORE);
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly handle: HandleService
-  ) { }
+    protected readonly http: HttpClient,
+    protected readonly handle: HandleService
+  ) {
+    super(http, handle);
+  }
 
-  private getFetch(groupUrl: EUrl, method: string): Observable<IGroupValue[]> {
-    return this.http.get(`/assets/backend/list-items/${groupUrl}.json`).pipe(
+  private getFetch(groupUrl: EUrl): Observable<IGroupValue[]> {
+    return this.get(`/assets/backend/list-items/${groupUrl}.json`).pipe(
       map((data: IGroupValue[]) => data.map(item => ({ ...item, groupUrl }))),
-      shareReplay(),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: ${method}`))
     );
   }
 }

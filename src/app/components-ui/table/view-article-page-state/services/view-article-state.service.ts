@@ -5,11 +5,13 @@ import { SortDirection } from '@angular/material/sort';
 import { environment } from '@env/environment';
 import { concatQueries, DEFAULT_PAGINATE_PARAMS } from '@lib/models/table';
 import { StateAtom } from '@lib/services/atom/atom.service';
+import { BaseService } from '@lib/services/base/base.service';
+import { HandleService } from '@lib/services/base/handle.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, finalize, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
 import { Article, Comment, initialArticleState, PaginateParams, ViewArticleState } from '../models/article.model';
 
 @Injectable()
-export class ViewArticleStateService {
+export class ViewArticleStateService extends BaseService {
 
   private currentState: ViewArticleState = initialArticleState;
 
@@ -35,8 +37,10 @@ export class ViewArticleStateService {
   );
 
   constructor(
-    private readonly http: HttpClient
+    protected readonly http: HttpClient,
+    protected readonly handle: HandleService
   ) {
+    super(http, handle);
     this.handleEffects();
   }
 
@@ -135,10 +139,10 @@ export class ViewArticleStateService {
    * @returns the filtered Articles by user id
   */
 
-  private getArticles(params: PaginateParams, userId?: number): Observable<Array<Article>> {
+  private getArticles(params: PaginateParams, userId?: number): Observable<Article[]> {
     const queries = concatQueries(params);
     const merged = userId ? queries.concat(`userId=${userId}`) : queries;
-    return this.http.get<Array<Article>>(this.postUrl + merged);
+    return this.get(this.postUrl + merged) as Observable<Article[]>;
   }
 
   /**
@@ -147,7 +151,7 @@ export class ViewArticleStateService {
   */
 
   private findById(id: number): Observable<Article> {
-    return this.http.get<Article>(this.postUrl + id);
+    return this.get(this.postUrl + id) as Observable<Article>;
   }
 
   /**
@@ -156,10 +160,9 @@ export class ViewArticleStateService {
    * 
   */
 
-  private findCommentsByArticle(id: number, searchTerm: string, params: PaginateParams): Observable<Array<Comment>> {
-    return this.http.get<Array<Comment>>(
-      environment.jsonPlaceHolderUrl + `comments?postId=${id}&_start=${params.start}&_limit=${params.limit}`
-    );
+  private findCommentsByArticle(id: number, searchTerm: string, params: PaginateParams): Observable<Comment[]> {
+    const queries = environment.jsonPlaceHolderUrl + `comments?postId=${id}&_start=${params.start}&_limit=${params.limit}`;
+    return this.get(queries) as Observable<Comment[]>;
   }
 
   private get postUrl(): string {

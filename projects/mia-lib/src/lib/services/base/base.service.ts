@@ -17,7 +17,7 @@ export type Method = Lowercase<`${EMethod}`>;
 @Injectable()
 export abstract class BaseService {
 
-  constructor(
+  protected constructor(
     protected readonly httpClient: HttpClient,
     protected readonly handle: HandleService
   ) { }

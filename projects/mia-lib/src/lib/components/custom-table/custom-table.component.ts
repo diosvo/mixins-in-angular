@@ -73,7 +73,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
   get columnTemplates(): { [key: string]: TemplateRef<any> } {
-    if (isEmpty(this.columnDefs)) {
+    if (!isEmpty(this.columnDefs)) {
       const columnTemplates: { [key: string]: TemplateRef<any> } = {};
       for (const column of this.columnDefs.toArray()) {
         columnTemplates[column.columnName] = column.columnTemplate;

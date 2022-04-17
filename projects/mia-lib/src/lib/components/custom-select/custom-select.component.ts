@@ -3,6 +3,7 @@ import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { debounceTime, Observable, of, startWith, takeUntil } from 'rxjs';
+import { FilterPipe } from '../../pipes/filter.pipe';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -18,7 +19,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
 })
 export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
   @Input() placeholder: string = 'Select';
-  @Input() items: Array<T> | Observable<Array<T>> = [];
+  @Input() items: T[] | Observable<T[]> = [];
   @Output() selectedItem = new EventEmitter<string>();
   filterControl: FormControl = new FormControl('');
 
@@ -30,7 +31,7 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   private isServerSide: boolean = true;
-  private currentStaticItems: Array<T> = [];
+  private currentStaticItems: T[] = [];
 
   constructor(
     injector: Injector,
@@ -66,12 +67,11 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   }
 
   private filteredItems(value: string): void {
-    const currentItems = this.currentStaticItems;
-    const filterValue = this.normalizeValue(value);
+    const items = this.currentStaticItems;
+    const query = this.normalizeValue(value);
+    const filterFn = new FilterPipe().transform(items, query) as T[];
 
-    this.items = of(
-      currentItems.filter((item: T) => this.normalizeValue(item).includes(filterValue))
-    );
+    this.items = of(filterFn);
   }
 
   private normalizeValue(value: unknown): string {

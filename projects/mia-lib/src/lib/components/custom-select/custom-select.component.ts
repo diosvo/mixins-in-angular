@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
+import isEqual from 'lodash.isequal';
 import { debounceTime, Observable, of, startWith, takeUntil } from 'rxjs';
 import { FilterPipe } from '../../pipes/filter.pipe';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
@@ -18,20 +20,22 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
   ]
 })
 export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
-  @Input() placeholder: string = 'Select';
+
   @Input() items: T[] | Observable<T[]> = [];
   @Output() selectedItem = new EventEmitter<string>();
-  filterControl: FormControl = new FormControl('');
 
   @Input() bindLabelKey: string;
   @Input() bindValueKey: string;
-  @Input() bindKeyValue: boolean = false;
-  @Input() searchPlaceholder: string = 'Search your item...';
+  @Input() bindKeyValue = false;
 
+  @Input() checkAll: boolean = true;
+  @Input() placeholder: string = 'Select';
+  @Input() searchPlaceholder: string = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
-  private isServerSide: boolean = true;
+  private isServerSide = true;
   private currentStaticItems: T[] = [];
+  filterControl = new FormControl('');
 
   constructor(
     injector: Injector,
@@ -67,10 +71,7 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   }
 
   private filteredItems(value: string): void {
-    const items = this.currentStaticItems;
-    const query = this.normalizeValue(value);
-    const filterFn = new FilterPipe().transform(items, query) as T[];
-
+    const filterFn = new FilterPipe().transform(this.currentStaticItems, this.normalizeValue(value)) as T[];
     this.items = of(filterFn);
   }
 
@@ -86,5 +87,19 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
       return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
     }
     return 1;
+  }
+
+  /* Functions to support Check All feature */
+
+  hasValue(): boolean {
+    return this.currentStaticItems.length > 0;
+  }
+
+  isAllSelected(): boolean {
+    return isEqual(this.control.value.length, this.currentStaticItems.length);
+  }
+
+  toggleSelection(change: MatCheckboxChange): void {
+    this.control.setValue(change.checked ? this.currentStaticItems : []);
   }
 }

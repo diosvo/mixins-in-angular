@@ -1,4 +1,5 @@
 import { fakeAsync, tick } from '@angular/core/testing';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { Observable } from 'rxjs';
 import { CustomSelectComponent } from './custom-select.component';
 
@@ -8,12 +9,7 @@ describe('CustomSelectComponent', () => {
   const value: string = 'test' as const;
 
   beforeEach(() => {
-    component = new CustomSelectComponent({} as any);
-  });
-
-  afterEach(() => {
-    jest.spyOn(component, 'ngOnDestroy');
-    component.ngOnDestroy();
+    component = new CustomSelectComponent({} as any, new DestroyService());
   });
 
   test('should create', () => {
@@ -115,6 +111,16 @@ describe('CustomSelectComponent', () => {
 
     test('return ascending if the items does not include object schema (bindKeyValue is false as default)', () => {
       expect(component.sortFunc()).toBe(1);
+    });
+  });
+
+  describe('conditions to check the parent box (All)', () => {
+    test('hasValue() to determine there has values or not', () => {
+      component['currentStaticItems'] = [];
+      expect(component.hasValue()).toBe(false);
+
+      component['currentStaticItems'] = [value];
+      expect(component.hasValue()).toBe(true);
     });
   });
 });

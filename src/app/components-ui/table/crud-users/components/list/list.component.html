@@ -11,13 +11,23 @@
 
   <custom-table
     *ngIf="users$ | async as data"
-    [data]="data"
+    [data]="data | filter: query.value"
     [columns]="columns"
     [defaultSortColumn]="'name'"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
       <custom-button [routerLink]="['create']"> Create User</custom-button>
+    </div>
+
+    <div filters>
+      <custom-input
+        class="flex-1"
+        label="search"
+        [clearFilter]="true"
+        [formControl]="query"
+      >
+      </custom-input>
     </div>
 
     <custom-column columnName="email">

@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IGroupValue } from '@home/models/search.model';
+import { IBaseValue, IGroupValue } from '@home/models/search.model';
 import { EComponentUI } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
 import isEqual from 'lodash.isequal';
-import isUndefined from 'lodash/isundefined';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+
+const groupList = Object.values(EComponentUI);
 
 const DEFAULT_FILTER = {
   query: '',
-  group: 'all'
+  group: groupList
 };
 
 @Component({
@@ -29,24 +28,20 @@ const DEFAULT_FILTER = {
 export class ListComponentUiComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
-  filteredData$: Observable<Array<IGroupValue>>;
+  filteredData$: Observable<IGroupValue[]>;
 
+  readonly selection = groupList;
   componentsForm: FormGroup = this.fb.group({
     query: [DEFAULT_FILTER.query],
     group: [DEFAULT_FILTER.group]
   });
-  groupList = Object.values(EComponentUI);
 
   constructor(
-    private readonly router: Router,
     private readonly fb: FormBuilder,
-    private readonly route: ActivatedRoute,
-    private readonly destroyed$: DestroyService,
     private readonly searchService: SearchService,
   ) { }
 
   ngOnInit(): void {
-    this.watchForQueryParams();
     this.onFilters();
   }
 
@@ -54,51 +49,32 @@ export class ListComponentUiComponent implements OnInit {
    * @description Search
    */
 
-  private watchForQueryParams(): void {
-    this.route.queryParams
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => {
-        if (isUndefined(params.query && params.group)) {
-          this.componentsForm.patchValue(params);
-        }
-        return;
-      });
-  }
-
   private onFilters(): void {
     const data$ = this.searchService.uiComponentsList$;
     const filters$ = this.componentsForm.valueChanges.pipe(
       startWith(this.componentsForm.value),
       debounceTime(100),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
 
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
-      map(([data, filter]) =>
+      map(([data, filters]) =>
         data
-          .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
-          .map(item => ({
+          .filter((item: IGroupValue) => filters.group.includes(item.groupName))
+          .map((item: IGroupValue) => ({
             ...item,
-            groupDetails: item.groupDetails.filter(details => {
-              const searchTerm = details.name + details.description + item.groupName;
-              return searchTerm.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1;
+            groupDetails: item.groupDetails.filter((details: IBaseValue) => {
+              const searchTerms = details.name + details.description + item.groupName;
+              return searchTerms.trim().toLowerCase().includes(filters.query.trim().toLowerCase());
             })
           }))
           .filter(item => item.groupDetails.length > 0)
       ),
-      tap(() => this.updateParams()),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
       }),
     );
-  }
-
-  updateParams(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: this.componentsForm.value
-    });
   }
 
   /**
@@ -114,7 +90,7 @@ export class ListComponentUiComponent implements OnInit {
   }
 
   private get primitiveFilters(): boolean {
-    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value, DEFAULT_FILTER.group);
+    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value.length, DEFAULT_FILTER.group.length);
   }
 
   get query(): FormControl {

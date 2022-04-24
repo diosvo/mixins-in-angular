@@ -1,9 +1,10 @@
 import { Component, OnInit, Self } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import isEmpty from 'lodash/isempty';
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
-import { Filter, GithubApi, GithubIssue } from '../../models/service.model';
+import isEmpty from 'lodash.isempty';
+import { catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
+import { GithubApi, GithubIssue } from '../../models/service.model';
 import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
 
 @Component({
@@ -14,25 +15,28 @@ import { GithubRepoIssuesService } from '../../service/github-repo-issues.servic
 })
 
 export class DataTableComponent implements OnInit {
-  errorMessage$ = new Subject<boolean>();
-  issues$: Observable<Array<GithubIssue>>;
 
-  columns: Array<TableColumn> = [
+  issues$: Observable<GithubIssue[]>;
+  errorMessage$ = new Subject<boolean>();
+
+  readonly states = ['open', 'closed'];
+
+  columns: TableColumn[] = [
     { key: 'created_at', flex: '15%' },
     { key: 'state', disableSorting: true, flex: '15%' },
     { key: 'number', flex: '15%' },
     { key: 'title', flex: '55%' },
   ];
-  private _filters$ = new BehaviorSubject<Partial<Filter>>({
-    query: '',
-    state: []
+  filterForm: FormGroup = this.fb.group({
+    query: ['', { initialValueIsDefault: true }],
+    state: [this.states, { initialValueIsDefault: true }]
   });
-  readonly filters$ = this._filters$.asObservable();
 
   resultsLength: number;
   private _pageIndex$ = new Subject<number>();
 
   constructor(
+    private readonly fb: FormBuilder,
     @Self() private readonly service: GithubRepoIssuesService
   ) { }
 
@@ -44,7 +48,7 @@ export class DataTableComponent implements OnInit {
     const data$ = this._pageIndex$.pipe(
       startWith(0),
       switchMap((page: number) => this.service.getRepoIssues(page)),
-      map((data: GithubApi): Array<GithubIssue> => {
+      map((data: GithubApi): GithubIssue[] => {
         if (isEmpty(data)) {
           return [];
         }
@@ -53,25 +57,16 @@ export class DataTableComponent implements OnInit {
         return data.items;
       }),
     );
+    const filters$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
 
-    this.issues$ = combineLatest([data$, this.filters$]).pipe(
-      map(([data, params]) =>
-        data.filter((item: GithubIssue) => {
-          let conditions = true;
-          const filterValues = JSON.parse(JSON.stringify(params));
-
-          for (const key in filterValues) {
-            if (key === 'query') {
-              const searchTerm = item.number + item.title;
-              conditions = conditions && searchTerm.toLowerCase().indexOf(filterValues['query'].trim().toLowerCase()) !== -1;
-            }
-            else if (filterValues[key].length) {
-              conditions = conditions && filterValues[key].includes(item[key].trim().toLowerCase());
-            }
-          }
-
-          return conditions;
-        })
+    this.issues$ = combineLatest([data$, filters$]).pipe(
+      map(([data, params]): GithubIssue[] =>
+        data
+          .filter((item: GithubIssue) => {
+            const searchTerm = item.number + item.title;
+            return searchTerm.trim().toLowerCase().includes(params.query.trim().toLowerCase());
+          })
+          .filter((item: GithubIssue) => params.state.includes(item.state))
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
@@ -82,9 +77,5 @@ export class DataTableComponent implements OnInit {
 
   pageChanges({ pageIndex }: PageEvent): void {
     this._pageIndex$.next(pageIndex);
-  }
-
-  filteredIssues($event: Filter): void {
-    this._filters$.next($event);
   }
 }

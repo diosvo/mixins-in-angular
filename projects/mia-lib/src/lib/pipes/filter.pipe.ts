@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import isEmpty from 'lodash/isempty';
-import isUndefined from 'lodash/isundefined';
+import isEmpty from 'lodash.isempty';
+import isUndefined from 'lodash.isundefined';
 
 @Pipe({
   name: 'filter'
@@ -10,7 +10,7 @@ export class FilterPipe<T> implements PipeTransform {
   private modify = (text: unknown): string => !isEmpty(text) && text.toString().trim().toLowerCase();
 
   transform(data: Array<T>, searchTerm: unknown): Array<T> {
-    this.errorHandler(data, searchTerm);
+    this.errorsHandler(data, searchTerm);
 
     if (!data || !this.modify(searchTerm)) {
       return data;
@@ -27,7 +27,7 @@ export class FilterPipe<T> implements PipeTransform {
       : predicate(data);
   }
 
-  private errorHandler(data: Array<T>, searchTerm: unknown): void {
+  private errorsHandler(data: Array<T>, searchTerm: unknown): void {
     if (!Array.isArray(data)) {
       throw new Error('Provided data should be an array.');
     }

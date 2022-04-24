@@ -1,41 +1,18 @@
-import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AlertModule } from '@lib/components/alert/alert.module';
-import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
-import { SearchFilterComponent } from '../search-filter/search-filter.component';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { of, throwError } from 'rxjs';
+import { GithubIssue } from '../../models/service.model';
 import { DataTableComponent } from './data-table.component';
 
 describe('DataTableComponent', () => {
   let component: DataTableComponent;
-  let fixture: ComponentFixture<DataTableComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [DataTableComponent, SearchFilterComponent],
-      imports: [
-        AlertModule,
-        CustomTableModule,
-
-        HttpClientModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-
-        MatInputModule,
-        MatSelectModule,
-        MatFormFieldModule,
-      ]
-    })
-      .compileComponents();
-  }));
+  const mockService: any = {
+    getRepoIssues: jest.fn().mockReturnValue(of([]))
+  };
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataTableComponent);
-    component = fixture.componentInstance;
+    component = new DataTableComponent(new FormBuilder(), mockService);
+    component['_pageIndex$'].next(0);
   });
 
   test('should create', () => {
@@ -51,11 +28,55 @@ describe('DataTableComponent', () => {
   describe('getIssues()', () => {
     test('should return empty data when no data found', () => {
       component['getIssues']();
-      component['_pageIndex$'].next(0);
-      component['_filters$'].next({ query: 'test', state: ['close'] });
-
-      component.issues$.subscribe(response => {
+      component.issues$.subscribe((response: GithubIssue[]) => {
         expect(response).toEqual([]);
+      });
+    });
+
+    test('should return filtered data when the filters changes', (done) => {
+      component.filterForm = new FormGroup({
+        query: new FormControl(''),
+        state: new FormControl(['open'])
+      });
+      mockService.getRepoIssues.mockReturnValue(of({
+        total_count: 2,
+        items: [
+          {
+            id: 1,
+            number: 24819,
+            state: 'open',
+            title: 'chore: CodeQL Action'
+          },
+          {
+            id: 2,
+            number: 24819,
+            state: 'closed',
+            title: 'feat(cdk/menu): move experimental CDK menu into stable'
+          }
+        ]
+      }));
+
+      component['getIssues']();
+      component.issues$.subscribe((response: GithubIssue[]) => {
+        expect(response).toEqual([
+          {
+            id: 1,
+            number: 24819,
+            state: 'open',
+            title: 'chore: CodeQL Action'
+          }
+        ]);
+        done();
+      });
+    });
+
+    test('should return error message when api returns fail', () => {
+      mockService.getRepoIssues.mockReturnValue(throwError(() => new Error('Bad Request')));
+      jest.spyOn(component['errorMessage$'], 'next');
+
+      component['getIssues']();
+      component.issues$.subscribe(() => {
+        expect(component['errorMessage$'].next).toBeCalledWith('Bad Request');
       });
     });
   });
@@ -66,16 +87,5 @@ describe('DataTableComponent', () => {
 
     component.pageChanges(page);
     expect(component['_pageIndex$'].next).toBeCalledWith(page.pageIndex);
-  });
-
-  test('filteredIssues()', () => {
-    const params = {
-      query: '',
-      state: ['open']
-    };
-    jest.spyOn(component['_filters$'], 'next');
-
-    component.filteredIssues(params);
-    expect(component['_filters$'].next).toBeCalledWith(params);
   });
 });

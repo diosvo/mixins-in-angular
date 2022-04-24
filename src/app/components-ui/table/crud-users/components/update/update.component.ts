@@ -21,6 +21,7 @@ export class UpdateComponent implements OnInit, DeactivateComponent {
   isValid = true;
   saving = false;
   hasChanged = false;
+  allowNavigation = false;
 
   errorMessage$: Observable<string>;
   readonly loading$: Observable<boolean> = this.service.loading$;
@@ -30,7 +31,6 @@ export class UpdateComponent implements OnInit, DeactivateComponent {
     private readonly snackbar: SnackbarService,
     private readonly service: UserDetailsService,
   ) { }
-  isAllowed: boolean;
 
   ngOnInit(): void {
     this.user$ = this.service.currentUser$.pipe(

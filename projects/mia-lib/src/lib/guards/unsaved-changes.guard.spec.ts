@@ -53,19 +53,20 @@ describe('UnsavedChangesGuard', () => {
 
     beforeEach(() => {
       component = {
+        allowNavigation: false,
         canDeactivate: jest.fn().mockReturnValue(false),
         saveChanges: jest.fn()
       };
     });
 
-    test('should save changes (when user clicks on Save button)', (done) => {
+    test('should save changes (when the user clicks on Save button)', (done) => {
       jest.spyOn(dialog, 'open').mockReturnValue(
         { afterClosed: () => of(false) } as MatDialogRef<typeof UnsavedChangesDialogComponent>
       );
 
       guard.canDeactivate(component).subscribe({
-        next: (changes: boolean) => {
-          expect(changes).toBe(false);
+        next: (discard: boolean) => {
+          expect(discard).toBe(false);
           expect(component.saveChanges).toBeCalledWith('http://localhost:4200/ui-components');
           done();
         },
@@ -73,11 +74,28 @@ describe('UnsavedChangesGuard', () => {
       });
     });
 
-    test('should NOT save changes (when user clicks on Discard button)', (done) => {
+    test('should NOT save changes (when the user clicks on Discard button)', (done) => {
       jest.spyOn(dialog, 'open').mockReturnValue(
         { afterClosed: () => of(true) } as MatDialogRef<typeof UnsavedChangesDialogComponent>
       );
 
+      guard.canDeactivate(component).subscribe({
+        next: (discard: boolean) => {
+          expect(discard).toBe(true);
+          done();
+        },
+        error: error => fail(error),
+      });
+    });
+  });
+
+  describe('returns true (not show dialog)', () => {
+    test('when there has not been changed', (done) => {
+      const component = {
+        allowNavigation: false,
+        canDeactivate: jest.fn().mockReturnValue(true),
+        saveChanges: jest.fn()
+      };
       guard.canDeactivate(component).subscribe({
         next: (changes: boolean) => {
           expect(changes).toBe(true);
@@ -86,19 +104,20 @@ describe('UnsavedChangesGuard', () => {
         error: error => fail(error),
       });
     });
-  });
 
-  test('returns true (not show dialog) when there has NO changed', (done) => {
-    const component = {
-      canDeactivate: jest.fn().mockReturnValue(true),
-      saveChanges: jest.fn()
-    };
-    guard.canDeactivate(component).subscribe({
-      next: (changes: boolean) => {
-        expect(changes).toBe(true);
-        done();
-      },
-      error: error => fail(error),
+    test('when allow navigation is true', (done) => {
+      const component = {
+        allowNavigation: true,
+        canDeactivate: jest.fn().mockReturnValue(true),
+        saveChanges: jest.fn()
+      };
+      guard.canDeactivate(component).subscribe({
+        next: (changes: boolean) => {
+          expect(changes).toBe(true);
+          done();
+        },
+        error: error => fail(error),
+      });
     });
   });
 });

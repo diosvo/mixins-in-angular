@@ -16,6 +16,7 @@ import { map, startWith } from 'rxjs/operators';
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   hasChanged = false;
+  allowNavigation = false;
 
   unsavedForm: FormGroup = this.fb.group({
     team_name: ['Dios', Validators.required],
@@ -30,7 +31,6 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
     private readonly snackbar: SnackbarService,
     @Self() readonly detectPermission: DetectPermissionService,
   ) { }
-  isAllowed: boolean;
 
   ngOnInit(): void {
     this.formState();

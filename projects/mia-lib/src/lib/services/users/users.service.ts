@@ -8,7 +8,7 @@ import { User } from './user-service.model';
 
 @Injectable()
 
-export class UsersService extends BaseService {
+export class UsersService extends BaseService<User> {
 
   private endpoint = environment.jsonPlaceHolderUrl + 'users';
 
@@ -20,7 +20,7 @@ export class UsersService extends BaseService {
   }
 
   all(): Observable<User[]> {
-    return this.get(this.endpoint) as Observable<User[]>;
+    return this.list(this.endpoint);
   }
 
   lookup(data: Observable<User[]>, imported: Observable<number[]>): Observable<User[]> {

@@ -7,7 +7,7 @@ import { GithubApi } from '../models/service.model';
 
 @Injectable()
 
-export class GithubRepoIssuesService extends BaseService {
+export class GithubRepoIssuesService extends BaseService<GithubApi> {
 
   constructor(
     protected readonly http: HttpClient,
@@ -20,6 +20,6 @@ export class GithubRepoIssuesService extends BaseService {
     const href = 'https://api.github.com/search/issues';
     const requestUrl = `${href}?q=repo:angular/components&page=${page + 1}`;
 
-    return this.get(requestUrl) as Observable<GithubApi>;
+    return this.get(requestUrl);
   }
 }

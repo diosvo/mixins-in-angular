@@ -11,7 +11,7 @@ import { combineLatest, debounceTime, distinctUntilChanged, filter, finalize, ma
 import { Article, Comment, initialArticleState, PaginateParams, ViewArticleState } from '../models/article.model';
 
 @Injectable()
-export class ViewArticleStateService extends BaseService {
+export class ViewArticleStateService extends BaseService<unknown> {
 
   private currentState: ViewArticleState = initialArticleState;
 
@@ -142,7 +142,7 @@ export class ViewArticleStateService extends BaseService {
   private getArticles(params: PaginateParams, userId?: number): Observable<Article[]> {
     const queries = concatQueries(params);
     const merged = userId ? queries.concat(`userId=${userId}`) : queries;
-    return this.get(this.postUrl + merged) as Observable<Article[]>;
+    return this.list(this.postUrl + merged) as Observable<Article[]>;
   }
 
   /**
@@ -162,7 +162,7 @@ export class ViewArticleStateService extends BaseService {
 
   private findCommentsByArticle(id: number, searchTerm: string, params: PaginateParams): Observable<Comment[]> {
     const queries = environment.jsonPlaceHolderUrl + `comments?postId=${id}&_start=${params.start}&_limit=${params.limit}`;
-    return this.get(queries) as Observable<Comment[]>;
+    return this.list(queries) as Observable<Comment[]>;
   }
 
   private get postUrl(): string {

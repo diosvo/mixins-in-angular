@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 
-export class SearchService extends BaseService {
+export class SearchService extends BaseService<IGroupValue> {
 
   uiComponentsList$ = this.getFetch(EUrl.COMPONENT);
   functionsList$ = this.getFetch(EUrl.FUNCTION);
@@ -25,7 +25,7 @@ export class SearchService extends BaseService {
   }
 
   private getFetch(groupUrl: EUrl): Observable<IGroupValue[]> {
-    return this.get(`/assets/backend/list-items/${groupUrl}.json`).pipe(
+    return this.list(`/assets/backend/list-items/${groupUrl}.json`).pipe(
       map((data: IGroupValue[]) => data.map(item => ({ ...item, groupUrl }))),
     );
   }

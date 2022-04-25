@@ -8,7 +8,7 @@ import { DestroyService } from '../destroy/destroy.service';
 import { endpoint, id_endpoint, User } from './user-service.model';
 
 @Injectable()
-export class UserDetailsService extends BaseService {
+export class UserDetailsService extends BaseService<User> {
   private _user$ = new BehaviorSubject<User>(null);
   readonly currentUser$ = this._user$.asObservable();
 
@@ -59,16 +59,16 @@ export class UserDetailsService extends BaseService {
   }
 
   create(user: User): Observable<User> {
-    return this.post(endpoint, { body: user });
+    return this.add(endpoint, { body: user });
   }
 
   update(user: User): Observable<User> {
-    return this.put(id_endpoint(user.id), { body: user }).pipe(
+    return this.edit(id_endpoint(user.id), { body: user }).pipe(
       tap((data: User) => this._user$.next(data))
     );
   }
 
-  remove(id: number): Observable<User> {
-    return this.delete(id_endpoint(id));
+  remove(user: User): Observable<User> {
+    return this.delete(id_endpoint(user.id));
   }
 }

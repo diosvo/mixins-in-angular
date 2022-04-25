@@ -86,7 +86,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   readonly DEFAULT_PAGESIZE = 5;
   source: MatTableDataSource<T>;
-  private selection = new SelectionModel<{}>(true, []); // store selection data
+  selection = new SelectionModel<{}>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data.currentValue && !changes.data.firstChange) {
@@ -110,8 +110,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.source = new MatTableDataSource(this.data);
     this.source.sort = this.sort;
     this.configPaginator();
-
-    this.selection = new SelectionModel<{}>(true, []);
   }
 
   getIndex(index: number): number {

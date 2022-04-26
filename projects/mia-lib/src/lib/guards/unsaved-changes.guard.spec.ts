@@ -53,7 +53,7 @@ describe('UnsavedChangesGuard', () => {
 
     beforeEach(() => {
       component = {
-        allowNavigation: false,
+        internalNavigation: false,
         canDeactivate: jest.fn().mockReturnValue(false),
         saveChanges: jest.fn()
       };
@@ -92,7 +92,7 @@ describe('UnsavedChangesGuard', () => {
   describe('returns true (not show dialog)', () => {
     test('when there has not been changed', (done) => {
       const component = {
-        allowNavigation: false,
+        internalNavigation: false,
         canDeactivate: jest.fn().mockReturnValue(true),
         saveChanges: jest.fn()
       };
@@ -107,7 +107,7 @@ describe('UnsavedChangesGuard', () => {
 
     test('when allow navigation is true', (done) => {
       const component = {
-        allowNavigation: true,
+        internalNavigation: true,
         canDeactivate: jest.fn().mockReturnValue(true),
         saveChanges: jest.fn()
       };

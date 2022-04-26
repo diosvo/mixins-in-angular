@@ -21,7 +21,7 @@ export class UpdateComponent implements OnInit, DeactivateComponent {
   isValid = true;
   saving = false;
   hasChanged = false;
-  allowNavigation = false;
+  internalNavigation = false;
 
   errorMessage$: Observable<string>;
   readonly loading$: Observable<boolean> = this.service.loading$;

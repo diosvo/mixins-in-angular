@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 export interface DeactivateComponent {
-  allowNavigation: boolean;
+  internalNavigation?: boolean;
   canDeactivate: () => boolean;
   saveChanges: (url: string) => void;
 }
@@ -25,7 +25,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
   ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
-    if (!component.canDeactivate() && !component.allowNavigation) {
+    if (!component.canDeactivate() && !component.internalNavigation) {
       const dialogRef = this.dialog.open(UnsavedChangesDialogComponent, {
         width: '400px',
         disableClose: true

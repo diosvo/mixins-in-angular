@@ -1,7 +1,4 @@
-<form
-  [formGroup]="unsavedForm"
-  class="d-flex flex-direction-column jc-center ai-center"
->
+<div class="d-flex flex-direction-column jc-center ai-center">
   <!-- Message -->
   <div class="w-400 mt-3" *ngIf="!detectPermission.hasPermission">
     <alert-message type="error">
@@ -11,10 +8,8 @@
 
   <!-- Form -->
   <div class="w-400 bg-white bd-auto bs-light p-3 m-3">
-    <custom-input label="Team Name" formControlName="team_name">
-      <small error *ngIf="unsavedForm.get('team_name').invalid">
-        Required
-      </small>
+    <custom-input label="Team Name" [formControl]="name">
+      <small error *ngIf="name.invalid"> Required </small>
     </custom-input>
 
     <!-- Actions -->
@@ -26,10 +21,10 @@
         mat-flat-button
         color="primary"
         (click)="saveChanges()"
-        [disabled]="canDeactivate() || !unsavedForm.valid"
+        [disabled]="!hasChanged || name.invalid"
       >
         Update
       </button>
     </div>
   </div>
-</form>
+</div>

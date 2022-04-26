@@ -2,6 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from './snackbar.service';
 
+export const mockSnackbar = {
+  success: jest.fn(),
+  error: jest.fn()
+};
+
 describe('SnackbarService', () => {
   let service: SnackbarService;
   const message = 'This is message string' as const;

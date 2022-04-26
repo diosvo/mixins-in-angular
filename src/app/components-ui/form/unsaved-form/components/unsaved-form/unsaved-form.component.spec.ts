@@ -12,17 +12,13 @@ import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { ERole } from '@lib/models/role';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
 import { of } from 'rxjs';
 import { UnsavedFormComponent } from './unsaved-form.component';
 
 describe('UnsavedFormComponent', () => {
   let component: UnsavedFormComponent;
   let fixture: ComponentFixture<UnsavedFormComponent>;
-
-  const snackbar = {
-    success: jest.fn(),
-    error: jest.fn()
-  };
 
   const route = ({
     data: of({ roles: [ERole.ADMIN] })
@@ -58,7 +54,7 @@ describe('UnsavedFormComponent', () => {
         },
         {
           provide: SnackbarService,
-          useValue: snackbar
+          useValue: mockSnackbar
         },
         {
           provide: AuthService,
@@ -79,22 +75,19 @@ describe('UnsavedFormComponent', () => {
     fixture.detectChanges();
   });
 
-  test('ngOnInit()', () => {
-    jest.spyOn(component as any, 'formState');
-    jest.spyOn(component as any, 'watchForChanges');
-
-    component.ngOnInit();
-
-    expect(component['formState']).toBeCalled();
-    expect(component['watchForChanges']).toBeCalled();
-  });
-
   test('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  test('ngOnInit()', () => {
+    jest.spyOn(component as any, 'watchForChanges');
+    component.ngOnInit();
+    expect(component['watchForChanges']).toBeCalled();
+  });
+
+
   describe('canDeactivate()', () => {
-    test('returns true when there has NO changes or user does NOT have permission to update', () => {
+    test('returns true when there has changes or user does NOT have permission to update', () => {
       component.hasChanged = false;
       component['detectPermission'].hasPermission = false;
       expect(component.canDeactivate()).toBe(true);
@@ -108,47 +101,28 @@ describe('UnsavedFormComponent', () => {
   });
 
   describe('saveChanges()', () => {
-    afterEach(() => expect(component.hasChanged).toBe(false));
-
-    test('show error message when form is invalid', () => {
-      component.unsavedForm.setValue({ team_name: '' });
-      component.saveChanges();
-      expect(snackbar.error).toBeCalledWith('You need to provide all required information.');
-    });
-
+    ;
     describe('should save changes', () => {
-      beforeEach(() => component.unsavedForm.setValue({ team_name: 'Dios Vo' }));
+      beforeEach(() => {
+        component.name.setValue('Dios Vo');
+        jest.spyOn(component['vm$'], 'next');
+      });
+
+      afterEach(() => {
+        expect(component['vm$'].next).toBeCalledWith('Dios Vo');
+      });
 
       test('should not navigate to somewhere else (user clicks on Save button)', () => {
         component.saveChanges();
-        expect(snackbar.success).toBeCalledWith('Update successfully!');
+        expect(mockSnackbar.success).toBeCalledWith('Update successfully!');
         expect(component['router'].navigate).toBeCalledWith([component['router'].url]);
       });
 
       test('should navigate to another page if user wants to navigate away from the current page', () => {
         component.saveChanges('functions');
-        expect(snackbar.success).toBeCalledWith('Update successfully!');
+        expect(mockSnackbar.success).toBeCalledWith('Update successfully!');
         expect(component['router'].navigate).toBeCalledWith(['functions']);
       });
-    });
-  });
-
-  describe('formState()', () => {
-    beforeEach(() => {
-      jest.spyOn(component.unsavedForm, 'enable');
-      jest.spyOn(component.unsavedForm, 'disable');
-    });
-
-    test('should enable form when user has permission', () => {
-      component['detectPermission'].hasPermission = true;
-      component['formState']();
-      expect(component.unsavedForm.enable).toBeCalled();
-    });
-
-    test('should disable form when user does NOT have permission', () => {
-      component['detectPermission'].hasPermission = false;
-      component['formState']();
-      expect(component.unsavedForm.disable).toBeCalled();
     });
   });
 });

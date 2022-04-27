@@ -39,13 +39,13 @@ describe('ListComponentUiComponent', () => {
 
   describe('clearAllIconActive()', () => {
     test('should hide clear all icon if group is all and query is empty value', () => {
-      component.group.setValue('all');
-      component.query.setValue('');
+      component.group.setValue(DEFAULT_FILTER.group);
+      component.query.setValue(DEFAULT_FILTER.query);
       expect(component.clearAllIconActive()).toBe(false);
     });
 
-    test('should show clear all icon if group or query has value', () => {
-      component.group.setValue('button');
+    test('should show clear all icon if query has value and group is not all selected', () => {
+      component.group.setValue(['button']);
       component.query.setValue('test');
       expect(component.clearAllIconActive()).toBe(true);
     });

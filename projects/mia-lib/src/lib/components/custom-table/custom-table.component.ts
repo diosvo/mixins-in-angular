@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, EventEmitter, Input,
+  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -32,8 +32,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() data: Array<T>;
-  @Input() columns: Array<TableColumn> = [];
+  @Input() data: T[];
+  @Input() columns: TableColumn[] = [];
+  @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
 
   /** Styles */
 
@@ -144,6 +145,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.pageChanges.emit(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    this.tableRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'start' });
   }
 
   /**

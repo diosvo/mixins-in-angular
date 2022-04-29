@@ -137,6 +137,11 @@ describe('CustomTableComponent', () => {
 
   test('onPageChanged()', () => {
     jest.spyOn(component.pageChanges, 'emit');
+    component['tableRef'] = {
+      nativeElement: {
+        scrollIntoView: jest.fn()
+      }
+    } as any;
     const page: PageEvent = {
       pageIndex: 0,
       pageSize: 10,
@@ -148,6 +153,7 @@ describe('CustomTableComponent', () => {
     expect(component.pageChanges.emit).toBeCalledWith(page);
     expect(component.pageIndex).toBe(page.pageIndex);
     expect(component.pageSize).toBe(page.pageSize);
+    expect(component['tableRef'].nativeElement.scrollIntoView).toBeCalledWith({ behavior: 'smooth', block: 'end', inline: 'start' });
   });
 
   describe('isAllSelected() to check master toggle state', () => {

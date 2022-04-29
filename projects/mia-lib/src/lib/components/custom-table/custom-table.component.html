@@ -5,6 +5,7 @@
   <!-- Table -->
   <div class="custom-table" [style]="style">
     <mat-table
+      #table
       [dataSource]="source"
       [trackBy]="trackByIdx"
       matSort

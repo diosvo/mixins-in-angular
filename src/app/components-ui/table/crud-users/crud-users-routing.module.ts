@@ -7,12 +7,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/list/list.module').then(({ ListModule }) => ListModule)
   },
   {
-    path: 'details/:user_id',
-    loadChildren: () => import('./components/update/update.module').then(({ UpdateModule }) => UpdateModule)
+    path: 'details/:id',
+    loadChildren: () => import('./components/details/details.module').then(({ DetailsModule }) => DetailsModule)
   },
   {
     path: 'create',
-    loadChildren: () => import('./components/create/create.module').then(({ CreateModule }) => CreateModule)
+    loadChildren: () => import('./components/details/details.module').then(({ DetailsModule }) => DetailsModule)
   }
 ];
 

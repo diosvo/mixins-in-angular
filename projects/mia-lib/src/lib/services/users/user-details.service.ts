@@ -1,60 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, finalize, map, Observable, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
-import { ActivatedParamsService } from '../activated-params/activated-params.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IUser, UserInput } from '@lib/models/user';
+import { map, Observable, of, shareReplay, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
+import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
-import { DestroyService } from '../destroy/destroy.service';
 import { endpoint, id_endpoint, User } from './user-service.model';
 
+const DEFAULT_VALUE = {
+  name: '',
+  email: '',
+  hobbies: []
+};
+
 @Injectable()
-export class UserDetailsService extends BaseService<User> {
-  private _user$ = new BehaviorSubject<User>(null);
-  readonly currentUser$ = this._user$.asObservable();
-
-  private _loading$ = new BehaviorSubject<boolean>(false);
-  readonly loading$ = this._loading$.asObservable();
-
-  readonly errorMessage$ = new Subject<string>();
+export class InternalService extends BaseService<User> {
 
   constructor(
     protected readonly http: HttpClient,
     protected readonly handle: HandleService,
-    private readonly destroy$: DestroyService,
-    private readonly route: ActivatedParamsService
   ) {
     super(http, handle);
-    this.getUserByRouteParams();
   }
 
-  private getUserByRouteParams(): void {
-    zip([this.route.pathMap$, this.route.paramsMap$]).subscribe({
-      next: ([path, params]) => {
-        const user_id = +params.user_id;
-
-        if (!isNaN(user_id) && !path.includes('create')) {
-          this._loading$.next(true);
-
-          this.byId(user_id)
-            .pipe(
-              finalize(() => this._loading$.next(false)),
-              catchError(({ message }) => {
-                this.errorMessage$.next(message);
-                return throwError(() => new Error(message));
-              }),
-              takeUntil(this.destroy$)
-            )
-            .subscribe({
-              next: (response: User) => this._user$.next(response)
-            });
-        }
-      }
-    });
-  }
-
-  private byId(id: number): Observable<User> {
+  byId(id: number): Observable<UserInput> {
     return this.get(id_endpoint(id)).pipe(
-      map(({ id, name, email }) => <User>{ id, name, email, hobbies: ['coding', 'basketball'] }),
+      map(({ id, name, email }) => ({ id, name, email, hobbies: ['coding', 'basketball'] })),
+      shareReplay(1)
     );
   }
 
@@ -63,12 +36,57 @@ export class UserDetailsService extends BaseService<User> {
   }
 
   update(user: User): Observable<User> {
-    return this.edit(id_endpoint(user.id), { body: user }).pipe(
-      tap((data: User) => this._user$.next(data))
+    return this.edit(id_endpoint(user.id), { body: user });
+  }
+
+  remove(id: number): Observable<User> {
+    return this.delete(id_endpoint(id));
+  }
+}
+
+@Injectable()
+export class UserDetailsService extends AbstractFormService<User, UserInput>{
+
+  constructor(
+    protected override fb: FormBuilder,
+    private readonly internal: InternalService,
+  ) {
+    super(fb);
+  }
+
+  buildForm(): FormGroup {
+    return this.fb.group({
+      name: [DEFAULT_VALUE.name, Validators.required],
+      email: [DEFAULT_VALUE.email, [Validators.required, Validators.email]],
+      hobbies: [DEFAULT_VALUE.hobbies]
+    });
+  }
+
+  loadFromApiAndFillForm$(id: number): Observable<UserInput> {
+    return this.internal.byId(id).pipe(
+      tap((user: UserInput) => this.setFormValue(user))
     );
   }
 
-  remove(user: User): Observable<User> {
-    return this.delete(id_endpoint(user.id));
+  initializeValue$(): Observable<{}> {
+    return of({}).pipe(
+      tap(() => this.form.reset(DEFAULT_VALUE))
+    );
+  }
+
+  protected create$(): Observable<Partial<IUser>> {
+    return this.internal.create(this.getFormValue()).pipe(
+      tap(() => this.form.reset())
+    );
+  }
+
+  protected update$(): Observable<Partial<IUser>> {
+    return this.internal.update(this.getFormValue()).pipe(
+      tap((user: UserInput) => this.setFormValue(user))
+    );
+  }
+
+  remove$(id: number): Observable<unknown> {
+    return this.internal.remove(id);
   }
 }

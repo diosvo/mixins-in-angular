@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterModule } from '@angular/router';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { DetailsComponent } from './details.component';
 
@@ -12,9 +16,19 @@ import { DetailsComponent } from './details.component';
     CommonModule,
     CustomInputModule,
     ReactiveFormsModule,
+    RouterModule.forChild([{
+      path: '',
+      component: DetailsComponent,
+      data: {
+        title: 'Details'
+      }
+    }]),
 
     MatChipsModule,
-    MatFormFieldModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
   exports: [DetailsComponent],
 })

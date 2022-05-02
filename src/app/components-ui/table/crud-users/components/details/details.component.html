@@ -16,7 +16,7 @@
       ></mat-progress-bar>
 
       <div class="d-flex jc-between ai-center">
-        <div>{{ service.form.get("id") ? "Details" : "Create" }}</div>
+        <div>{{ (service.isEdit$ | async) ? "Details" : "Create" }}</div>
         <button
           mat-flat-button
           color="primary"

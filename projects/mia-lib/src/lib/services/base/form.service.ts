@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import isEmpty from 'lodash.isempty';
 import isUndefined from 'lodash.isundefined';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 
 @Injectable()
 export abstract class AbstractFormService<T, InputT extends { id?: unknown }> {
 
   form: FormGroup;
+  abstract isEdit$: BehaviorSubject<boolean>;
 
   constructor(protected fb: FormBuilder) {
     this.form = this.buildForm();

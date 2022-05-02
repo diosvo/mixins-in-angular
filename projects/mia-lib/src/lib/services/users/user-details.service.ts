@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IUser, UserInput } from '@lib/models/user';
-import { map, Observable, of, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
@@ -47,6 +47,8 @@ export class InternalService extends BaseService<User> {
 @Injectable()
 export class UserDetailsService extends AbstractFormService<User, UserInput>{
 
+  isEdit$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     protected override fb: FormBuilder,
     private readonly internal: InternalService,
@@ -63,6 +65,7 @@ export class UserDetailsService extends AbstractFormService<User, UserInput>{
   }
 
   loadFromApiAndFillForm$(id: number): Observable<UserInput> {
+    this.isEdit$.next(true);
     return this.internal.byId(id).pipe(
       tap((user: UserInput) => this.setFormValue(user))
     );
@@ -70,7 +73,10 @@ export class UserDetailsService extends AbstractFormService<User, UserInput>{
 
   initializeValue$(): Observable<{}> {
     return of({}).pipe(
-      tap(() => this.form.reset(DEFAULT_VALUE))
+      tap(() => {
+        this.form.reset(DEFAULT_VALUE);
+        this.isEdit$.next(false);
+      })
     );
   }
 

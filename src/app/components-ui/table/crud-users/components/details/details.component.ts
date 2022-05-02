@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
 import { UserInput } from '@lib/models/user';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
@@ -10,14 +11,14 @@ import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
 import isEqual from 'lodash.isequal';
-import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'user-details',
   templateUrl: './details.component.html',
   styles: ['@use \'display/host\';']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, DeactivateComponent {
 
   saving = false;
   loading = true;
@@ -59,14 +60,21 @@ export class DetailsComponent implements OnInit {
   }
 
   disableButton(): boolean {
-    return !this.service.valid || this.saving;
+    return !this.hasChanged || !this.service.valid || this.saving;
+  }
+
+  canDeactivate(): boolean {
+    return this.disableButton();
   }
 
   saveChanges(): void {
     this.saving = true;
 
     this.service.save$()
-      .pipe(finalize(() => this.saving = false))
+      .pipe(
+        tap(() => this.primitiveValue$.next(this.service.form.value)),
+        finalize(() => this.saving = false),
+      )
       .subscribe({
         next: () => this.snackbar.success(`The user has been ${this.service.form.get('id') ? 'update' : 'create'}.`),
         error: ({ message }) => this.snackbar.error(message),
@@ -101,7 +109,7 @@ export class DetailsComponent implements OnInit {
   }
 
   private watchForFormChanges(): void {
-    combineLatest([this.primitiveValue$.asObservable().pipe(take(1)), this.service.form.valueChanges])
+    combineLatest([this.primitiveValue$, this.service.form.valueChanges])
       .pipe(
         map(([prev, next]) => !isEqual(prev, next)),
         startWith(false),

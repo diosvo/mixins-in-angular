@@ -8,6 +8,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { UnsavedChangesGuard } from '@lib/guards/unsaved-changes.guard';
 import { DetailsComponent } from './details.component';
 
 @NgModule({
@@ -19,9 +20,10 @@ import { DetailsComponent } from './details.component';
     RouterModule.forChild([{
       path: '',
       component: DetailsComponent,
+      canDeactivate: [UnsavedChangesGuard],
       data: {
         title: 'Details'
-      }
+      },
     }]),
 
     MatChipsModule,

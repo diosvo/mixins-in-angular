@@ -1,48 +1,76 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { User } from '@lib/services/users/user-service.model';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { UserInput } from '@lib/models/user';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
 import isEqual from 'lodash.isequal';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, take, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'user-details',
-  templateUrl: './details.component.html'
+  templateUrl: './details.component.html',
+  styles: ['@use \'display/host\';']
 })
 export class DetailsComponent implements OnInit {
-  form = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    hobbies: [[]]
-  });
 
-  @Input() user: User;
-  @Output() isValid = new EventEmitter<boolean>();
-  @Output() changed = new EventEmitter<User>();
+  saving = false;
+  loading = true;
+  hasChanged = false;
 
+  readonly errorMessage$ = new Subject<string>();
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  private primitiveValue$ = new BehaviorSubject<UserInput>({} as UserInput);
 
   constructor(
-    private readonly fb: FormBuilder
+    private readonly router: Router,
+    readonly service: UserDetailsService,
+    private readonly route: ActivatedRoute,
+    private readonly destroy$: DestroyService,
+    private readonly snackbar: SnackbarService,
   ) { }
 
   ngOnInit(): void {
-    this.form.patchValue(this.user);
-    this.watchForFormChanged();
+    this.route.params
+      .pipe(
+        switchMap((params: Params) =>
+          params['id']
+            ? this.service.loadFromApiAndFillForm$(params['id'])
+            : this.service.initializeValue$()
+        ),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: (user: UserInput) => {
+          this.loading = false;
+          this.primitiveValue$.next(user);
+        },
+        error: ({ message }) => {
+          this.errorMessage$.next(message);
+          return throwError(() => new Error(message));
+        }
+      });
+    this.watchForFormChanges();
   }
 
-  private watchForFormChanged(): void {
-    this.form.valueChanges
-      .pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-      )
-      .subscribe((details: User) => {
-        this.changed.emit(details);
-        this.isValid.emit(this.form.valid);
+  disableButton(): boolean {
+    return !this.service.valid || this.saving;
+  }
+
+  saveChanges(): void {
+    this.saving = true;
+
+    this.service.save$()
+      .pipe(finalize(() => this.saving = false))
+      .subscribe({
+        next: () => this.snackbar.success(`The user has been ${this.service.form.get('id') ? 'update' : 'create'}.`),
+        error: ({ message }) => this.snackbar.error(message),
+        complete: () => this.router.navigate(['components/table/crud-users'])
       });
   }
 
@@ -72,7 +100,17 @@ export class DetailsComponent implements OnInit {
     }
   }
 
+  private watchForFormChanges(): void {
+    combineLatest([this.primitiveValue$.asObservable().pipe(take(1)), this.service.form.valueChanges])
+      .pipe(
+        map(([prev, next]) => !isEqual(prev, next)),
+        startWith(false),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((changed: boolean) => this.hasChanged = changed);
+  }
+
   get hobbies(): FormControl {
-    return this.form.get('hobbies') as FormControl;
+    return this.service.form.get('hobbies') as FormControl;
   }
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import isEmpty from 'lodash.isempty';
+import isUndefined from 'lodash.isundefined';
 import { Observable, throwError } from 'rxjs';
 
 @Injectable()
@@ -39,12 +41,15 @@ export abstract class AbstractFormService<T, InputT extends { id?: unknown }> {
 
   abstract loadFromApiAndFillForm$(id: string | number): Observable<T>;
 
-  save$(): Observable<T> {
+  save$(primary_key = 'id'): Observable<T> {
     if (this.form.invalid) {
       return throwError(() => new Error('Invalid form.'));
     }
+    if (isEmpty(primary_key) || isUndefined(primary_key)) {
+      return throwError(() => new Error('Please provide a primary key.'));
+    }
 
-    const id = this.form.get('id')?.value ?? null;
+    const id = this.form.get(primary_key)?.value ?? null;
     return id ? this.update$(id) : this.create$();
   }
 

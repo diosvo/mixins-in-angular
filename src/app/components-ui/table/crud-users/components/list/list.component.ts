@@ -7,6 +7,7 @@ import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
+import isEqual from 'lodash.isequal';
 import { catchError, filter, finalize, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -45,7 +46,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  openConfirmDialog(user: User, index: number): void {
+  openConfirmDialog(user: User): void {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -64,10 +65,10 @@ export class ListComponent implements OnInit {
   private delete(user: User): void {
     this.loading = true;
 
-    this.details.remove(user)
+    this.details.remove$(user.id)
       .pipe(
         switchMap(() => this.users$ = this.users$.pipe(
-          map((data: Array<User>) => data.filter(item => item.id !== user.id))
+          map((data: User[]) => data.filter(item => !isEqual(item.id, user.id)))
         )),
         finalize(() => this.loading = false)
       )

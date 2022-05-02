@@ -28,9 +28,7 @@ export class UsersService extends BaseService<User> {
       startWith([]),
       switchMap((ids: number[]) =>
         data.pipe(
-          map((data: User[]) =>
-            data.filter((item: User) => ids.includes(item.id as number))
-          )
+          map((data: User[]) => data.filter((item: User) => ids.includes(item.id)))
         )
       )
     );

@@ -23,27 +23,27 @@ export abstract class BaseService<T> {
     protected readonly handle: HandleService,
   ) { }
 
-  list(url: string): Observable<T[]> {
+  protected list(url: string): Observable<T[]> {
     return this.fetch(EMethod.GET)(url)({}) as Observable<T[]>;
   }
 
-  get(url: string): Observable<T> {
+  protected get(url: string): Observable<T> {
     return this.fetch(EMethod.GET)(url)({}) as Observable<T>;
   }
 
-  add(url: string, { body }): Observable<T> {
+  protected add(url: string, { body }): Observable<T> {
     return this.fetch(EMethod.POST)(url)({ body }) as Observable<T>;
   }
 
-  edit(url: string, { body }): Observable<T> {
+  protected edit(url: string, { body }): Observable<T> {
     return this.fetch(EMethod.PUT)(url)({ body }) as Observable<T>;
   }
 
-  modify(url: string, { body }): Observable<T> {
+  protected modify(url: string, { body }): Observable<T> {
     return this.fetch(EMethod.PATCH)(url)({ body }) as Observable<T>;
   }
 
-  delete(url: string): Observable<{}> {
+  protected delete(url: string): Observable<{}> {
     return this.fetch(EMethod.DELETE)(url)({});
   }
 

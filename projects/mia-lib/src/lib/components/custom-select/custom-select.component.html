@@ -18,7 +18,11 @@
       <hr class="my-0" />
     </div>
 
-    <div *ngIf="checkAll" class="d-flex mx-2 mt-2">
+    <div
+      *ngIf="checkAll"
+      class="d-flex mx-2 mt-2"
+      [style.line-height]="'normal'"
+    >
       <mat-checkbox
         color="warn"
         title="Select All"

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from './snackbar.service';
 
-export const mockSnackbar = {
+export const mockSnackbar: any = {
   success: jest.fn(),
   error: jest.fn()
 };

@@ -11,7 +11,7 @@ import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
 import isEqual from 'lodash.isequal';
-import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'user-details',
@@ -51,10 +51,7 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
           this.loading = false;
           this.primitiveValue$.next(user);
         },
-        error: ({ message }) => {
-          this.errorMessage$.next(message);
-          return throwError(() => new Error(message));
-        }
+        error: ({ message }) => this.errorMessage$.next(message)
       });
     this.watchForFormChanges();
   }
@@ -76,7 +73,7 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
         finalize(() => this.saving = false),
       )
       .subscribe({
-        next: () => this.snackbar.success(`The user has been ${this.service.form.get('id') ? 'update' : 'create'}.`),
+        next: () => this.snackbar.success(`The user has been ${this.service.form.get('id') ? 'updated' : 'created'}.`),
         error: ({ message }) => this.snackbar.error(message),
         complete: () => this.router.navigate(['components/table/crud-users'])
       });

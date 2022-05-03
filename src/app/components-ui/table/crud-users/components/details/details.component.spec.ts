@@ -1,10 +1,11 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { fakeAsync, tick } from '@angular/core/testing';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
+import { of, throwError } from 'rxjs';
 import { DetailsComponent } from './details.component';
+
+const id = 9 as const;
 
 const user = {
   name: 'Dios',
@@ -14,47 +15,138 @@ const user = {
 
 describe('DetailsComponent', () => {
   let component: DetailsComponent;
-  let fixture: ComponentFixture<DetailsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DetailsComponent],
-      imports: [
-        CustomInputModule,
+  const mockRouter: any = {
+    navigate: jest.fn()
+  };
 
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
+  const mockService: any = {
+    form: new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      hobbies: new FormControl([])
+    }),
+    initializeValue$: jest.fn().mockReturnValue(of({})),
+    loadFromApiAndFillForm$: jest.fn().mockReturnValue(of({ ...user, id })),
+    save$: jest.fn().mockReturnValue(of(user))
+  };
 
-        MatChipsModule,
-        MatFormFieldModule
-      ]
-    })
-      .compileComponents();
-  });
+  const mockRoute: any = {
+    params: of({})
+  };
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new DetailsComponent(mockRouter, mockService, mockRoute, new DestroyService(), mockSnackbar);
   });
 
   test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  test('watchForFormChanged()', fakeAsync(() => {
-    jest.spyOn(component.changed, 'emit');
-    jest.spyOn(component.isValid, 'emit');
-
-    component['watchForFormChanged']();
-    component.form.patchValue(user);
-    tick(100);
-
-    component.form.valueChanges.subscribe(response => {
-      expect(component.changed.emit).toBeCalledWith(response);
-      expect(component.isValid.emit).toBeCalledWith(component.form.valid);
+  describe('ngOnInit() to set up component after page load', () => {
+    beforeEach(() => {
+      jest.spyOn(component as any, 'watchForFormChanges');
     });
-  }));
+
+    afterEach(() => {
+      expect(component['watchForFormChanges']).toBeCalled();
+    });
+
+    describe('when no errors occur', () => {
+      beforeEach(() => {
+        jest.spyOn(component['primitiveValue$'], 'next');
+      });
+
+      afterEach(() => {
+        expect(component.loading).toBe(false);
+      });
+
+      test('should get primitive value when we are landing on Create page', () => {
+        component.ngOnInit();
+        expect(component['primitiveValue$'].next).toBeCalledWith({});
+      });
+
+      test('should map value when we are landing on Edit page', () => {
+        mockRoute.params = of({ id });
+        component.ngOnInit();
+        expect(component['primitiveValue$'].next).toBeCalledWith({ ...user, id });
+      });
+    });
+
+    test('should show error message when API returns error', () => {
+      mockService.loadFromApiAndFillForm$.mockReturnValue(throwError(() => new Error('Bad Request')));
+      jest.spyOn(component.errorMessage$, 'next');
+
+      component.ngOnInit();
+      expect(component.errorMessage$.next).toBeCalledWith('Bad Request');
+    });
+  });
+
+  describe('disableButton() to disable Save button, in cases:', () => {
+    test('when there has not been changed', () => {
+      component.hasChanged = false;
+      expect(component.disableButton()).toBe(true);
+    });
+
+    test('when the form is invalid', () => {
+      component.service.form.setValue({
+        ...user,
+        name: ''
+      });
+      component.hasChanged = true;
+      expect(component.disableButton()).toBe(true);
+    });
+
+    test('when saving data', () => {
+      component.service.form.setValue(user);
+      component.hasChanged = true;
+      component.saving = true;
+      expect(component.disableButton()).toBe(true);
+    });
+  });
+
+  describe('canDeactivate()', () => {
+    test('returns true if disableButton() is true', () => {
+      component.disableButton = () => true;
+      expect(component.canDeactivate()).toBe(true);
+    });
+
+    test('returns false if disableButton() is false', () => {
+      component.disableButton = () => false;
+      expect(component.canDeactivate()).toBe(false);
+    });
+  });
+
+  describe('saveChanges()', () => {
+    describe('when API returns success', () => {
+      beforeEach(() => {
+        jest.spyOn(component['primitiveValue$'], 'next');
+      });
+
+      afterEach(() => {
+        expect(component.saving).toBe(false);
+        expect(component['primitiveValue$'].next).toBeCalledWith(mockService.form.value);
+        expect(mockRouter.navigate).toBeCalledWith(['components/table/crud-users']);
+      });
+
+      test('should save changes on the Create page', () => {
+        component.saveChanges();
+        expect(mockSnackbar.success).toBeCalledWith('The user has been created.');
+      });
+
+      test('should save changes on the Edit page', () => {
+        mockService.form.addControl('id', new FormControl(id));
+        component.saveChanges();
+        expect(mockSnackbar.success).toBeCalledWith('The user has been updated.');
+      });
+    });
+
+    test('should throw error message when API returns error', () => {
+      mockService.save$.mockReturnValue(throwError(() => new Error('Bad Request')));
+      component.saveChanges();
+      expect(mockSnackbar.error).toBeCalledWith('Bad Request');
+    });
+  });
 
   describe('addHobby() when the user enters', () => {
     beforeEach(() => {
@@ -115,5 +207,30 @@ describe('DetailsComponent', () => {
       component['hobbyValidator']('12');
       expect(component.hobbies.setErrors).toBeCalledWith({ invalid: true });
     });
+  });
+
+  describe('watchForFormChanges()', () => {
+    test('returns false if there has not been changed', fakeAsync(() => {
+      component['primitiveValue$'].next(user);
+
+      component['watchForFormChanges']();
+      mockService.form.setValue(user);
+      tick();
+
+      expect(component.hasChanged).toBe(false);
+    }));
+
+    test('returns true if there has changed', fakeAsync(() => {
+      component['primitiveValue$'].next(user);
+
+      component['watchForFormChanges']();
+      mockService.form.setValue({
+        ...user,
+        name: 'dios'
+      });
+      tick();
+
+      expect(component.hasChanged).toBe(true);
+    }));
   });
 });

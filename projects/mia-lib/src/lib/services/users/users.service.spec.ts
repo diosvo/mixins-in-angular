@@ -1,7 +1,8 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { User, users_endpoint } from './user-service.model';
+import { of } from 'rxjs';
+import { endpoint, User } from './user-service.model';
 import { UsersService } from './users.service';
 
 const user: User = {
@@ -10,7 +11,7 @@ const user: User = {
   lastName: 'Vo'
 };
 
-const list_users: Array<User> = [user];
+const list_users: User[] = [user];
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -21,7 +22,8 @@ describe('UsersService', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule
-      ]
+      ],
+      providers: [UsersService]
     });
 
     service = TestBed.inject(UsersService);
@@ -36,31 +38,35 @@ describe('UsersService', () => {
     expect(service).toBeTruthy();
   });
 
-  test('all()', () => {
+  test('all() to get all users from the response API', () => {
     service.all().subscribe({
-      next: (response: Array<User>) => {
+      next: (response: User[]) => {
         expect(response).toEqual(list_users);
         expect(response.length).toEqual(1);
       },
       error: ({ message }) => fail(message)
     });
 
-    const request = http.expectOne(users_endpoint);
+    const request = http.expectOne(endpoint);
     expect(request.request.method).toBe('GET');
     request.flush(list_users);
   });
 
-  test('delete()', (done) => {
-    service.delete(+user.id).subscribe({
-      next: (response: User) => {
-        expect(response).toEqual({});
-        done();
+  test('lookup() to find out user corresponding to specific id', () => {
+    service.lookup(of(list_users), of([1])).subscribe({
+      next: (response: User[]) => {
+        expect(response).toEqual(list_users);
+        expect(response.length).toEqual(1);
       },
       error: ({ message }) => fail(message)
     });
 
-    const request = http.expectOne(user_id_endpoint(user.id));
-    expect(request.request.method).toBe('DELETE');
-    request.flush({});
+    service.lookup(of(list_users), of([2])).subscribe({
+      next: (response: User[]) => {
+        expect(response).toEqual([]);
+        expect(response.length).toEqual(0);
+      },
+      error: ({ message }) => fail(message)
+    });
   });
 });

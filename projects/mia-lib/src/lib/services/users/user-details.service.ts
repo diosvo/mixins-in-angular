@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IUser, UserInput } from '@lib/models/user';
+import { UserInput } from '@lib/models/user';
 import { BehaviorSubject, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
@@ -80,19 +80,19 @@ export class UserDetailsService extends AbstractFormService<User, UserInput>{
     );
   }
 
-  protected create$(): Observable<Partial<IUser>> {
+  protected create$(): Observable<User> {
     return this.internal.create(this.getFormValue()).pipe(
       tap(() => this.form.reset())
     );
   }
 
-  protected update$(): Observable<Partial<IUser>> {
+  protected update$(): Observable<User> {
     return this.internal.update(this.getFormValue()).pipe(
       tap((user: UserInput) => this.setFormValue(user))
     );
   }
 
-  remove$(id: number): Observable<unknown> {
+  remove$(id: number): Observable<{}> {
     return this.internal.remove(id);
   }
 }

@@ -145,7 +145,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.pageChanges.emit(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.tableRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'start' });
+    window.requestAnimationFrame(() =>
+      this.tableRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    );
   }
 
   /**

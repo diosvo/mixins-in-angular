@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { catchError, Observable, Subject, throwError } from 'rxjs';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { catchError, Observable, Subject, takeUntil, throwError } from 'rxjs';
 import { ViewArticleState } from '../../models/article.model';
 import { ViewArticleStateService } from '../../services/view-article-state.service';
 
 @Component({
   selector: 'app-list-articles',
   templateUrl: './list-articles.component.html',
-  styleUrls: ['./list-articles.component.scss'],
   providers: [ViewArticleStateService]
 })
 export class ListArticlesComponent implements OnInit {
@@ -27,11 +28,14 @@ export class ListArticlesComponent implements OnInit {
   ];
 
   constructor(
-    private readonly service: ViewArticleStateService
+    private readonly route: ActivatedRoute,
+    private readonly destroyed$: DestroyService,
+    private readonly service: ViewArticleStateService,
   ) { }
 
   ngOnInit(): void {
     this.getState();
+    this.updateParams();
   }
 
   private getState(): void {
@@ -41,5 +45,13 @@ export class ListArticlesComponent implements OnInit {
         return throwError(() => new Error(message));
       })
     );
+  }
+
+  private updateParams(): void {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (params: Record<string, string>) => this.service.updateStateFromQueryParams(params)
+      });
   }
 }

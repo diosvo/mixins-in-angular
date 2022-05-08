@@ -8,7 +8,9 @@ interface Comment {
 
 interface Article {
   id: number;
-  comments: Array<Comment>;
+  userId: number;
+  title: string;
+  body: string;
 }
 
 interface ViewArticleState {
@@ -23,7 +25,12 @@ interface ViewArticleState {
 
 const initialArticleState: ViewArticleState = {
   id: undefined,
-  article: null,
+  article: {
+    id: null,
+    userId: null,
+    title: '',
+    body: '',
+  },
   articles: [],
   comments: [],
   loading: false,

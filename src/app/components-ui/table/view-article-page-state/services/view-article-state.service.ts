@@ -58,7 +58,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
     this.id.update(id);
   }
 
-  updateStateFromQueryParams(params: { query, start, limit, order, sort }): void {
+  updateStateFromQueryParams(params: Record<string, any>): void {
     const searchTerm = params?.query || '';
     const limit = +params?.limit || DEFAULT_PAGINATE_PARAMS.limit;
     const start = +params?.start || DEFAULT_PAGINATE_PARAMS.start;
@@ -97,7 +97,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
             finalize(() => this.loading.update(false))
           )
         ),
-        shareReplay()
+        shareReplay(1)
       )
       .subscribe({
         next: (article: Article) => this.article.update(article)
@@ -109,18 +109,18 @@ export class ViewArticleStateService extends BaseService<unknown> {
       .pipe(
         debounceTime(200),
         tap(() => this.loading.update(true)),
-        switchMap(([id, searchTerm, params]): Observable<Array<Comment | Article>> =>
+        switchMap(([id, searchTerm, params]): Observable<Comment[] | Article[]> =>
           id
             ? this.findCommentsByArticle(id, searchTerm, params)
             : this.getArticles(params)
         ),
-        shareReplay()
+        shareReplay(1)
       )
       .subscribe({
-        next: (response: Array<Article | Comment>) => {
+        next: (response: Comment[] | Article[]) => {
           this.id.getValue()
-            ? this.comments.update(response as Array<Comment>)
-            : this.articles.update(response as Array<Article>);
+            ? this.comments.update(response as Comment[])
+            : this.articles.update(response as Article[]);
           this.loading.update(false);
         }
       });

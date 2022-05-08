@@ -4,7 +4,7 @@ import { IGroupValue } from '@home/models/search.model';
 import { EUrl } from '@home/models/url.enum';
 import { SearchService } from './search.service';
 
-const ui_comps: Array<IGroupValue> = [
+const ui_comps: IGroupValue[] = [
   {
     groupName: 'button',
     groupUrl: EUrl.COMPONENT,
@@ -16,20 +16,6 @@ const ui_comps: Array<IGroupValue> = [
       }
     ]
   }
-];
-
-const funcs: Array<IGroupValue> = [
-  {
-    groupName: 'rxjs',
-    groupUrl: EUrl.FUNCTION,
-    groupDetails: [
-      {
-        name: 'Data Composition #ng-conf',
-        route: 'data-composition-ng-conf',
-        description: 'Without subscription, improve performance'
-      }
-    ]
-  },
 ];
 
 describe('SearchService', () => {
@@ -53,31 +39,17 @@ describe('SearchService', () => {
     expect(service).toBeTruthy();
   });
 
-  test('uiComponentsList$', () => {
-    service.uiComponentsList$.subscribe({
-      next: (response: Array<IGroupValue>) => {
+  test('should call list based on provided group', () => {
+    service['getFetch'](EUrl.COMPONENT).subscribe({
+      next: (response: IGroupValue[]) => {
         expect(response).toEqual(ui_comps);
         expect(response.length).toEqual(1);
       },
       error: ({ message }) => fail(message)
     });
 
-    const request = http.expectOne(service['path'](EUrl.COMPONENT));
+    const request = http.expectOne(`/assets/backend/list-items/${EUrl.COMPONENT}.json`);
     expect(request.request.method).toBe('GET');
     request.flush(ui_comps);
-  });
-
-  test('functionsList$', () => {
-    service.functionsList$.subscribe({
-      next: (response: Array<IGroupValue>) => {
-        expect(response).toEqual(funcs);
-        expect(response.length).toEqual(1);
-      },
-      error: ({ message }) => fail(message)
-    });
-
-    const request = http.expectOne(service['path'](EUrl.FUNCTION));
-    expect(request.request.method).toBe('GET');
-    request.flush(funcs);
   });
 });

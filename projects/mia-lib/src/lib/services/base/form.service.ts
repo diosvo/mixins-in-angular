@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import isEmpty from 'lodash.isempty';
 import isUndefined from 'lodash.isundefined';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 
 @Injectable()
-export abstract class AbstractFormService<T, InputT extends { id?: unknown }> {
+export abstract class AbstractFormService<T> {
 
   form: FormGroup;
+  protected abstract primary_key: string;
   abstract isEdit$: BehaviorSubject<boolean>;
 
   constructor(protected fb: FormBuilder) {
@@ -19,21 +20,15 @@ export abstract class AbstractFormService<T, InputT extends { id?: unknown }> {
     return this.form.valid;
   }
 
-  getFormValue(): InputT {
+  getFormValue(): T {
     return this.form.value;
   }
 
-  setFormValue(data: InputT): void {
+  setFormValue(data: T): void {
     if (!data) {
-      this.form.reset();
+      return this.form.reset();
     }
-
-    this.form.patchValue(data);
-    // when we have to use id, consider the form for UPDATE rather than CREATE
-    if (data.id) {
-      const control = new FormControl(data.id);
-      this.form.addControl('id', control);
-    }
+    return this.form.reset(data);
   }
 
   abstract buildForm(): FormGroup;
@@ -42,16 +37,14 @@ export abstract class AbstractFormService<T, InputT extends { id?: unknown }> {
 
   abstract loadFromApiAndFillForm$(id: string | number): Observable<T>;
 
-  save$(primary_key = 'id'): Observable<T> {
-    if (this.form.invalid) {
-      return throwError(() => new Error('Invalid form.'));
-    }
-    if (isEmpty(primary_key) || isUndefined(primary_key)) {
+  save$(): Observable<T> {
+    if (isEmpty(this.primary_key) || isUndefined(this.primary_key)) {
       return throwError(() => new Error('Please provide a primary key.'));
     }
-
-    const id = this.form.get(primary_key)?.value ?? null;
-    return id ? this.update$(id) : this.create$();
+    if (!this.valid) {
+      return throwError(() => new Error('Invalid form.'));
+    }
+    return this.isEdit$.value ? this.update$(this.primary_key) : this.create$();
   }
 
   protected abstract create$(): Observable<T>;

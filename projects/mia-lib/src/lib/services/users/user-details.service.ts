@@ -6,16 +6,17 @@ import { BehaviorSubject, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
-import { endpoint, id_endpoint, User } from './user-service.model';
+import { endpoint, id_endpoint } from './user-service.model';
 
 const DEFAULT_VALUE = {
+  id: null,
   name: '',
   email: '',
   hobbies: []
 };
 
 @Injectable()
-export class InternalService extends BaseService<User> {
+export class InternalService extends BaseService<UserInput> {
 
   constructor(
     protected readonly http: HttpClient,
@@ -31,22 +32,23 @@ export class InternalService extends BaseService<User> {
     );
   }
 
-  create(user: User): Observable<User> {
+  create(user: UserInput): Observable<UserInput> {
     return this.add(endpoint, { body: user });
   }
 
-  update(user: User): Observable<User> {
+  update(user: UserInput): Observable<UserInput> {
     return this.edit(id_endpoint(user.id), { body: user });
   }
 
-  remove(id: number): Observable<User> {
+  remove(id: number): Observable<{}> {
     return this.delete(id_endpoint(id));
   }
 }
 
 @Injectable()
-export class UserDetailsService extends AbstractFormService<User, UserInput>{
+export class UserDetailsService extends AbstractFormService<UserInput>{
 
+  primary_key = 'id';
   isEdit$ = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -58,6 +60,7 @@ export class UserDetailsService extends AbstractFormService<User, UserInput>{
 
   buildForm(): FormGroup {
     return this.fb.group({
+      id: [DEFAULT_VALUE.id],
       name: [DEFAULT_VALUE.name, Validators.required],
       email: [DEFAULT_VALUE.email, [Validators.required, Validators.email]],
       hobbies: [DEFAULT_VALUE.hobbies]
@@ -74,21 +77,22 @@ export class UserDetailsService extends AbstractFormService<User, UserInput>{
   initializeValue$(): Observable<{}> {
     return of({}).pipe(
       tap(() => {
-        this.form.reset(DEFAULT_VALUE);
+        this.setFormValue(DEFAULT_VALUE);
         this.isEdit$.next(false);
       })
     );
   }
 
-  protected create$(): Observable<User> {
+  protected create$(): Observable<UserInput> {
+    delete this.getFormValue()[this.primary_key];
     return this.internal.create(this.getFormValue()).pipe(
-      tap(() => this.form.reset())
+      tap(() => this.setFormValue(DEFAULT_VALUE))
     );
   }
 
-  protected update$(): Observable<User> {
+  protected update$(): Observable<UserInput> {
     return this.internal.update(this.getFormValue()).pipe(
-      tap((user: UserInput) => this.setFormValue(user))
+      tap(() => this.setFormValue(DEFAULT_VALUE))
     );
   }
 

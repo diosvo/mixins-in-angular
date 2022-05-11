@@ -3,10 +3,11 @@
   [appearance]="appearance"
   [floatLabel]="floatLabel"
 >
-  <mat-label *ngIf="label" [innerHTML]="label | titlecase"></mat-label>
+  <mat-label *ngIf="label"> {{ label | titlecase }} </mat-label>
   <input
     matInput
     [type]="type"
+    spellcheck="true"
     autocomplete="off"
     [readonly]="readonly"
     [formControl]="control"

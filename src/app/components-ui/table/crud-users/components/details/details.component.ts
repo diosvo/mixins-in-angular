@@ -1,24 +1,24 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
-import { UserInput } from '@lib/models/user';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
+import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import { BehaviorSubject, combineLatest, finalize, map, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'user-details',
   templateUrl: './details.component.html',
   styles: ['@use \'display/host\';']
 })
-export class DetailsComponent implements OnInit, DeactivateComponent {
+export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent {
 
   saving = false;
   loading = true;
@@ -26,7 +26,6 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
 
   readonly errorMessage$ = new Subject<string>();
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  private primitiveValue$ = new BehaviorSubject<UserInput>({} as UserInput);
 
   constructor(
     private readonly router: Router,
@@ -39,19 +38,16 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
   ngOnInit(): void {
     this.route.params
       .pipe(
-        switchMap((params: Params) =>
-          params['id']
-            ? this.service.loadFromApiAndFillForm$(params['id'])
-            : this.service.initializeValue$()
-        ),
+        switchMap((params: Params) => {
+          return isEmpty(params)
+            ? this.service.initializeValue$()
+            : this.service.loadFromApiAndFillForm$(params['id']);
+        }),
         takeUntil(this.destroy$),
       )
       .subscribe({
-        next: (user: UserInput) => {
-          this.loading = false;
-          this.primitiveValue$.next(user);
-        },
-        error: ({ message }) => this.errorMessage$.next(message)
+        next: () => this.loading = false,
+        error: ({ message }) => this.errorMessage$.next(message),
       });
     this.watchForFormChanges();
   }
@@ -68,12 +64,9 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
     this.saving = true;
 
     this.service.save$()
-      .pipe(
-        tap(() => this.primitiveValue$.next(this.service.form.value)),
-        finalize(() => this.saving = false),
-      )
+      .pipe(finalize(() => this.saving = false))
       .subscribe({
-        next: () => this.snackbar.success(`The user has been ${this.service.form.get('id') ? 'updated' : 'created'}.`),
+        next: () => this.snackbar.success(`The user has been ${this.service.isEdit$.value ? 'updated' : 'created'}.`),
         error: ({ message }) => this.snackbar.error(message),
         complete: () => this.router.navigate(['components/table/crud-users'])
       });
@@ -106,16 +99,20 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
   }
 
   private watchForFormChanges(): void {
-    combineLatest([this.primitiveValue$, this.service.form.valueChanges])
-      .pipe(
-        map(([prev, next]) => !isEqual(prev, next)),
-        startWith(false),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((changed: boolean) => this.hasChanged = changed);
+    this.service.onFormChanges$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (changed: boolean) => this.hasChanged = changed
+      });
   }
 
   get hobbies(): FormControl {
     return this.service.form.get('hobbies') as FormControl;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.service.setFormValue();
   }
 }

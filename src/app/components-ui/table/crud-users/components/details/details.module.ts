@@ -32,6 +32,5 @@ import { DetailsComponent } from './details.component';
     MatProgressBarModule,
     MatProgressSpinnerModule
   ],
-  exports: [DetailsComponent],
 })
 export class DetailsModule { }

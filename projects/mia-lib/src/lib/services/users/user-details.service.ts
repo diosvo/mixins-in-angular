@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
-import { BehaviorSubject, map, Observable, of, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, shareReplay } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
@@ -50,6 +50,7 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   primary_key = 'id';
   isEdit$ = new BehaviorSubject<boolean>(false);
+  primitiveValue$ = new BehaviorSubject<UserInput>(DEFAULT_VALUE);
 
   constructor(
     protected override fb: FormBuilder,
@@ -69,31 +70,21 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   loadFromApiAndFillForm$(id: number): Observable<UserInput> {
     this.isEdit$.next(true);
-    return this.internal.byId(id).pipe(
-      tap((user: UserInput) => this.setFormValue(user))
-    );
+    return this.internal.byId(id).pipe(this.afterAction());
   }
 
-  initializeValue$(): Observable<{}> {
-    return of({}).pipe(
-      tap(() => {
-        this.setFormValue(DEFAULT_VALUE);
-        this.isEdit$.next(false);
-      })
-    );
+  initializeValue$(): Observable<UserInput> {
+    this.isEdit$.next(false);
+    return of(DEFAULT_VALUE).pipe(this.afterAction());
   }
 
   protected create$(): Observable<UserInput> {
     delete this.getFormValue()[this.primary_key];
-    return this.internal.create(this.getFormValue()).pipe(
-      tap(() => this.setFormValue(DEFAULT_VALUE))
-    );
+    return this.internal.create(this.form.value);
   }
 
   protected update$(): Observable<UserInput> {
-    return this.internal.update(this.getFormValue()).pipe(
-      tap(() => this.setFormValue(DEFAULT_VALUE))
-    );
+    return this.internal.update(this.getFormValue());
   }
 
   remove$(id: number): Observable<{}> {

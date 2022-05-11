@@ -17,7 +17,7 @@
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
-      <custom-button [routerLink]="['create']"> Create User</custom-button>
+      <custom-button [routerLink]="['create']"> Create User </custom-button>
     </div>
 
     <div filters>
@@ -38,7 +38,7 @@
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
-        <custom-button type="icon" [routerLink]="['details', user.id]">
+        <custom-button type="icon" [routerLink]="[user.id]">
           edit
         </custom-button>
         <custom-button type="icon" (click)="openConfirmDialog(user)">

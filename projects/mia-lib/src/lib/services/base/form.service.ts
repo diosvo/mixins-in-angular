@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import isEmpty from 'lodash.isempty';
-import isUndefined from 'lodash.isundefined';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import isEqual from 'lodash.isequal';
+import omit from 'lodash.omit';
+import { BehaviorSubject, combineLatest, finalize, map, Observable, pipe, startWith, tap } from 'rxjs';
 
-@Injectable()
 export abstract class AbstractFormService<T> {
 
   form: FormGroup;
   protected abstract primary_key: string;
   abstract isEdit$: BehaviorSubject<boolean>;
+  abstract primitiveValue$: BehaviorSubject<T>;
 
   constructor(protected fb: FormBuilder) {
     this.form = this.buildForm();
   }
 
   get valid(): boolean {
-    if (this.form.untouched) return false;
+    if (this.form.pristine) {
+      return false;
+    };
     return this.form.valid;
   }
 
@@ -24,7 +25,7 @@ export abstract class AbstractFormService<T> {
     return this.form.value;
   }
 
-  setFormValue(data: T): void {
+  setFormValue(data?: T): void {
     if (!data) {
       return this.form.reset();
     }
@@ -33,21 +34,35 @@ export abstract class AbstractFormService<T> {
 
   abstract buildForm(): FormGroup;
 
-  abstract initializeValue$(): Observable<{}>;
+  abstract initializeValue$(): Observable<T>;
 
-  abstract loadFromApiAndFillForm$(id: string | number): Observable<T>;
+  abstract loadFromApiAndFillForm$(id: unknown): Observable<T>;
+
+  onFormChanges$(exclusions = []): Observable<boolean> {
+    return combineLatest([this.primitiveValue$, this.form.valueChanges])
+      .pipe(
+        map(([prev, next]) => !isEqual(omit(prev, exclusions), omit(next, exclusions))),
+        startWith(false)
+      );
+  }
 
   save$(): Observable<T> {
-    if (isEmpty(this.primary_key) || isUndefined(this.primary_key)) {
-      return throwError(() => new Error('Please provide a primary key.'));
-    }
-    if (!this.valid) {
-      return throwError(() => new Error('Invalid form.'));
-    }
-    return this.isEdit$.value ? this.update$(this.primary_key) : this.create$();
+    this.form.disable();
+    return this.isEdit$.value
+      ? this.update$(this.getFormValue()[this.primary_key]).pipe(this.afterAction())
+      : this.create$().pipe(this.afterAction());
   }
 
   protected abstract create$(): Observable<T>;
 
   protected abstract update$(id: string): Observable<T>;
+
+  protected afterAction = () =>
+    pipe(
+      tap((changes: T) => {
+        this.setFormValue(changes);
+        this.primitiveValue$.next(changes);
+      }),
+      finalize(() => this.form.enable())
+    );
 }

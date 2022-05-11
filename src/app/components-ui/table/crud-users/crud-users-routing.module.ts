@@ -7,13 +7,13 @@ const routes: Routes = [
     loadChildren: () => import('./components/list/list.module').then(({ ListModule }) => ListModule)
   },
   {
-    path: 'details/:id',
+    path: 'create',
     loadChildren: () => import('./components/details/details.module').then(({ DetailsModule }) => DetailsModule)
   },
   {
-    path: 'create',
+    path: ':id',
     loadChildren: () => import('./components/details/details.module').then(({ DetailsModule }) => DetailsModule)
-  }
+  },
 ];
 
 @NgModule({

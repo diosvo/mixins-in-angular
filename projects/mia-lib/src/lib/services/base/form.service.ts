@@ -49,15 +49,15 @@ export abstract class AbstractFormService<T> {
   save$(): Observable<T> {
     this.form.disable();
     return this.isEdit$.value
-      ? this.update$(this.getFormValue()[this.primary_key]).pipe(this.afterAction())
-      : this.create$().pipe(this.afterAction());
+      ? this.update$(this.getFormValue()[this.primary_key]).pipe(this.pipeHandler())
+      : this.create$().pipe(this.pipeHandler());
   }
 
   protected abstract create$(): Observable<T>;
 
   protected abstract update$(id: string): Observable<T>;
 
-  protected afterAction = () =>
+  protected pipeHandler = () =>
     pipe(
       tap((changes: T) => {
         this.setFormValue(changes);

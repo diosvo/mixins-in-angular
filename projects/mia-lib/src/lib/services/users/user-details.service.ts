@@ -70,17 +70,17 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   loadFromApiAndFillForm$(id: number): Observable<UserInput> {
     this.isEdit$.next(true);
-    return this.internal.byId(id).pipe(this.afterAction());
+    return this.internal.byId(id).pipe(this.pipeHandler());
   }
 
   initializeValue$(): Observable<UserInput> {
     this.isEdit$.next(false);
-    return of(DEFAULT_VALUE).pipe(this.afterAction());
+    return of(DEFAULT_VALUE).pipe(this.pipeHandler());
   }
 
   protected create$(): Observable<UserInput> {
     delete this.getFormValue()[this.primary_key];
-    return this.internal.create(this.form.value);
+    return this.internal.create(this.getFormValue());
   }
 
   protected update$(): Observable<UserInput> {

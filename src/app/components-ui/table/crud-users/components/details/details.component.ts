@@ -38,11 +38,11 @@ export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent 
   ngOnInit(): void {
     this.route.params
       .pipe(
-        switchMap((params: Params) => {
-          return isEmpty(params)
+        switchMap((params: Params) =>
+          isEmpty(params)
             ? this.service.initializeValue$()
-            : this.service.loadFromApiAndFillForm$(params['id']);
-        }),
+            : this.service.loadFromApiAndFillForm$(params['id'])
+        ),
         takeUntil(this.destroy$),
       )
       .subscribe({
@@ -113,6 +113,5 @@ export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.service.setFormValue();
   }
 }

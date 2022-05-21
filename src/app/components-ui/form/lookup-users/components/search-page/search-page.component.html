@@ -22,9 +22,9 @@
               {{ option.name }}
             </app-select-option>
           </ng-container>
-          <app-select-option *ngIf="!result.length">
-            No result
-          </app-select-option>
+          <div *ngIf="!result.length" class="p-1">
+            <ng-container> No result. </ng-container>
+          </div>
         </ng-container>
       </ng-container>
 

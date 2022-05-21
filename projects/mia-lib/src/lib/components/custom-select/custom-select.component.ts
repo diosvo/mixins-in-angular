@@ -77,7 +77,7 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
 
   private normalizeValue(value: unknown): string {
     if (this.bindKeyValue && typeof value !== 'string') {
-      return value = value[this.bindLabelKey];
+      return value[this.bindLabelKey];
     }
     return (value as string).toLowerCase().replace(/\s/g, '');
   }

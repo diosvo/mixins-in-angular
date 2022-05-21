@@ -1,7 +1,5 @@
 version = 1
 
-test_patterns = ["src/**/*.spec.ts", "projects/mia-lib/src/**/*.spec.ts"]
-
 [[analyzers]]
 name = "test-coverage"
 enabled = true

@@ -11,7 +11,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const { url, method, headers } = request;
+    const { url, method } = request;
 
     if (url.endsWith('login') && method === 'POST') {
       return handleLogin();

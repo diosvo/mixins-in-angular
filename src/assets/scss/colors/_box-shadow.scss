@@ -10,7 +10,6 @@ $-transition  : .2s all ease-in-out;
   box-shadow: 0 0.5rem 1rem $-dark-shadow;
 }
 
-
 :is(.bs-light, .bs-light-hover:hover) {
   @extend %light;
   transition: $-transition;

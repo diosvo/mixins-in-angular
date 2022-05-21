@@ -17,7 +17,7 @@
           <app-select-option
             *ngFor="let option of result"
             [value]="option.username"
-            (emitValue)="stateChanges(option.id)"
+            (emitValue)="stateChanges(option.name)"
           >
             {{ option.name }}
           </app-select-option>
@@ -35,5 +35,7 @@
     </ng-template>
   </app-autocomplete>
 
-  <div *ngIf="control.value" class="mt-1">Selected: {{ control.value }}</div>
+  <div *ngIf="selected$ | async as selected" class="mt-1">
+    Selected: {{ selected }}
+  </div>
 </div>

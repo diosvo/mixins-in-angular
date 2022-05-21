@@ -6,7 +6,7 @@ import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { filter } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
@@ -14,7 +14,7 @@ import { filter } from 'rxjs';
 })
 export class ToolbarComponent {
 
-  navigation = Object.values(EUrl);
+  readonly navigation = Object.values(EUrl);
 
   constructor(
     private readonly router: Router,
@@ -31,7 +31,9 @@ export class ToolbarComponent {
       })
       .afterClosed()
       .pipe(filter(info => !!info))
-      .subscribe(data => this.login(data));
+      .subscribe({
+        next: (info) => this.login(info)
+      });
   }
 
   openLogoutDialog(): void {
@@ -46,10 +48,15 @@ export class ToolbarComponent {
         disableClose: true,
       })
       .afterClosed()
-      .pipe(filter(result => result))
-      .subscribe(() => {
-        this.authService.logout();
-        this.router.navigate(['/components']);
+      .pipe(
+        filter((ok: boolean) => ok),
+        take(1)
+      )
+      .subscribe({
+        next: () => {
+          this.authService.logout();
+          this.router.navigateByUrl('/components');
+        }
       });
   }
 

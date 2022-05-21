@@ -21,7 +21,7 @@
           mat-flat-button
           color="primary"
           (click)="saveChanges()"
-          [disabled]="disableButton()"
+          [disabled]="!enableSaveButton()"
         >
           Save
         </button>

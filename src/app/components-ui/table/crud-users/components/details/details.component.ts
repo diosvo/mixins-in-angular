@@ -18,7 +18,7 @@ import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
   templateUrl: './details.component.html',
   styles: ['@use \'display/host\';']
 })
-export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent {
+export class DetailsComponent implements OnInit, DeactivateComponent {
 
   saving = false;
   loading = true;
@@ -52,12 +52,12 @@ export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent 
     this.watchForFormChanges();
   }
 
-  disableButton(): boolean {
-    return !this.hasChanged || !this.service.valid || this.saving;
+  enableSaveButton(): boolean {
+    return this.hasChanged && this.service.valid && !this.saving;
   }
 
   canDeactivate(): boolean {
-    return this.disableButton();
+    return !this.enableSaveButton();
   }
 
   saveChanges(): void {
@@ -108,10 +108,5 @@ export class DetailsComponent implements OnInit, OnDestroy, DeactivateComponent 
 
   get hobbies(): FormControl {
     return this.service.form.get('hobbies') as FormControl;
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

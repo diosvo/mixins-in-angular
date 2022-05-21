@@ -1,13 +1,13 @@
-import { fakeAsync, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserInput } from '@lib/models/user';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { DetailsComponent } from './details.component';
 
 const id = 9 as const;
 
-const user = {
+const user: UserInput = {
   name: 'Dios',
   email: 'vtmn1212@gmail.com',
   hobbies: ['us', 'you']
@@ -26,9 +26,12 @@ describe('DetailsComponent', () => {
       email: new FormControl('', [Validators.required, Validators.email]),
       hobbies: new FormControl([])
     }),
+    valid: true,
+    isEdit$: of(true),
     initializeValue$: jest.fn().mockReturnValue(of({})),
     loadFromApiAndFillForm$: jest.fn().mockReturnValue(of({ ...user, id })),
-    save$: jest.fn().mockReturnValue(of(user))
+    save$: jest.fn().mockReturnValue(of(user)),
+    onFormChanges$: jest.fn().mockReturnValue(of(false))
   };
 
   const mockRoute: any = {
@@ -53,23 +56,19 @@ describe('DetailsComponent', () => {
     });
 
     describe('when no errors occur', () => {
-      beforeEach(() => {
-        jest.spyOn(component['primitiveValue$'], 'next');
-      });
-
       afterEach(() => {
         expect(component.loading).toBe(false);
       });
 
       test('should get primitive value when we are landing on Create page', () => {
         component.ngOnInit();
-        expect(component['primitiveValue$'].next).toBeCalledWith({});
+        expect(mockService.initializeValue$).toBeCalled();
       });
 
       test('should map value when we are landing on Edit page', () => {
         mockRoute.params = of({ id });
         component.ngOnInit();
-        expect(component['primitiveValue$'].next).toBeCalledWith({ ...user, id });
+        expect(mockService.loadFromApiAndFillForm$).toBeCalledWith(id);
       });
     });
 
@@ -82,60 +81,55 @@ describe('DetailsComponent', () => {
     });
   });
 
-  describe('disableButton() to disable Save button, in cases:', () => {
-    test('when there has not been changed', () => {
+  describe('enableSaveButton()', () => {
+    test('returns false if there has not been changed', () => {
       component.hasChanged = false;
-      expect(component.disableButton()).toBe(true);
+      expect(component.enableSaveButton()).toBe(false);
     });
 
-    test('when the form is invalid', () => {
-      component.service.form.setValue({
-        ...user,
-        name: ''
-      });
-      component.hasChanged = true;
-      expect(component.disableButton()).toBe(true);
+    test('returns false if form is invalid', () => {
+      mockService.valid = () => false;
+      expect(component.enableSaveButton()).toBe(false);
     });
 
-    test('when saving data', () => {
-      component.service.form.setValue(user);
-      component.hasChanged = true;
+    test('returns false if loading indicator is visible', () => {
       component.saving = true;
-      expect(component.disableButton()).toBe(true);
+      expect(component.enableSaveButton()).toBe(false);
+    });
+
+    test('returns true if there has changed, form is valid and loading indicator is invisible', () => {
+      component.hasChanged = true;
+      expect(component.enableSaveButton()).toBe(true);
     });
   });
 
   describe('canDeactivate()', () => {
-    test('returns true if disableButton() is true', () => {
-      component.disableButton = () => true;
+    test('returns true if enableSaveButton() is false', () => {
+      component.enableSaveButton = () => false;
       expect(component.canDeactivate()).toBe(true);
     });
 
-    test('returns false if disableButton() is false', () => {
-      component.disableButton = () => false;
+    test('returns false if disableButton() is true', () => {
+      component.enableSaveButton = () => true;
       expect(component.canDeactivate()).toBe(false);
     });
   });
 
   describe('saveChanges()', () => {
     describe('when API returns success', () => {
-      beforeEach(() => {
-        jest.spyOn(component['primitiveValue$'], 'next');
-      });
-
       afterEach(() => {
         expect(component.saving).toBe(false);
-        expect(component['primitiveValue$'].next).toBeCalledWith(mockService.form.value);
         expect(mockRouter.navigate).toBeCalledWith(['components/table/crud-users']);
       });
 
       test('should save changes on the Create page', () => {
+        mockService.isEdit$ = new BehaviorSubject(false);
         component.saveChanges();
         expect(mockSnackbar.success).toBeCalledWith('The user has been created.');
       });
 
       test('should save changes on the Edit page', () => {
-        mockService.form.addControl('id', new FormControl(id));
+        mockService.isEdit$ = new BehaviorSubject(true);
         component.saveChanges();
         expect(mockSnackbar.success).toBeCalledWith('The user has been updated.');
       });
@@ -148,13 +142,13 @@ describe('DetailsComponent', () => {
     });
   });
 
-  describe('addHobby() when the user enters', () => {
+  describe('addHobby()', () => {
     beforeEach(() => {
       jest.spyOn(component.hobbies, 'setValue');
       jest.spyOn(component as any, 'hobbyValidator');
     });
 
-    test('empty chip', () => {
+    test('should not add new value if no value is passed in', () => {
       const event = {
         value: '',
         chipInput: {
@@ -163,11 +157,11 @@ describe('DetailsComponent', () => {
       } as any;
       component.addHobby(event);
 
-      expect(event.chipInput.clear).toHaveBeenCalled();
-      expect(component['hobbyValidator']).toHaveBeenCalled();
+      expect(event.chipInput.clear).toBeCalled();
+      expect(component['hobbyValidator']).toBeCalledWith(event.value);
     });
 
-    test('new chip', () => {
+    test('should add new value if value is passed in', () => {
       const event = {
         value: 'football',
         chipInput: {
@@ -177,7 +171,7 @@ describe('DetailsComponent', () => {
       component.addHobby(event);
 
       expect(component.hobbies.setValue).toBeCalledWith([event.value]);
-      expect(event.chipInput.clear).toHaveBeenCalled();
+      expect(event.chipInput.clear).toBeCalled();
       expect(component['hobbyValidator']).toBeCalledWith(event.value);
     });
   });
@@ -193,16 +187,16 @@ describe('DetailsComponent', () => {
     component.hobbies.value.forEach((item: string) => expect(component['hobbyValidator']).toBeCalledWith(item));
   });
 
-  describe('hobbyValidator() to check hobby when it is', () => {
+  describe('hobbyValidator()', () => {
     beforeEach(() => jest.spyOn(component.hobbies, 'setErrors'));
 
-    test('duplicated', () => {
+    test('returns duplicated error', () => {
       component.hobbies.setValue([...user.hobbies, 'us']);
       component['hobbyValidator']('us');
       expect(component.hobbies.setErrors).toBeCalledWith({ duplicate: true });
     });
 
-    test('invalid', () => {
+    test('returns invalid error', () => {
       component.hobbies.setValue(user.hobbies);
       component['hobbyValidator']('12');
       expect(component.hobbies.setErrors).toBeCalledWith({ invalid: true });
@@ -210,27 +204,15 @@ describe('DetailsComponent', () => {
   });
 
   describe('watchForFormChanges()', () => {
-    test('returns false if there has not been changed', fakeAsync(() => {
-      component['primitiveValue$'].next(user);
-
+    test('returns false if there has not been changed', () => {
       component['watchForFormChanges']();
-      mockService.form.setValue(user);
-      tick();
-
       expect(component.hasChanged).toBe(false);
-    }));
+    });
 
-    test('returns true if there has changed', fakeAsync(() => {
-      component['primitiveValue$'].next(user);
-
+    test('returns true if there has changed', () => {
+      mockService.onFormChanges$.mockReturnValue(of(true));
       component['watchForFormChanges']();
-      mockService.form.setValue({
-        ...user,
-        name: 'dios'
-      });
-      tick();
-
       expect(component.hasChanged).toBe(true);
-    }));
+    });
   });
 });

@@ -20,7 +20,7 @@ export class AutocompleteComponent {
 
   optionsClick(): Observable<string> {
     return this.options.changes.pipe(
-      switchMap((options: Array<{ click$: Observable<string> }>) => {
+      switchMap((options: { click$: Observable<string> }[]) => {
         const click$ = options.map(({ click$ }) => click$);
         return merge(...click$);
       })

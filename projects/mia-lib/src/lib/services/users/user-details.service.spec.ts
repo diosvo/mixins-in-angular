@@ -1,12 +1,11 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
+import { UserInput } from '@lib/models/user';
 import { of } from 'rxjs';
+import { HandleService } from '../base/handle.service';
 import { InternalService, UserDetailsService } from './user-details.service';
-import { endpoint, id_endpoint, User } from './user-service.model';
+import { User } from './user-service.model';
 
-const user: User = {
+const user: UserInput = {
   id: 1,
   name: 'Dios Vo',
   email: 'vtmn1212@gmail.com',
@@ -15,19 +14,16 @@ const user: User = {
 
 describe('InternalService', () => {
   let service: InternalService;
-  let http: HttpTestingController;
+
+  const mockHttp: any = {
+    get: jest.fn().mockReturnValue(of(user)),
+    put: jest.fn().mockReturnValue(of(user)),
+    post: jest.fn().mockReturnValue(of(user)),
+    delete: jest.fn().mockReturnValue(of({})),
+  };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule
-      ],
-      providers: [InternalService]
-    });
-
-    service = TestBed.inject(InternalService);
-    http = TestBed.inject(HttpTestingController);
+    service = new InternalService(mockHttp, new HandleService());
   });
 
   test('should be created', () => {
@@ -36,58 +32,42 @@ describe('InternalService', () => {
 
   test('byId()', (done) => {
     service.byId(user.id).subscribe({
-      next: (response: User) => {
+      next: (response: UserInput) => {
         expect(response).toEqual(user);
         done();
       },
       error: ({ message }) => fail(message)
     });
-
-    const request = http.expectOne(id_endpoint(user.id));
-    expect(request.request.method).toBe('GET');
-    request.flush(user);
   });
 
   test('create()', (done) => {
     service.create(user).subscribe({
-      next: (response: User) => {
+      next: (response: UserInput) => {
         expect(response).toEqual(user);
         done();
       },
       error: ({ message }) => fail(message)
     });
-
-    const request = http.expectOne(endpoint);
-    expect(request.request.method).toBe('POST');
-    request.flush(user);
   });
 
   test('update()', (done) => {
     service.update(user).subscribe({
-      next: (response: User) => {
+      next: (response: UserInput) => {
         expect(response).toEqual(user);
         done();
       },
       error: ({ message }) => fail(message)
     });
-
-    const request = http.expectOne(id_endpoint(user.id));
-    expect(request.request.method).toBe('PUT');
-    request.flush(user);
   });
 
   test('remove()', (done) => {
     service.remove(user.id).subscribe({
-      next: (response: User) => {
-        expect(response).toEqual(user);
+      next: (response: UserInput) => {
+        expect(response).toEqual({});
         done();
       },
       error: ({ message }) => fail(message)
     });
-
-    const request = http.expectOne(id_endpoint(user.id));
-    expect(request.request.method).toBe('DELETE');
-    request.flush(user);
   });
 });
 
@@ -115,45 +95,41 @@ describe('UserDetailsService', () => {
 
   test('loadFromApiAndFillForm$() to map value corresponding to specific id (Edit mode)', (done) => {
     jest.spyOn(service.isEdit$, 'next');
-    jest.spyOn(service, 'setFormValue');
-
     service.loadFromApiAndFillForm$(user.id).subscribe(() => {
       expect(service.isEdit$.next).toBeCalledWith(true);
+      expect(mockInternalService.byId).toBeCalledWith(user.id);
       done();
     });
-    expect(service.setFormValue).toBeCalledWith(user);
   });
 
   test('initializeValue$() to get the default value (Create mode)', (done) => {
-    jest.spyOn(service.form, 'reset');
     jest.spyOn(service.isEdit$, 'next');
-
-    service.initializeValue$().subscribe(() => {
+    service.initializeValue$().subscribe((response: UserInput) => {
       expect(service.isEdit$.next).toBeCalledWith(false);
+      expect(response).toEqual({
+        id: null,
+        name: '',
+        email: '',
+        hobbies: []
+      });
       done();
     });
-
-    expect(service.form.reset).toBeCalled();
-    expect(mockInternalService.byId).toBeCalledWith(user.id);
   });
 
   test('create$()', (done) => {
-    jest.spyOn(service.form, 'reset');
-    service['create$']().subscribe(() => done());
-
-    expect(service.form.reset).toBeCalled();
-    expect(mockInternalService.create).toBeCalledWith({ name: '', email: '', hobbies: [] });
+    service['create$']().subscribe(() => {
+      expect(mockInternalService.create).toBeCalledWith({ name: '', email: '', hobbies: [] });
+      done();
+    });
   });
 
   test('update$()', (done) => {
-    jest.spyOn(service, 'setFormValue');
     service.form.addControl('id', new FormControl(user.id));
     service.form.setValue(user);
-
-    service['update$']().subscribe(() => done());
-
-    expect(service.setFormValue).toBeCalledWith(user);
-    expect(mockInternalService.update).toBeCalledWith(user);
+    service['update$']().subscribe(() => {
+      expect(mockInternalService.update).toBeCalledWith(user);
+      done();
+    });
   });
 
   test('remove$()', (done) => {

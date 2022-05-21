@@ -6,7 +6,7 @@ import { EFunctions } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import isEqual from 'lodash.isequal';
-import isUndefined from 'lodash/isundefined';
+import isUndefined from 'lodash.isundefined';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
 

@@ -137,7 +137,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
 
   /**
    * @returns the filtered Articles by user id
-  */
+   */
 
   private getArticles(params: PaginateParams, userId?: number): Observable<Article[]> {
     const queries = concatQueries(params);
@@ -148,7 +148,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
   /**
    * @param id article id
    * @returns get Article by id
-  */
+   */
 
   private findById(id: number): Observable<Article> {
     return this.get(this.postUrl + id) as Observable<Article>;
@@ -158,7 +158,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
    * @param id article id
    * @returns get list Comments by Article id
    * 
-  */
+   */
 
   private findCommentsByArticle(id: number, searchTerm: string, params: PaginateParams): Observable<Comment[]> {
     const queries = environment.jsonPlaceHolderUrl + `comments?postId=${id}&_start=${params.start}&_limit=${params.limit}`;

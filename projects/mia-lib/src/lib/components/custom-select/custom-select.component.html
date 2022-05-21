@@ -38,7 +38,9 @@
 
     <!-- Options -->
     <ng-container *ngIf="items | async as retrievedItems; else waitingResponse">
-      <ng-container *ngFor="let item of retrievedItems">
+      <ng-container
+        *ngFor="let item of retrievedItems; trackByKey: bindLabelKey"
+      >
         <ng-container *ngIf="bindKeyValue; else basicTemplate">
           <mat-option [value]="item[bindValueKey]">
             {{ item[bindLabelKey] | titlecase }}

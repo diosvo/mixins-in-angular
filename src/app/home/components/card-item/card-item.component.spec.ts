@@ -43,8 +43,4 @@ describe('CardItemComponent', () => {
     component.directItem('functions', 'rxjs', item.route);
     expect(component['router'].navigate).toBeCalledWith(['functions', 'rxjs', item.route]);
   });
-
-  test('trackByItemName()', () => {
-    expect(component.trackByItemName(null, item)).toBe(item.name);
-  });
 });

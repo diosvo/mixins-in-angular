@@ -14,13 +14,14 @@
     <ng-template appAutocompleteContent>
       <ng-container *ngIf="users$ | async as users; else loading">
         <ng-container *ngIf="users | filter: control.value as result">
-          <app-select-option
-            *ngFor="let option of result"
-            [value]="option.username"
-            (emitValue)="stateChanges(option.name)"
-          >
-            {{ option.name }}
-          </app-select-option>
+          <ng-container *ngFor="let option of result; trackByKey: 'id'">
+            <app-select-option
+              [value]="option.username"
+              (emitValue)="stateChanges(option.name)"
+            >
+              {{ option.name }}
+            </app-select-option>
+          </ng-container>
           <app-select-option *ngIf="!result.length">
             No result
           </app-select-option>

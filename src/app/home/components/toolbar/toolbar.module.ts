@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AuthModule } from '@auth/auth.module';
 import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
 import { ToolbarComponent } from './toolbar.component';
 
 @NgModule({
@@ -18,6 +19,7 @@ import { ToolbarComponent } from './toolbar.component';
     AuthModule,
     CustomButtonModule,
     ConfirmDialogModule,
+    TrackByKeyDirectiveModule,
 
     MatIconModule,
     MatButtonModule,

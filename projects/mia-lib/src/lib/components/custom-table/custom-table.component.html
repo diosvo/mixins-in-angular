@@ -7,7 +7,7 @@
     <mat-table
       #table
       [dataSource]="source"
-      [trackBy]="trackByIdx"
+      [trackBy]="trackByFn"
       matSort
       matSortDisableClear
       [matSortActive]="defaultSortColumn"

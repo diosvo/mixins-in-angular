@@ -3,7 +3,6 @@
  */
 
 enum EUrl {
-  CORE = 'core',
   COMPONENT = 'components',
   FUNCTION = 'functions',
 }

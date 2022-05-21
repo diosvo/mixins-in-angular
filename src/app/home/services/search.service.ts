@@ -15,7 +15,6 @@ export class SearchService extends BaseService<IGroupValue> {
 
   uiComponentsList$ = this.getFetch(EUrl.COMPONENT);
   functionsList$ = this.getFetch(EUrl.FUNCTION);
-  core$ = this.getFetch(EUrl.CORE);
 
   constructor(
     protected readonly http: HttpClient,

@@ -33,7 +33,7 @@ export class LoggerFactory {
         if (!environment.production) {
           switch (type) {
             case ELog.DEFAULT: {
-              this.log(name, Background.AUTH, message);
+              this.log(name, Background.DEFAULT, message);
               break;
             }
             case ELog.SERVICE: {

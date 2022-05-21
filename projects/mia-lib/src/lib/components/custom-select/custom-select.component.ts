@@ -28,9 +28,9 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() bindValueKey: string;
   @Input() bindKeyValue = false;
 
-  @Input() checkAll: boolean = true;
-  @Input() placeholder: string = 'Select';
-  @Input() searchPlaceholder: string = 'Search';
+  @Input() checkAll = true;
+  @Input() placeholder = 'Select';
+  @Input() searchPlaceholder = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   private isServerSide = true;

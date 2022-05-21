@@ -44,7 +44,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
     this.handleEffects();
   }
 
-  controlSearchTerm(initial: string = ''): FormControl {
+  controlSearchTerm(initial = ''): FormControl {
     const control = new FormControl(initial);
 
     control.valueChanges

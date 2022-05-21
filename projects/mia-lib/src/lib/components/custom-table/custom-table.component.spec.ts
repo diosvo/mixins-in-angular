@@ -186,8 +186,4 @@ describe.skip('CustomTableComponent', () => {
       component.source.data.forEach(row => expect(component['selection'].select(row)));
     });
   });
-
-  it('trackByIdx() to keep track from list', () => {
-    expect(component.trackByIdx(0)).toEqual(0);
-  });
 });

@@ -151,7 +151,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
    */
 
   private findById(id: number): Observable<Article> {
-    return this.get(this.postUrl + id) as Observable<Article>;
+    return this.get(this.postUrl + id.toString()) as Observable<Article>;
   }
 
   /**

@@ -18,10 +18,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     }
     return next.handle(request);
 
-    function isLoggedIn() {
-      return headers.get('authorization') === FAKE_JWT_TOKEN;
-    }
-
     function handleLogin(): Observable<HttpEvent<unknown>> {
       return of(
         new HttpResponse({

@@ -40,7 +40,7 @@ export class InternalService extends BaseService<UserInput> {
     return this.edit(id_endpoint(user.id), { body: user });
   }
 
-  remove(id: number): Observable<{}> {
+  remove(id: number): Observable<unknown> {
     return this.delete(id_endpoint(id));
   }
 }
@@ -87,7 +87,7 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
     return this.internal.update(this.getFormValue());
   }
 
-  remove$(id: number): Observable<{}> {
+  remove$(id: number): Observable<unknown> {
     return this.internal.remove(id);
   }
 }

@@ -43,7 +43,7 @@ export abstract class BaseService<T> {
     return this.fetch(EMethod.PATCH)(url)({ body }) as Observable<T>;
   }
 
-  protected delete(url: string): Observable<{}> {
+  protected delete(url: string): Observable<unknown> {
     return this.fetch(EMethod.DELETE)(url)({});
   }
 

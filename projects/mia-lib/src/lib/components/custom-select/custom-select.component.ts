@@ -22,7 +22,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
 export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
 
   @Input() items: T[] | Observable<T[]> = [];
-  @Output() selectedItem = new EventEmitter<string>();
+  @Output() readonly selectedItem = new EventEmitter<string>();
 
   @Input() bindLabelKey: string;
   @Input() bindValueKey: string;

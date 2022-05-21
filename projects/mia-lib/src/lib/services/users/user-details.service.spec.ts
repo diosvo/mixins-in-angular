@@ -3,7 +3,6 @@ import { UserInput } from '@lib/models/user';
 import { of } from 'rxjs';
 import { HandleService } from '../base/handle.service';
 import { InternalService, UserDetailsService } from './user-details.service';
-import { User } from './user-service.model';
 
 const user: UserInput = {
   id: 1,
@@ -62,10 +61,7 @@ describe('InternalService', () => {
 
   test('remove()', (done) => {
     service.remove(user.id).subscribe({
-      next: (response: UserInput) => {
-        expect(response).toEqual({});
-        done();
-      },
+      next: () => done(),
       error: ({ message }) => fail(message)
     });
   });

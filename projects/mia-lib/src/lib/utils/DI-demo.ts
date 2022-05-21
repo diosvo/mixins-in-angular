@@ -1,15 +1,13 @@
 /**
-* @description: Angular Dependency Injection – Understanding hierarchical injectors
-*/
+  * @description: Angular Dependency Injection – Understanding hierarchical injectors
+  */
 
-class UserService {
-  sayHi(): void {
-    console.log('I\'m Dios V');
-  }
+class DemoDIService {
+  sayHi(): void { }
 }
 
 class MyComponent {
-  constructor(public user: UserService) { }
+  constructor(public user: DemoDIService) { }
 }
 
 /* "Angular" DI */
@@ -26,13 +24,13 @@ class Injector {
 
     if (!serviceInstance) {
       throw new Error('No provider found!');
-    }  
+    }
     return serviceInstance;
   }
 }
 
 //  Somewhere in application
 
-const injector = new Injector([UserService]);
-const component = new MyComponent(injector.get(UserService));
+const injector = new Injector([DemoDIService]);
+const component = new MyComponent(injector.get(DemoDIService));
 component.user.sayHi();

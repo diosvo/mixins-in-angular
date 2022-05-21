@@ -5,7 +5,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, NgModule, Output } f
 })
 export class ClickOutsideDirective {
 
-  @Output() clickOutside = new EventEmitter<MouseEvent>();
+  @Output() readonly clickOutside = new EventEmitter<MouseEvent>();
 
   constructor(private readonly elementRef: ElementRef) { }
 

@@ -25,7 +25,7 @@ export class AnimatedCounterDirective implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (!!this.el.nativeElement.textContent) {
+    if (this.el.nativeElement.textContent) {
       this.staticText = this.el.nativeElement.textContent;
     }
 

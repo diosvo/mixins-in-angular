@@ -33,6 +33,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   /** Definitions: data */
 
   @Input() data: T[];
+  @Input() trackByKey: string;
   @Input() columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
 
@@ -164,7 +165,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
   }
 
-  trackByIdx(idx: number): number {
-    return idx;
+  trackByFn(_: number, item: T): T {
+    // TODO: can not get trackByKey instead of we already declare it in specific component
+    return this.trackByKey ? item[this.trackByKey] : item;
   }
 }

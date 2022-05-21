@@ -25,8 +25,8 @@ export class CustomInputComponent extends FormControlValueAccessorConnector {
   @Input() type = 'string';
   @Input() label?: string;
   @Input() placeholder?: string;
-  @Input() readonly: boolean = false;
-  @Input() clearFilter: boolean = false;
+  @Input() readonly = false;
+  @Input() clearFilter = false;
 
   readonly EMPTY_VALUE = '';
 

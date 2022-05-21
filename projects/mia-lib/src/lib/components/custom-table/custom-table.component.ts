@@ -43,7 +43,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Pagination */
 
-  @Input() showFirstLastButtons: boolean = false;
+  @Input() showFirstLastButtons = false;
   @ViewChild(MatPaginator) private paginator: MatPaginator;
   @ViewChild(MatPaginator) private set matPaginator(paginator: MatPaginator) {
     this.paginator = paginator;
@@ -51,7 +51,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() length: number;
   @Input() pageSize: number;
-  @Input() pageIndex: number = 0;
+  @Input() pageIndex = 0;
   @Input() pageSizeOptions: Array<number>;
   @Output() pageChanges = new EventEmitter<PageEvent>();
 

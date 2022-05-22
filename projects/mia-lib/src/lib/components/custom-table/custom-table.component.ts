@@ -88,7 +88,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   readonly DEFAULT_PAGESIZE = 5;
   source: MatTableDataSource<T>;
-  selection = new SelectionModel<{}>(true, []); // store selection data
+  selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.data.currentValue && !changes.data.firstChange) {

@@ -58,7 +58,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
     this.id.update(id);
   }
 
-  updateStateFromQueryParams(params: Record<string, any>): void {
+  updateStateFromQueryParams(params: Record<string, string>): void {
     const searchTerm = params?.query || '';
     const limit = +params?.limit || DEFAULT_PAGINATE_PARAMS.limit;
     const start = +params?.start || DEFAULT_PAGINATE_PARAMS.start;
@@ -66,7 +66,7 @@ export class ViewArticleStateService extends BaseService<unknown> {
     const sort = params?.sort || DEFAULT_PAGINATE_PARAMS.sort;
 
     this.searchTerm.update(searchTerm);
-    this.updatePagination(start, limit, order, sort);
+    this.updatePagination(start, limit, order as SortDirection, sort);
   }
 
   getStateSnapshot(): ViewArticleState {
@@ -127,10 +127,10 @@ export class ViewArticleStateService extends BaseService<unknown> {
   }
 
   private updatePagination(
-    start: number = DEFAULT_PAGINATE_PARAMS.start,
-    limit: number = DEFAULT_PAGINATE_PARAMS.limit,
-    order: SortDirection = DEFAULT_PAGINATE_PARAMS.order,
-    sort: string = DEFAULT_PAGINATE_PARAMS.sort
+    start = DEFAULT_PAGINATE_PARAMS.start,
+    limit = DEFAULT_PAGINATE_PARAMS.limit,
+    order = DEFAULT_PAGINATE_PARAMS.order,
+    sort = DEFAULT_PAGINATE_PARAMS.sort
   ): void {
     this.paginate.update({ start, limit, order, sort });
   }

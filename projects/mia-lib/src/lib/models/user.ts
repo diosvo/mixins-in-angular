@@ -1,14 +1,17 @@
 declare type Gender = 'male' | 'female' | 'others';
 
-interface IUser {
-  id: string | number;
-  lastName: string;
-  firstName: string;
+interface UserInput {
+  id?: number;
   name: string;
-  gender: Gender;
   email: string;
-  hobbies: Array<string>;
+  hobbies: string[];
 }
 
-export { IUser };
+interface IUser extends UserInput {
+  lastName: string;
+  firstName: string;
+  gender: Gender;
+}
+
+export { UserInput, IUser };
 

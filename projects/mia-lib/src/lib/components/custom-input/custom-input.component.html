@@ -1,20 +1,30 @@
-<mat-form-field [style]="style" [appearance]="appearance">
-  <mat-label *ngIf="label" [innerHTML]="label"></mat-label>
+<mat-form-field
+  [style]="style"
+  [appearance]="appearance"
+  [floatLabel]="floatLabel"
+>
+  <mat-label *ngIf="label"> {{ label | titlecase }} </mat-label>
   <input
     matInput
     [type]="type"
+    spellcheck="true"
     autocomplete="off"
-    [(ngModel)]="value"
-    [pattern]="pattern"
-    [required]="required"
-    [disabled]="disabled"
     [readonly]="readonly"
+    [formControl]="control"
     [placeholder]="placeholder"
-    (blur)="onTouched()"
   />
-  <span matSuffix>
+  <ng-container *ngIf="clearFilter" matSuffix>
+    <custom-button
+      type="icon"
+      *ngIf="control.value !== EMPTY_VALUE"
+      (click)="control.setValue(EMPTY_VALUE)"
+    >
+      clear
+    </custom-button>
+  </ng-container>
+  <ng-container matSuffix>
     <ng-content select="[suffix]"></ng-content>
-  </span>
+  </ng-container>
   <mat-error *ngIf="control?.invalid">
     <ng-content select="[error]"></ng-content>
   </mat-error>

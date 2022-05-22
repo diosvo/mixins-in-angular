@@ -2,9 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  NgZone,
-  OnDestroy,
-  OnInit,
+  NgZone, OnInit,
   QueryList,
   ViewChild,
   ViewChildren
@@ -13,7 +11,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ICategory } from '@lib/models/category';
 import { CategoryService } from '@lib/services/category/category.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -22,7 +20,7 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./advanced-crud.component.scss'],
 })
 
-export class AdvancedCrudComponent implements OnInit, OnDestroy {
+export class AdvancedCrudComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'action'];
   dataSource = new MatTableDataSource<unknown>([]);
   categories$: Observable<Array<ICategory>>;
@@ -32,8 +30,6 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
   });
   isEdit: boolean;
   rowValue: ICategory;
-
-  private destroyed$ = new Subject();
 
   @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
   @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
@@ -151,10 +147,5 @@ export class AdvancedCrudComponent implements OnInit, OnDestroy {
       categoryName: [null, Validators.required],
       isEditable: [true]
     });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

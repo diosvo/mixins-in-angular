@@ -1,0 +1,64 @@
+<mat-form-field [appearance]="appearance">
+  <mat-label>{{ placeholder }}</mat-label>
+  <mat-select
+    [multiple]="checkAll"
+    [formControl]="control"
+    [sortComparator]="sortFunc"
+  >
+    <!-- Search Input & Check All -->
+    <div class="pt-1 px-2 position-sticky bg-white top-0 z-index-1">
+      <custom-input
+        class="width-100"
+        [clearFilter]="true"
+        [appearance]="'legacy'"
+        [label]="searchPlaceholder"
+        [formControl]="filterControl"
+      >
+      </custom-input>
+      <hr class="my-0" />
+    </div>
+
+    <div
+      *ngIf="checkAll"
+      class="d-flex mx-2 mt-2"
+      [style.line-height]="'normal'"
+    >
+      <mat-checkbox
+        color="warn"
+        title="Select All"
+        data-toggle="tooltip"
+        (change)="toggleSelection($event)"
+        [checked]="hasValue() && isAllSelected()"
+      >
+      </mat-checkbox>
+      <span class="ml-1">All</span>
+    </div>
+
+    <hr *ngIf="checkAll" class="mx-0 mb-0" />
+
+    <!-- Options -->
+    <ng-container *ngIf="items | async as retrievedItems; else waitingResponse">
+      <ng-container
+        *ngFor="let item of retrievedItems; trackByKey: bindLabelKey"
+      >
+        <ng-container *ngIf="bindKeyValue; else basicTemplate">
+          <mat-option [value]="item[bindValueKey]">
+            {{ item[bindLabelKey] | titlecase }}
+          </mat-option>
+        </ng-container>
+
+        <ng-template #basicTemplate>
+          <mat-option [value]="item">{{ item | titlecase }}</mat-option>
+        </ng-template>
+      </ng-container>
+
+      <ng-container *ngIf="retrievedItems.length === 0">
+        <div class="p-2">No items found.</div>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #waitingResponse>
+      <mat-option [disabled]="true">Please wait...</mat-option>
+    </ng-template>
+  </mat-select>
+</mat-form-field>

@@ -10,13 +10,24 @@
   ></mat-progress-bar>
 
   <custom-table
-    [data]="users$"
+    *ngIf="users$ | async as data"
+    [data]="data | filter: query.value"
     [columns]="columns"
     [defaultSortColumn]="'name'"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
-      <custom-button [routerLink]="['create']"> Create User</custom-button>
+      <custom-button [routerLink]="['create']"> Create User </custom-button>
+    </div>
+
+    <div filters>
+      <custom-input
+        class="flex-1"
+        label="search"
+        [clearFilter]="true"
+        [formControl]="query"
+      >
+      </custom-input>
     </div>
 
     <custom-column columnName="email">
@@ -26,8 +37,8 @@
     </custom-column>
 
     <custom-column columnName="actions">
-      <ng-template let-user>
-        <custom-button type="icon" [routerLink]="['details', user.id]">
+      <ng-template let-user let-index="index">
+        <custom-button type="icon" [routerLink]="[user.id]">
           edit
         </custom-button>
         <custom-button type="icon" (click)="openConfirmDialog(user)">

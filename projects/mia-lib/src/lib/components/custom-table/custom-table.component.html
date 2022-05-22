@@ -1,12 +1,13 @@
-<main class="bg-white m-2 p-2">
+<main class="bg-white bd-auto m-2 p-2">
   <ng-content select="[header]"></ng-content>
   <ng-content select="[filters]"></ng-content>
 
   <!-- Table -->
   <div class="custom-table" [style]="style">
     <mat-table
+      #table
       [dataSource]="source"
-      [trackBy]="trackByIdx"
+      [trackBy]="trackByFn"
       matSort
       matSortDisableClear
       [matSortActive]="defaultSortColumn"
@@ -55,25 +56,30 @@
             disableClear
             mat-sort-header
             [style.flex]="column.flex"
-            [disabled]="column.disableSorting"
+            [disabled]="
+              !data.length || column.disableSorting || column.key === 'actions'
+            "
           >
-            <span class="truncate-cell">
+            <span [class.truncate-cell]="column.truncate ?? true">
               {{ column?.header || column?.key | uppercase }}
             </span>
           </mat-header-cell>
           <mat-cell
             *matCellDef="let row; let idx = index"
             [style.flex]="column.flex"
+            [matTooltip]="column.tooltip ? row[column.key] : null"
+            [id]="column.key + '-row-' + getIndex(idx)"
           >
-            <span class="truncate-cell">
+            <span [class.truncate-cell]="column.truncate ?? true">
               <ng-container
                 [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
-                [ngTemplateOutletContext]="{ $implicit: row }"
+                [ngTemplateOutletContext]="{
+                  $implicit: row,
+                  index: getIndex(idx)
+                }"
               ></ng-container>
             </span>
-            <ng-template #noTemplates>
-              <span class="truncate-cell">{{ row[column.key] }}</span>
-            </ng-template>
+            <ng-template #noTemplates>{{ row[column.key] }}</ng-template>
           </mat-cell>
         </ng-template>
       </ng-container>
@@ -85,20 +91,18 @@
 
       <!-- Loading spinner -->
       <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">
-          <mat-spinner [diameter]="50"></mat-spinner>
-        </div>
+        <div class="d-flex jc-center ai-center my-2">No data found</div>
       </div>
     </mat-table>
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="pageable" [class.custom-pagination]="pageable">
+  <div class="custom-pagination">
     <mat-paginator
       [length]="length"
-      [pageSize]="pageSize"
       [pageIndex]="pageIndex"
-      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions || [DEFAULT_PAGESIZE]"
       [showFirstLastButtons]="showFirstLastButtons"
       (page)="onPageChanged($event)"
     ></mat-paginator>

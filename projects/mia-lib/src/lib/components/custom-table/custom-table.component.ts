@@ -1,42 +1,48 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, Component, ContentChildren, EventEmitter, Input,
-  OnChanges, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild
+  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
+  OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import isEmpty from 'lodash.isempty';
+import isEqual from 'lodash.isequal';
+import isUndefined from 'lodash.isundefined';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 export interface TableColumn {
   key: string;
   flex?: string;
   header?: string;
+  tooltip?: boolean;
+  truncate?: boolean;
   disableSorting?: boolean;
 }
 
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
-  styleUrls: ['./custom-table.component.scss']
+  styleUrls: ['./custom-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit, OnDestroy {
-
-  source: MatTableDataSource<T> = new MatTableDataSource<T>([]);
-  private selection = new SelectionModel<{}>(true, []); // store selection data
+export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
 
   /** Definitions: data */
 
-  @Input() data!: Observable<Array<T>>;
-  @Input() columns: Array<TableColumn> = [];
+  @Input() data: T[];
+  @Input() trackByKey: string;
+  @Input() columns: TableColumn[] = [];
+  @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
+
+  /** Styles */
+
   @Input() style: Record<string, string>;
 
   /** Pagination */
 
-  @Input() pageable = true;
   @Input() showFirstLastButtons = false;
   @ViewChild(MatPaginator) private paginator: MatPaginator;
   @ViewChild(MatPaginator) private set matPaginator(paginator: MatPaginator) {
@@ -46,7 +52,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() length: number;
   @Input() pageSize: number;
   @Input() pageIndex = 0;
-  @Input() pageSizeOptions: Array<number> = [5, 10, 20];
+  @Input() pageSizeOptions: Array<number>;
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -65,13 +71,11 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() enableCheckbox = false;
   @Output() selectedRows = new EventEmitter();
 
-  private _destroyed$ = new Subject<boolean>();
-
   /** construct columns definitions  */
 
   @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
   get columnTemplates(): { [key: string]: TemplateRef<any> } {
-    if (this.columnDefs !== null) {
+    if (!isEmpty(this.columnDefs)) {
       const columnTemplates: { [key: string]: TemplateRef<any> } = {};
       for (const column of this.columnDefs.toArray()) {
         columnTemplates[column.columnName] = column.columnTemplate;
@@ -82,11 +86,15 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: Array<string>;
 
-  constructor() { }
+  readonly DEFAULT_PAGESIZE = 5;
+  source: MatTableDataSource<T>;
+  selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.data && changes.data.currentValue) {
-      this.getData();
+    if (changes.data.currentValue && !changes.data.firstChange) {
+      this.source.data = changes.data.currentValue;
+      this.source.sort = this.sort;
+      this.configPaginator();
     };
 
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
@@ -100,24 +108,21 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
+
+    this.source = new MatTableDataSource(this.data);
+    this.source.sort = this.sort;
+    this.configPaginator();
   }
 
-  private getData(): void {
-    this.data
-      .pipe(takeUntil(this._destroyed$))
-      .subscribe((response: Array<T>) => {
-        this.source = new MatTableDataSource<T>(response);
-        this.source.sort = this.sort;
+  getIndex(index: number): number {
+    return this.length
+      ? index
+      : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
+  }
 
-        if (!this.pageable) {
-          this.source.paginator = null;
-        } else {
-          // length = calling data from API when page index changes
-          this.source.paginator = this.length === undefined ? this.paginator : this.matPaginator;
-        }
-      });
-
-    this.selection = new SelectionModel<{}>(true, []);
+  private configPaginator(): void {
+    // length = calling data from API when page index changes
+    this.source.paginator = isUndefined(this.length) ? this.paginator : this.matPaginator;
   }
 
   private configDisplayColumns(): void {
@@ -141,6 +146,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     this.pageChanges.emit(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    window.requestAnimationFrame(() =>
+      this.tableRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    );
   }
 
   /**
@@ -150,19 +158,15 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.source.data.length;
-    return numSelected === numRows;
+    return isEqual(numSelected, numRows);
   }
 
   masterToggle(): void {
     this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
   }
 
-  trackByIdx(idx: number): number {
-    return idx;
-  }
-
-  ngOnDestroy(): void {
-    this._destroyed$.next(true);
-    this._destroyed$.complete();
+  trackByFn(_: number, item: T): T {
+    // TODO: can not get trackByKey instead of we already declare it in specific component
+    return this.trackByKey ? item[this.trackByKey] : item;
   }
 }

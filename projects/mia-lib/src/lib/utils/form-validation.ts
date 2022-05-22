@@ -1,7 +1,5 @@
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
 
 /**
 * @description check property pattern
@@ -22,22 +20,6 @@ class ErrorMatcher implements ErrorStateMatcher {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
-}
-
-/**
-* for @username
-*/
-
-function usernameExits(username: string, list?: Array<string>): Observable<boolean> {
-  return of(list.includes(username)).pipe(delay(1000));
-}
-
-function usernameValidator(): AsyncValidatorFn {
-  return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    return usernameExits(control.value).pipe(
-      map(response => response ? { usernameExits: true } : null)
-    );
-  };
 }
 
 /**
@@ -76,4 +58,4 @@ function isCardNumberValid(cardNumber: string): boolean {
   return !(array.reduce((prev, next) => prev + next, 0) % 10);
 }
 
-export { ErrorMatcher, Regex, usernameValidator, matchPassword, isCardNumberValid };
+export { ErrorMatcher, Regex, matchPassword, isCardNumberValid };

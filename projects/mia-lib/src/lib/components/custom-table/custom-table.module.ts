@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SlugifyPipeModule } from '../../pipes/slugify.pipe';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 import { CustomTableComponent } from './custom-table.component';
 
@@ -15,9 +16,11 @@ import { CustomTableComponent } from './custom-table.component';
     CommonModule,
     MatSortModule,
     MatTableModule,
+    MatTooltipModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+
+    SlugifyPipeModule
   ],
   exports: [CustomTableComponent, TableColumnDirective],
   providers: [

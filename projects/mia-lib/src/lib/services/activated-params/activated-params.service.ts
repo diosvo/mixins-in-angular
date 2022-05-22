@@ -1,11 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, filter, map, of, Subject, switchMap, takeUntil } from 'rxjs';
+import isEqual from 'lodash.isequal';
+import { BehaviorSubject, filter, map, of, switchMap, takeUntil } from 'rxjs';
+import { DestroyService } from '../destroy/destroy.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ActivatedParamsService implements OnDestroy {
+export class ActivatedParamsService {
   private _param$ = new BehaviorSubject<Record<string, string>>({});
   readonly paramsMap$ = this._param$.asObservable();
 
@@ -15,15 +17,14 @@ export class ActivatedParamsService implements OnDestroy {
   private _path$ = new BehaviorSubject<string>('');
   readonly pathMap$ = this._path$.asObservable();
 
-  private _destroyed$ = new Subject<boolean>();
-
   private isShallowEqual<V = string | Record<string, unknown>>(prev: V, curr: V): boolean {
-    return prev === curr;
+    return isEqual(prev, curr);
   }
 
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly destroy$: DestroyService
   ) {
     this.getParams();
   }
@@ -36,9 +37,9 @@ export class ActivatedParamsService implements OnDestroy {
         while (route.firstChild) route = route.firstChild;
         return route;
       }),
-      filter(route => route.outlet === 'primary'),
+      filter(route => isEqual(route.outlet, 'primary')),
       switchMap(({ params, data }) => of({ params, data })),
-      takeUntil(this._destroyed$)
+      takeUntil(this.destroy$)
     );
 
     mappedRoute.subscribe({
@@ -66,10 +67,5 @@ export class ActivatedParamsService implements OnDestroy {
         }
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this._destroyed$.next(true);
-    this._destroyed$.complete();
   }
 }

@@ -1,79 +1,93 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, catchError, finalize, map, Observable, shareReplay, Subject, takeUntil, tap, throwError, zip } from 'rxjs';
-import { ActivatedParamsService } from '../activated-params/activated-params.service';
+import { Injectable } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserInput } from '@lib/models/user';
+import { BehaviorSubject, map, Observable, of, shareReplay } from 'rxjs';
+import { BaseService } from '../base/base.service';
+import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
-import { User, users_endpoint, user_id_endpoint } from './user-service.model';
+import { endpoint, id_endpoint } from './user-service.model';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UserDetailsService implements OnDestroy {
-  private _user$ = new BehaviorSubject<User>(null);
-  readonly currentUser$ = this._user$.asObservable();
+const DEFAULT_VALUE = {
+  id: null,
+  name: '',
+  email: '',
+  hobbies: []
+};
 
-  private _loading$ = new BehaviorSubject<boolean>(false);
-  readonly loading$ = this._loading$.asObservable();
-
-  readonly errorMessage$ = new Subject<string>();
-  private _destroyed$ = new Subject<boolean>();
+@Injectable()
+export class InternalService extends BaseService<UserInput> {
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly handle: HandleService,
-    private readonly route: ActivatedParamsService
+    protected readonly http: HttpClient,
+    protected readonly handle: HandleService,
   ) {
-    this.getUserByRouteParams();
+    super(http, handle);
   }
 
-  private getUserByRouteParams(): void {
-    zip([this.route.pathMap$, this.route.paramsMap$]).subscribe({
-      next: ([path, params]) => {
-        const user_id = +params.user_id;
+  byId(id: number): Observable<UserInput> {
+    return this.get(id_endpoint(id)).pipe(
+      map(({ id, name, email }) => ({ id, name, email, hobbies: ['coding', 'basketball'] })),
+      shareReplay(1)
+    );
+  }
 
-        if (!isNaN(user_id) && !path.includes('create')) {
-          this._loading$.next(true);
+  create(user: UserInput): Observable<UserInput> {
+    return this.add(endpoint, { body: user });
+  }
 
-          this.byId(user_id)
-            .pipe(
-              finalize(() => this._loading$.next(false)),
-              catchError(({ message }) => {
-                this.errorMessage$.next(message);
-                return throwError(() => new Error(message));
-              }),
-              takeUntil(this._destroyed$)
-            )
-            .subscribe({
-              next: (response: User) => this._user$.next(response)
-            });
-        }
-      }
+  update(user: UserInput): Observable<UserInput> {
+    return this.edit(id_endpoint(user.id), { body: user });
+  }
+
+  remove(id: number): Observable<unknown> {
+    return this.delete(id_endpoint(id));
+  }
+}
+
+@Injectable()
+export class UserDetailsService extends AbstractFormService<UserInput>{
+
+  primary_key = 'id';
+  isEdit$ = new BehaviorSubject<boolean>(false);
+  primitiveValue$ = new BehaviorSubject<UserInput>(DEFAULT_VALUE);
+
+  constructor(
+    protected override fb: FormBuilder,
+    private readonly internal: InternalService,
+  ) {
+    super(fb);
+  }
+
+  buildForm(): FormGroup {
+    return this.fb.group({
+      id: [DEFAULT_VALUE.id],
+      name: [DEFAULT_VALUE.name, Validators.required],
+      email: [DEFAULT_VALUE.email, [Validators.required, Validators.email]],
+      hobbies: [DEFAULT_VALUE.hobbies]
     });
   }
 
-  byId(id: number): Observable<User> {
-    return this.http.get<Required<User>>(user_id_endpoint(id)).pipe(
-      map(({ id, name, email }) => <User>{ id, name, email, hobbies: ['coding', 'basketball'] }),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: byId`)),
-      shareReplay()
-    );
+  loadFromApiAndFillForm$(id: number): Observable<UserInput> {
+    this.isEdit$.next(true);
+    return this.internal.byId(id).pipe(this.pipeHandler());
   }
 
-  create(user: User): Observable<User> {
-    return this.http.post<Required<User>>(users_endpoint, user).pipe(
-      catchError(this.handle.errorHandler(`${this.constructor.name}: create`)),
-    );
+  initializeValue$(): Observable<UserInput> {
+    this.isEdit$.next(false);
+    return of(DEFAULT_VALUE).pipe(this.pipeHandler());
   }
 
-  update(user: User): Observable<User> {
-    return this.http.put<Required<User>>(user_id_endpoint(user.id), user).pipe(
-      tap((data: User) => this._user$.next(data)),
-      catchError(this.handle.errorHandler(`${this.constructor.name}: create`))
-    );
+  protected create$(): Observable<UserInput> {
+    delete this.getFormValue()[this.primary_key];
+    return this.internal.create(this.getFormValue());
   }
 
-  ngOnDestroy(): void {
-    this._destroyed$.next(true);
-    this._destroyed$.complete();
+  protected update$(): Observable<UserInput> {
+    return this.internal.update(this.getFormValue());
+  }
+
+  remove$(id: number): Observable<unknown> {
+    return this.internal.remove(id);
   }
 }

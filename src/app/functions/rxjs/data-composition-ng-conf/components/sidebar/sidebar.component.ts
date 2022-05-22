@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EFunctions, EUrl } from '@home/models/url.enum';
 import { ProductsService } from '@lib/services/products/products.service';
@@ -6,8 +6,7 @@ import { catchError, Subject, throwError } from 'rxjs';
 
 @Component({
   selector: 'data-composition-sidebar',
-  templateUrl: './sidebar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
   errorMessage$ = new Subject<string>();

@@ -6,7 +6,7 @@ import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { filter } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
@@ -14,7 +14,7 @@ import { filter } from 'rxjs';
 })
 export class ToolbarComponent {
 
-  navigation = Object.values(EUrl);
+  readonly navigation = Object.values(EUrl);
 
   constructor(
     private readonly router: Router,
@@ -26,12 +26,14 @@ export class ToolbarComponent {
   openLoginDialog(): void {
     this.dialog
       .open(LoginComponent, {
-        width: '375px',
+        width: '400px',
         disableClose: true,
       })
       .afterClosed()
       .pipe(filter(info => !!info))
-      .subscribe(data => this.login(data));
+      .subscribe({
+        next: (info) => this.login(info)
+      });
   }
 
   openLogoutDialog(): void {
@@ -42,14 +44,19 @@ export class ToolbarComponent {
           body: 'Are you sure you want to logout?',
           btnClose: false
         },
-        width: '425px',
+        width: '400px',
         disableClose: true,
       })
       .afterClosed()
-      .pipe(filter(result => result))
-      .subscribe(() => {
-        this.authService.logout();
-        this.router.navigate(['/core']);
+      .pipe(
+        filter((ok: boolean) => ok),
+        take(1)
+      )
+      .subscribe({
+        next: () => {
+          this.authService.logout();
+          this.router.navigateByUrl('/components');
+        }
       });
   }
 

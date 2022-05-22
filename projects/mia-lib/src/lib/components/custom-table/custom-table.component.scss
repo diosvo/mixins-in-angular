@@ -1,7 +1,8 @@
 @use 'palette';
+@import 'layout/breakpoints';
 
 $-unit-px : 2px;
-$-cell-pd : 0 calc($-unit-px * 8);
+$-cell-pd : calc($-unit-px * 4) calc($-unit-px * 8);
 
 $-hover    : rgba(0, 0, 0, .04);
 $-bd-radius: calc($-unit-px * 2);
@@ -9,7 +10,6 @@ $-bd-radius: calc($-unit-px * 2);
 .custom-table {
   display       : flex;
   flex-direction: column;
-  min-width     : 300px;
 
   border       : 1px solid palette.$shade;
   border-bottom: none;
@@ -48,16 +48,21 @@ $-bd-radius: calc($-unit-px * 2);
     // Cell
 
     mat-cell {
-      height : calc($-unit-px * 21);
-      padding: $-cell-pd;
+      min-height: calc($-unit-px * 21);
+      padding   : $-cell-pd;
     }
 
     // Text that is longer than the column width is truncated with an ellipsis
 
     :where(mat-header-cell, mat-cell) .truncate-cell {
-      overflow     : hidden;
-      white-space  : nowrap;
       text-overflow: ellipsis;
+
+      display           : -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+
+      line-height: 1.5;
+      overflow   : hidden;
     }
 
     mat-row {
@@ -93,9 +98,14 @@ $-bd-radius: calc($-unit-px * 2);
   border-bottom-right-radius: $-bd-radius;
 }
 
-@media screen and (max-width: 1200px) {
-  .custom-table mat-table {
-    min-width: 100%;
-    display  : inline-grid;
+@include screen('small') {
+  .custom-table {
+    overflow-x: scroll;
+    overflow-y: auto;
+
+    mat-table {
+      min-width: 1024px;
+      overflow : initial;
+    }
   }
 }

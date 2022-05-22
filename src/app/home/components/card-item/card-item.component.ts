@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { IBaseValue, IGroupValue } from '../../models/search.model';
+import { IGroupValue } from '../../models/search.model';
 
 @Component({
   selector: 'card-item',
@@ -8,7 +8,7 @@ import { IBaseValue, IGroupValue } from '../../models/search.model';
   templateUrl: './card-item.component.html',
 })
 export class CardItemComponent {
-  @Input() data: Array<IGroupValue>;
+  @Input() data: IGroupValue[];
 
   constructor(
     private readonly router: Router
@@ -16,9 +16,5 @@ export class CardItemComponent {
 
   directItem(groupUrl: string, groupName: string, itemRoute: string): void {
     this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
-  }
-
-  trackByItemName(_: number, item: IBaseValue): string {
-    return item.name;
   }
 }

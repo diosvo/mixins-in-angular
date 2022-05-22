@@ -1,0 +1,42 @@
+<div class="bg-white bd-auto w-400 p-2 m-2">
+  <small class="d-block text-secondary mb-1">
+    Autocomplete search with custom directive and portal CDK.
+  </small>
+
+  <input
+    [formControl]="control"
+    [appAutocomplete]="autocomplete"
+    placeholder="Lookup users..."
+    class="bd-light bd-auto width-100 p-1"
+  />
+
+  <app-autocomplete #autocomplete="appAutocomplete">
+    <ng-template appAutocompleteContent>
+      <ng-container *ngIf="users$ | async as users; else loading">
+        <ng-container *ngIf="users | filter: control.value as result">
+          <ng-container *ngFor="let option of result; trackByKey: 'id'">
+            <app-select-option
+              [value]="option.username"
+              (emitValue)="stateChanges(option.name)"
+            >
+              {{ option.name }}
+            </app-select-option>
+          </ng-container>
+          <div *ngIf="!result.length" class="p-1">
+            <ng-container> No result. </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #loading>
+        <div class="d-flex jc-center ai-center">
+          <mat-spinner [diameter]="50"></mat-spinner>
+        </div>
+      </ng-template>
+    </ng-template>
+  </app-autocomplete>
+
+  <div *ngIf="selected$ | async as selected" class="mt-1">
+    Selected: {{ selected }}
+  </div>
+</div>

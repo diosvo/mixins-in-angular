@@ -1,6 +1,7 @@
 import { Directive, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthUser } from '@auth/models/auth.model';
 import { AuthService } from '@auth/services/auth.service';
+import isEqual from 'lodash.isequal';
 
 export enum LogicalOperator {
   OR = 'OR',
@@ -27,7 +28,7 @@ export class HasPermissionDirective implements OnInit {
   }
 
   private _currentUser: AuthUser;
-  private _permissions: Array<string> = new Array();
+  private _permissions: Array<string> = [];
 
   private _logicalOperator: Operator = LogicalOperator.AND;
   private _isHidden = true;
@@ -60,18 +61,18 @@ export class HasPermissionDirective implements OnInit {
 
     if (this._currentUser && this._currentUser.roles) {
       for (const checkPermission of this._permissions) {
-        const permissionFound = this._currentUser.roles.find(permission => permission.toLowerCase() === checkPermission.toLowerCase());
+        const permissionFound = this._currentUser.roles.find(permission => isEqual(permission.toLowerCase(), checkPermission.toLowerCase()));
 
         if (permissionFound) {
           hasPermission = true;
 
-          if (this._logicalOperator === LogicalOperator.OR) {
+          if (isEqual(this._logicalOperator, LogicalOperator.OR)) {
             break;
           }
         } else {
           hasPermission = false;
 
-          if (this._logicalOperator === LogicalOperator.AND) {
+          if (isEqual(this._logicalOperator, LogicalOperator.AND)) {
             break;
           }
         }

@@ -5,7 +5,10 @@ import { RouterModule } from '@angular/router';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
+import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
+import { FilterPipeModule } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { ListComponent } from './list.component';
 
 @NgModule({
@@ -21,9 +24,12 @@ import { ListComponent } from './list.component';
     }]),
 
     AlertModule,
+    FilterPipeModule,
     CustomTableModule,
+    CustomInputModule,
     CustomButtonModule,
     ConfirmDialogModule,
+    TrackByKeyDirectiveModule,
 
     MatProgressBarModule
   ]

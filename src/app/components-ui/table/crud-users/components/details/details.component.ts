@@ -1,53 +1,74 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { NgChanges } from '@lib/helpers/mark-function-properties';
-import { User } from '@lib/services/users/user-service.model';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import isEmpty from 'lodash.isempty';
+import isEqual from 'lodash.isequal';
+import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'user-details',
-  templateUrl: './details.component.html'
+  templateUrl: './details.component.html',
+  styles: ['@use \'display/host\';']
 })
-export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
-  form = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    hobbies: [[]]
-  });
-  private destroyed$ = new Subject<void>();
+export class DetailsComponent implements OnInit, DeactivateComponent {
 
-  @Input() user: User;
-  @Output() isValid = new EventEmitter<boolean>();
-  @Output() changed = new EventEmitter<User>();
+  saving = false;
+  loading = true;
+  hasChanged = false;
 
+  readonly errorMessage$ = new Subject<string>();
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
-    private readonly fb: FormBuilder
+    private readonly router: Router,
+    readonly service: UserDetailsService,
+    private readonly route: ActivatedRoute,
+    private readonly destroy$: DestroyService,
+    private readonly snackbar: SnackbarService,
   ) { }
 
-  ngOnChanges(changes: NgChanges<DetailsComponent>): void {
-    this.form.patchValue(changes.user.currentValue);
-  }
-
   ngOnInit(): void {
-    this.watchForFormChanged();
+    this.route.params
+      .pipe(
+        switchMap((params: Params) =>
+          isEmpty(params)
+            ? this.service.initializeValue$()
+            : this.service.loadFromApiAndFillForm$(params['id'])
+        ),
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: () => this.loading = false,
+        error: ({ message }) => this.errorMessage$.next(message),
+      });
+    this.watchForFormChanges();
   }
 
-  private watchForFormChanged(): void {
-    this.form.valueChanges
-      .pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((details: User) => {
-        this.changed.emit(details);
-        this.isValid.emit(this.form.valid);
+  enableSaveButton(): boolean {
+    return this.hasChanged && this.service.valid && !this.saving;
+  }
+
+  canDeactivate(): boolean {
+    return !this.enableSaveButton();
+  }
+
+  saveChanges(): void {
+    this.saving = true;
+
+    this.service.save$()
+      .pipe(finalize(() => this.saving = false))
+      .subscribe({
+        next: () => this.snackbar.success(`The user has been ${this.service.isEdit$.value ? 'updated' : 'created'}.`),
+        error: ({ message }) => this.snackbar.error(message),
+        complete: () => this.router.navigate(['components/table/crud-users'])
       });
   }
 
@@ -63,7 +84,7 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeHobby(index: number): void {
-    this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => index !== idx));
+    this.hobbies.setValue(this.hobbies.value.filter((_item, idx) => !isEqual(index, idx)));
     this.hobbies.value.forEach((item: string) => this.hobbyValidator(item));
   }
 
@@ -77,12 +98,15 @@ export class DetailsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  get hobbies(): FormControl {
-    return this.form.get('hobbies') as FormControl;
+  private watchForFormChanges(): void {
+    this.service.onFormChanges$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (changed: boolean) => this.hasChanged = changed
+      });
   }
 
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+  get hobbies(): FormControl {
+    return this.service.form.get('hobbies') as FormControl;
   }
 }

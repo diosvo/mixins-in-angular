@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CustomButtonModule } from '../custom-button/custom-button.module';
 import { CustomInputComponent } from './custom-input.component';
 
 @NgModule({
   declarations: [CustomInputComponent],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
+
+    CustomButtonModule,
+
     MatInputModule,
     MatFormFieldModule,
   ],

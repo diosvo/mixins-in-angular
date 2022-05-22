@@ -1,29 +1,31 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Subject, timer } from 'rxjs';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 const DEFAULT_ANIMATION_SPEED = 8;
 
 @Directive({
-  selector: '[appAnimatedCounter]'
+  selector: '[appAnimatedCounter]',
 })
-export class AnimatedCounterDirective implements OnInit, OnDestroy {
+export class AnimatedCounterDirective implements OnInit {
   @Input('appAnimatedCounter') value: number;
   @Input() delay = 0;
   @Input() speed = DEFAULT_ANIMATION_SPEED;
 
   staticText: string;
 
-  private destroyed$ = new Subject<void>();
   private startingValue = 0;
   private startingValueDecimal = 0;
 
   constructor(
-    private el: ElementRef<HTMLDivElement>,
-    private renderer: Renderer2) { }
+    private readonly renderer: Renderer2,
+    private readonly destroyed$: DestroyService,
+    private readonly el: ElementRef<HTMLDivElement>,
+  ) { }
 
   ngOnInit(): void {
-    if (!!this.el.nativeElement.textContent) {
+    if (this.el.nativeElement.textContent) {
       this.staticText = this.el.nativeElement.textContent;
     }
 
@@ -70,10 +72,5 @@ export class AnimatedCounterDirective implements OnInit, OnDestroy {
 
   private safeValidate(value): boolean {
     return typeof value === 'number';
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }

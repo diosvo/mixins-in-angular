@@ -1,11 +1,13 @@
 import { Component, OnInit, Self } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DeactivateComponent } from '@lib/models/base-form-component';
+import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { combineLatest, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import isEqual from 'lodash.isequal';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unsaved-form',
@@ -16,34 +18,30 @@ import { map, startWith } from 'rxjs/operators';
 export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   hasChanged = false;
-
-  unsavedForm: FormGroup = this.fb.group({
-    team_name: ['Dios', Validators.required],
-  });
-  primitiveValue = of({
-    team_name: 'Dios',
-  });
+  private vm$ = new BehaviorSubject<string>('Dios');
+  name = new FormControl({ value: 'Dios', disabled: !this.detectPermission.hasPermission }, Validators.required);
 
   constructor(
     private readonly router: Router,
-    private readonly fb: FormBuilder,
+    private readonly destroy$: DestroyService,
     private readonly snackbar: SnackbarService,
     @Self() readonly detectPermission: DetectPermissionService,
   ) { }
 
   ngOnInit(): void {
-    this.formState();
     this.watchForChanges();
   }
 
   private watchForChanges(): void {
-    // Deep-compare between Primitive Form Value & Form Value Changes
-    combineLatest([this.primitiveValue, this.unsavedForm.valueChanges])
+    combineLatest([this.vm$.asObservable(), this.name.valueChanges])
       .pipe(
-        map(([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)),
-        startWith(false)
+        map(([prev, next]) => !isEqual(prev, next)),
+        startWith(false),
+        takeUntil(this.destroy$)
       )
-      .subscribe(response => this.hasChanged = response);
+      .subscribe({
+        next: (changed: boolean) => this.hasChanged = changed
+      });
   }
 
   canDeactivate(): boolean {
@@ -51,16 +49,8 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   }
 
   saveChanges(url?: string): void {
-    this.hasChanged = false;
-    if (this.unsavedForm.invalid) {
-      this.snackbar.error('You need to provide all required information.');
-      return;
-    }
+    this.vm$.next(this.name.value);
     this.snackbar.success('Update successfully!');
     this.router.navigate([url ?? this.router.url]);
-  }
-
-  private formState(): void {
-    this.detectPermission.hasPermission ? this.unsavedForm.enable() : this.unsavedForm.disable();
   }
 }

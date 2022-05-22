@@ -1,11 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGroupValue } from '@home/models/search.model';
 import { EFunctions } from '@home/models/url.enum';
 import { SearchService } from '@home/services/search.service';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import isEqual from 'lodash.isequal';
+import isUndefined from 'lodash.isundefined';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
+
+const DEFAULT_FILTER = {
+  query: '',
+  group: 'all'
+};
 
 @Component({
   selector: 'app-list-functions',
@@ -16,29 +24,25 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUnt
     .panel-container {
         display: block;
     }
-
-    .filter-group {
-        width: 100%;
-    }
-  }`]
+  }`],
 })
-export class ListFunctionsComponent implements OnInit, OnDestroy {
+export class ListFunctionsComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
 
   functionsForm: FormGroup = this.fb.group({
-    query: [''],
-    group: ['all']
+    query: [DEFAULT_FILTER.query],
+    group: [DEFAULT_FILTER.group]
   });
-  groupList = Object.values(EFunctions).sort((prev, next) => prev < next ? -1 : 1);
+  groupList = Object.values(EFunctions).sort();
 
   filteredData$: Observable<Array<IGroupValue>>;
-  private destroyed$: Subject<boolean> = new Subject();
 
   constructor(
     private readonly router: Router,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
+    private readonly destroyed$: DestroyService,
     private readonly searchService: SearchService,
   ) { }
 
@@ -55,7 +59,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.destroyed$))
       .subscribe(params => {
-        if ((params.query && params.group) !== undefined) {
+        if (!isUndefined(params.query && params.group)) {
           this.functionsForm.patchValue(params);
         }
         return;
@@ -73,7 +77,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filter]) =>
         data
-          .filter(item => filter.group !== 'all' ? item.groupName === filter.group : 'all')
+          .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
           .map(item => ({
             ...item,
             groupDetails: item.groupDetails.filter(details => {
@@ -84,7 +88,6 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
           .filter(item => item.groupDetails.length > 0)
       ),
       tap(() => this.updateParams()),
-      takeUntil(this.destroyed$),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
@@ -99,13 +102,8 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  cleanQuery(): void {
-    return this.query.setValue('');
-  }
-
   cleanFilters(): void {
-    this.cleanQuery();
-    this.group.setValue('all');
+    this.functionsForm.setValue(DEFAULT_FILTER);
   }
 
   clearAllIconActive(): boolean {
@@ -113,7 +111,7 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
   }
 
   private get primitiveFilters(): boolean {
-    return this.query.value === '' && this.group.value === 'all';
+    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value, DEFAULT_FILTER.group);
   }
 
   get query(): FormControl {
@@ -122,10 +120,5 @@ export class ListFunctionsComponent implements OnInit, OnDestroy {
 
   get group(): FormControl {
     return this.functionsForm.get('group') as FormControl;
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.complete();
-    this.destroyed$.unsubscribe();
   }
 }

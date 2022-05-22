@@ -2,7 +2,7 @@ import { environment } from '@env/environment';
 import { IUser } from '@lib/models/user';
 
 type User = Partial<IUser>;
-const users_endpoint: string = environment.jsonPlaceHolderUrl + 'users/';
-const user_id_endpoint = (id: number | string): string => users_endpoint + `${id}`;
+const endpoint: string = environment.jsonPlaceHolderUrl + 'users/';
+const id_endpoint = (id: number): string => endpoint + `${id}`;
 
-export { User, users_endpoint, user_id_endpoint };
+export { User, endpoint, id_endpoint };

@@ -1,15 +1,13 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { SnackbarComponent } from '@lib/components/snackbar/snackbar.component';
-import { Observable, race, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
+
+export declare type MessageType = 'success' | 'info' | 'warning' | 'error';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SnackbarService implements OnDestroy {
-  private dismissed$ = new Subject<boolean>();
-  private destroyed$ = new Subject<boolean>();
+export class SnackbarService {
 
   private config: MatSnackBarConfig = {
     duration: 3000,
@@ -18,7 +16,6 @@ export class SnackbarService implements OnDestroy {
   };
 
   constructor(
-    private readonly zone: NgZone,
     private readonly snackbar: MatSnackBar,
   ) { }
 
@@ -35,25 +32,10 @@ export class SnackbarService implements OnDestroy {
   }
 
   private show(message: string, panelClasses?: string | Array<string>): void {
-    const dismissConditions: Observable<boolean>[] = [this.dismissed$, this.destroyed$];
-
-    this.zone.run(() => {
-      const snackbar = this.snackbar.openFromComponent(SnackbarComponent, {
-        ...this.config,
-        data: message,
-        panelClass: panelClasses
-      });
-
-      race(...dismissConditions)
-        .pipe(take(1))
-        .subscribe({
-          complete: () => snackbar.dismiss()
-        });
+    this.snackbar.openFromComponent(SnackbarComponent, {
+      ...this.config,
+      data: message,
+      panelClass: panelClasses
     });
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
   }
 }

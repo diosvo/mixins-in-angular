@@ -5,15 +5,11 @@ import { EUrl } from '@home/models/url.enum';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: EUrl.CORE, pathMatch: 'full',
+    path: '', redirectTo: EUrl.COMPONENT, pathMatch: 'full',
   },
   {
     path: EUrl.COMPONENT,
     loadChildren: () => import('./components-ui/components-ui.module').then(({ ComponentsUiModule }) => ComponentsUiModule)
-  },
-  {
-    path: EUrl.CORE,
-    loadChildren: () => import('./core/core.module').then(({ CoreModule }) => CoreModule)
   },
   {
     path: EUrl.FUNCTION,

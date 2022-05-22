@@ -1,38 +1,44 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
-import { catchError, filter, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
+import isEqual from 'lodash.isequal';
+import { catchError, filter, finalize, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'list-users',
   templateUrl: './list.component.html'
 })
 export class ListComponent implements OnInit {
-  users$: Observable<Array<User>>;
+  users$: Observable<User[]>;
 
-  loading = false;
+  loading = true;
+  query = new FormControl('');
   errorMessage$ = new Subject<string>();
 
-  columns: Array<TableColumn> = [
+  columns: TableColumn[] = [
     { key: 'id', flex: '10%' },
     { key: 'name', flex: '20%' },
     { key: 'email', flex: '20%' },
     { key: 'phone', flex: '20%' },
-    { key: 'actions', disableSorting: true, flex: '15%' },
+    { key: 'actions', flex: '15%', truncate: false },
   ];
 
   constructor(
     private readonly dialog: MatDialog,
+    private readonly service: UsersService,
     private readonly snackbar: SnackbarService,
-    private readonly userService: UsersService,
+    private readonly details: UserDetailsService,
   ) { }
 
   ngOnInit(): void {
-    this.users$ = this.userService.all().pipe(
+    this.users$ = this.service.all().pipe(
+      tap(() => this.loading = false),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return of(message);
@@ -59,10 +65,10 @@ export class ListComponent implements OnInit {
   private delete(user: User): void {
     this.loading = true;
 
-    this.userService.delete(user.id as number)
+    this.details.remove$(user.id)
       .pipe(
         switchMap(() => this.users$ = this.users$.pipe(
-          map((data: Array<User>) => data.filter(item => item.id !== user.id))
+          map((data: User[]) => data.filter(item => !isEqual(item.id, user.id)))
         )),
         finalize(() => this.loading = false)
       )

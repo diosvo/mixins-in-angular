@@ -22,7 +22,7 @@ export class AuthService {
     private http: HttpClient
   ) {
     this._isLoggedIn$.next(!!this.token);
-    this.user = !!this.token ? this.getUser(this.token) : {} as AuthUser;
+    this.user = this.token ? this.getUser(this.token) : {} as AuthUser;
   }
 
   login(info: BaseAuth): Observable<{}> {

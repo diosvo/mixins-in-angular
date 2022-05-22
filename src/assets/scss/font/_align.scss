@@ -1,9 +1,12 @@
+$-aligns: ('center': center);
+
 .text {
-  &-center {
-    text-align: center;
+
+  @each $name,
+  $position in $-aligns {
+    &-#{$name} {
+      text-align: $position;
+    }
   }
 
-  &-right {
-    text-align: right;
-  }
 }

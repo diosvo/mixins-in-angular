@@ -4,7 +4,8 @@
 
 <ng-template #noError>
   <custom-table
-    [data]="issues$"
+    *ngIf="issues$ | async as data; else loadingTmpl"
+    [data]="data"
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
     [length]="resultsLength"
@@ -13,12 +14,30 @@
     [style]="{ 'max-height': '300px' }"
   >
     <h2 header>Github: Angular Issues</h2>
-    <search-filter filters (filters)="filteredIssues($event)"></search-filter>
+
+    <!-- Filters selection -->
+    <form filters [formGroup]="filterForm" class="d-flex gap-1 width-100">
+      <custom-select
+        placeholder="State"
+        formControlName="state"
+        [items]="states"
+        searchPlaceholder="Search"
+      ></custom-select>
+
+      <custom-input
+        class="flex-1"
+        label="search"
+        [clearFilter]="true"
+        formControlName="query"
+        placeholder="Find an issue..."
+      >
+      </custom-input>
+    </form>
+
+    <!-- Custom columns -->
 
     <custom-column columnName="created_at">
-      <ng-template let-issue>
-        {{ issue.created_at | date }}
-      </ng-template>
+      <ng-template let-issue>{{ issue.created_at | date }}</ng-template>
     </custom-column>
 
     <custom-column columnName="state">
@@ -35,4 +54,8 @@
       </ng-template>
     </custom-column>
   </custom-table>
+
+  <ng-template #loadingTmpl>
+    <div class="d-flex jc-center my-2">...loading</div>
+  </ng-template>
 </ng-template>

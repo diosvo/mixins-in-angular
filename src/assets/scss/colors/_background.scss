@@ -1,21 +1,20 @@
 @use 'palette';
 
+$-bg-colors: ('none': none,
+  'white': palette.$white,
+  'black': palette.$black,
+  'light-blue': palette.$light-blue,
+);
+
 .bg {
-  &-none {
-    background: none;
+
+  @each $name,
+  $color in $-bg-colors {
+    &-#{$name} {
+      background: $color;
+    }
   }
 
-  &-white {
-    background-color: palette.$white;
-  }
-
-  &-black {
-    background-color: palette.$black;
-  }
-
-  &-light-blue {
-    background-color: palette.$light-blue;
-  }
 }
 
 .shade {

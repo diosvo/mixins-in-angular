@@ -11,6 +11,7 @@
       matSort
       matSortDisableClear
       [matSortActive]="defaultSortColumn"
+      (matSortChange)="sortTable($event)"
       [matSortDirection]="defaultSortDirection"
     >
       <ng-container
@@ -57,7 +58,9 @@
             mat-sort-header
             [style.flex]="column.flex"
             [disabled]="
-              !data.length || column.disableSorting || column.key === 'actions'
+              !source.data.length ||
+              column.disableSorting ||
+              column.key === 'actions'
             "
           >
             <span [class.truncate-cell]="column.truncate ?? true">

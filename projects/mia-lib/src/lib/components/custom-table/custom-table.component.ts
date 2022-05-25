@@ -32,7 +32,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() data: T[];
+  @Input() set data(source: T[]) {
+    this.setDataSource(source);
+  }
   @Input() trackByKey: string;
   @Input() columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
@@ -59,7 +61,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() defaultSortColumn: string;
   @Input() defaultSortDirection: SortDirection = 'asc';
-  @ViewChild(MatSort) private readonly sort: MatSort;
+  @ViewChild(MatSort) private readonly matSort: MatSort;
 
   /** Filter */
 
@@ -87,16 +89,10 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   displayColumns: Array<string>;
 
   readonly DEFAULT_PAGESIZE = 5;
-  source: MatTableDataSource<T>;
+  source = new MatTableDataSource<T>([]);
   selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.data.currentValue && !changes.data.firstChange) {
-      this.source.data = changes.data.currentValue;
-      this.source.sort = this.sort;
-      this.configPaginator();
-    };
-
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }
@@ -108,16 +104,22 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-
-    this.source = new MatTableDataSource(this.data);
-    this.source.sort = this.sort;
+    this.source.sort = this.matSort;
     this.configPaginator();
+  }
+
+  private setDataSource(source: T[]): void {
+    this.source = new MatTableDataSource<T>(source);
   }
 
   getIndex(index: number): number {
     return this.length
       ? index
       : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
+  }
+
+  sortTable(sort: MatSort): void {
+    this.matSort.active = this.columns.find((column: TableColumn) => isEqual(column.key, sort.active)).key;
   }
 
   private configPaginator(): void {
@@ -166,7 +168,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   trackByFn(_: number, item: T): T {
-    // TODO: can not get trackByKey instead of we already declare it in specific component
+    // TODO: can not get trackByKey even thought we already declare it in specific component
     return this.trackByKey ? item[this.trackByKey] : item;
   }
 }

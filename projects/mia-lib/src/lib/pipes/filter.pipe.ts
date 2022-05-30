@@ -20,7 +20,7 @@ export class FilterPipe<T> implements PipeTransform {
   }
 
   private filterFn(data: T, value: string): boolean {
-    const predicate = (text: T) => new RegExp(value, 'gi').test(this.modify(text));
+    const predicate = (text: T) => new RegExp(this.modify(value), 'gi').test(this.modify(text));
 
     return data instanceof Object
       ? Object.keys(data).map((key: string) => predicate(data[key])).some((results: boolean) => results)

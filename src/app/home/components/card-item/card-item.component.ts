@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Required } from '@lib/decorators/required-attribute';
 import { IGroupValue } from '../../models/search.model';
 
 @Component({
@@ -8,7 +9,7 @@ import { IGroupValue } from '../../models/search.model';
   templateUrl: './card-item.component.html',
 })
 export class CardItemComponent {
-  @Input() data: IGroupValue[];
+  @Input() @Required data: IGroupValue[];
 
   constructor(
     private readonly router: Router

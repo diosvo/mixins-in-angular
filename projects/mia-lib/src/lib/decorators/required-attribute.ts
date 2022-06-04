@@ -1,15 +1,15 @@
 /**
  * @usageNote `@Input()` Required name: string;
- * @description it only affects with `@Input()` is not set or does not use default value.
- * @description if the user does not provide property name, the browser will throw an error message.
+ * @description it only affects with `@Input()` has primitive type (does not set/ use default value).
+ * @returns if the user does not provide property name, the browser will throw an error message.
  */
 
 export const Required = (target: unknown, propertyKey: string): void => {
   Object.defineProperty(target, propertyKey, {
-    get() {
+    get(): never {
       throw new Error(`Attribute ${propertyKey} is required!`);
     },
-    set(value) {
+    set(value): void {
       Object.defineProperty(target, propertyKey, {
         value,
         writable: true,

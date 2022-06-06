@@ -34,6 +34,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() set data(source: T[]) {
     this.setDataSource(source);
+    this.source.sort = this.matSort;
   }
   @Input() trackByKey: string;
   @Input() columns: TableColumn[] = [];

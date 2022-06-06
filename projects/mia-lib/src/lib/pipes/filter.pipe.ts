@@ -9,25 +9,25 @@ export class FilterPipe<T> implements PipeTransform {
 
   private modify = (text: unknown): string => !isEmpty(text) && text.toString().trim().toLowerCase();
 
-  transform(data: Array<T>, searchTerm: unknown): Array<T> {
-    this.errorsHandler(data, searchTerm);
+  transform(data: T[], query: unknown): T[] {
+    this.errorsHandler(data, query);
 
-    if (!data || !this.modify(searchTerm)) {
+    if (!data || !this.modify(query)) {
       return data;
     }
 
-    return data.filter((item: T) => this.filterFn(item, this.modify(searchTerm)));
+    return data.filter((item: T) => this.filterFn(item, this.modify(query)));
   }
 
-  private filterFn(data: T, value: string): boolean {
-    const predicate = (text: T) => new RegExp(value, 'gi').test(this.modify(text));
+  private filterFn(subject: T, query: string): boolean {
+    const predicate = (text: T) => new RegExp(query, 'gi').test(this.modify(text));
 
-    return data instanceof Object
-      ? Object.keys(data).map((key: string) => predicate(data[key])).some((results: boolean) => results)
-      : predicate(data);
+    return subject instanceof Object
+      ? Object.keys(subject).map((key: string) => predicate(subject[key])).some((results: boolean) => results)
+      : predicate(subject);
   }
 
-  private errorsHandler(data: Array<T>, searchTerm: unknown): void {
+  private errorsHandler(data: T[], searchTerm: unknown): void {
     if (!Array.isArray(data)) {
       throw new Error('Provided data should be an array.');
     }

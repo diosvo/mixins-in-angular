@@ -29,7 +29,7 @@ export class DataTableComponent implements OnInit {
   ];
   filterForm: FormGroup = this.fb.group({
     query: ['', { initialValueIsDefault: true }],
-    state: [this.states, { initialValueIsDefault: true }]
+    state: [[], { initialValueIsDefault: true }]
   });
 
   resultsLength: number;
@@ -66,7 +66,10 @@ export class DataTableComponent implements OnInit {
             const searchTerm = item.number + item.title;
             return searchTerm.trim().toLowerCase().includes(params.query.trim().toLowerCase());
           })
-          .filter((item: GithubIssue) => params.state.includes(item.state))
+          .filter((item: GithubIssue) => {
+            const collection = isEmpty(params.state) ? this.states : params.state;
+            return collection.includes(item.state);
+          })
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);

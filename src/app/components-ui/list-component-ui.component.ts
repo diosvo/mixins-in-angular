@@ -7,7 +7,7 @@ import { FilterPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
 const groupList = Object.values(EComponentUI);
 
@@ -55,7 +55,6 @@ export class ListComponentUiComponent implements OnInit {
     const data$ = this.searchService.uiComponentsList$;
     const filters$ = this.componentsForm.valueChanges.pipe(
       startWith(this.componentsForm.value),
-      debounceTime(100),
       distinctUntilChanged(),
     );
 

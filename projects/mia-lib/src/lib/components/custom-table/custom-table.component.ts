@@ -35,6 +35,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() set data(source: T[]) {
     this.setDataSource(source);
     this.source.sort = this.matSort;
+    this.source.paginator = this.paginator;
   }
   @Input() trackByKey: string;
   @Input() columns: TableColumn[] = [];
@@ -87,7 +88,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     }
     return {};
   }
-  displayColumns: Array<string>;
+  displayColumns: string[];
 
   readonly DEFAULT_PAGESIZE = 5;
   source = new MatTableDataSource<T>([]);

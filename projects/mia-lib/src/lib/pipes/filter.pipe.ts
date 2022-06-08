@@ -2,29 +2,21 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import isEmpty from 'lodash.isempty';
 import isUndefined from 'lodash.isundefined';
 
+const modify = (text: unknown): string => text.toString().toLowerCase().trim();
+
 @Pipe({
   name: 'filter'
 })
 export class FilterPipe<T> implements PipeTransform {
 
-  private modify = (text: unknown): string => !isEmpty(text) && text.toString().trim().toLowerCase();
-
-  transform(data: T[], query: unknown): T[] {
+  transform(data: T[], query: string): T[] {
     this.errorsHandler(data, query);
 
-    if (!data || !this.modify(query)) {
+    if (!data || !modify(query)) {
       return data;
     }
 
-    return data.filter((item: T) => this.filterFn(item, this.modify(query)));
-  }
-
-  private filterFn(subject: T, query: string): boolean {
-    const predicate = (text: T) => new RegExp(query, 'gi').test(this.modify(text));
-
-    return subject instanceof Object
-      ? Object.keys(subject).map((key: string) => predicate(subject[key])).some((results: boolean) => results)
-      : predicate(subject);
+    return data.filter((item: T) => new FilterObjectPipe().transform(item, query));
   }
 
   private errorsHandler(data: T[], searchTerm: unknown): void {
@@ -42,8 +34,29 @@ export class FilterPipe<T> implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: 'primitive-filter'
+})
+export class FilterObjectPipe<T> implements PipeTransform {
+
+  private prediction = (subject: T, query: string) => modify(subject).includes(modify(query));
+
+  transform(subject: T, query: string): boolean {
+    if (!subject || !modify(query)) {
+      return true;
+    }
+    if (typeof subject !== 'object') {
+      return this.prediction(subject, query);
+    }
+    return Object.keys(subject)
+      .filter((key: string) => !!subject[key])
+      .map((key: string) => this.prediction(subject[key], query))
+      .some((matches: boolean) => matches);
+  }
+}
+
 @NgModule({
-  declarations: [FilterPipe],
-  exports: [FilterPipe],
+  declarations: [FilterPipe, FilterObjectPipe],
+  exports: [FilterPipe, FilterObjectPipe],
 })
 export class FilterPipeModule { }

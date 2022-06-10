@@ -106,6 +106,16 @@
               "src/**/*.html"
             ]
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "mixins-in-angular:build:production",
+            "firebaseProject": "mixins-in-angular",
+            "firebaseHostingSite": "mixins-in-angular"
+          }
         }
       }
     },

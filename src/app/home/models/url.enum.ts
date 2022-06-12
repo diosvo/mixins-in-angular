@@ -3,7 +3,7 @@
  */
 
 enum EUrl {
-  COMPONENT = 'components',
+  COMPONENT = 'components-ui',
   FUNCTION = 'functions',
 }
 

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IGroupValue } from '@home/models/search.model';
 import { EFunctions } from '@home/models/url.enum';
-import { SearchService } from '@home/services/search.service';
+import { CardItem, SearchService } from '@home/services/search.service';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
-import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
 
 const DEFAULT_FILTER = {
   query: '',
@@ -36,7 +35,7 @@ export class ListFunctionsComponent implements OnInit {
   });
   groupList = Object.values(EFunctions).sort();
 
-  filteredData$: Observable<Array<IGroupValue>>;
+  filteredData$: Observable<CardItem[]>;
 
   constructor(
     private readonly router: Router,
@@ -74,25 +73,27 @@ export class ListFunctionsComponent implements OnInit {
       distinctUntilChanged()
     );
 
-    this.filteredData$ = combineLatest([data$, filters$]).pipe(
-      map(([data, filter]) =>
-        data
-          .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
-          .map(item => ({
-            ...item,
-            groupDetails: item.groupDetails.filter(details => {
-              const searchTerm = details.name + details.description + item.groupName;
-              return searchTerm.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1;
-            })
-          }))
-          .filter(item => item.groupDetails.length > 0)
-      ),
-      tap(() => this.updateParams()),
-      catchError(({ message }) => {
-        this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      }),
-    );
+    this.filteredData$ = data$;
+
+    // this.filteredData$ = combineLatest([data$, filters$]).pipe(
+    //   map(([data, filter]) =>
+    //     data
+    //       .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
+    //       .map(item => ({
+    //         ...item,
+    //         groupDetails: item.groupDetails.filter(details => {
+    //           const searchTerm = details.name + details.description + item.groupName;
+    //           return searchTerm.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1;
+    //         })
+    //       }))
+    //       .filter(item => item.groupDetails.length > 0)
+    //   ),
+    //   tap(() => this.updateParams()),
+    //   catchError(({ message }) => {
+    //     this.errorMessage$.next(message);
+    //     return throwError(() => new Error(message));
+    //   }),
+    // );
   }
 
   updateParams(): void {

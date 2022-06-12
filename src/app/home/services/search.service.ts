@@ -1,31 +1,34 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IGroupValue } from '@home/models/search.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { EUrl } from '@home/models/url.enum';
-import { BaseService } from '@lib/services/base/base.service';
 import { HandleService } from '@lib/services/base/handle.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, Observable, shareReplay } from 'rxjs';
+
+export interface CardItem {
+  name: string;
+  group_id: string;
+  routing_path: EUrl;
+  description: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class SearchService extends BaseService<IGroupValue> {
+export class SearchService {
 
   uiComponentsList$ = this.getFetch(EUrl.COMPONENT);
   functionsList$ = this.getFetch(EUrl.FUNCTION);
 
   constructor(
-    protected readonly http: HttpClient,
-    protected readonly handle: HandleService
-  ) {
-    super(http, handle);
-  }
+    private readonly handle: HandleService,
+    private readonly firestore: AngularFirestore,
+  ) { }
 
-  private getFetch(groupUrl: EUrl): Observable<IGroupValue[]> {
-    return this.list(`/assets/backend/list-items/${groupUrl}.json`).pipe(
-      map((data: IGroupValue[]) => data.map(item => ({ ...item, groupUrl }))),
-    );
+  private getFetch(group_url: EUrl): Observable<CardItem[]> {
+    return this.firestore.collection(group_url, ref => ref.orderBy('group_id')).valueChanges().pipe(
+      shareReplay(1),
+      catchError(this.handle.errorHandler('SearchService'))
+    ) as Observable<CardItem[]>;
   }
 }

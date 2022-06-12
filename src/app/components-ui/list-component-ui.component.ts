@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { IBaseValue, IGroupValue } from '@home/models/search.model';
 import { EComponentUI } from '@home/models/url.enum';
-import { SearchService } from '@home/services/search.service';
-import { FilterPipe } from '@lib/pipes/filter.pipe';
+import { CardItem, SearchService } from '@home/services/search.service';
+import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import { combineLatest, Observable, Subject, throwError } from 'rxjs';
+import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
 const groupList = Object.values(EComponentUI);
@@ -30,7 +29,7 @@ const DEFAULT_FILTER = {
 export class ListComponentUiComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
-  filteredData$: Observable<IGroupValue[]>;
+  filteredData$: Observable<CardItem[]>;
 
   readonly selection = groupList;
   componentsForm: FormGroup = this.fb.group({
@@ -61,17 +60,13 @@ export class ListComponentUiComponent implements OnInit {
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filters]) =>
         data
-          .filter((item: IGroupValue) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.groupName))
-          .map((item: IGroupValue) => ({
-            ...item,
-            groupDetails: new FilterPipe().transform(item.groupDetails, filters.query) as IBaseValue[]
-          }))
-          .filter((item: IGroupValue) => item.groupDetails.length > 0)
+          .filter((item: CardItem) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.group_id))
+          .filter((item: CardItem) => new FilterObjectPipe().transform(item, filters.query))
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      }),
+        return EMPTY;
+      })
     );
   }
 

@@ -1,15 +1,13 @@
 <article class="d-grid container gap-1 p-2">
-  <ng-container *ngFor="let group of data; trackByKey: 'groupName'">
-    <ng-container *ngFor="let item of group.groupDetails; trackByKey: 'name'">
-      <div
-        class="item d-flex jc-between ai-center p-2 bg-white bd-auto bs-light-hover cursor-pointer"
-        (click)="directItem(group.groupUrl, group.groupName, item.route)"
-      >
-        <div>
-          <span class="f-12 text-secondary mb-1"> #{{ group.groupName }} </span>
-          <div class="f-16">{{ item.name | titlecase }}</div>
-        </div>
+  <ng-container *ngFor="let item of data; trackByKey: 'routing_path'">
+    <div
+      class="item d-flex jc-between ai-center p-2 bg-white bd-auto bs-light-hover cursor-pointer"
+      (click)="directItem(item.group_id, item.routing_path)"
+    >
+      <div>
+        <span class="f-12 text-secondary mb-1"> #{{ item.group_id }} </span>
+        <div class="f-16">{{ item.name | titlecase }}</div>
       </div>
-    </ng-container>
+    </div>
   </ng-container>
 </article>

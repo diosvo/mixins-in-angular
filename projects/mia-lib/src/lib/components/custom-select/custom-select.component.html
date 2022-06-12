@@ -22,8 +22,8 @@
 
     <div
       *ngIf="checkAll"
-      class="d-flex jc-between ai-center mx-2 mt-2 gap-1"
-      [style.line-height]="'normal'"
+      class="d-flex jc-between ai-center gap-1 mx-2"
+      [style.height.px]="42"
     >
       <mat-checkbox
         color="warn"
@@ -44,7 +44,7 @@
       </span>
     </div>
 
-    <hr *ngIf="checkAll" class="mx-0 mb-0" />
+    <hr *ngIf="checkAll" class="m-0" />
 
     <!-- Options -->
     <ng-container *ngIf="items | async as data; else waitingResponse">

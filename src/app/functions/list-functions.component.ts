@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { EFunctions } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
+import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import isUndefined from 'lodash.isundefined';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
 
+const groupList = Object.values(EFunctions).sort();
 const DEFAULT_FILTER = {
   query: '',
-  group: 'all'
+  group: []
 };
 
 @Component({
@@ -28,25 +28,20 @@ const DEFAULT_FILTER = {
 export class ListFunctionsComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
+  filteredData$: Observable<CardItem[]>;
 
+  readonly selection = groupList;
   functionsForm: FormGroup = this.fb.group({
     query: [DEFAULT_FILTER.query],
     group: [DEFAULT_FILTER.group]
   });
-  groupList = Object.values(EFunctions).sort();
-
-  filteredData$: Observable<CardItem[]>;
 
   constructor(
-    private readonly router: Router,
     private readonly fb: FormBuilder,
-    private readonly route: ActivatedRoute,
-    private readonly destroyed$: DestroyService,
     private readonly searchService: SearchService,
   ) { }
 
   ngOnInit(): void {
-    this.watchForQueryParams();
     this.onFilters();
   }
 
@@ -54,53 +49,23 @@ export class ListFunctionsComponent implements OnInit {
    * @description Search
    */
 
-  private watchForQueryParams(): void {
-    this.route.queryParams
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(params => {
-        if (!isUndefined(params.query && params.group)) {
-          this.functionsForm.patchValue(params);
-        }
-        return;
-      });
-  }
-
-  onFilters(): void {
+  private onFilters(): void {
     const data$ = this.searchService.functionsList$;
     const filters$ = this.functionsForm.valueChanges.pipe(
       startWith(this.functionsForm.value),
-      debounceTime(100),
-      distinctUntilChanged()
     );
 
-    this.filteredData$ = data$;
-
-    // this.filteredData$ = combineLatest([data$, filters$]).pipe(
-    //   map(([data, filter]) =>
-    //     data
-    //       .filter(item => !isEqual(filter.group, DEFAULT_FILTER.group) ? isEqual(item.groupName, filter.group) : DEFAULT_FILTER.group)
-    //       .map(item => ({
-    //         ...item,
-    //         groupDetails: item.groupDetails.filter(details => {
-    //           const searchTerm = details.name + details.description + item.groupName;
-    //           return searchTerm.toLowerCase().indexOf(filter.query.toLowerCase()) !== -1;
-    //         })
-    //       }))
-    //       .filter(item => item.groupDetails.length > 0)
-    //   ),
-    //   tap(() => this.updateParams()),
-    //   catchError(({ message }) => {
-    //     this.errorMessage$.next(message);
-    //     return throwError(() => new Error(message));
-    //   }),
-    // );
-  }
-
-  updateParams(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: this.functionsForm.value
-    });
+    this.filteredData$ = combineLatest([data$, filters$]).pipe(
+      map(([data, filters]) =>
+        data
+          .filter((item: CardItem) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.group_id))
+          .filter((item: CardItem) => new FilterObjectPipe().transform(item, filters.query))
+      ),
+      catchError(({ message }) => {
+        this.errorMessage$.next(message);
+        return EMPTY;
+      })
+    );
   }
 
   cleanFilters(): void {

@@ -19,9 +19,5 @@ enum EFunctions {
   RXJS = 'rxjs'
 }
 
-enum ECore {
-  Algorithm = 'algorithm',
-}
-
-export { EUrl, EComponentUI, EFunctions, ECore };
+export { EUrl, EComponentUI, EFunctions };
 

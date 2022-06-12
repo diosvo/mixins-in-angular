@@ -6,10 +6,9 @@ import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { catchError, map, startWith } from 'rxjs/operators';
 
-const groupList = Object.values(EComponentUI);
-
+const groupList = Object.values(EComponentUI).sort();
 const DEFAULT_FILTER = {
   query: '',
   group: []
@@ -54,7 +53,6 @@ export class ListComponentUiComponent implements OnInit {
     const data$ = this.searchService.uiComponentsList$;
     const filters$ = this.componentsForm.valueChanges.pipe(
       startWith(this.componentsForm.value),
-      distinctUntilChanged(),
     );
 
     this.filteredData$ = combineLatest([data$, filters$]).pipe(

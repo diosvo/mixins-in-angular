@@ -5,7 +5,6 @@ import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { filter, take } from 'rxjs';
 
 @Component({
@@ -20,7 +19,6 @@ export class ToolbarComponent {
     private readonly router: Router,
     readonly authService: AuthService,
     private readonly dialog: MatDialog,
-    private readonly snackbar: SnackbarService,
   ) { }
 
   openLoginDialog(): void {
@@ -55,15 +53,12 @@ export class ToolbarComponent {
       .subscribe({
         next: () => {
           this.authService.logout();
-          this.router.navigateByUrl('/components');
+          this.router.navigateByUrl('/components-ui');
         }
       });
   }
 
-  private login(info: { username: string, password: string }): void {
-    this.authService.login(info).subscribe({
-      next: () => this.snackbar.success('Login successfully!'),
-      error: () => this.snackbar.error('Something went wrong. Please try again!')
-    });
+  private login({ email, password }): Promise<void> {
+    return this.authService.login({ email, password });
   }
 }

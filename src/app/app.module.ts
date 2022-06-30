@@ -1,5 +1,8 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -7,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FakeBackendProvider } from '@backend/api/fake-be';
 import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterModule } from './home/components/footer/footer.module';
@@ -14,9 +18,7 @@ import { ToolbarModule } from './home/components/toolbar/toolbar.module';
 import { MonitorInterceptor } from './interceptors/monitor.interceptor';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -28,7 +30,11 @@ import { MonitorInterceptor } from './interceptors/monitor.interceptor';
     FooterModule,
     ToolbarModule,
     MatSnackBarModule,
-    UnsavedChangesDialogModule
+    UnsavedChangesDialogModule,
+
+    /* init firebase config */
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
   ],
   providers: [
     FakeBackendProvider,
@@ -40,7 +46,9 @@ import { MonitorInterceptor } from './interceptors/monitor.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: MonitorInterceptor,
       multi: true
-    }
+    },
+    ScreenTrackingService,
+    UserTrackingService
   ],
   bootstrap: [AppComponent]
 })

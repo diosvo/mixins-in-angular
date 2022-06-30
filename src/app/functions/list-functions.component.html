@@ -8,7 +8,7 @@
   </ng-template>
 
   <!-- Search -->
-  <ng-container *ngIf="filteredData$ | async as filteredData; else loadingTmpl">
+  <ng-container *ngIf="filteredData$ | async as data; else loadingTmpl">
     <mat-accordion>
       <mat-expansion-panel>
         <!-- Header -->
@@ -34,7 +34,7 @@
             class="panel-container d-flex gap-1"
           >
             <custom-select
-              [items]="groupList"
+              [items]="selection"
               formControlName="group"
               searchPlaceholder="Find the group..."
             ></custom-select>
@@ -52,8 +52,8 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <ng-container *ngIf="filteredData.length > 0; else notFound">
-      <card-item [data]="filteredData"></card-item>
+    <ng-container *ngIf="data.length > 0; else notFound">
+      <card-item [data]="data"></card-item>
     </ng-container>
 
     <ng-template #notFound>

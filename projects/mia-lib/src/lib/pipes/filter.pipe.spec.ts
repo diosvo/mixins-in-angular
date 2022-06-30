@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FilterPipe } from './filter.pipe';
+import { FilterObjectPipe, FilterPipe } from './filter.pipe';
 
 const data = {
   name: 'diosvo'
@@ -19,25 +19,12 @@ describe('FilterPipe', () => {
   describe('transform()', () => {
     test('returns primitive data if data is not found or query string is empty', () => {
       expect(pipe.transform([], 'diosvo')).toEqual([]);
-      expect(pipe.transform([data], null)).toEqual([data]);
       expect(pipe.transform([data], '')).toEqual([data]);
     });
 
     test('should call filterFn() to find the results', () => {
       expect(pipe.transform([data], 'd')).toEqual([data]);
       expect(pipe.transform([data], 'aaa')).toEqual([]);
-    });
-  });
-
-  describe('filterFn()', () => {
-    test('should filter data with object key', () => {
-      expect(pipe['filterFn'](data, 'diosvo')).toEqual(true);
-      expect(pipe['filterFn'](data, 'hi')).toEqual(false);
-    });
-
-    test('should filter data without object key', () => {
-      expect(pipe['filterFn']('diosvo', 'd')).toEqual(true);
-      expect(pipe['filterFn']('diosvo', 'aaa')).toEqual(false);
     });
   });
 
@@ -59,6 +46,59 @@ describe('FilterPipe', () => {
       expect(() => pipe['errorsHandler']([], new FormControl(null))).toThrow(message);
       expect(() => pipe['errorsHandler']([], 'diosvo')).not.toThrow(message);
       expect(() => pipe['errorsHandler']([], null)).not.toThrow(message);
+    });
+  });
+});
+
+describe('FilterObjectPipe', () => {
+  describe('should test data has string/ number/ boolean type', () => {
+    let pipe: FilterObjectPipe<string>;
+
+    beforeEach(() => {
+      pipe = new FilterObjectPipe();
+    });
+
+    test('should create an instance', () => {
+      expect(pipe).toBeTruthy();
+    });
+
+    test('returns true if no data is passed in or query is empty', () => {
+      expect(pipe.transform(null, 'test')).toBe(true);
+      expect(pipe.transform('diosvo', '')).toBe(true);
+    });
+
+    test('returns true if value is found', () => {
+      expect(pipe.transform('diosvo', 'diosvo')).toBe(true);
+    });
+
+    test('returns true if value is not found', () => {
+      expect(pipe.transform('diosvo', 'aaa')).toBe(false);
+    });
+  });
+
+  describe('should test data has object type', () => {
+    let pipe: FilterObjectPipe<{ name: string }>;
+    const name = { name: 'diosvo' };
+
+    beforeEach(() => {
+      pipe = new FilterObjectPipe();
+    });
+
+    test('should create an instance', () => {
+      expect(pipe).toBeTruthy();
+    });
+
+    test('returns true if no data is passed in or query is empty', () => {
+      expect(pipe.transform(null, 'test')).toBe(true);
+      expect(pipe.transform(name, '')).toBe(true);
+    });
+
+    test('returns true if value is found', () => {
+      expect(pipe.transform(name, 'diosvo')).toBe(true);
+    });
+
+    test('returns true if value is not found', () => {
+      expect(pipe.transform(name, 'aaa')).toBe(false);
     });
   });
 });

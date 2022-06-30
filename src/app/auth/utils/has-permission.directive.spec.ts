@@ -20,7 +20,7 @@ describe('HasPermissionDirective', () => {
   } as any;
 
   test('should create an instance', () => {
-    directive = new HasPermissionDirective(service, templateRef, viewContainer);
+    directive = new HasPermissionDirective(service, viewContainer, templateRef);
     expect(directive).toBeTruthy();
   });
 

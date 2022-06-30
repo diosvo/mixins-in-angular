@@ -1,5 +1,3 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { IBaseValue } from '@home/models/search.model';
 import { CardItemComponent } from './card-item.component';
 
@@ -11,27 +9,14 @@ const item: IBaseValue = {
 
 describe('CardItemComponent', () => {
   let component: CardItemComponent;
-  let fixture: ComponentFixture<CardItemComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [CardItemComponent],
-      imports: [
-        RouterTestingModule.withRoutes([
-          {
-            path: 'functions/rxjs/' + item.route,
-            component: CardItemComponent
-          }
-        ])
-      ]
-    })
-      .compileComponents();
-  }));
+  const mockRouter: any = {
+    navigate: jest.fn()
+  };
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CardItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new CardItemComponent(mockRouter);
+    component.data = [];
   });
 
   test('should create', () => {
@@ -39,8 +24,7 @@ describe('CardItemComponent', () => {
   });
 
   test('directItem()', () => {
-    jest.spyOn(component['router'], 'navigate');
     component.directItem('functions', 'rxjs', item.route);
-    expect(component['router'].navigate).toBeCalledWith(['functions', 'rxjs', item.route]);
+    expect(mockRouter.navigate).toBeCalledWith(['functions', 'rxjs', item.route]);
   });
 });

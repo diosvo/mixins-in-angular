@@ -1,15 +1,26 @@
-<form [formGroup]="loginForm">
-  <h2 mat-dialog-title>Login</h2>
+<form [formGroup]="form">
+  <h2 mat-dialog-title>
+    <ng-container [ngSwitch]="mode$.value">
+      <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
+      <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
+      <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
+        Reset password
+      </ng-container>
+    </ng-container>
+  </h2>
 
   <!-- Content -->
   <mat-dialog-content>
+    <div *ngIf="mode$.value === mode.FORGOT_PASSWORD" class="mb-1">
+      Please provide your email and reset your password.
+    </div>
+    <custom-input label="Email" formControlName="email"></custom-input>
     <custom-input
-      cdkTrapFocus
-      label="Username"
-      formControlName="username"
-    ></custom-input>
-    <custom-input
-      label="Password"
+      [label]="
+        [mode.REGISTER, mode.LOGIN].includes(mode$.value)
+          ? 'Password'
+          : 'Password to reset'
+      "
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
     >
@@ -17,11 +28,42 @@
         {{ hidePassword ? "visibility_off" : "visibility" }}
       </custom-button>
     </custom-input>
+
+    <div class="d-flex jc-between ai-center">
+      <a
+        *ngIf="[mode.REGISTER, mode.FORGOT_PASSWORD].includes(mode$.value)"
+        class="text-light-blue cursor-pointer"
+        (click)="login()"
+      >
+        Login here
+      </a>
+      <ng-container *ngIf="mode$.value === mode.LOGIN">
+        <a class="text-light-blue cursor-pointer" (click)="register()">
+          Create an account
+        </a>
+        <span class="cursor-pointer" (click)="forgotPassword()">
+          Forgot password?
+        </span>
+      </ng-container>
+    </div>
   </mat-dialog-content>
 
   <!-- Actions -->
   <mat-dialog-actions class="d-flex jc-between">
     <custom-button type="text" mat-dialog-close>Cancel</custom-button>
-    <custom-button [mat-dialog-close]="loginForm.value">Log In</custom-button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="form.invalid"
+      [mat-dialog-close]="form.value"
+    >
+      <ng-container [ngSwitch]="mode$.value">
+        <ng-container *ngSwitchCase="mode.LOGIN">Login</ng-container>
+        <ng-container *ngSwitchCase="mode.REGISTER">Register</ng-container>
+        <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
+          Reset password
+        </ng-container>
+      </ng-container>
+    </button>
   </mat-dialog-actions>
 </form>

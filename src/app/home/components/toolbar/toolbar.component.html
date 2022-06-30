@@ -6,7 +6,7 @@
       routerLinkActive="opacity-1"
       [routerLink]="['/', item]"
     >
-      {{ item | titlecase }}
+      {{ item === "components-ui" ? "Components" : (item | titlecase) }}
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>

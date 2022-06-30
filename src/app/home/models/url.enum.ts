@@ -3,7 +3,7 @@
  */
 
 enum EUrl {
-  COMPONENT = 'components',
+  COMPONENT = 'components-ui',
   FUNCTION = 'functions',
 }
 
@@ -19,9 +19,5 @@ enum EFunctions {
   RXJS = 'rxjs'
 }
 
-enum ECore {
-  Algorithm = 'algorithm',
-}
-
-export { EUrl, EComponentUI, EFunctions, ECore };
+export { EUrl, EComponentUI, EFunctions };
 

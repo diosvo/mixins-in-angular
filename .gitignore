@@ -45,3 +45,9 @@ testem.log
 Thumbs.db
 
 .angular/cache
+.firebase
+.env
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

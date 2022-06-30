@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { IBaseValue, IGroupValue } from '@home/models/search.model';
 import { EComponentUI } from '@home/models/url.enum';
-import { SearchService } from '@home/services/search.service';
+import { CardItem, SearchService } from '@home/services/search.service';
+import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
+import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
 
-const groupList = Object.values(EComponentUI);
-
+const groupList = Object.values(EComponentUI).sort();
 const DEFAULT_FILTER = {
   query: '',
-  group: groupList
+  group: []
 };
 
 @Component({
@@ -21,14 +21,14 @@ const DEFAULT_FILTER = {
   @import 'layout/breakpoints';
   @include screen('extra-small') {
     .panel-container {
-        display: block;
+      display: block;
     }
   }`],
 })
 export class ListComponentUiComponent implements OnInit {
 
   errorMessage$ = new Subject<string>();
-  filteredData$: Observable<IGroupValue[]>;
+  filteredData$: Observable<CardItem[]>;
 
   readonly selection = groupList;
   componentsForm: FormGroup = this.fb.group({
@@ -53,27 +53,18 @@ export class ListComponentUiComponent implements OnInit {
     const data$ = this.searchService.uiComponentsList$;
     const filters$ = this.componentsForm.valueChanges.pipe(
       startWith(this.componentsForm.value),
-      debounceTime(100),
-      distinctUntilChanged(),
     );
 
     this.filteredData$ = combineLatest([data$, filters$]).pipe(
       map(([data, filters]) =>
         data
-          .filter((item: IGroupValue) => filters.group.includes(item.groupName))
-          .map((item: IGroupValue) => ({
-            ...item,
-            groupDetails: item.groupDetails.filter((details: IBaseValue) => {
-              const searchTerms = details.name + details.description + item.groupName;
-              return searchTerms.trim().toLowerCase().includes(filters.query.trim().toLowerCase());
-            })
-          }))
-          .filter(item => item.groupDetails.length > 0)
+          .filter((item: CardItem) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.group_id))
+          .filter((item: CardItem) => new FilterObjectPipe().transform(item, filters.query))
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      }),
+        return EMPTY;
+      })
     );
   }
 

@@ -2,8 +2,8 @@
 
 .alert {
   &-info {
-    $-color     : #2E5AAC;
-    $-background: #89A7E0;
+    $-color     : #BFDBFE;
+    $-background: #EFF6FF;
     @include severity.message-config($-color, $-background);
   }
 

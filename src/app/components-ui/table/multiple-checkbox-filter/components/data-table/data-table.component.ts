@@ -2,6 +2,7 @@ import { Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import { catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
 import { GithubApi, GithubIssue } from '../../models/service.model';
@@ -29,7 +30,7 @@ export class DataTableComponent implements OnInit {
   ];
   filterForm: FormGroup = this.fb.group({
     query: ['', { initialValueIsDefault: true }],
-    state: [this.states, { initialValueIsDefault: true }]
+    state: [[], { initialValueIsDefault: true }]
   });
 
   resultsLength: number;
@@ -62,11 +63,11 @@ export class DataTableComponent implements OnInit {
     this.issues$ = combineLatest([data$, filters$]).pipe(
       map(([data, params]): GithubIssue[] =>
         data
+          .filter((item: GithubIssue) => new FilterObjectPipe().transform(item, params.query))
           .filter((item: GithubIssue) => {
-            const searchTerm = item.number + item.title;
-            return searchTerm.trim().toLowerCase().includes(params.query.trim().toLowerCase());
+            const collection = isEmpty(params.state) ? this.states : params.state;
+            return collection.includes(item.state);
           })
-          .filter((item: GithubIssue) => params.state.includes(item.state))
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);

@@ -12,7 +12,7 @@ export abstract class FormControlValueAccessorConnector implements ControlValueA
   @Input() formControl?: FormControl;
   @Input() formControlName?: string;
 
-  protected constructor(private readonly injector: Injector) { }
+  protected constructor(protected injector: Injector) { }
 
   /* make connection with provided formControl of parents */
 

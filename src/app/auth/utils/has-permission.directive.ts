@@ -1,5 +1,4 @@
-import { Directive, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { AuthUser } from '@auth/models/auth.model';
+import { Directive, ElementRef, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthService } from '@auth/services/auth.service';
 import isEqual from 'lodash.isequal';
 
@@ -27,7 +26,7 @@ export class HasPermissionDirective implements OnInit {
     this.updateView();
   }
 
-  private _currentUser: AuthUser;
+  private _currentUser: any;
   private _permissions: Array<string> = [];
 
   private _logicalOperator: Operator = LogicalOperator.AND;
@@ -35,12 +34,15 @@ export class HasPermissionDirective implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly templateRef: TemplateRef<any>,
     private readonly viewContainer: ViewContainerRef,
+    private readonly templateRef: TemplateRef<ElementRef>,
   ) { }
 
   ngOnInit(): void {
-    this._currentUser = this.authService.user;
+    this._currentUser = {
+      ...this.authService.user,
+      roles: [] // need works
+    };
     this.updateView();
   }
 

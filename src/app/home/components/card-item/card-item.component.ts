@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { IGroupValue } from '../../models/search.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CardItem } from '@home/services/search.service';
+import { Required } from '@lib/decorators/required-attribute';
 
 @Component({
   selector: 'card-item',
@@ -8,13 +9,16 @@ import { IGroupValue } from '../../models/search.model';
   templateUrl: './card-item.component.html',
 })
 export class CardItemComponent {
-  @Input() data: IGroupValue[];
+  @Input() @Required data: CardItem[];
 
   constructor(
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) { }
 
-  directItem(groupUrl: string, groupName: string, itemRoute: string): void {
-    this.router.navigate([groupUrl, groupName.toLowerCase(), itemRoute]);
+  directItem(group_id: string, routing_path: string): void {
+    this.router.navigate([group_id.toLowerCase(), routing_path], {
+      relativeTo: this.route
+    });
   }
 }

@@ -1,6 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { DetailsComponent } from './details.component';
@@ -39,7 +38,7 @@ describe('DetailsComponent', () => {
   };
 
   beforeEach(() => {
-    component = new DetailsComponent(mockRouter, mockService, mockRoute, new DestroyService(), mockSnackbar);
+    component = new DetailsComponent(mockRouter, mockService, mockRoute, mockSnackbar);
   });
 
   test('should create', () => {

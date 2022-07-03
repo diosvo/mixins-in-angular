@@ -2,12 +2,12 @@ import { Component, OnInit, Self } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { untilDestroy } from '@lib/helpers/until-destroy';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import isEqual from 'lodash.isequal';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unsaved-form',
@@ -23,7 +23,6 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   constructor(
     private readonly router: Router,
-    private readonly destroy$: DestroyService,
     private readonly snackbar: SnackbarService,
     @Self() readonly detectPermission: DetectPermissionService,
   ) { }
@@ -37,7 +36,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
       .pipe(
         map(([prev, next]) => !isEqual(prev, next)),
         startWith(false),
-        takeUntil(this.destroy$)
+        untilDestroy()
       )
       .subscribe({
         next: (changed: boolean) => this.hasChanged = changed

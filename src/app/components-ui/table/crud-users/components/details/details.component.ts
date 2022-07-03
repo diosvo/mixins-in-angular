@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { untilDestroy } from '@lib/helpers/until-destroy';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { hasDuplicates } from '@lib/utils/array-utils';
@@ -31,7 +31,6 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
     private readonly router: Router,
     readonly service: UserDetailsService,
     private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroyService,
     private readonly snackbar: SnackbarService,
   ) { }
 
@@ -43,7 +42,7 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
             ? this.service.initializeValue$()
             : this.service.loadFromApiAndFillForm$(params['id'])
         ),
-        takeUntil(this.destroy$),
+        untilDestroy()
       )
       .subscribe({
         next: () => this.loading = false,

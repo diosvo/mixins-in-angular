@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
-import { catchError, Observable, Subject, takeUntil, throwError } from 'rxjs';
+import { untilDestroy } from '@lib/helpers/until-destroy';
+import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { ViewArticleState } from '../../models/article.model';
 import { ViewArticleStateService } from '../../services/view-article-state.service';
 
@@ -29,7 +29,6 @@ export class ListArticlesComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly destroyed$: DestroyService,
     private readonly service: ViewArticleStateService,
   ) { }
 
@@ -49,9 +48,9 @@ export class ListArticlesComponent implements OnInit {
 
   private updateParams(): void {
     this.route.queryParams
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(untilDestroy())
       .subscribe({
-        next: (params: Record<string, string>) => this.service.updateStateFromQueryParams(params)
+        next: (params: Params) => this.service.updateStateFromQueryParams(params)
       });
   }
 }

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate, GuardsCheckEnd, Router } from '@angular/router';
 import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
-import { untilDestroy } from '@lib/helpers/until-destroy';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import isEqual from 'lodash.isequal';
 import { Observable, of } from 'rxjs';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 export interface DeactivateComponent {
   internalNavigation?: boolean;
@@ -21,6 +21,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
   constructor(
     private readonly router: Router,
     private readonly dialog: MatDialog,
+    private readonly destroy$: DestroyService
   ) { }
 
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
@@ -34,7 +35,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
         .pipe(
           filter((action: unknown) => !isEqual(action, 'close') && !isEqual(action, true)),
           take(1),
-          untilDestroy()
+          takeUntil(this.destroy$)
         )
         .subscribe({
           next: () => {
@@ -42,7 +43,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
               .pipe(
                 filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd),
                 take(1),
-                untilDestroy()
+                takeUntil(this.destroy$)
               )
               .subscribe({
                 next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)

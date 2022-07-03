@@ -2,7 +2,7 @@ import { ConnectionPositionPair, Overlay, OverlayRef, PositionStrategy } from '@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Directive, ElementRef, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
-import { untilDestroy } from '@lib/helpers/until-destroy';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { filter, fromEvent, Observable, takeUntil } from 'rxjs';
 import { AutocompleteComponent } from '../components/autocomplete/autocomplete.component';
 
@@ -18,6 +18,7 @@ export class AutocompleteDirective implements OnInit, OnDestroy {
   constructor(
     private readonly overlay: Overlay,
     private readonly ngControl: NgControl,
+    private readonly destroyed$: DestroyService,
     private readonly containerRef: ViewContainerRef,
     private readonly host: ElementRef<HTMLInputElement>,
   ) { }
@@ -32,7 +33,7 @@ export class AutocompleteDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     fromEvent(this.origin, 'focus')
-      .pipe(untilDestroy())
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {
         this.openDropdown();
 

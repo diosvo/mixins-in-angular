@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { untilDestroy } from '@lib/helpers/until-destroy';
 import isEqual from 'lodash.isequal';
-import { BehaviorSubject, filter, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, of, switchMap, takeUntil } from 'rxjs';
+import { DestroyService } from '../destroy/destroy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,7 @@ export class ActivatedParamsService {
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly destroy$: DestroyService
   ) {
     this.getParams();
   }
@@ -38,7 +39,7 @@ export class ActivatedParamsService {
       }),
       filter(route => isEqual(route.outlet, 'primary')),
       switchMap(({ params, data }) => of({ params, data })),
-      untilDestroy()
+      takeUntil(this.destroy$)
     );
 
     mappedRoute.subscribe({

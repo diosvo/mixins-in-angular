@@ -1,6 +1,7 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { untilDestroy } from '@lib/helpers/until-destroy';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const DEFAULT_ANIMATION_SPEED = 8;
 
@@ -19,6 +20,7 @@ export class AnimatedCounterDirective implements OnInit {
 
   constructor(
     private readonly renderer: Renderer2,
+    private readonly destroyed$: DestroyService,
     private readonly el: ElementRef<HTMLDivElement>,
   ) { }
 
@@ -32,7 +34,7 @@ export class AnimatedCounterDirective implements OnInit {
     }
 
     timer(this.delay || 0)
-      .pipe(untilDestroy())
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         complete: () => this.animate()
       });

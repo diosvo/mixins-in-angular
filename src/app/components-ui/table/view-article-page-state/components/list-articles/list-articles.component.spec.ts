@@ -1,3 +1,4 @@
+import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { of } from 'rxjs';
 import { ViewArticleState } from '../../models/article.model';
 import { ListArticlesComponent } from './list-articles.component';
@@ -37,7 +38,7 @@ describe('ListArticlesComponent', () => {
   };
 
   beforeEach(() => {
-    component = new ListArticlesComponent(mockRoute, mockService);
+    component = new ListArticlesComponent(mockRoute, new DestroyService(), mockService);
   });
 
   it('should create', () => {

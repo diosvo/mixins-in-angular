@@ -1,7 +1,13 @@
-enum ERole {
-  ADMIN = 'Admin',
-  GUEST = 'Guest',
-  CUSTOMER = 'Customer',
+interface IRoles {
+  guest: boolean;
+  admin: boolean;
+  subscriber: boolean;
 }
 
-export { ERole };
+enum ERole {
+  ADMIN = 'admin',
+  GUEST = 'guest',
+  SUBSCRIBER = 'subscriber'
+}
+
+export { ERole, IRoles };

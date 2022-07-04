@@ -12,14 +12,14 @@
   <!-- Content -->
   <mat-dialog-content>
     <div *ngIf="mode$.value === mode.FORGOT_PASSWORD" class="mb-1">
-      Please provide your email and reset your password.
+      Please provide your email and password to reset.
     </div>
     <custom-input label="Email" formControlName="email"></custom-input>
     <custom-input
       [label]="
         [mode.REGISTER, mode.LOGIN].includes(mode$.value)
           ? 'Password'
-          : 'Password to reset'
+          : 'New password'
       "
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"

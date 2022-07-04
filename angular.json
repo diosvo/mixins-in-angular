@@ -162,6 +162,7 @@
   },
   "defaultProject": "mixins-in-angular",
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
+    "defaultCollection": "@angular-eslint/schematics",
+    "analytics": "2ae0ceb5-fc9d-4547-a95e-71d87ee6875c"
   }
 }

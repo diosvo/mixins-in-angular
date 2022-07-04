@@ -59,6 +59,6 @@ export class ToolbarComponent {
   }
 
   private login({ email, password }): Promise<void> {
-    return this.authService.login({ email, password });
+    return this.authService.emailSignIn({ email, password });
   }
 }

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ToggleModeComponent } from './toggle-mode.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ToggleModeComponent,
-    data: { title: 'Button Toggle Mode' }
+    title: 'Button Toggle Mode'
   },
 ];
 

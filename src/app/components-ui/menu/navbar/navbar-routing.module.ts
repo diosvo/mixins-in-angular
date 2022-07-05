@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NavbarComponent } from './navbar.component';
 
 const routes: Routes = [
   {
     path: '',
     component: NavbarComponent,
-    data: { title: 'Navbar Interaction' }
+    title: 'Navbar Interaction'
   },
 ];
 

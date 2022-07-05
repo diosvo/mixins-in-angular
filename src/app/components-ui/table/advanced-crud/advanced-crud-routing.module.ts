@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdvancedCrudComponent,
-    data: { title: 'Mat-table: Advanced CRUD' }
+    title: 'Mat-table: Advanced CRUD'
   }
 ];
 

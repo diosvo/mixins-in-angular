@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: MainPageComponent,
-    data: { title: 'Data Composition w/ RxJS' }
+    title: 'Data Composition w/ RxJS'
   },
   {
     path: ':id',
     component: MainPageComponent,
-    data: { title: 'Data Composition w/ RxJS - Product Details' }
+    title: 'Data Composition w/ RxJS - Product Details'
   }
 ];
 

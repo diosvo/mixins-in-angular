@@ -6,7 +6,8 @@ const routes: Routes = [
   {
     path: '',
     component: PageNotFoundComponent,
-    data: { title: 'Page Not Found', toolbar: false, footer: false }
+    title: 'Page Not Found',
+    data: { toolbar: false, footer: false }
   }
 ];
 

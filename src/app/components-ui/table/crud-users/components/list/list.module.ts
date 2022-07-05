@@ -18,9 +18,7 @@ import { ListComponent } from './list.component';
     RouterModule.forChild([{
       path: '',
       component: ListComponent,
-      data: {
-        title: 'List - Users'
-      }
+      title: 'List - Users'
     }]),
 
     AlertModule,

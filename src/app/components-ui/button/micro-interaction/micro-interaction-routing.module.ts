@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: MicroInteractionComponent,
-    data: { title: 'Button Micro Interaction' }
+    title: 'Button Micro Interaction'
   },
 ];
 

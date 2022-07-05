@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: ListFunctionsComponent,
-    data: { title: 'Functions' }
+    title: 'Functions'
   },
   {
     path: EFunctions.RXJS,

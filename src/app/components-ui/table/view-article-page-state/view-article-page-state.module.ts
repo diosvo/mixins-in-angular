@@ -15,16 +15,12 @@ const routes: Routes = [
   {
     path: '',
     component: ListArticlesComponent,
-    data: {
-      title: 'List Articles'
-    }
+    title: 'List Articles'
   },
   {
     path: ':id',
     component: ViewArticlePageStateComponent,
-    data: {
-      title: 'View Article Page State'
-    }
+    title: 'View Article Page State'
   }
 ];
 

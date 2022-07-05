@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedParamsService } from '@lib/services/activated-params/activated-params.service';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth/services/auth.service';
@@ -15,12 +14,10 @@ export class AppComponent {
 
   constructor(
     readonly authService: AuthService,
-    private readonly titleService: Title,
     private readonly route: ActivatedParamsService
   ) {
     this.route.dataMap$.subscribe({
-      next: ({ title, toolbar, footer }) => {
-        this.titleService.setTitle(title);
+      next: ({ toolbar, footer }) => {
         this.showToolbar$.next(toolbar ?? true);
         this.showFooter$.next(footer ?? true);
       }

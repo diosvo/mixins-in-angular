@@ -21,9 +21,7 @@ import { DetailsComponent } from './details.component';
       path: '',
       component: DetailsComponent,
       canDeactivate: [UnsavedChangesGuard],
-      data: {
-        title: 'Details'
-      },
+      title: 'Details'
     }]),
 
     MatChipsModule,

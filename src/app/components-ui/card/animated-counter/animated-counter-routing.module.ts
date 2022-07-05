@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: AnimatedCounterComponent,
-    data: { title: 'Animated Counter Card' }
+    title: 'Animated Counter Card'
   }
 ];
 

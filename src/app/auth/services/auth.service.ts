@@ -25,7 +25,7 @@ export class AuthService {
 
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
-  private userSubj$ = new BehaviorSubject<FirebaseAuth>(null);
+  private userSubj$ = new BehaviorSubject<AuthUser>(null);
   readonly user$ = this.userSubj$.asObservable();
 
   state$: Observable<AuthUser>;
@@ -36,7 +36,7 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  get user(): FirebaseAuth {
+  get user(): AuthUser {
     return this.userSubj$.value;
   }
 
@@ -132,6 +132,7 @@ export class AuthService {
         subscriber: true,
       }
     };
+    this.userSubj$.next(data);
     return userRef.set(data, { merge: true });
   }
 

@@ -21,7 +21,10 @@
 
     <!-- Actions -->
     <div
-      *hasPermission="['Customer', 'Guest']; op: 'OR'"
+      *hasPermission="
+        [permission.ADMIN, permission.SUBSCRIBER];
+        op: operator.OR
+      "
       class="d-flex jc-flex-end"
     >
       <button

@@ -1,5 +1,5 @@
-import { Directive, ElementRef, Input, NgModule, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
-import { AuthService } from '@auth/services/auth.service';
+import { Directive, ElementRef, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AuthService, AuthUser } from '@auth/services/auth.service';
 import isEqual from 'lodash.isequal';
 
 export enum LogicalOperator {
@@ -9,8 +9,15 @@ export enum LogicalOperator {
 
 type Operator = `${Uppercase<LogicalOperator>}`;
 
+
+/**
+ * @description The view is hidden if the user does not have the corresponding permission/s.
+ * @usageNotes *hasPermission="['Customer', 'Guest']; op 'OR'"; default op is AND.
+ */
+
 @Directive({
-  selector: '[hasPermission]'
+  selector: '[hasPermission]',
+  standalone: true
 })
 export class HasPermissionDirective implements OnInit {
 
@@ -26,7 +33,7 @@ export class HasPermissionDirective implements OnInit {
     this.updateView();
   }
 
-  private _currentUser: any;
+  private _currentUser: AuthUser;
   private _permissions: Array<string> = [];
 
   private _logicalOperator: Operator = LogicalOperator.AND;
@@ -39,10 +46,7 @@ export class HasPermissionDirective implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._currentUser = {
-      ...this.authService.user,
-      roles: [] // need works
-    };
+    this._currentUser = this.authService.user;
     this.updateView();
   }
 
@@ -63,7 +67,8 @@ export class HasPermissionDirective implements OnInit {
 
     if (this._currentUser && this._currentUser.roles) {
       for (const checkPermission of this._permissions) {
-        const permissionFound = this._currentUser.roles.find(permission => isEqual(permission.toLowerCase(), checkPermission.toLowerCase()));
+        const permissionFound = Object.keys(this._currentUser.roles)
+          .find((permission: string): boolean => isEqual(permission.toLowerCase(), checkPermission.toLowerCase()));
 
         if (permissionFound) {
           hasPermission = true;
@@ -84,14 +89,3 @@ export class HasPermissionDirective implements OnInit {
     return hasPermission;
   }
 }
-
-/**
- * @description The view is hidden if we don't have the corresponding permission.
- * @usageNotes *hasPermission="['Customer', 'Guest']; op 'OR'"; default op is AND.
- */
-
-@NgModule({
-  declarations: [HasPermissionDirective],
-  exports: [HasPermissionDirective],
-})
-export class HasPermissionDirectiveModule { }

@@ -16,10 +16,10 @@ export class DetectPermissionService {
   isAuthorized(): void {
     this.activatedRoute.data.subscribe({
       next: ({ roles }) => {
-        // if (!this.authService.user) return false;
+        if (!this.authService.user) return false;
 
-        // const checkRole = (role: string) => this.authService.user.roles.includes(role);
-        // this.hasPermission = roles.some(checkRole);
+        const checkRole = (role: string) => Object.keys(this.authService.user.roles).includes(role);
+        this.hasPermission = roles.some(checkRole);
       }
     });
   }

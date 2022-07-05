@@ -1,7 +1,9 @@
 import { Component, OnInit, Self } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LogicalOperator } from '@auth/utils/has-permission.directive';
 import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
+import { ERole } from '@lib/models/role';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { DetectPermissionService } from '@lib/services/detect-permission/detect-permission.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
@@ -20,6 +22,9 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
   hasChanged = false;
   private vm$ = new BehaviorSubject<string>('Dios');
   name = new FormControl({ value: 'Dios', disabled: !this.detectPermission.hasPermission }, Validators.required);
+
+  readonly permission = ERole;
+  readonly operator = LogicalOperator;
 
   constructor(
     private readonly router: Router,

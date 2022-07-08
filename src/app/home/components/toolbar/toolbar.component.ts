@@ -5,6 +5,7 @@ import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import isUndefined from 'lodash.isundefined';
 import { filter, take } from 'rxjs';
 
 @Component({
@@ -24,11 +25,10 @@ export class ToolbarComponent {
   openLoginDialog(): void {
     this.dialog
       .open(LoginComponent, {
-        width: '400px',
-        disableClose: true,
+        width: '450px',
       })
       .afterClosed()
-      .pipe(filter(info => !!info))
+      .pipe(filter((info) => !isUndefined(info)))
       .subscribe({
         next: (info) => this.login(info)
       });

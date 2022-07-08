@@ -1,19 +1,21 @@
 <form [formGroup]="form">
-  <h2 mat-dialog-title>
-    <ng-container [ngSwitch]="mode$.value">
-      <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
-      <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
-      <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
-        Reset password
-      </ng-container>
-    </ng-container>
-  </h2>
+  <ng-container *ngIf="[mode.REGISTER, mode.LOGIN].includes(mode$.value)">
+    <button mat-raised-button class="width-100">
+      <img
+        width="16"
+        class="mr-2"
+        alt="google"
+        src="assets/images/google.png"
+      />
+      <span>
+        Sign {{ mode$.value === mode.LOGIN ? "in" : "up" }} with Google
+      </span>
+    </button>
+    <hr />
+  </ng-container>
 
-  <!-- Content -->
-  <mat-dialog-content>
-    <div *ngIf="mode$.value === mode.FORGOT_PASSWORD" class="mb-1">
-      Please provide your email and password to reset.
-    </div>
+  <ng-container>
+    <!-- Fields -->
     <custom-input label="Email" formControlName="email"></custom-input>
     <custom-input
       [label]="
@@ -29,41 +31,40 @@
       </custom-button>
     </custom-input>
 
-    <div class="d-flex jc-between ai-center">
+    <!-- Utils -->
+    <div
+      class="d-flex jc-between ai-center cursor-pointer text-secondary text-deco-underline f-12 mb-2"
+      [style.margin-top.px]="-8"
+    >
       <a
         *ngIf="[mode.REGISTER, mode.FORGOT_PASSWORD].includes(mode$.value)"
-        class="text-light-blue cursor-pointer"
         (click)="login()"
       >
-        Login here
+        Already have an account?
       </a>
       <ng-container *ngIf="mode$.value === mode.LOGIN">
-        <a class="text-light-blue cursor-pointer" (click)="register()">
-          Create an account
-        </a>
-        <span class="cursor-pointer" (click)="forgotPassword()">
-          Forgot password?
-        </span>
+        <a (click)="register()"> Don't have an account? </a>
+        <a (click)="forgotPassword()"> Forgot password? </a>
       </ng-container>
     </div>
-  </mat-dialog-content>
 
-  <!-- Actions -->
-  <mat-dialog-actions class="d-flex jc-between">
-    <custom-button type="text" mat-dialog-close>Cancel</custom-button>
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="form.invalid"
-      [mat-dialog-close]="form.value"
-    >
-      <ng-container [ngSwitch]="mode$.value">
-        <ng-container *ngSwitchCase="mode.LOGIN">Login</ng-container>
-        <ng-container *ngSwitchCase="mode.REGISTER">Register</ng-container>
-        <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
-          Reset password
+    <!-- Buttons -->
+    <div class="width-100">
+      <button
+        mat-flat-button
+        color="primary"
+        class="width-100"
+        [disabled]="form.invalid"
+        [mat-dialog-close]="form.value"
+      >
+        <ng-container [ngSwitch]="mode$.value">
+          <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
+          <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
+          <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
+            Reset password
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </button>
-  </mat-dialog-actions>
+      </button>
+    </div>
+  </ng-container>
 </form>

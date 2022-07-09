@@ -6,7 +6,7 @@
     *ngIf="data.btnClose"
     class="dialog-close-button"
   >
-    <span class="text-secondary f-20" [style]="{ 'font-family': 'wide-font' }">
+    <span class="text-secondary f-20" [style.font-family]="'wide-font'">
       &times;
     </span>
   </button>
@@ -18,6 +18,6 @@
     mat-flat-button
     color="primary"
     [mat-dialog-close]="true"
-    [innerHTML]="'Confirm'"
+    [innerHTML]="'OK'"
   ></button>
 </mat-dialog-actions>

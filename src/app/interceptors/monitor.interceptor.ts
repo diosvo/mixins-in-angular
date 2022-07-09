@@ -1,13 +1,13 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { finalize, Observable } from 'rxjs';
 
 @Injectable()
 export class MonitorInterceptor implements HttpInterceptor {
-  private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
 
-  constructor(private readonly loggerFactory: LoggerFactory) { }
+  private loggerFactory = inject(LoggerFactory);
+  private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 

@@ -4,7 +4,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { Router } from '@angular/router';
 import { ERole, IRoles } from '@lib/models/role';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import firebase from 'firebase/compat/app';
 import auth = firebase.auth;
@@ -15,6 +15,7 @@ export type FirebaseAuth = auth.UserCredential;
 export interface AuthUser {
   uid: string;
   email: string;
+  expire: number;
   roles: Partial<IRoles>;
 }
 
@@ -28,13 +29,7 @@ export class AuthService {
   private userSubj$ = new BehaviorSubject<AuthUser>(null);
   readonly user$ = this.userSubj$.asObservable();
 
-  state$: Observable<AuthUser>;
-
-  private readonly TOKEN_KEY = 'firebase_auth';
-
-  get token(): string {
-    return localStorage.getItem(this.TOKEN_KEY);
-  }
+  private readonly TOKEN_KEY = 'auth';
 
   get user(): AuthUser {
     return this.userSubj$.value;
@@ -46,26 +41,25 @@ export class AuthService {
     private readonly afs: AngularFirestore,
     private readonly snackbar: SnackbarService,
   ) {
-    this.getState$();
-    this.isLoggedIn$.next(!!this.token);
+    this.handleState();
   }
 
-  private getState$(): void {
-    this.state$ = this.afa.authState.pipe(
-      switchMap((user: FirebaseUser) => {
-        if (user) {
-          return this.afs.doc<AuthUser>(`users/${user.uid}`).valueChanges();
-        }
-        return of(null);
-      })
-    );
+  private handleState(): void {
+    const current = JSON.parse(localStorage.getItem(this.TOKEN_KEY));
+
+    if (current) {
+      const expired = Date.now() >= current.expire * 1000;
+      return this.updateUserState(current, !expired);
+    };
+    return this.updateUserState(null, false);
   }
+
+  /* Sign in */
 
   emailSignIn({ email, password }): Promise<void> {
     return this.afa.signInWithEmailAndPassword(email, password)
       .then((response: FirebaseAuth) => {
         this.updateUserData(response.user);
-        this.isLoggedIn$.next(true);
         this.snackbar.success('Logged in successfully.');
       })
       .catch((error) => this.snackbar.error(error));
@@ -77,7 +71,9 @@ export class AuthService {
     return this.updateUserData(credentials.user);
   }
 
-  register({ email, password }): Promise<void> {
+  /* Register */
+
+  emailRegister({ email, password }): Promise<void> {
     return this.afa.createUserWithEmailAndPassword(email, password)
       .then((response: FirebaseAuth) => {
         this.updateUserData(response.user);
@@ -93,6 +89,14 @@ export class AuthService {
       .catch((error) => this.snackbar.error(error));
   }
 
+  async logout(): Promise<void> {
+    await this.afa.signOut();
+    localStorage.clear();
+    this.updateUserState(null, false);
+  }
+
+  /* Check permission */
+
   ability(action: 'read' | 'edit' | 'delete', user: AuthUser): boolean {
     switch (action) {
       case 'read':
@@ -106,37 +110,6 @@ export class AuthService {
     }
   }
 
-  async logout(): Promise<void> {
-    await this.afa.signOut();
-    localStorage.clear();
-    this.isLoggedIn$.next(false);
-  }
-
-  private verifyEmail(): Promise<boolean> {
-    return this.afa.currentUser
-      .then((user) => user.sendEmailVerification())
-      .then(() => this.router.navigate(['verify-email-address']));
-  }
-
-  private updateUserData(user: FirebaseUser): Promise<void> {
-    if (!user) {
-      throw new Error('User is null');
-    }
-
-    const userRef: AngularFirestoreDocument<AuthUser> = this.afs.doc(`users/${user.uid}`);
-    const data: AuthUser = {
-      uid: user.uid,
-      email: user.email,
-      roles: {
-        guest: true,
-        subscriber: true,
-      }
-    };
-    this.userSubj$.next(data);
-    localStorage.setItem(this.TOKEN_KEY, JSON.stringify(data));
-    return userRef.set(data, { merge: true });
-  }
-
   private checkAuthorization(user: AuthUser, allowedRoles: string[]): boolean {
     if (!user) return false;
 
@@ -146,5 +119,45 @@ export class AuthService {
       }
     }
     return false;
+  }
+
+  /* Utils */
+
+  private verifyEmail(): Promise<boolean> {
+    return this.afa.currentUser
+      .then((user) => user.sendEmailVerification())
+      .then(() => this.router.navigate(['verify-email-address']));
+  }
+
+  private async updateUserData(user: FirebaseUser): Promise<void> {
+    if (!user) {
+      throw new Error('User is null');
+    }
+
+    const { uid, email } = user;
+    const idToken = await user.getIdToken();
+    const expire = JSON.parse(
+      Buffer
+        .from(idToken.split('.')[1], 'base64')
+        .toString('ascii')
+    )['exp'];
+
+    const userRef: AngularFirestoreDocument<AuthUser> = this.afs.doc(`users/${uid}`);
+    const data: AuthUser = {
+      uid,
+      email,
+      expire,
+      roles: {
+        subscriber: true,
+      }
+    };
+    this.updateUserState(data, true);
+    localStorage.setItem(this.TOKEN_KEY, JSON.stringify(data));
+    return userRef.set(data, { merge: true });
+  }
+
+  updateUserState(user: AuthUser, loggedIn: boolean): void {
+    this.userSubj$.next(user);
+    this.isLoggedIn$.next(loggedIn);
   }
 }

@@ -22,7 +22,7 @@ type Operator = `${Uppercase<LogicalOperator>}`;
 export class HasPermissionDirective implements OnInit {
 
   @Input()
-  set hasPermission(value: Array<string>) {
+  set hasPermission(value: string[]) {
     this._permissions = value;
     this.updateView();
   }
@@ -34,7 +34,7 @@ export class HasPermissionDirective implements OnInit {
   }
 
   private _currentUser: AuthUser;
-  private _permissions: Array<string> = [];
+  private _permissions: string[] = [];
 
   private _logicalOperator: Operator = LogicalOperator.AND;
   private _isHidden = true;
@@ -68,7 +68,7 @@ export class HasPermissionDirective implements OnInit {
     if (this._currentUser && this._currentUser.roles) {
       for (const checkPermission of this._permissions) {
         const permissionFound = Object.keys(this._currentUser.roles)
-          .find((permission: string): boolean => isEqual(permission.toLowerCase(), checkPermission.toLowerCase()));
+          .find((role: string): boolean => isEqual(role.toLowerCase(), checkPermission.toLowerCase()));
 
         if (permissionFound) {
           hasPermission = true;

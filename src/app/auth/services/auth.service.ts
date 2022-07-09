@@ -10,7 +10,7 @@ import firebase from 'firebase/compat/app';
 import auth = firebase.auth;
 import FirebaseUser = firebase.User;
 
-export type FirebaseAuth = firebase.auth.UserCredential;
+export type FirebaseAuth = auth.UserCredential;
 
 export interface AuthUser {
   uid: string;
@@ -133,6 +133,7 @@ export class AuthService {
       }
     };
     this.userSubj$.next(data);
+    localStorage.setItem(this.TOKEN_KEY, JSON.stringify(data));
     return userRef.set(data, { merge: true });
   }
 

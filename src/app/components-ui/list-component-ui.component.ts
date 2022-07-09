@@ -5,7 +5,7 @@ import { CardItem, SearchService } from '@home/services/search.service';
 import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject, throwError } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 
 const groupList = Object.values(EComponentUI).sort();
@@ -63,7 +63,7 @@ export class ListComponentUiComponent implements OnInit {
       ),
       catchError(({ message }) => {
         this.errorMessage$.next(message);
-        return EMPTY;
+        return throwError(() => new Error(message));
       })
     );
   }

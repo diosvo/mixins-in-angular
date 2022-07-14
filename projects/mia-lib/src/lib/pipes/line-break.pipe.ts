@@ -1,7 +1,8 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'lineBreak'
+  name: 'lineBreak',
+  standalone: true
 })
 export class LineBreakPipe implements PipeTransform {
 
@@ -9,9 +10,3 @@ export class LineBreakPipe implements PipeTransform {
     return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
   }
 }
-
-@NgModule({
-  declarations: [LineBreakPipe],
-  exports: [LineBreakPipe],
-})
-export class LineBreakPipeModule { }

@@ -8,7 +8,7 @@ import { CustomButtonModule } from '@lib/components/custom-button/custom-button.
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
-import { FilterPipeModule } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
+import { FilterPipe } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { ListComponent } from './list.component';
 
 @NgModule({
@@ -21,8 +21,8 @@ import { ListComponent } from './list.component';
       title: 'List - Users'
     }]),
 
+    FilterPipe,
     AlertModule,
-    FilterPipeModule,
     CustomTableModule,
     CustomInputModule,
     CustomButtonModule,

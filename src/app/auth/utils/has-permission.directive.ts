@@ -67,8 +67,9 @@ export class HasPermissionDirective implements OnInit {
 
     if (this._currentUser && this._currentUser.roles) {
       for (const checkPermission of this._permissions) {
-        const permissionFound = Object.keys(this._currentUser.roles)
-          .find((role: string): boolean => isEqual(role.toLowerCase(), checkPermission.toLowerCase()));
+        const permissionFound = this._currentUser.roles.find(
+          (permission: string) => isEqual(permission.toLowerCase(), checkPermission.toLowerCase())
+        );
 
         if (permissionFound) {
           hasPermission = true;

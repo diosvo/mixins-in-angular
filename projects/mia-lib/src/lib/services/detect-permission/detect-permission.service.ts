@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
+import { TRole } from '@lib/models/role';
 
 @Injectable()
 export class DetectPermissionService {
@@ -18,7 +19,7 @@ export class DetectPermissionService {
       next: ({ roles }) => {
         if (!this.authService.user) return false;
 
-        const checkRole = (role: string) => Object.keys(this.authService.user.roles).includes(role);
+        const checkRole = (role: TRole) => this.authService.user.roles.includes(role);
         this.hasPermission = roles.some(checkRole);
       }
     });

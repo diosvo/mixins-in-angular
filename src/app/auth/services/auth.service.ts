@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { ERole, IRoles } from '@lib/models/role';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import { BehaviorSubject } from 'rxjs';
 
+import { ERole, TRole } from '@lib/models/role';
 import firebase from 'firebase/compat/app';
 import auth = firebase.auth;
 import FirebaseUser = firebase.User;
@@ -16,7 +16,7 @@ export interface AuthUser {
   uid: string;
   email: string;
   expire: number;
-  roles: Partial<IRoles>;
+  roles: TRole[];
 }
 
 @Injectable({
@@ -95,32 +95,6 @@ export class AuthService {
     this.updateUserState(null, false);
   }
 
-  /* Check permission */
-
-  ability(action: 'read' | 'edit' | 'delete', user: AuthUser): boolean {
-    switch (action) {
-      case 'read':
-        return this.checkAuthorization(user, [ERole.ADMIN, ERole.GUEST, ERole.SUBSCRIBER]);
-      case 'edit':
-        return this.checkAuthorization(user, [ERole.ADMIN, ERole.SUBSCRIBER]);
-      case 'delete':
-        return this.checkAuthorization(user, [ERole.ADMIN]);
-      default:
-        return false;
-    }
-  }
-
-  private checkAuthorization(user: AuthUser, allowedRoles: string[]): boolean {
-    if (!user) return false;
-
-    for (const role of allowedRoles) {
-      if (user.roles[role]) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   /* Utils */
 
   private verifyEmail(): Promise<boolean> {
@@ -147,9 +121,7 @@ export class AuthService {
       uid,
       email,
       expire,
-      roles: {
-        subscriber: true,
-      }
+      roles: [ERole.SUBSCRIBER]
     };
     this.updateUserState(data, true);
     localStorage.setItem(this.TOKEN_KEY, JSON.stringify(data));

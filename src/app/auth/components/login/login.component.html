@@ -1,6 +1,6 @@
 <form [formGroup]="form">
   <ng-container *ngIf="[mode.REGISTER, mode.LOGIN].includes(mode$.value)">
-    <button mat-raised-button class="width-100">
+    <button mat-raised-button class="width-100" [disabled]="loading">
       <img
         width="16"
         class="mr-2"
@@ -54,15 +54,18 @@
         mat-flat-button
         color="primary"
         class="width-100"
-        [disabled]="form.invalid"
-        [mat-dialog-close]="form.value"
+        (click)="onAction()"
+        [disabled]="form.invalid || loading"
       >
-        <ng-container [ngSwitch]="mode$.value">
+        <ng-container *ngIf="!loading" [ngSwitch]="mode$.value">
           <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
           <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
           <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
             Reset password
           </ng-container>
+        </ng-container>
+        <ng-container *ngIf="loading">
+          <mat-icon><mat-spinner diameter="20"> </mat-spinner></mat-icon>
         </ng-container>
       </button>
     </div>

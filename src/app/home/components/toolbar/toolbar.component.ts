@@ -5,7 +5,6 @@ import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import isUndefined from 'lodash.isundefined';
 import { filter, take } from 'rxjs';
 
 @Component({
@@ -23,15 +22,9 @@ export class ToolbarComponent {
   ) { }
 
   openLoginDialog(): void {
-    this.dialog
-      .open(LoginComponent, {
-        width: '450px',
-      })
-      .afterClosed()
-      .pipe(filter((info) => !isUndefined(info)))
-      .subscribe({
-        next: (info) => this.login(info)
-      });
+    this.dialog.open(LoginComponent, {
+      width: '450px',
+    });
   }
 
   openLogoutDialog(): void {
@@ -56,9 +49,5 @@ export class ToolbarComponent {
           this.router.navigateByUrl('/components-ui');
         }
       });
-  }
-
-  private login({ email, password }): Promise<void> {
-    return this.authService.emailSignIn({ email, password });
   }
 }

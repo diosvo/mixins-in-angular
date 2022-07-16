@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { BehaviorSubject } from 'rxjs';
-
 import { ERole, TRole } from '@lib/models/role';
+import { BehaviorSubject, from, Observable, switchMap } from 'rxjs';
+
 import firebase from 'firebase/compat/app';
 import auth = firebase.auth;
 import FirebaseUser = firebase.User;
@@ -39,12 +38,12 @@ export class AuthService {
     private readonly router: Router,
     private readonly afa: AngularFireAuth,
     private readonly afs: AngularFirestore,
-    private readonly snackbar: SnackbarService,
   ) {
     this.handleState();
   }
 
   private handleState(): void {
+    // TODO: check the user is existed in collection
     const current = JSON.parse(localStorage.getItem(this.TOKEN_KEY));
 
     if (current) {
@@ -56,37 +55,29 @@ export class AuthService {
 
   /* Sign in */
 
-  emailSignIn({ email, password }): Promise<void> {
-    return this.afa.signInWithEmailAndPassword(email, password)
-      .then((response: FirebaseAuth) => {
-        this.updateUserData(response.user);
-        this.snackbar.success('Logged in successfully.');
-      })
-      .catch((error) => this.snackbar.error(error));
+  emailSignIn({ email, password }): Observable<void> {
+    return from(this.afa.signInWithEmailAndPassword(email, password)).pipe(
+      switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
+    );
   }
 
-  async googleSignIn(): Promise<void> {
+  googleSignIn(): Observable<void> {
     const provider = new auth.GoogleAuthProvider();
-    const credentials = await this.afa.signInWithPopup(provider);
-    return this.updateUserData(credentials.user);
+    return from(this.afa.signInWithPopup(provider)).pipe(
+      switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
+    );
   }
 
   /* Register */
 
-  emailRegister({ email, password }): Promise<void> {
-    return this.afa.createUserWithEmailAndPassword(email, password)
-      .then((response: FirebaseAuth) => {
-        this.updateUserData(response.user);
-        this.snackbar.success('Register successfully.');
-        this.verifyEmail();
-      })
-      .catch((error) => this.snackbar.error(error));
+  emailRegister({ email, password }): Observable<void> {
+    return from(this.afa.createUserWithEmailAndPassword(email, password)).pipe(
+      switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
+    );
   }
 
-  resetPassword(password: string): void {
-    this.afa.sendPasswordResetEmail(password)
-      .then(() => this.snackbar.success('Password to reset was sent, please check your message box.'))
-      .catch((error) => this.snackbar.error(error));
+  resetPassword(password: string): Observable<void> {
+    return from(this.afa.sendPasswordResetEmail(password));
   }
 
   async logout(): Promise<void> {
@@ -109,7 +100,7 @@ export class AuthService {
     }
 
     const { uid, email } = user;
-    const idToken = await user.getIdToken();
+    const idToken = await user.getIdToken(true);
     const expire = JSON.parse(
       Buffer
         .from(idToken.split('.')[1], 'base64')
@@ -129,6 +120,9 @@ export class AuthService {
   }
 
   updateUserState(user: AuthUser, loggedIn: boolean): void {
+    if (!loggedIn) {
+      localStorage.clear();
+    }
     this.userSubj$.next(user);
     this.isLoggedIn$.next(loggedIn);
   }

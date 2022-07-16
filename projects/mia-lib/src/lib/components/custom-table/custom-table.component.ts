@@ -12,14 +12,15 @@ import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
-export interface TableColumn {
-  key: string;
-  flex?: string;
-  header?: string;
-  tooltip?: boolean;
-  truncate?: boolean;
-  disableSorting?: boolean;
+interface ColumnProperties {
+  flex: string;
+  header: string;
+  tooltip: boolean;
+  truncate: boolean;
+  disableSorting: boolean;
 }
+
+export type TableColumn = { key: string } & Partial<ColumnProperties>;
 
 @Component({
   selector: 'custom-table',
@@ -34,8 +35,8 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   @Input() set data(source: T[]) {
     this.setDataSource(source);
+    this.configPaginator();
     this.source.sort = this.matSort;
-    this.source.paginator = this.paginator;
   }
   @Input() trackByKey: string;
   @Input() columns: TableColumn[] = [];
@@ -43,7 +44,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Styles */
 
-  @Input() style: Record<string, string>;
+  @Input() style: Record<string, unknown>;
 
   /** Pagination */
 
@@ -64,10 +65,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() defaultSortColumn: string;
   @Input() defaultSortDirection: SortDirection = 'asc';
   @ViewChild(MatSort) private readonly matSort: MatSort;
-
-  /** Filter */
-
-  @Input() filterable = false;
 
   /** Checkbox */
 

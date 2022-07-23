@@ -1,5 +1,5 @@
 export interface GithubApi {
-  items: Array<GithubIssue>;
+  items: GithubIssue[];
   total_count: number;
 }
 
@@ -8,9 +8,4 @@ export interface GithubIssue {
   number: string;
   state: string;
   title: string;
-}
-
-export interface Filter {
-  query: string;
-  state: Array<string>;
 }

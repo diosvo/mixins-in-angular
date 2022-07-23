@@ -1,17 +1,16 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
-
-<ng-template #noError>
+<ng-container *ngIf="state$ | async as state">
   <mat-progress-bar
-    *ngIf="loading"
-    class="mb-1"
+    *ngIf="state.loading"
     mode="indeterminate"
   ></mat-progress-bar>
 
+  <alert-message *ngIf="state.message" type="error">
+    {{ state.message }}
+  </alert-message>
+
   <custom-table
-    *ngIf="users$ | async as data"
-    [data]="data | filter: query.value"
+    *ngIf="state.data"
+    [data]="state.data | filter: query.value"
     [columns]="columns"
     [defaultSortColumn]="'name'"
   >
@@ -47,4 +46,4 @@
       </ng-template>
     </custom-column>
   </custom-table>
-</ng-template>
+</ng-container>

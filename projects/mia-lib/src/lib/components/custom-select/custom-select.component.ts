@@ -60,7 +60,7 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
       startWith(this.query.value)
     );
     this.items = combineLatest([this.items as Observable<T[]>, query$]).pipe(
-      map(([data, query]) => new FilterPipe().transform(data, query) as T[]),
+      map(([data, query]) => new FilterPipe<T>().transform(data, query).sort()),
     );
   }
 

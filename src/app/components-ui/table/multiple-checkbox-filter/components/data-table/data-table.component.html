@@ -18,8 +18,15 @@
     <form filters [formGroup]="filterForm" class="d-flex gap-1 width-100">
       <custom-select
         placeholder="State"
-        formControlName="state"
+        formControlName="states"
         [items]="states"
+        searchPlaceholder="Search"
+      ></custom-select>
+
+      <custom-select
+        placeholder="Author"
+        formControlName="authors"
+        [items]="authors"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -35,6 +42,19 @@
 
     <custom-column columnName="created_at">
       <ng-template let-issue>{{ issue.created_at | date }}</ng-template>
+    </custom-column>
+
+    <custom-column columnName="number">
+      <ng-template let-issue>
+        <a
+          target="_blank"
+          [href]="issue.html_url"
+          rel="noopener noreferrer"
+          class="cursor-pointer text-deco-none text-black text-hover-dark-blue"
+        >
+          {{ issue.number }}
+        </a>
+      </ng-template>
     </custom-column>
 
     <custom-column columnName="state">

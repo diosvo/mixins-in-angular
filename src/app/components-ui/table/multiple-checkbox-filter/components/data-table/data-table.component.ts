@@ -5,8 +5,7 @@ import { HttpRequestState } from '@lib/models/server.model';
 import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import { catchError, combineLatest, distinctUntilChanged, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
-import { GithubIssue } from '../../models/service.model';
-import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
+import { AngularIssue, GithubRepoIssuesService } from '../../service/github-repo-issues.service';
 
 @Component({
   selector: 'app-data-table',
@@ -17,19 +16,22 @@ import { GithubRepoIssuesService } from '../../service/github-repo-issues.servic
 
 export class DataTableComponent implements OnInit {
 
-  state$: Observable<HttpRequestState<GithubIssue>>;
+  state$: Observable<HttpRequestState<AngularIssue>>;
 
   readonly states = ['open', 'closed'];
+  readonly authors = ['none', 'collaborator', 'member'];
 
   columns: TableColumn[] = [
-    { key: 'created_at', flex: '15%' },
-    { key: 'state', disableSorting: true, flex: '15%' },
-    { key: 'number', flex: '15%' },
-    { key: 'title', flex: '55%' },
+    { key: 'id', flex: '10%' },
+    { key: 'created_at', flex: '10%' },
+    { key: 'state', disableSorting: true, flex: '10%' },
+    { key: 'number', flex: '10%' },
+    { key: 'title', flex: '50%' },
   ];
   filterForm = this.fb.group({
     query: [''],
-    state: [[]]
+    states: [[]],
+    authors: [[]],
   });
 
   private index$ = new Subject<number>();
@@ -58,19 +60,22 @@ export class DataTableComponent implements OnInit {
             total_count
           };
         }),
-        catchError(({ message }) => of({ data: null, message, loading: false })),
+        catchError(({ message }) => of({ data: null, message })),
         shareReplay(1)
       )),
-    ) as Observable<HttpRequestState<GithubIssue>>;
+    ) as Observable<HttpRequestState<AngularIssue>>;
 
     this.state$ = combineLatest([data$, filters$]).pipe(
       map(([state, params]) => ({
         ...state,
         data: state.data
-          .filter((item: GithubIssue) => new FilterObjectPipe().transform(item, params.query))
-          .filter((item: GithubIssue) => {
-            const collection = isEmpty(params.state) ? this.states : params.state;
-            return collection.includes(item.state);
+          .filter((item: AngularIssue) => {
+            const states = isEmpty(params.states) ? this.states : params.states;
+            const authors = isEmpty(params.authors) ? this.authors : params.authors;
+
+            return new FilterObjectPipe().transform(item, params.query)
+              && states.includes(item.state)
+              && authors.includes(item.author_association.toLowerCase());
           })
       }))
     );

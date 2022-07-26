@@ -100,7 +100,7 @@ export class AuthService {
     }
 
     const { uid, email } = user;
-    const idToken = await user.getIdToken(true);
+    const idToken = await user.getIdToken();
     const expire = JSON.parse(
       Buffer
         .from(idToken.split('.')[1], 'base64')

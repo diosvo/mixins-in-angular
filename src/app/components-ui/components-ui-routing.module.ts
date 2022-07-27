@@ -20,7 +20,7 @@ export const COMPONENT_ROUTES: Routes = [
   },
   {
     path: EComponentUI.MENU,
-    loadChildren: () => import('./menu/menu.module').then(({ MenuModule }) => MenuModule)
+    loadChildren: () => import('./menu/menu-routing.module').then(({ MENU_ROUTES }) => MENU_ROUTES)
   },
   {
     path: EComponentUI.TABLE,

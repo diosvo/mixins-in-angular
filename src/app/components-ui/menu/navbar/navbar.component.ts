@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 const navList = [
@@ -21,6 +22,8 @@ const navList = [
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
@@ -38,7 +41,7 @@ export class NavbarComponent {
   get animate(): any {
     return {
       width: this.sizes.listItemWidth + 'px',
-      transform: `translateX(${ this.sizes.translateX }px)`
+      transform: `translateX(${this.sizes.translateX}px)`
     };
   }
 

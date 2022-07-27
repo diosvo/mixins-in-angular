@@ -1,15 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const MENU_ROUTES: Routes = [
   {
     path: 'navbar',
-    loadChildren: () => import('./navbar/navbar.module').then(({ NavbarModule }) => NavbarModule)
+    loadComponent: () => import('./navbar/navbar.component')
+      .then(({ NavbarComponent }) => NavbarComponent),
+    title: 'Navbar Interaction'
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class MenuRoutingModule { }

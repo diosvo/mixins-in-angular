@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { EComponentUI } from '@home/models/url.enum';
 import { CanLoadGuard } from '@lib/guards/can-load.guard';
 import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
 import { ListComponentUiComponent } from './list-component-ui.component';
 
-const routes: Routes = [
+export const COMPONENT_ROUTES: Routes = [
   {
     path: '',
     component: ListComponentUiComponent,
@@ -34,8 +33,3 @@ const routes: Routes = [
     canLoad: [CanLoadGuard]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class ComponentsUiRoutingModule { }

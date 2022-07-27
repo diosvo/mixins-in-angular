@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: EUrl.COMPONENT,
-    loadChildren: () => import('./components-ui/components-ui.module').then(({ ComponentsUiModule }) => ComponentsUiModule)
+    loadChildren: () => import('./components-ui/components-ui-routing.module').then(({ COMPONENT_ROUTES }) => COMPONENT_ROUTES)
   },
   {
     path: EUrl.FUNCTION,

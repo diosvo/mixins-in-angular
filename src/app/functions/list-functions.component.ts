@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CardItemModule } from '@home/components/card-item/card-item.component.module';
-import { EFunctions } from '@home/models/url.enum';
+import { EFunctions, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
@@ -50,6 +50,8 @@ const DEFAULT_FILTER = {
   }`],
 })
 export class ListFunctionsComponent implements OnInit {
+
+  state$ = this.searchService.getData(EUrl.FUNCTION);
 
   errorMessage$ = new Subject<string>();
   filteredData$: Observable<CardItem[]>;

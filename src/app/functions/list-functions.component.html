@@ -1,20 +1,19 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
+<ng-container *ngIf="state$ | async as state">
+  <alert-message *ngIf="state.message" type="error">
+    {{ message }}
+  </alert-message>
+  <mat-progress-bar
+    *ngIf="state.loading"
+    mode="indeterminate"
+  ></mat-progress-bar>
 
-<ng-template #noError>
-  <ng-template #loadingTmpl>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </ng-template>
-
-  <!-- Search -->
-  <ng-container *ngIf="filteredData$ | async as data; else loadingTmpl">
+  <ng-container *ngIf="state.data">
     <mat-accordion>
       <mat-expansion-panel>
         <!-- Header -->
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Reactive programming with RxJS 6+, ...
+            Reactive programming with RxJS 7.5+, ...
           </mat-panel-title>
           <mat-panel-description class="jc-flex-end">
             <custom-button
@@ -52,8 +51,8 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <ng-container *ngIf="data.length > 0; else notFound">
-      <card-item [data]="data"></card-item>
+    <ng-container *ngIf="state.data.length > 0; else notFound">
+      <card-item [data]="state.data"></card-item>
     </ng-container>
 
     <ng-template #notFound>
@@ -64,9 +63,9 @@
           (click)="cleanFilters()"
           class="text-light-blue text-deco-underline cursor-pointer"
         >
-          Reset filters.
+          Reset filters
         </a>
       </div>
     </ng-template>
   </ng-container>
-</ng-template>
+</ng-container>

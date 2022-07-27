@@ -1,7 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CardItemModule } from '@home/components/card-item/card-item.component.module';
 import { EFunctions } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
+import { AlertModule } from '@lib/components/alert/alert.module';
+import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { CustomSelectModule } from '@lib/components/custom-select/custom-select.module';
 import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
@@ -17,6 +26,21 @@ const DEFAULT_FILTER = {
 @Component({
   selector: 'app-list-functions',
   templateUrl: './list-functions.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    AlertModule,
+    CardItemModule,
+    CustomInputModule,
+    CustomButtonModule,
+    CustomSelectModule,
+
+    MatTooltipModule,
+    MatExpansionModule,
+    MatProgressBarModule
+  ],
   styles: [`
   @import 'layout/breakpoints';
   @include screen('extra-small') {

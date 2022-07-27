@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: EUrl.FUNCTION,
-    loadChildren: () => import('./functions/functions.module').then(({ FunctionsModule }) => FunctionsModule)
+    loadChildren: () => import('./functions/functions-routing.module').then(({ FUNCTIONS_ROUTES }) => FUNCTIONS_ROUTES)
   },
   {
     path: '**',

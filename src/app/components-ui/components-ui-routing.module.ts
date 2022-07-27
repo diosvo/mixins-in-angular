@@ -16,7 +16,7 @@ export const COMPONENT_ROUTES: Routes = [
   },
   {
     path: EComponentUI.CARD,
-    loadChildren: () => import('./card/card.module').then(({ CardModule }) => CardModule)
+    loadChildren: () => import('./card/card-routing.module').then(({ CARD_ROUTES }) => CARD_ROUTES)
   },
   {
     path: EComponentUI.MENU,

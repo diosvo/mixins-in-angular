@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { of } from 'rxjs';
+import { AnimatedCounterDirective } from './animated-counter.directive';
 
 interface AnimatedCounterModel {
   title: string;
@@ -43,8 +45,10 @@ const data: AnimatedCounterModel[] = [
 
 @Component({
   selector: 'app-animated-counter',
+  standalone: true,
+  imports: [CommonModule, AnimatedCounterDirective],
   templateUrl: './animated-counter.component.html',
-  styleUrls: ['./animated-counter.component.scss'],
+  styleUrls: ['./animated-counter.component.scss']
 })
 
 export class AnimatedCounterComponent implements AfterViewInit {

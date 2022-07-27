@@ -1,15 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const CARD_ROUTES: Routes = [
   {
     path: 'animated-counter',
-    loadChildren: () => import('./animated-counter/animated-counter.module').then(({ AnimatedCounterModule }) => AnimatedCounterModule)
+    loadComponent: () => import('./animated-counter/animated-counter.component')
+      .then(({ AnimatedCounterComponent }) => AnimatedCounterComponent),
+    title: 'Animated Counter Card'
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class CardRoutingModule { }

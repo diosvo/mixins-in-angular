@@ -12,7 +12,7 @@ export const COMPONENT_ROUTES: Routes = [
   },
   {
     path: EComponentUI.BUTTON,
-    loadChildren: () => import('./button/button.module').then(({ ButtonModule }) => ButtonModule)
+    loadChildren: () => import('./button/button-routing.module').then(({ BUTTON_ROUTES }) => BUTTON_ROUTES)
   },
   {
     path: EComponentUI.CARD,

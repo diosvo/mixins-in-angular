@@ -1,19 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const BUTTON_ROUTES: Routes = [
   {
     path: 'micro-interaction',
-    loadChildren: () => import('./micro-interaction/micro-interaction.module').then(({ MicroInteractionModule }) => MicroInteractionModule),
+    loadComponent: () => import('./micro-interaction/micro-interaction.component').then(({ MicroInteractionComponent }) => MicroInteractionComponent),
+    title: 'Micro Interaction'
   },
   {
     path: 'toggle-mode',
-    loadChildren: () => import('./toggle-mode/toggle-mode.module').then(({ ToggleModeModule }) => ToggleModeModule),
+    loadComponent: () => import('./toggle-mode/toggle-mode.component').then(({ ToggleModeComponent }) => ToggleModeComponent),
+    title: 'Button Toggle Mode'
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ButtonRoutingModule { }

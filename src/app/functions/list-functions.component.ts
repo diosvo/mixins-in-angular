@@ -10,7 +10,7 @@ import { CardItem, SearchService } from '@home/services/search.service';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
-import { CustomSelectModule } from '@lib/components/custom-select/custom-select.module';
+import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { HttpRequestState } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
@@ -34,7 +34,7 @@ const DEFAULT_FILTER = {
     CardItemModule,
     CustomInputModule,
     CustomButtonModule,
-    CustomSelectModule,
+    CustomSelectComponent,
 
     MatTooltipModule,
     MatExpansionModule,

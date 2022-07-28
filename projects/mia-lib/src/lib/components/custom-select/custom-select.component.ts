@@ -1,17 +1,35 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatSelectChange } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Required } from '@lib/decorators/required-attribute';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import isEqual from 'lodash.isequal';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { FilterPipe } from '../../pipes/filter.pipe';
+import { CustomInputModule } from '../custom-input/custom-input.module';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
   selector: 'custom-select',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    CustomInputModule,
+    TrackByKeyDirective,
+
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCheckboxModule
+  ],
   templateUrl: './custom-select.component.html',
   providers: [
     {
@@ -89,3 +107,6 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
     this.control.setValue(change.checked ? this.primitiveItems : []);
   }
 }
+
+// ref: https://marselbeqiri.medium.com/angular-material-custom-mat-select-with-search-functionality-4b2b69b47511
+

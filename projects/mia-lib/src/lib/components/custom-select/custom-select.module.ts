@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { CustomInputModule } from '../custom-input/custom-input.module';
 import { CustomSelectComponent } from './custom-select.component';
 
@@ -16,7 +16,7 @@ import { CustomSelectComponent } from './custom-select.component';
     ReactiveFormsModule,
 
     CustomInputModule,
-    TrackByKeyDirectiveModule,
+    TrackByKeyDirective,
 
     MatIconModule,
     MatButtonModule,

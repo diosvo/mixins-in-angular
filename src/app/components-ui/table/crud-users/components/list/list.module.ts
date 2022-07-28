@@ -7,7 +7,7 @@ import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dial
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
-import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { FilterPipe } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { ListComponent } from './list.component';
 
@@ -27,7 +27,7 @@ import { ListComponent } from './list.component';
     CustomInputModule,
     CustomButtonModule,
     ConfirmDialogModule,
-    TrackByKeyDirectiveModule,
+    TrackByKeyDirective,
 
     MatProgressBarModule
   ]

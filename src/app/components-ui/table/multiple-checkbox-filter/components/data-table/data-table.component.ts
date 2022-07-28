@@ -51,16 +51,16 @@ export class DataTableComponent implements OnInit {
     );
     const data$ = page$.pipe(
       switchMap((page: number) => this.service.getRepoIssues(page).pipe(
-        map(({ items, total_count }) => {
+        map(({ items }) => {
           if (isEmpty(items)) {
             return [];
           }
           return {
             data: items,
-            total_count
+            total_count: 1000
           };
         }),
-        catchError(({ message }) => of({ data: null, message })),
+        catchError(({ message }) => of({ message, loading: false })),
         shareReplay(1)
       )),
     ) as Observable<HttpRequestState<AngularIssue>>;

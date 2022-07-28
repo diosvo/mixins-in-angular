@@ -10,6 +10,7 @@
     [defaultSortColumn]="'created_at'"
     [length]="state.total_count"
     [pageSizeOptions]="[30]"
+    [showFirstLastButtons]="true"
     (pageChanges)="pageChanges($event)"
     [style]="{ 'max-height': '300px' }"
   >

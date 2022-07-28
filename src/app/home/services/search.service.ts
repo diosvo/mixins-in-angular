@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Params } from '@angular/router';
 import { EUrl } from '@home/models/url.enum';
 import { HttpRequestState, initialValues } from '@lib/models/server.model';
-import { HandleService } from '@lib/services/base/handle.service';
-import { catchError, map, Observable, of, shareReplay } from 'rxjs';
+import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
+import isEmpty from 'lodash.isempty';
+import { catchError, combineLatest, map, Observable, of, shareReplay } from 'rxjs';
 
 export interface CardItem {
   name: string;
@@ -18,27 +20,25 @@ export interface CardItem {
 
 export class SearchService {
 
-  uiComponentsList$ = this.getFetch(EUrl.COMPONENT);
-  functionsList$ = this.getFetch(EUrl.FUNCTION);
+  constructor(private readonly firestore: AngularFirestore) { }
 
-  constructor(
-    private readonly handle: HandleService,
-    private readonly firestore: AngularFirestore,
-  ) { }
-
-  private getFetch(group_url: EUrl): Observable<CardItem[]> {
-    return this.firestore.collection(group_url, ref => ref.orderBy('group_id')).valueChanges().pipe(
-      shareReplay(1),
-      catchError(this.handle.errorHandler('SearchService'))
-    ) as Observable<CardItem[]>;
-  }
-
-  getData(group_url: EUrl): Observable<HttpRequestState<CardItem[]>> {
-    // TODO: combine getFetch and queries state
-    return this.getFetch(group_url).pipe(
-      map((data: CardItem[]) => ({ data, loading: false })),
+  getData(group_url: EUrl, params$: Observable<Params>, selection: string[]): Observable<HttpRequestState<CardItem[]>> {
+    const data$ = this.firestore.collection(group_url, ref => ref.orderBy('group_id')).valueChanges();
+    return combineLatest([data$, params$]).pipe(
+      map(([data, params]) => {
+        const filtered = data.filter((item: CardItem) => {
+          const byGroup = (isEmpty(params.group) ? selection : params.group).includes(item.group_id);
+          const byQuery = new FilterObjectPipe().transform(item, params.query);
+          return byGroup && byQuery;
+        });
+        return {
+          data: filtered,
+          loading: false
+        };
+      }),
       catchError(({ message }) => of({ message, loading: false })),
       initialValues(),
+      shareReplay(1),
     ) as Observable<HttpRequestState<CardItem[]>>;
   }
 }

@@ -1,14 +1,13 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
+<ng-container *ngIf="state$ | async as state">
+  <alert-message *ngIf="state.message" type="error">
+    {{ message }}
+  </alert-message>
+  <mat-progress-bar
+    *ngIf="state.loading"
+    mode="indeterminate"
+  ></mat-progress-bar>
 
-<ng-template #noError>
-  <ng-template #loadingTmpl>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </ng-template>
-
-  <!-- Search -->
-  <ng-container *ngIf="filteredData$ | async as data; else loadingTmpl">
+  <ng-container *ngIf="state.data">
     <mat-accordion>
       <mat-expansion-panel>
         <!-- Header -->
@@ -27,10 +26,7 @@
 
         <!-- Content -->
         <ng-template matExpansionPanelContent>
-          <form
-            [formGroup]="componentsForm"
-            class="panel-container d-flex gap-1"
-          >
+          <form [formGroup]="form" class="panel-container d-flex gap-1">
             <custom-select
               [items]="selection"
               placeholder="Group"
@@ -50,8 +46,8 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <ng-container *ngIf="data.length > 0; else notFound">
-      <card-item [data]="data"></card-item>
+    <ng-container *ngIf="state.data.length > 0; else notFound">
+      <card-item [data]="state.data"></card-item>
     </ng-container>
 
     <ng-template #notFound>
@@ -62,9 +58,9 @@
           (click)="cleanFilters()"
           class="text-light-blue text-deco-underline cursor-pointer"
         >
-          Reset filters.
+          Reset filters
         </a>
       </div>
     </ng-template>
   </ng-container>
-</ng-template>
+</ng-container>

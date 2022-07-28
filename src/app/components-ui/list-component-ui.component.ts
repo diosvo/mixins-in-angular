@@ -1,21 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CardItemModule } from '@home/components/card-item/card-item.component.module';
-import { EComponentUI } from '@home/models/url.enum';
+import { EComponentUI, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { CustomSelectModule } from '@lib/components/custom-select/custom-select.module';
-import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
-import isEmpty from 'lodash.isempty';
+import { HttpRequestState } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
-import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 const groupList = Object.values(EComponentUI).sort();
 const DEFAULT_FILTER = {
@@ -51,11 +50,10 @@ const DEFAULT_FILTER = {
 })
 export class ListComponentUiComponent implements OnInit {
 
-  errorMessage$ = new Subject<string>();
-  filteredData$: Observable<CardItem[]>;
+  state$: Observable<HttpRequestState<CardItem[]>>;
 
   readonly selection = groupList;
-  componentsForm: FormGroup = this.fb.group({
+  form = this.fb.group({
     query: [DEFAULT_FILTER.query],
     group: [DEFAULT_FILTER.group]
   });
@@ -66,30 +64,8 @@ export class ListComponentUiComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.onFilters();
-  }
-
-  /**
-   * @description Search
-   */
-
-  private onFilters(): void {
-    const data$ = this.searchService.uiComponentsList$;
-    const filters$ = this.componentsForm.valueChanges.pipe(
-      startWith(this.componentsForm.value),
-    );
-
-    this.filteredData$ = combineLatest([data$, filters$]).pipe(
-      map(([data, filters]) =>
-        data
-          .filter((item: CardItem) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.group_id))
-          .filter((item: CardItem) => new FilterObjectPipe().transform(item, filters.query))
-      ),
-      catchError(({ message }) => {
-        this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      })
-    );
+    const filters$ = this.form.valueChanges.pipe(startWith(this.form.value));
+    this.state$ = this.searchService.getData(EUrl.COMPONENT, filters$, this.selection);
   }
 
   /**
@@ -97,7 +73,7 @@ export class ListComponentUiComponent implements OnInit {
    */
 
   cleanFilters(): void {
-    this.componentsForm.setValue(DEFAULT_FILTER);
+    this.form.setValue(DEFAULT_FILTER);
   }
 
   clearAllIconActive(): boolean {
@@ -109,10 +85,10 @@ export class ListComponentUiComponent implements OnInit {
   }
 
   get query(): FormControl {
-    return this.componentsForm.get('query') as FormControl;
+    return this.form.get('query') as FormControl;
   }
 
   get group(): FormControl {
-    return this.componentsForm.get('group') as FormControl;
+    return this.form.get('group') as FormControl;
   }
 }

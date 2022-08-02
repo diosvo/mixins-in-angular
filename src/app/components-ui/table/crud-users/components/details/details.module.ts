@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
-import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { UnsavedChangesGuard } from '@lib/guards/unsaved-changes.guard';
 import { DetailsComponent } from './details.component';
 
@@ -15,7 +15,7 @@ import { DetailsComponent } from './details.component';
   declarations: [DetailsComponent],
   imports: [
     CommonModule,
-    CustomInputModule,
+    CustomInputComponent,
     ReactiveFormsModule,
     RouterModule.forChild([{
       path: '',

@@ -6,7 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
-import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
@@ -20,8 +20,8 @@ import { LoginComponent } from './components/login/login.component';
     MatButtonModule,
     MatProgressSpinnerModule,
 
-    CustomInputModule,
     CustomButtonModule,
+    CustomInputComponent,
   ],
   exports: [LoginComponent]
 })

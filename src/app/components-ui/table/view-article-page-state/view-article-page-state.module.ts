@@ -4,7 +4,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule, Routes } from '@angular/router';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
-import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { LineBreakPipe } from 'projects/mia-lib/src/lib/pipes/line-break.pipe';
@@ -36,9 +36,9 @@ const routes: Routes = [
     FilterPipe,
     AlertModule,
     LineBreakPipe,
-    CustomInputModule,
     CustomTableModule,
     CustomButtonModule,
+    CustomInputComponent,
 
     MatProgressBarModule
   ]

@@ -4,12 +4,12 @@ import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CardItemModule } from '@home/components/card-item/card-item.component.module';
+import { CardItemComponent } from '@home/components/card-item/card-item.component';
 import { EComponentUI, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
 import { AlertModule } from '@lib/components/alert/alert.module';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
-import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { HttpRequestState } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
@@ -30,9 +30,9 @@ const DEFAULT_FILTER = {
     ReactiveFormsModule,
 
     AlertModule,
-    CardItemModule,
-    CustomInputModule,
+    CardItemComponent,
     CustomButtonModule,
+    CustomInputComponent,
     CustomSelectComponent,
 
     MatTooltipModule,

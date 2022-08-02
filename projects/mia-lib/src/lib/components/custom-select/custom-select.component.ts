@@ -12,7 +12,7 @@ import { NgChanges } from '@lib/helpers/mark-function-properties';
 import isEqual from 'lodash.isequal';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { FilterPipe } from '../../pipes/filter.pipe';
-import { CustomInputModule } from '../custom-input/custom-input.module';
+import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -22,8 +22,8 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
     CommonModule,
     ReactiveFormsModule,
 
-    CustomInputModule,
     TrackByKeyDirective,
+    CustomInputComponent,
 
     MatIconModule,
     MatButtonModule,
@@ -49,12 +49,14 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() bindKeyValue = false;
 
   @Input() checkAll = true;
+  @Input() disabled = false;
   @Input() placeholder = 'Select';
   @Input() searchPlaceholder = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   private primitiveItems: T[];
-  query = new FormControl('');
+  protected allow = false;
+  protected query = new FormControl('');
 
   constructor(
     readonly injector: Injector,
@@ -91,6 +93,10 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
 
   selectionChange(change: MatSelectChange): void {
     this.control.setValue(change.value);
+  }
+
+  openedChange(change: boolean): void {
+    this.allow = !change;
   }
 
   /* Functions to support Check All feature */

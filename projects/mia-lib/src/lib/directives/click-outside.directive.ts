@@ -1,7 +1,8 @@
-import { Directive, ElementRef, EventEmitter, HostListener, NgModule, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[click-outside]'
+  selector: '[clickOutside]',
+  standalone: true
 })
 export class ClickOutsideDirective {
 
@@ -19,13 +20,3 @@ export class ClickOutsideDirective {
     throw new Error('Some errors occurred.');
   }
 }
-
-@NgModule({
-  declarations: [ClickOutsideDirective],
-  exports: [ClickOutsideDirective]
-})
-export class ClickOutsideDirectiveModule { }
-
-/** 
- * @usage [click-outside]"
- */

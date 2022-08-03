@@ -1,51 +1,53 @@
 <ng-container *ngIf="state$ | async as state">
   <alert-message *ngIf="state.message" type="error">
-    {{ message }}
+    {{ state.message }}
   </alert-message>
   <mat-progress-bar
     *ngIf="state.loading"
     mode="indeterminate"
   ></mat-progress-bar>
 
+  <mat-accordion>
+    <mat-expansion-panel expanded>
+      <!-- Header -->
+      <mat-expansion-panel-header>
+        <mat-panel-title> Represent distinct UI elements. </mat-panel-title>
+        <mat-panel-description class="jc-flex-end">
+          <custom-button
+            type="icon"
+            (click)="cleanFilters()"
+            *ngIf="clearAllIconActive()"
+          >
+            clear_all
+          </custom-button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Content -->
+      <ng-template matExpansionPanelContent>
+        <form [formGroup]="form" class="panel-container d-flex gap-1">
+          <custom-select
+            [items]="selection"
+            placeholder="Group"
+            formControlName="group"
+            [disabled]="state.loading || state.error"
+          ></custom-select>
+
+          <custom-input
+            class="flex-1"
+            label="search"
+            [clearFilter]="true"
+            formControlName="query"
+            [disabled]="state.loading || state.error"
+            placeholder="What are you looking for today..."
+          >
+          </custom-input>
+        </form>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
   <ng-container *ngIf="state.data">
-    <mat-accordion>
-      <mat-expansion-panel expanded>
-        <!-- Header -->
-        <mat-expansion-panel-header>
-          <mat-panel-title> Represent distinct UI elements. </mat-panel-title>
-          <mat-panel-description class="jc-flex-end">
-            <custom-button
-              type="icon"
-              (click)="cleanFilters()"
-              *ngIf="clearAllIconActive()"
-            >
-              clear_all
-            </custom-button>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <!-- Content -->
-        <ng-template matExpansionPanelContent>
-          <form [formGroup]="form" class="panel-container d-flex gap-1">
-            <custom-select
-              [items]="selection"
-              placeholder="Group"
-              formControlName="group"
-            ></custom-select>
-
-            <custom-input
-              class="flex-1"
-              label="search"
-              [clearFilter]="true"
-              formControlName="query"
-              placeholder="What are you looking for today..."
-            >
-            </custom-input>
-          </form>
-        </ng-template>
-      </mat-expansion-panel>
-    </mat-accordion>
-
     <ng-container *ngIf="state.data.length > 0; else notFound">
       <card-item [data]="state.data"></card-item>
     </ng-container>

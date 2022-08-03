@@ -3,8 +3,10 @@
   <mat-select
     #panel
     [multiple]="checkAll"
+    [disabled]="disabled"
     [formControl]="control"
     [sortComparator]="sortFunc"
+    (openedChange)="openedChange($event)"
     (selectionChange)="selectionChange($event)"
   >
     <!-- Search Input & Check All -->

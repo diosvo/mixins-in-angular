@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import isEmpty from 'lodash.isempty';
 import isUndefined from 'lodash.isundefined';
 
-const modify = (text: unknown): string => text.toString().toLowerCase().trim();
+const modify = (text: unknown): string => (text ?? '').toString().toLowerCase().trim();
 
 @Pipe({
   name: 'filter',

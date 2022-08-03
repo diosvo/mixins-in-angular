@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -47,6 +47,7 @@ const DEFAULT_FILTER = {
       display: block;
     }
   }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponentUiComponent implements OnInit {
 

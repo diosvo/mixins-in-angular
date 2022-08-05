@@ -1,12 +1,17 @@
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
+import { SlugifyPipe } from '@lib/pipes/slugify.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
@@ -25,8 +30,25 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSortModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+
+    SlugifyPipe,
+  ],
   styleUrls: ['./custom-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'standard' }
+    },
+  ]
 })
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {

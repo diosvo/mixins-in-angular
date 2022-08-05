@@ -1,8 +1,9 @@
-import { Directive, HostListener, Input, NgModule } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { Required } from '../decorators/required-attribute';
 
 @Directive({
-  selector: '[prevent-keys]'
+  selector: '[prevent-keys]',
+  standalone: true
 })
 export class PreventKeysDirective {
   @Input('prevent-keys') @Required preventKeys: Array<string>;
@@ -13,12 +14,6 @@ export class PreventKeysDirective {
     }
   }
 }
-
-@NgModule({
-  declarations: [PreventKeysDirective],
-  exports: [PreventKeysDirective]
-})
-export class PreventKeysDirectiveModule { }
 
 /** 
  * @usage [prevent-keys]="['-']"

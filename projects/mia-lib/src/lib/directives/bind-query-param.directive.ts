@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Directive, Input, NgModule, OnInit } from '@angular/core';
-import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { Directive, Input, OnInit } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[bindQueryParam]'
+  selector: '[bindQueryParam]',
+  standalone: true
 })
 export class BindQueryParamDirective implements OnInit {
 
@@ -20,14 +20,3 @@ export class BindQueryParamDirective implements OnInit {
   }
 
 }
-
-@NgModule({
-  declarations: [BindQueryParamDirective],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  exports: [BindQueryParamDirective]
-})
-export class BindQueryParamDirectiveModule { }

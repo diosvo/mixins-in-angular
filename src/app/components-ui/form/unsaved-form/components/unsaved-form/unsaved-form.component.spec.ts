@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '@auth/services/auth.service';
-import { AlertModule } from '@lib/components/alert/alert.module';
+import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomInputModule } from '@lib/components/custom-input/custom-input.module';
 import { ERole } from '@lib/models/role';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
@@ -27,7 +27,7 @@ describe('UnsavedFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [UnsavedFormComponent],
       imports: [
-        AlertModule,
+        AlertComponent,
         CustomInputModule,
 
         ReactiveFormsModule,

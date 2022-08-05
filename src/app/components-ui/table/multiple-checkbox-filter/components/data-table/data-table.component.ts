@@ -5,8 +5,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
-import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
+import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
+import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { HttpRequestState } from '@lib/models/server.model';
 import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
 import isEmpty from 'lodash.isempty';
@@ -15,7 +15,6 @@ import { AngularIssue, GithubRepoIssuesService } from '../../service/github-repo
 
 @Component({
   selector: 'app-data-table',
-  templateUrl: './data-table.component.html',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,12 +23,14 @@ import { AngularIssue, GithubRepoIssuesService } from '../../service/github-repo
     MatProgressSpinnerModule,
 
     AlertComponent,
-    CustomTableModule,
+    CustomTableComponent,
     CustomInputComponent,
-    CustomSelectComponent
+    CustomSelectComponent,
+    TableColumnDirective
   ],
   styles: ['@use \'chip\';'],
   providers: [GithubRepoIssuesService],
+  templateUrl: './data-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

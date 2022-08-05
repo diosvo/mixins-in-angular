@@ -1,14 +1,35 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
+import { AuthModule } from '@auth/auth.module';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+
+    AuthModule,
+    CustomButtonModule,
+    TrackByKeyDirective,
+    ConfirmDialogComponent,
+
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule
+  ],
   templateUrl: './toolbar.component.html'
 })
 export class ToolbarComponent {

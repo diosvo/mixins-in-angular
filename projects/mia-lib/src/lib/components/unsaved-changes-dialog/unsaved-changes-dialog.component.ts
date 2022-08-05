@@ -1,10 +1,17 @@
-import { LocationStrategy } from '@angular/common';
+import { CommonModule, LocationStrategy } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'unsaved-changes-dialog',
-  templateUrl: './unsaved-changes-dialog.component.html'
+  templateUrl: './unsaved-changes-dialog.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+  ]
 })
 
 export class UnsavedChangesDialogComponent {

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,8 +8,14 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { ICategory } from '@lib/models/category';
 import { CategoryService } from '@lib/services/category/category.service';
 import { Observable } from 'rxjs';
@@ -16,6 +23,19 @@ import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-advanced-crud',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CustomInputComponent,
+
+    MatIconModule,
+    MatTableModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatPaginatorModule,
+    MatProgressBarModule
+  ],
   templateUrl: './advanced-crud.component.html',
   styleUrls: ['./advanced-crud.component.scss'],
 })

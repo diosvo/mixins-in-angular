@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CardItemComponent } from '@home/components/card-item/card-item.component';
 import { EFunctions, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
-import { AlertModule } from '@lib/components/alert/alert.module';
+import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
@@ -24,13 +24,13 @@ const DEFAULT_FILTER = {
 
 @Component({
   selector: 'app-list-functions',
-  templateUrl: './list-functions.component.html',
   standalone: true,
+  templateUrl: './list-functions.component.html',
   imports: [
     CommonModule,
     ReactiveFormsModule,
 
-    AlertModule,
+    AlertComponent,
     CardItemComponent,
     CustomButtonModule,
     CustomInputComponent,

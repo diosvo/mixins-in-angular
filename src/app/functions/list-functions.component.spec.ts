@@ -12,7 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthModule } from '@auth/auth.module';
-import { AlertModule } from '@lib/components/alert/alert.module';
+import { AlertComponent } from '@lib/components/alert/alert.component';
 import { of } from 'rxjs';
 import { ListFunctionsComponent } from './list-functions.component';
 
@@ -28,7 +28,7 @@ describe.skip('ListFunctionsComponent', () => {
       declarations: [ListFunctionsComponent],
       imports: [
         AuthModule,
-        AlertModule,
+        AlertComponent,
 
         HttpClientModule,
         ReactiveFormsModule,

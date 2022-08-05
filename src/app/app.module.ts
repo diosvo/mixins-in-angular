@@ -7,12 +7,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
+import { FooterComponent } from '@home/components/footer/footer.component';
+import { ToolbarComponent } from '@home/components/toolbar/toolbar.component';
+import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FooterModule } from './home/components/footer/footer.module';
-import { ToolbarModule } from './home/components/toolbar/toolbar.module';
 import { MonitorInterceptor } from './interceptors/monitor.interceptor';
 
 @NgModule({
@@ -25,10 +25,10 @@ import { MonitorInterceptor } from './interceptors/monitor.interceptor';
     AppRoutingModule,
     HttpClientModule,
 
-    FooterModule,
-    ToolbarModule,
+    FooterComponent,
+    ToolbarComponent,
     MatSnackBarModule,
-    UnsavedChangesDialogModule,
+    UnsavedChangesDialogComponent,
 
     /* init firebase config */
     AngularFireModule.initializeApp(environment.firebase),

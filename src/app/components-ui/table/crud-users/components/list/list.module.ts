@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
-import { AlertModule } from '@lib/components/alert/alert.module';
-import { ConfirmDialogModule } from '@lib/components/confirm-dialog/confirm-dialog.module';
+import { AlertComponent } from '@lib/components/alert/alert.component';
+import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
-import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
+import { CustomTableComponent } from '@lib/components/custom-table/custom-table.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { FilterPipe } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { ListComponent } from './list.component';
@@ -22,12 +22,12 @@ import { ListComponent } from './list.component';
     }]),
 
     FilterPipe,
-    AlertModule,
-    CustomTableModule,
+    AlertComponent,
     CustomButtonModule,
-    ConfirmDialogModule,
+    CustomTableComponent,
     TrackByKeyDirective,
     CustomInputComponent,
+    ConfirmDialogComponent,
 
     MatProgressBarModule
   ]

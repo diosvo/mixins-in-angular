@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AlertModule } from '@lib/components/alert/alert.module';
+import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ContentComponent } from '../content/content.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MainPageComponent } from './main-page.component';
@@ -23,7 +23,7 @@ describe('MainPageComponent', () => {
         ContentComponent
       ],
       imports: [
-        AlertModule,
+        AlertComponent,
         MatListModule,
         MatCardModule,
         MatIconModule,

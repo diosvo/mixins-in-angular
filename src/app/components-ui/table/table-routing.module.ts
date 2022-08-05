@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const TABLE_ROUTES: Routes = [
   {
     path: 'multiple-checkbox-filter',
-    loadChildren: () => import('./multiple-checkbox-filter/multiple-checkbox-filter.module').then(({ MultipleCheckboxFilterModule }) => MultipleCheckboxFilterModule)
+    loadComponent: () =>
+      import('./multiple-checkbox-filter/components/data-table/data-table.component').then(({ DataTableComponent }) => DataTableComponent)
   },
   {
     path: 'advanced-crud',
@@ -19,8 +19,3 @@ const routes: Routes = [
     loadChildren: () => import('./view-article-page-state/view-article-page-state.module').then(({ ViewArticlePageStateModule }) => ViewArticlePageStateModule)
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class TableRoutingModule { }

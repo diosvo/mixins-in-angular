@@ -24,7 +24,7 @@ export const COMPONENT_ROUTES: Routes = [
   },
   {
     path: EComponentUI.TABLE,
-    loadChildren: () => import('./table/table.module').then(({ TableModule }) => TableModule)
+    loadChildren: () => import('./table/table-routing.module').then(({ TABLE_ROUTES }) => TABLE_ROUTES)
   },
   {
     path: EComponentUI.FORM,

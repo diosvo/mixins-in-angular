@@ -4,11 +4,11 @@
   </alert-message>
 
   <custom-table
-    *ngIf="state.data"
     [data]="state.data"
+    [length]="1000"
     [columns]="columns"
+    [pageIndex]="index$ | async"
     [defaultSortColumn]="'created_at'"
-    [length]="state.total_count"
     [pageSizeOptions]="[30]"
     [showFirstLastButtons]="true"
     (pageChanges)="pageChanges($event)"
@@ -21,6 +21,7 @@
         placeholder="State"
         formControlName="states"
         [items]="states"
+        [disabled]="state.loading"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -28,6 +29,7 @@
         placeholder="Author"
         formControlName="authors"
         [items]="authors"
+        [disabled]="state.loading"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -36,10 +38,13 @@
         label="search"
         [clearFilter]="true"
         formControlName="query"
+        [disabled]="state.loading"
         placeholder="Find an issue..."
       >
       </custom-input>
     </form>
+
+    <mat-spinner loading *ngIf="state.loading" diameter="50"> </mat-spinner>
 
     <custom-column columnName="created_at">
       <ng-template let-issue>{{ issue.created_at | date }}</ng-template>

@@ -2,11 +2,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 const slideInOut = trigger('slideInOut', [
   transition(':enter', [
-    style({ transform: 'translateX(-100%)' }),
-    animate('200ms ease-in-out', style({ transform: 'translateX(0%)' }))
+    style({ transform: 'translateY(-100%)' }),
+    animate('500ms ease-in-out', style({ transform: 'translateY(0%)' }))
   ]),
   transition(':leave', [
-    animate('200ms ease-in-out', style({ transform: 'translateX(-100%)' }))
+    animate('500ms ease-in-out', style({ transform: 'translateY(-100%)' }))
   ])
 ]);
 

@@ -7,6 +7,12 @@
     @include severity.message-config($-color, $-background);
   }
 
+  &-warning {
+    $-color     : #B95000;
+    $-background: #FFF4EC;
+    @include severity.message-config($-color, $-background);
+  }
+
   &-error {
     $-color     : #DA1414;
     $-background: #FEEFFE;

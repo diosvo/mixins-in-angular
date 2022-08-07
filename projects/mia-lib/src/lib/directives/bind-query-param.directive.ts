@@ -1,22 +1,19 @@
-import { Directive, Input, OnInit } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { Directive, OnInit } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
 
 @Directive({
-  selector: '[bindQueryParam]',
+  selector: '[bindQueryParams]',
   standalone: true
 })
-export class BindQueryParamDirective implements OnInit {
+export class BindQueryParamsDirective implements OnInit {
 
-  @Input('bindQueryParam') paramKey: string;
-
-  constructor(private readonly ngControl: NgControl) { }
+  constructor(private readonly ngControl: ControlContainer) { }
 
   ngOnInit(): void {
-    const queryParams = new URLSearchParams(location.search);
-
-    if (queryParams.has(this.paramKey)) {
-      this.ngControl.control.patchValue(queryParams.get(this.paramKey));
+    if (location.search) {
+      const queryParams = new URLSearchParams(location.search);
+      const value = Object.entries(queryParams.entries());
+      this.ngControl.control.patchValue(value);
     }
   }
-
 }

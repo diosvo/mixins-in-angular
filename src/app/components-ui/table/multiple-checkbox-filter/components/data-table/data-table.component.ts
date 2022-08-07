@@ -2,16 +2,15 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Params } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { HttpRequestState } from '@lib/models/server.model';
-import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
-import isEmpty from 'lodash.isempty';
-import { catchError, combineLatest, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
-import { AngularIssue, GithubRepoIssuesService } from '../../service/github-repo-issues.service';
+import { catchError, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues.service';
 
 @Component({
   selector: 'app-data-table',
@@ -36,9 +35,9 @@ import { AngularIssue, GithubRepoIssuesService } from '../../service/github-repo
 
 export class DataTableComponent implements OnInit {
 
-  state$: Observable<HttpRequestState<AngularIssue>>;
+  state$: Observable<HttpRequestState<Issue>>;
 
-  readonly states = ['open', 'closed'];
+  readonly states = ['is\:open', 'is:\closed'];
   readonly authors = ['none', 'collaborator', 'member'];
 
   columns: TableColumn[] = [
@@ -48,13 +47,12 @@ export class DataTableComponent implements OnInit {
     { key: 'number', flex: '10%' },
     { key: 'title', flex: '50%' },
   ];
-  filterForm = this.fb.group({
+  protected form = this.fb.group({
     query: [''],
-    states: [[]],
+    states: [this.states],
     authors: [[]],
   });
-
-  private index$ = new Subject<number>();
+  private params$ = new Subject<Params>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -62,45 +60,20 @@ export class DataTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const filters$ = this.filterForm.valueChanges.pipe(
-      startWith(this.filterForm.value)
-    );
-    const data$ = this.index$.pipe(
-      startWith(0),
-      switchMap((page: number) => this.service.getRepoIssues(page).pipe(
-        map(({ items }) => {
-          if (isEmpty(items)) {
-            return [];
-          }
-          return {
-            data: items,
-            loading: false,
-            total_count: 1000
-          };
-        }),
-        catchError(({ message }) => of({ message, loading: false })),
-        shareReplay(1),
-        startWith({ data: [], loading: true })
-      )),
-    ) as Observable<HttpRequestState<AngularIssue>>;
-
-    this.state$ = combineLatest([data$, filters$]).pipe(
-      map(([state, params]) => ({
-        ...state,
-        data: state.data
-          .filter((item: AngularIssue) => {
-            const states = isEmpty(params.states) ? this.states : params.states;
-            const authors = isEmpty(params.authors) ? this.authors : params.authors;
-
-            return new FilterObjectPipe().transform(item, params.query)
-              && states.includes(item.state)
-              && authors.includes(item.author_association.toLowerCase());
-          })
-      }))
+    this.state$ = this.params$.pipe(
+      startWith({ page: '0', ...this.form.value }),
+      switchMap(({ page, ...rest }) => {
+        return this.service.getRepoIssues({ page, ...rest }).pipe(
+          map(({ items }) => ({ data: items, loading: false })),
+          catchError(({ message }) => of({ message, loading: false })),
+          startWith({ data: [], loading: true }),
+          shareReplay(1),
+        );
+      }),
     );
   }
 
   pageChanges({ pageIndex }): void {
-    this.index$.next(pageIndex);
+    this.params$.next({ page: pageIndex.toString(), ...this.form.value });
   }
 }

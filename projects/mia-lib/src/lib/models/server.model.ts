@@ -1,12 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { pipe, startWith } from 'rxjs';
 
-interface HttpRequestState<T> {
+interface RequestState<T> {
   data: T[];
-  loading?: boolean;
-  total_count?: number;
-  message?: HttpErrorResponse | Error;
+  loading: boolean;
+  total_count: number;
+  message: HttpErrorResponse | Error;
 }
+
+type HttpRequestState<T> = Partial<RequestState<T>>
 
 const DEFAULT_STATE = {
   data: null,

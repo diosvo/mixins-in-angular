@@ -7,16 +7,15 @@
     [data]="state.data"
     [length]="1000"
     [columns]="columns"
-    [pageIndex]="index$ | async"
     [defaultSortColumn]="'created_at'"
     [pageSizeOptions]="[30]"
     [showFirstLastButtons]="true"
     (pageChanges)="pageChanges($event)"
     [style]="{ 'max-height': '300px' }"
   >
-    <h2 header>Github: Angular Issues</h2>
+    <h2 header>Github Issues</h2>
 
-    <form filters [formGroup]="filterForm" class="d-flex gap-1 width-100">
+    <form filters [formGroup]="form" class="d-flex gap-1 width-100">
       <custom-select
         placeholder="State"
         formControlName="states"

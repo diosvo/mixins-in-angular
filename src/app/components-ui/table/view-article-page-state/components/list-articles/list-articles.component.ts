@@ -1,23 +1,47 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { AlertComponent } from '@lib/components/alert/alert.component';
+import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
+import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { FilterPipe } from '@lib/pipes/filter.pipe';
+import { LineBreakPipe } from '@lib/pipes/line-break.pipe';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
-import { catchError, Observable, Subject, takeUntil, throwError } from 'rxjs';
-import { ViewArticleState } from '../../models/article.model';
+import { catchError, Observable, Subject, throwError } from 'rxjs';
+import { Article } from '../../models/article.model';
 import { ViewArticleStateService } from '../../services/view-article-state.service';
 
 @Component({
   selector: 'app-list-articles',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+
+    AlertComponent,
+    CustomButtonModule,
+    CustomTableComponent,
+    CustomInputComponent,
+
+    FilterPipe,
+    LineBreakPipe,
+    TableColumnDirective,
+
+    MatProgressBarModule
+  ],
   templateUrl: './list-articles.component.html',
   providers: [ViewArticleStateService]
 })
 export class ListArticlesComponent implements OnInit {
 
-  state$: Observable<ViewArticleState>;
-  errorMessage$ = new Subject<string>();
+  protected state$: Observable<Article[]>;
+  protected errorMessage$ = new Subject<string>();
 
-  query = new FormControl('');
+  protected query = new FormControl('');
 
   columns: Array<TableColumn> = [
     { key: 'userId', flex: '10%', header: 'user id' },
@@ -35,23 +59,14 @@ export class ListArticlesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getState();
-    this.updateParams();
   }
 
   private getState(): void {
-    this.state$ = this.service.state$.pipe(
+    this.state$ = this.service.articles.pipe(
       catchError(({ message }) => {
         this.errorMessage$.next(message);
         return throwError(() => new Error(message));
       })
     );
-  }
-
-  private updateParams(): void {
-    this.route.queryParams
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (params: Record<string, string>) => this.service.updateStateFromQueryParams(params)
-      });
   }
 }

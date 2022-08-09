@@ -3,44 +3,42 @@
 </ng-container>
 
 <ng-template #noError>
-  <ng-container *ngIf="state$ | async as state">
-    <ng-container *ngIf="state.loading; else getData">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </ng-container>
+  <ng-container *ngIf="state$ | async as state; else loadingTemplate">
+    <custom-table
+      [data]="state | filter: query.value"
+      [columns]="columns"
+      [pageSizeOptions]="[3, 5, 10, 20]"
+    >
+      <div header class="d-flex ai-baseline jc-between">
+        <h2>List Articles</h2>
+        <custom-button [routerLink]="['create']">Create</custom-button>
+      </div>
 
-    <ng-template #getData>
-      <custom-table
-        [data]="state.articles | filter: query.value"
-        [columns]="columns"
-        [pageSizeOptions]="[10, 25, 50, 100]"
-      >
-        <div header class="d-flex ai-baseline jc-between">
-          <h2>List Articles</h2>
-          <custom-button [routerLink]="['create']">Create</custom-button>
-        </div>
+      <div filters>
+        <custom-input
+          label="Search"
+          [formControl]="query"
+          [clearFilter]="true"
+        ></custom-input>
+      </div>
 
-        <div filters>
-          <custom-input
-            label="Search"
-            [formControl]="query"
-            [clearFilter]="true"
-          ></custom-input>
-        </div>
+      <custom-column columnName="body">
+        <ng-template let-article>
+          <div [innerHTML]="article.body | lineBreak"></div>
+        </ng-template>
+      </custom-column>
 
-        <custom-column columnName="body">
-          <ng-template let-article>
-            <div [innerHTML]="article.body | lineBreak"></div>
-          </ng-template>
-        </custom-column>
-
-        <custom-column columnName="actions">
-          <ng-template let-article>
-            <custom-button type="icon" [routerLink]="[article.id]">
-              edit
-            </custom-button>
-          </ng-template>
-        </custom-column>
-      </custom-table>
-    </ng-template>
+      <custom-column columnName="actions">
+        <ng-template let-article>
+          <custom-button type="icon" [routerLink]="[article.id]">
+            edit
+          </custom-button>
+        </ng-template>
+      </custom-column>
+    </custom-table>
   </ng-container>
+
+  <ng-template #loadingTemplate>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
 </ng-template>

@@ -19,6 +19,6 @@ export const TABLE_ROUTES: Routes = [
   },
   {
     path: 'view-article-page-state',
-    loadChildren: () => import('./view-article-page-state/view-article-page-state.module').then(({ ViewArticlePageStateModule }) => ViewArticlePageStateModule)
+    loadChildren: () => import('./view-article-page-state/view-article-page-state.module').then(({ ARTICLES_ROUTES }) => ARTICLES_ROUTES)
   },
 ];

@@ -10,6 +10,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Required } from '@lib/decorators/required-attribute';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { SlugifyPipe } from '@lib/pipes/slugify.pipe';
 import isEmpty from 'lodash.isempty';
@@ -55,13 +56,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() set data(source: T[]) {
-    this.setDataSource(source);
-    this.configPaginator();
-    this.source.sort = this.matSort;
-  }
+  @Input() @Required data: T[];
   @Input() trackByKey: string;
-  @Input() columns: TableColumn[] = [];
+  @Input() @Required columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
 
   /** Styles */
@@ -79,7 +76,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() length: number;
   @Input() pageSize: number;
   @Input() pageIndex = 0;
-  @Input() pageSizeOptions: Array<number>;
+  @Input() pageSizeOptions: number[];
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -109,11 +106,16 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: string[];
 
-  readonly DEFAULT_PAGESIZE = 5;
-  source = new MatTableDataSource<T>([]);
-  selection = new SelectionModel<T>(true, []); // store selection data
+  protected readonly DEFAULT_PAGESIZE = 5;
+  protected source = new MatTableDataSource<T>([]);
+  protected selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
+    if (changes.data && changes.data.currentValue) {
+      this.setDataSource(changes.data.currentValue);
+      this.configPaginator();
+      this.source.sort = this.matSort;
+    }
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }

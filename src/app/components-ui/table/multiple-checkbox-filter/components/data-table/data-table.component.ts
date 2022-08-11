@@ -27,7 +27,7 @@ import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues
     CustomSelectComponent,
     TableColumnDirective
   ],
-  styles: ['@use \'chip\';'],
+  styleUrls: ['./data-table.component.scss'],
   providers: [GithubRepoIssuesService],
   templateUrl: './data-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

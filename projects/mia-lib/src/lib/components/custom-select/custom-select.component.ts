@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
@@ -37,7 +37,8 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
       useExisting: CustomSelectComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
 
@@ -54,8 +55,8 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() searchPlaceholder = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
-  private primitiveItems: T[];
   protected allow = false;
+  protected primitiveItems: T[];
   protected query = new FormControl('');
 
   constructor(

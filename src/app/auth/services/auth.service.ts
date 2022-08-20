@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { ERole, TRole } from '@lib/models/role';
-import { BehaviorSubject, from, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, from, Observable, switchMap, take } from 'rxjs';
 
 import firebase from 'firebase/compat/app';
 import auth = firebase.auth;
@@ -57,6 +57,7 @@ export class AuthService {
 
   emailSignIn({ email, password }): Observable<void> {
     return from(this.afa.signInWithEmailAndPassword(email, password)).pipe(
+      take(1),
       switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
     );
   }
@@ -64,6 +65,7 @@ export class AuthService {
   googleSignIn(): Observable<void> {
     const provider = new auth.GoogleAuthProvider();
     return from(this.afa.signInWithPopup(provider)).pipe(
+      take(1),
       switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
     );
   }

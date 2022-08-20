@@ -10,24 +10,28 @@
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>
-  <a
-    title="Login"
-    mat-icon-button
-    *ngIf="(authService.isLoggedIn$ | async) === false"
-    class="text-white"
-    data-toggle="tooltip"
-    (click)="openLoginDialog()"
-  >
-    <mat-icon>public</mat-icon>
-  </a>
-  <a
-    title="Logged In"
-    mat-icon-button
-    *ngIf="authService.isLoggedIn$ | async"
-    class="text-white"
-    data-toggle="tooltip"
-    (click)="openLogoutDialog()"
-  >
-    <mat-icon>vpn_lock</mat-icon>
-  </a>
+  <ng-container *ngIf="loggedIn$ | async; else loginIcon">
+    <a
+      title="Logged In"
+      mat-icon-button
+      class="text-white"
+      data-toggle="tooltip"
+      (click)="openLogoutDialog()"
+    >
+      <mat-icon aria-hidden="false" aria-label="Logged In">
+        person_outline
+      </mat-icon>
+    </a>
+  </ng-container>
+  <ng-template #loginIcon>
+    <a
+      title="Login"
+      mat-icon-button
+      class="text-white"
+      data-toggle="tooltip"
+      (click)="openLoginDialog()"
+    >
+      <mat-icon aria-hidden="false" aria-label="Login">fingerprint</mat-icon>
+    </a>
+  </ng-template>
 </mat-toolbar>

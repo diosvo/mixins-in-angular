@@ -34,11 +34,13 @@ import { filter, take } from 'rxjs';
 })
 export class ToolbarComponent {
 
+  readonly loggedIn$ = this.authService.isLoggedIn$;
+
   readonly navigation = Object.values(EUrl);
 
   constructor(
     private readonly router: Router,
-    readonly authService: AuthService,
+    private readonly authService: AuthService,
     private readonly dialog: MatDialog,
   ) { }
 

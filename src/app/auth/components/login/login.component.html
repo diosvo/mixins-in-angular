@@ -1,6 +1,11 @@
 <form [formGroup]="form">
   <ng-container *ngIf="[mode.REGISTER, mode.LOGIN].includes(mode$.value)">
-    <button mat-raised-button class="width-100" [disabled]="loading">
+    <button
+      mat-raised-button
+      class="width-100"
+      [disabled]="loading"
+      (click)="googleSignIn()"
+    >
       <img
         width="16"
         class="mr-2"

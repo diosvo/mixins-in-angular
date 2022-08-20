@@ -84,4 +84,10 @@ export class LoginComponent {
         error: ({ message }) => this.snackbar.error(message)
       });
   }
+
+  googleSignIn(): void {
+    this.service.googleSignIn().subscribe({
+      next: () => this.dialogRef.close()
+    });
+  }
 }

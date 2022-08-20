@@ -28,7 +28,7 @@ export class SearchService {
       map(([data, params]) => {
         const filtered = data.filter((item: CardItem) => {
           const byGroup = (isEmpty(params.group) ? selection : params.group).includes(item.group_id);
-          const byQuery = new FilterObjectPipe().transform(item, params.query);
+          const byQuery = new FilterObjectPipe().transform(item.name, params.query);
           return byGroup && byQuery;
         });
         return {

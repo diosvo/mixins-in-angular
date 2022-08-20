@@ -3,17 +3,24 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardItem } from '@home/services/search.service';
 import { Required } from '@lib/decorators/required-attribute';
+import { HighlightDirective } from '@lib/directives/highlight.directive';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 
 @Component({
   selector: 'card-item',
   standalone: true,
-  imports: [CommonModule, TrackByKeyDirective],
+  imports: [
+    CommonModule,
+    HighlightDirective,
+    TrackByKeyDirective
+  ],
   styleUrls: ['./card-item.component.scss'],
   templateUrl: './card-item.component.html',
 })
 export class CardItemComponent {
+
   @Input() @Required data: CardItem[];
+  @Input() searchTerm: string;
 
   constructor(
     private readonly router: Router,

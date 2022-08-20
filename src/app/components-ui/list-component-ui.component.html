@@ -49,7 +49,7 @@
 
   <ng-container *ngIf="state.data">
     <ng-container *ngIf="state.data.length > 0; else notFound">
-      <card-item [data]="state.data"></card-item>
+      <card-item [data]="state.data" [searchTerm]="query.value"></card-item>
     </ng-container>
 
     <ng-template #notFound>

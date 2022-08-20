@@ -6,7 +6,11 @@
     >
       <div>
         <span class="f-12 text-secondary mb-1"> #{{ item.group_id }} </span>
-        <div class="f-16">{{ item.name | titlecase }}</div>
+        <div
+          class="f-16"
+          [highlight]="searchTerm"
+          [innerText]="item.name | titlecase"
+        ></div>
       </div>
     </div>
   </ng-container>

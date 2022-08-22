@@ -4,7 +4,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomTableComponent } from '@lib/components/custom-table/custom-table.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
@@ -23,7 +23,7 @@ import { ListComponent } from './list.component';
 
     FilterPipe,
     AlertComponent,
-    CustomButtonModule,
+    CustomButtonComponent,
     CustomTableComponent,
     TrackByKeyDirective,
     CustomInputComponent,

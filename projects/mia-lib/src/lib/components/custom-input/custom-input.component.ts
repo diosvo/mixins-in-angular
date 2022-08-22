@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, forwardRef, Injector, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { FloatLabelType, MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { DisableControlDirective } from '@lib/directives/disable-control.directive';
-import { CustomButtonModule } from '../custom-button/custom-button.module';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
@@ -15,10 +15,9 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
     CommonModule,
     ReactiveFormsModule,
 
-    CustomButtonModule,
-    DisableControlDirective,
-
     MatInputModule,
+    MatButtonModule,
+    MatIconModule,
     MatFormFieldModule,
   ],
   providers: [

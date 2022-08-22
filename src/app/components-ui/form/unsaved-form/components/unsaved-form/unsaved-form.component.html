@@ -27,14 +27,14 @@
       "
       class="d-flex jc-flex-end"
     >
-      <button
-        mat-flat-button
-        color="primary"
+      <custom-button
+        variant="flat"
         (click)="saveChanges()"
         [disabled]="!hasChanged || name.invalid"
       >
         Update
-      </button>
+        <ng-template loader> Saving ... </ng-template>
+      </custom-button>
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { IProduct } from '@lib/models/product';
 import { ProductsService } from '@lib/services/products/products.service';
 import { combineLatest } from 'rxjs';
@@ -13,7 +13,7 @@ import { filter, map, tap } from 'rxjs/operators';
   imports: [
     CommonModule,
     RouterModule,
-    CustomButtonModule,
+    CustomButtonComponent,
   ],
   templateUrl: './content.component.html'
 })

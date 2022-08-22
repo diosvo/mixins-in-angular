@@ -8,7 +8,7 @@ import { CardItemComponent } from '@home/components/card-item/card-item.componen
 import { EComponentUI, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
 import { AlertComponent } from '@lib/components/alert/alert.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { HttpRequestState } from '@lib/models/server.model';
@@ -31,7 +31,7 @@ const DEFAULT_FILTER = {
 
     AlertComponent,
     CardItemComponent,
-    CustomButtonModule,
+    CustomButtonComponent,
     CustomInputComponent,
     CustomSelectComponent,
 

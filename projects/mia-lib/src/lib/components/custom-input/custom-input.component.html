@@ -11,17 +11,16 @@
     autocomplete="off"
     [readonly]="readonly"
     [formControl]="control"
-    [disableControl]="disabled"
     [placeholder]="placeholder"
   />
   <ng-container *ngIf="clearFilter" matSuffix>
-    <custom-button
-      type="icon"
+    <button
+      mat-icon-button
       *ngIf="control.value !== EMPTY_VALUE"
       (click)="control.setValue(EMPTY_VALUE)"
     >
-      clear
-    </custom-button>
+      <mat-icon>clear</mat-icon>
+    </button>
   </ng-container>
   <ng-container matSuffix>
     <ng-content select="[suffix]"></ng-content>

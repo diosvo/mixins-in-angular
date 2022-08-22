@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
@@ -23,7 +23,7 @@ import { ViewArticleStateService } from '../../services/view-article-state.servi
     RouterModule,
 
     AlertComponent,
-    CustomButtonModule,
+    CustomButtonComponent,
     CustomTableComponent,
     CustomInputComponent,
 

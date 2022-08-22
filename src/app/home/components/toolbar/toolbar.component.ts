@@ -10,7 +10,7 @@ import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { filter, take } from 'rxjs';
 
@@ -22,7 +22,7 @@ import { filter, take } from 'rxjs';
     RouterModule,
 
     AuthModule,
-    CustomButtonModule,
+    CustomButtonComponent,
     TrackByKeyDirective,
     ConfirmDialogComponent,
 

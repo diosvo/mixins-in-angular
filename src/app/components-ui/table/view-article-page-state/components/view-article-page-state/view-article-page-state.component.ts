@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent } from '@lib/components/custom-table/custom-table.component';
@@ -20,7 +20,7 @@ import { ViewArticleStateService } from '../../services/view-article-state.servi
 
     AlertComponent,
     LineBreakPipe,
-    CustomButtonModule,
+    CustomButtonComponent,
     CustomTableComponent,
     CustomInputComponent,
     TableColumnDirective,

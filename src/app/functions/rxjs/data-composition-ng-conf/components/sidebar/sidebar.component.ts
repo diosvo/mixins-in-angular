@@ -4,7 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EFunctions, EUrl } from '@home/models/url.enum';
 import { AlertComponent } from '@lib/components/alert/alert.component';
-import { CustomButtonModule } from '@lib/components/custom-button/custom-button.module';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { ProductsService } from '@lib/services/products/products.service';
 import { catchError, Subject, throwError } from 'rxjs';
 
@@ -17,7 +17,7 @@ import { catchError, Subject, throwError } from 'rxjs';
     MatProgressSpinnerModule,
 
     AlertComponent,
-    CustomButtonModule,
+    CustomButtonComponent,
   ],
   templateUrl: './sidebar.component.html'
 })

@@ -18,11 +18,10 @@ button {
   &-pointer:hover {
     cursor: pointer;
   }
-}
 
-.disable {
-  cursor : not-allowed !important;
-  opacity: .7;
+  &-prevent:hover {
+    cursor: not-allowed;
+  }
 }
 
 .btn {

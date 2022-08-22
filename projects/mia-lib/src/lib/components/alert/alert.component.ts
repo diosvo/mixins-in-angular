@@ -3,7 +3,6 @@ import { Attribute, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MessageType } from '@lib/services/snackbar/snackbar.service';
 
-
 @Component({
   selector: 'alert-message',
   standalone: true,

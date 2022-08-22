@@ -14,13 +14,13 @@
     [placeholder]="placeholder"
   />
   <ng-container *ngIf="clearFilter" matSuffix>
-    <button
-      mat-icon-button
+    <custom-button
       *ngIf="control.value !== EMPTY_VALUE"
       (click)="control.setValue(EMPTY_VALUE)"
+      variant="icon"
     >
-      <mat-icon>clear</mat-icon>
-    </button>
+      <ng-container icon>clear</ng-container>
+    </custom-button>
   </ng-container>
   <ng-container matSuffix>
     <ng-content select="[suffix]"></ng-content>

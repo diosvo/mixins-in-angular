@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ButtonLoaderIconDirective } from './button-loader-icon.directive';
 
-type ButtonType = 'basic' | 'flat' | 'outline';
+type ButtonType = 'basic' | 'flat' | 'outline' | 'icon';
 
 @Component({
   selector: 'custom-button',

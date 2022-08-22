@@ -17,6 +17,7 @@ import { MessageType } from '@lib/services/snackbar/snackbar.service';
 export class AlertComponent {
 
   constructor(
-    @Attribute('type') public type: MessageType
+    @Attribute('type') readonly type: MessageType
   ) { }
+
 }

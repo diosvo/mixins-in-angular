@@ -1,14 +1,39 @@
-<ng-container
-  *ngComponentOutlet="buttonComponentType; content: [[buttonContent]]"
-></ng-container>
+<ng-container [ngSwitch]="variant">
+  <button *ngSwitchCase="'basic'" mat-button [disabled]="disabled || loading">
+    <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+  </button>
+  <button
+    *ngSwitchCase="'flat'"
+    mat-flat-button
+    color="primary"
+    [disabled]="disabled || loading"
+  >
+    <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+  </button>
+  <button
+    *ngSwitchCase="'outline'"
+    mat-stroked-button
+    [disabled]="disabled || loading"
+  >
+    <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+  </button>
+</ng-container>
 
-<div #buttonContent>
-  <ng-content></ng-content>
-</div>
-
-<!-- 
-buttonComponentType: which holds the component that we want to instantiate
-content: which takes a list of nodes to inject into ng-content element/s inside the component
-(the type is any[][]: we can inject more than one node (text, div, span,..) elements into the component)
-buttonContent: local variables that references the div element
- -->
+<!-- base template -->
+<ng-template #buttonTemplate>
+  <!-- default label -->
+  <ng-container *ngIf="!loading; else loadingTemplate">
+    <ng-content></ng-content>
+  </ng-container>
+  <ng-template #loadingTemplate>
+    <!-- passed template while loading -->
+    <ng-container
+      *ngTemplateOutlet="icon?.template || defaultLoader"
+    ></ng-container>
+    <ng-template #defaultLoader>
+      <mat-icon>
+        <mat-spinner diameter="20" color="accent"> </mat-spinner>
+      </mat-icon>
+    </ng-template>
+  </ng-template>
+</ng-template>

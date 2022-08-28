@@ -24,12 +24,14 @@ export class CustomButtonComponent {
 
   @Input() disabled = false;
   @Input() loading = false;
+  @Input() iconClass: string;
+  @Input() buttonClass: string;
 
   @ContentChild(ButtonLoaderIconDirective)
   protected readonly icon: ButtonLoaderIconDirective;
 
   constructor(
-    @Attribute('variant') readonly variant: ButtonType = 'flat'
+    @Attribute('variant') readonly variant: ButtonType
   ) { }
 }
 

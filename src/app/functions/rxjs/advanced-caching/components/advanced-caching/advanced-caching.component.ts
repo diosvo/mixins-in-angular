@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
 import { slideInOut } from '@lib/animations/animations';
 import { AlertComponent } from '@lib/components/alert/alert.component';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { LineBreakPipe } from '@lib/pipes/line-break.pipe';
@@ -18,13 +18,13 @@ import { Joke, JokesService } from '../../services/jokes.service';
     CommonModule,
     RouterModule,
 
+    MatProgressBarModule,
+
     LineBreakPipe,
     AlertComponent,
     TableColumnDirective,
     CustomTableComponent,
-
-    MatIconModule,
-    MatButtonModule,
+    CustomButtonComponent,
   ],
   animations: [slideInOut],
   templateUrl: './advanced-caching.component.html',

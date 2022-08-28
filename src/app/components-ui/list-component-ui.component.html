@@ -11,15 +11,17 @@
     <mat-expansion-panel expanded>
       <!-- Header -->
       <mat-expansion-panel-header>
-        <mat-panel-title> Represent distinct UI elements. </mat-panel-title>
+        <mat-panel-title class="f-14">
+          Represent distinct UI elements.
+        </mat-panel-title>
         <mat-panel-description class="jc-flex-end">
-          <!-- <custom-button
-            type="icon"
+          <custom-button
+            variant="icon"
             (click)="cleanFilters()"
             *ngIf="clearAllIconActive()"
           >
-            clear_all
-          </custom-button> -->
+            <ng-container icon>clear_all</ng-container>
+          </custom-button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 

@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthModule } from '@auth/auth.module';
@@ -22,12 +20,10 @@ import { filter, take } from 'rxjs';
     RouterModule,
 
     AuthModule,
-    CustomButtonComponent,
     TrackByKeyDirective,
+    CustomButtonComponent,
     ConfirmDialogComponent,
 
-    MatIconModule,
-    MatButtonModule,
     MatToolbarModule
   ],
   templateUrl: './toolbar.component.html'

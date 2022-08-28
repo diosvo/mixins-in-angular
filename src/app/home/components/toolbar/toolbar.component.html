@@ -2,38 +2,26 @@
   <ng-container *ngFor="let item of navigation; trackByKey">
     <custom-button
       variant="basic"
-      class="opacity-0.8"
-      routerLinkActive="opacity-1"
+      class="opacity-0.5"
       [routerLink]="['/', item]"
+      routerLinkActive="opacity-1"
     >
-      <span class="mr-1">
-        {{ item === "components-ui" ? "Components" : (item | titlecase) }}
-      </span>
+      {{ item | titlecase }}
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>
   <ng-container *ngIf="loggedIn$ | async; else loginIcon">
-    <a
-      title="Logged In"
-      mat-icon-button
-      class="text-white"
-      data-toggle="tooltip"
-      (click)="openLogoutDialog()"
-    >
-      <mat-icon aria-hidden="false" aria-label="Logged In">
-        person_outline
-      </mat-icon>
-    </a>
+    <custom-button variant="icon" (click)="openLogoutDialog()">
+      <ng-container icon>person_outline</ng-container>
+    </custom-button>
   </ng-container>
   <ng-template #loginIcon>
-    <a
-      title="Login"
-      mat-icon-button
-      class="text-white"
-      data-toggle="tooltip"
+    <custom-button
+      variant="icon"
+      buttonClass="text-white"
       (click)="openLoginDialog()"
     >
-      <mat-icon aria-hidden="false" aria-label="Login">fingerprint</mat-icon>
-    </a>
+      <ng-container icon>fingerprint</ng-container>
+    </custom-button>
   </ng-template>
 </mat-toolbar>

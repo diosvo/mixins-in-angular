@@ -12,16 +12,16 @@
       <mat-expansion-panel>
         <!-- Header -->
         <mat-expansion-panel-header>
-          <mat-panel-title>
+          <mat-panel-title class="f-14" [style.flex-grow]="2">
             Reactive programming with RxJS 7.5+, ...
           </mat-panel-title>
           <mat-panel-description class="jc-flex-end">
             <custom-button
-              type="icon"
+              variant="icon"
               (click)="cleanFilters()"
               *ngIf="clearAllIconActive()"
             >
-              clear_all
+              <ng-container icon>clear_all</ng-container>
             </custom-button>
           </mat-panel-description>
         </mat-expansion-panel-header>

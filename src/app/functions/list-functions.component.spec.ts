@@ -1,7 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,7 +35,6 @@ describe.skip('ListFunctionsComponent', () => {
 
         MatIconModule,
         MatInputModule,
-        MatButtonModule,
         MatSelectModule,
         MatTooltipModule,
         MatExpansionModule,

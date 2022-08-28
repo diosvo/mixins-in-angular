@@ -11,13 +11,19 @@
     <ng-container *ngIf="products$ | async as products; else loadingTmpl">
       <div class="d-flex jc-between">
         <h3 [style.margin.rem]="0">List of Products</h3>
-        <custom-button type="icon" (click)="onRefresh()">refresh</custom-button>
+        <custom-button
+          variant="icon"
+          iconClass="text-secondary"
+          (click)="onRefresh()"
+        >
+          <ng-container icon>refresh</ng-container>
+        </custom-button>
       </div>
 
       <ng-container *ngFor="let product of products">
         <custom-button
-          type="text"
-          class="d-block mb-1 text-secondary"
+          variant="basic"
+          class="d-block text-secondary"
           routerLinkActive="text-black"
           [routerLink]="[
             '/functions/rxjs/data-composition-ng-conf/',

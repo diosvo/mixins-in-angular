@@ -11,7 +11,9 @@
     >
       <div header class="d-flex ai-baseline jc-between">
         <h2>List Articles</h2>
-        <custom-button [routerLink]="['create']">Create</custom-button>
+        <custom-button variant="flat" [routerLink]="['create']">
+          Create
+        </custom-button>
       </div>
 
       <div filters>
@@ -30,8 +32,8 @@
 
       <custom-column columnName="actions">
         <ng-template let-article>
-          <custom-button type="icon" [routerLink]="[article.id]">
-            edit
+          <custom-button variant="icon" [routerLink]="[article.id]">
+            <ng-container icon>edit</ng-container>
           </custom-button>
         </ng-template>
       </custom-column>

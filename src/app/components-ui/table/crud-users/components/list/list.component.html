@@ -37,11 +37,11 @@
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
-        <custom-button type="icon" [routerLink]="[user.id]">
-          edit
+        <custom-button variant="icon" [routerLink]="[user.id]">
+          <ng-container icon>edit</ng-container>
         </custom-button>
-        <custom-button type="icon" (click)="openConfirmDialog(user)">
-          delete_outline
+        <custom-button variant="icon" (click)="openConfirmDialog(user)">
+          <ng-container icon>delete_outline</ng-container>
         </custom-button>
       </ng-template>
     </custom-column>

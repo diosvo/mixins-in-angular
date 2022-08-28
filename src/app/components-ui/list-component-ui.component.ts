@@ -55,8 +55,8 @@ export class ListComponentUiComponent implements OnInit {
 
   readonly selection = groupList;
   form = this.fb.group({
-    query: [DEFAULT_FILTER.query],
-    group: [DEFAULT_FILTER.group]
+    query: ['', { nonNullable: true }],
+    group: [[], { nonNullable: true }]
   });
 
   constructor(
@@ -74,7 +74,7 @@ export class ListComponentUiComponent implements OnInit {
    */
 
   cleanFilters(): void {
-    this.form.setValue(DEFAULT_FILTER);
+    this.form.reset();
   }
 
   clearAllIconActive(): boolean {

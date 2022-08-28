@@ -1,11 +1,17 @@
 <ng-container [ngSwitch]="variant">
-  <button *ngSwitchCase="'basic'" mat-button [disabled]="disabled || loading">
+  <button
+    *ngSwitchCase="'basic'"
+    mat-button
+    [class]="buttonClass"
+    [disabled]="disabled || loading"
+  >
     <ng-container *ngTemplateOutlet="baseTemplate"></ng-container>
   </button>
   <button
     *ngSwitchCase="'flat'"
     mat-flat-button
     color="primary"
+    [class]="buttonClass"
     [disabled]="disabled || loading"
   >
     <ng-container *ngTemplateOutlet="baseTemplate"></ng-container>
@@ -13,6 +19,7 @@
   <button
     *ngSwitchCase="'outline'"
     mat-stroked-button
+    [class]="buttonClass"
     [disabled]="disabled || loading"
   >
     <ng-container *ngTemplateOutlet="baseTemplate"></ng-container>
@@ -20,6 +27,7 @@
   <button
     *ngSwitchCase="'icon'"
     mat-icon-button
+    [class]="buttonClass"
     [disabled]="disabled || loading"
   >
     <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
@@ -27,11 +35,7 @@
 </ng-container>
 
 <ng-template #baseTemplate>
-  <!-- default label -->
-  <ng-container *ngIf="!loading; else loadingTemplate">
-    <ng-content></ng-content>
-  </ng-container>
-  <ng-template #loadingTemplate>
+  <ng-container *ngIf="loading; else notLoading">
     <!-- passed template while loading -->
     <ng-container
       *ngTemplateOutlet="icon?.template || defaultLoader"
@@ -41,11 +45,15 @@
         <mat-spinner diameter="20" color="accent"> </mat-spinner>
       </mat-icon>
     </ng-template>
+  </ng-container>
+  <ng-template #notLoading>
+    <!-- default label -->
+    <ng-content></ng-content>
   </ng-template>
 </ng-template>
 
 <ng-template #iconTemplate>
-  <mat-icon class="text-secondary">
+  <mat-icon [class]="iconClass">
     <ng-content select="[icon]"> </ng-content>
   </mat-icon>
 </ng-template>

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { HasPermissionDirective } from '@auth/utils/has-permission.directive';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ButtonLoaderIconDirective } from '@lib/components/custom-button/button-loader-icon.directive';
@@ -22,8 +21,6 @@ import { UnsavedFormRoutingModule } from './unsaved-form-routing.module';
     CustomButtonComponent,
     HasPermissionDirective,
     ButtonLoaderIconDirective,
-
-    MatButtonModule,
   ]
 })
 export class UnsavedFormModule { }

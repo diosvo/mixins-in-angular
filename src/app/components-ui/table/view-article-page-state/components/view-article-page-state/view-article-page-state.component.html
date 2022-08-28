@@ -17,8 +17,8 @@
               <span class="text-error mr-1">#{{ state.article.id }}</span>
               <span>{{ state.article.title }}</span>
             </h2>
-            <custom-button type="icon" [routerLink]="['..']">
-              list_alt
+            <custom-button variant="icon" [routerLink]="['..']">
+              <ng-container icon>list_alt</ng-container>
             </custom-button>
           </div>
           <small class="text-secondary">{{ state.article.body }}</small>

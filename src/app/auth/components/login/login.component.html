@@ -1,9 +1,9 @@
 <form [formGroup]="form">
   <ng-container *ngIf="[mode.REGISTER, mode.LOGIN].includes(mode$.value)">
-    <button
-      mat-raised-button
-      class="width-100"
+    <custom-button
+      variant="outline"
       [disabled]="loading"
+      buttonClass="width-100"
       (click)="googleSignIn()"
     >
       <img
@@ -15,7 +15,7 @@
       <span>
         Sign {{ mode$.value === mode.LOGIN ? "in" : "up" }} with Google
       </span>
-    </button>
+    </custom-button>
     <hr />
   </ng-container>
 
@@ -31,8 +31,15 @@
       [type]="hidePassword ? 'password' : 'text'"
       formControlName="password"
     >
-      <custom-button suffix type="icon" (click)="hidePassword = !hidePassword">
-        {{ hidePassword ? "visibility_off" : "visibility" }}
+      <custom-button
+        suffix
+        variant="icon"
+        iconClass="text-secondary"
+        (click)="hidePassword = !hidePassword"
+      >
+        <ng-container icon>
+          {{ hidePassword ? "visibility_off" : "visibility" }}
+        </ng-container>
       </custom-button>
     </custom-input>
 
@@ -55,24 +62,21 @@
 
     <!-- Buttons -->
     <div class="width-100">
-      <button
-        mat-flat-button
-        color="primary"
-        class="width-100"
+      <custom-button
+        variant="flat"
+        buttonClass="width-100"
         (click)="onAction()"
+        [loading]="loading"
         [disabled]="form.invalid || loading"
       >
-        <ng-container *ngIf="!loading" [ngSwitch]="mode$.value">
+        <ng-container [ngSwitch]="mode$.value">
           <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
           <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
           <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
             Reset password
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="loading">
-          <mat-icon><mat-spinner diameter="20"> </mat-spinner></mat-icon>
-        </ng-container>
-      </button>
+      </custom-button>
     </div>
   </ng-container>
 </form>

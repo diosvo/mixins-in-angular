@@ -1,4 +1,4 @@
-import { DEFAULT_PAGINATE_PARAMS, PaginateParams } from '@lib/models/table';
+import { DEFAULT_PAGINATE_PARAMS, Pagination } from '@lib/models/table';
 
 interface Comment {
   postId: number;
@@ -20,7 +20,7 @@ interface ViewArticleState {
   comments: Array<Comment>;
   searchTerm: string;
   loading: boolean;
-  paginate: PaginateParams;
+  paginate: Pagination;
 }
 
 const initialArticleState: ViewArticleState = {
@@ -38,4 +38,4 @@ const initialArticleState: ViewArticleState = {
   paginate: DEFAULT_PAGINATE_PARAMS
 };
 
-export { Comment, Article, PaginateParams, ViewArticleState, initialArticleState };
+export { Comment, Article, Pagination, ViewArticleState, initialArticleState };

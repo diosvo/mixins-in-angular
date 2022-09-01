@@ -18,22 +18,22 @@ describe('StateService', () => {
     service = new StateService<State<User>>(user_state);
   });
 
-  it('should initialize service', () => {
+  test('should initialize service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get the current state', () => {
+  test('should get the current state', () => {
     expect(service['state']).toEqual(user_state);
   });
 
-  it('should select state by key', (done) => {
+  test('should select state by key', (done) => {
     service['select']((state) => state.loading).subscribe((response: boolean) => {
       expect(response).toBe(false);
       done();
     });
   });
 
-  it('should set new state', () => {
+  test('should set new state', () => {
     jest.spyOn(service['state$'], 'next');
     service['setState']({ loading: true });
     expect(service['state$'].next).toBeCalledWith({

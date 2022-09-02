@@ -11,6 +11,7 @@ import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Required } from '@lib/decorators/required-attribute';
+import { HighlightDirective } from '@lib/directives/highlight.directive';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { SlugifyPipe } from '@lib/pipes/slugify.pipe';
 import isEmpty from 'lodash.isempty';
@@ -41,6 +42,7 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
     MatPaginatorModule,
 
     SlugifyPipe,
+    HighlightDirective
   ],
   styleUrls: ['./custom-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,6 +65,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Styles */
 
+  @Input() highlight: string;
   @Input() style: Record<string, unknown>;
 
   /** Pagination */

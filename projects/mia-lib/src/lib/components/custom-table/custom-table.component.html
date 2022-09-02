@@ -82,7 +82,12 @@
                 }"
               ></ng-container>
             </span>
-            <ng-template #noTemplates>{{ row[column.key] }}</ng-template>
+            <ng-template #noTemplates>
+              <span
+                [highlight]="highlight"
+                [innerHTML]="row[column.key]"
+              ></span>
+            </ng-template>
           </mat-cell>
         </ng-template>
       </ng-container>
@@ -94,9 +99,7 @@
 
       <!-- Loading spinner -->
       <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">
-          <div class="d-flex jc-center ai-center my-2">No data found</div>
-        </div>
+        <div class="d-flex jc-center ai-center my-2">No data found</div>
       </div>
     </mat-table>
   </div>

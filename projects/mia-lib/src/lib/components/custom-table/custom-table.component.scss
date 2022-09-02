@@ -1,21 +1,16 @@
-@use 'palette';
-@import 'layout/breakpoints';
+@use "palette";
+@import "layout/breakpoints";
 
-$-unit-px : 2px;
-$-cell-pd : calc($-unit-px * 4) calc($-unit-px * 8);
-
-$-hover    : rgba(0, 0, 0, .04);
-$-bd-radius: calc($-unit-px * 2);
+$-unit-px: 2px;
+$-hover: rgba(0, 0, 0, 0.04);
+$-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 
 .custom-table {
-  display       : flex;
+  display: flex;
   flex-direction: column;
 
-  border       : 1px solid palette.$shade;
   border-bottom: none;
-
-  border-top-left-radius : $-bd-radius;
-  border-top-right-radius: $-bd-radius;
+  border: 1px solid palette.$shade;
 
   mat-table {
     overflow: auto;
@@ -42,6 +37,7 @@ $-bd-radius: calc($-unit-px * 2);
 
     [aria-sort="ascending"],
     [aria-sort="descending"] {
+      font-weight: bold;
       color: palette.$black;
     }
 
@@ -49,7 +45,7 @@ $-bd-radius: calc($-unit-px * 2);
 
     mat-cell {
       min-height: calc($-unit-px * 21);
-      padding   : $-cell-pd;
+      padding: $-cell-pd;
     }
 
     // Text that is longer than the column width is truncated with an ellipsis
@@ -57,12 +53,12 @@ $-bd-radius: calc($-unit-px * 2);
     :where(mat-header-cell, mat-cell) .truncate-cell {
       text-overflow: ellipsis;
 
-      display           : -webkit-box;
+      display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
 
       line-height: 1.5;
-      overflow   : hidden;
+      overflow: hidden;
     }
 
     mat-row {
@@ -93,19 +89,17 @@ $-bd-radius: calc($-unit-px * 2);
 
 .custom-pagination {
   border: 1px solid palette.$shade;
-
-  border-bottom-left-radius : $-bd-radius;
-  border-bottom-right-radius: $-bd-radius;
+  border-top: none;
 }
 
-@include screen('small') {
+@include screen("small") {
   .custom-table {
     overflow-x: scroll;
     overflow-y: auto;
 
     mat-table {
       min-width: 1024px;
-      overflow : initial;
+      overflow: initial;
     }
   }
 }

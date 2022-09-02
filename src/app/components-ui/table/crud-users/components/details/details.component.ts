@@ -1,75 +1,65 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
-import { DestroyService } from '@lib/services/destroy/destroy.service';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
 import { Regex } from '@lib/utils/form-validation';
-import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
-import { finalize, Subject, switchMap, takeUntil } from 'rxjs';
+import { iif, Observable } from 'rxjs';
 
 @Component({
   selector: 'user-details',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    CustomInputComponent,
+    CustomButtonComponent,
+
+    MatChipsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './details.component.html',
-  styles: ['@use \'display/host\';']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsComponent implements OnInit, DeactivateComponent {
+export class DetailsComponent implements OnInit {
 
-  saving = false;
-  loading = true;
-  hasChanged = false;
+  user$: Observable<User>;
 
-  readonly errorMessage$ = new Subject<string>();
+  readonly form = this.service.form;
+  readonly hasChanged$ = this.service.onFormChanges$();
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
-    private readonly router: Router,
-    readonly service: UserDetailsService,
-    private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroyService,
-    private readonly snackbar: SnackbarService,
+    @Inject(MAT_DIALOG_DATA) readonly state: {
+      user: User,
+      isEdit: boolean;
+    },
+    private readonly service: UserDetailsService,
+    private readonly dialogRef: MatDialogRef<DetailsComponent>
   ) { }
 
   ngOnInit(): void {
-    this.route.params
-      .pipe(
-        switchMap((params: Params) =>
-          isEmpty(params)
-            ? this.service.initializeValue$()
-            : this.service.loadFromApiAndFillForm$(params['id'])
-        ),
-        takeUntil(this.destroy$),
-      )
-      .subscribe({
-        next: () => this.loading = false,
-        error: ({ message }) => this.errorMessage$.next(message),
-      });
-    this.watchForFormChanges();
+    this.user$ = iif(
+      () => this.state.isEdit,
+      this.service.loadFromApiAndFillForm$(this.state.user),
+      this.service.initializeValue$()
+    );
   }
 
-  enableSaveButton(): boolean {
-    return this.hasChanged && this.service.valid && !this.saving;
-  }
-
-  canDeactivate(): boolean {
-    return !this.enableSaveButton();
-  }
-
-  saveChanges(): void {
-    this.saving = true;
-
-    this.service.save$()
-      .pipe(finalize(() => this.saving = false))
-      .subscribe({
-        next: () => this.snackbar.success(`The user has been ${this.service.isEdit$.value ? 'updated' : 'created'}.`),
-        error: ({ message }) => this.snackbar.error(message),
-        complete: () => this.router.navigate(['components/table/crud-users'])
-      });
+  onSave(ok: boolean): void {
+    this.dialogRef.close(ok);
   }
 
   addHobby(event: MatChipInputEvent): void {
@@ -96,14 +86,6 @@ export class DetailsComponent implements OnInit, DeactivateComponent {
     } else if (!regex.test(hobby)) {
       this.hobbies.setErrors({ invalid: true });
     }
-  }
-
-  private watchForFormChanges(): void {
-    this.service.onFormChanges$()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (changed: boolean) => this.hasChanged = changed
-      });
   }
 
   get hobbies(): FormControl {

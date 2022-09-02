@@ -4,19 +4,22 @@
     mode="indeterminate"
   ></mat-progress-bar>
 
-  <alert-message *ngIf="state.message" type="error">
-    {{ state.message }}
+  <alert-message *ngIf="state.error" type="error">
+    {{ state.error }}
   </alert-message>
 
   <custom-table
-    *ngIf="state.data"
+    *ngIf="!!state.data"
     [data]="state.data | filter: query.value"
     [columns]="columns"
+    [highlight]="query.value"
     [defaultSortColumn]="'name'"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
-      <custom-button [routerLink]="['create']"> Create User </custom-button>
+      <custom-button variant="flat" (click)="onBulk({})">
+        Create User
+      </custom-button>
     </div>
 
     <div filters>
@@ -29,18 +32,20 @@
       </custom-input>
     </div>
 
-    <custom-column columnName="email">
-      <ng-template let-user>
-        {{ user.email | lowercase }}
-      </ng-template>
-    </custom-column>
-
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
-        <custom-button variant="icon" [routerLink]="[user.id]">
+        <custom-button
+          variant="icon"
+          iconClass="f-16 text-secondary"
+          (click)="onBulk(user)"
+        >
           <ng-container icon>edit</ng-container>
         </custom-button>
-        <custom-button variant="icon" (click)="openConfirmDialog(user)">
+        <custom-button
+          variant="icon"
+          iconClass="f-16 text-secondary"
+          (click)="onDelete(user)"
+        >
           <ng-container icon>delete_outline</ng-container>
         </custom-button>
       </ng-template>

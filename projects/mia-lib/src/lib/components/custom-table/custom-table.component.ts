@@ -58,7 +58,11 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   /** Definitions: data */
 
-  @Input() @Required data: T[];
+  @Input() @Required set data(source: T[]) {
+    this.setDataSource(source);
+    this.configPaginator();
+    this.source.sort = this.matSort;
+  }
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
@@ -114,11 +118,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   protected selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
-    if (changes.data && changes.data.currentValue) {
-      this.setDataSource(changes.data.currentValue);
-      this.configPaginator();
-      this.source.sort = this.matSort;
-    }
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }

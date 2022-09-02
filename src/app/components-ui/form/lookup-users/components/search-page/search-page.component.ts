@@ -24,7 +24,7 @@ export class SearchPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.service.loadState(this.control.valueChanges);
+    this.service.loadState();
   }
 
   stateChanges(name: string): void {

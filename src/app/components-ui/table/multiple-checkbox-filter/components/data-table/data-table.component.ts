@@ -8,7 +8,7 @@ import { CustomInputComponent } from '@lib/components/custom-input/custom-input.
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { HttpRequestState } from '@lib/models/server.model';
+import { State } from '@lib/models/server.model';
 import { catchError, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues.service';
 
@@ -35,7 +35,7 @@ import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues
 
 export class DataTableComponent implements OnInit {
 
-  state$: Observable<HttpRequestState<Issue>>;
+  state$: Observable<State<Issue>>;
 
   readonly states = ['is\:open', 'is:\closed'];
   readonly authors = ['none', 'collaborator', 'member'];

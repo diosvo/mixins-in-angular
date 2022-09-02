@@ -1,25 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { pipe, startWith } from 'rxjs';
+import { Params } from '@angular/router';
+import { Pagination } from './table';
 
-interface RequestState<T> {
+interface IState<T> {
   data: T[];
+  params: Params;
   loading: boolean;
-  total_count: number;
-  message: HttpErrorResponse | Error;
+  pagination: Pagination;
+  error: HttpErrorResponse | Error | string;
 }
 
-type HttpRequestState<T> = Partial<RequestState<T>>
-
-const DEFAULT_STATE = {
-  data: null,
-  loading: true,
-  message: null,
-  total_count: 0
-};
-
-const initialValues = () => pipe(
-  startWith(DEFAULT_STATE)
-);
-
-export { HttpRequestState, DEFAULT_STATE, initialValues };
-
+export type State<T> = Partial<IState<T>>;

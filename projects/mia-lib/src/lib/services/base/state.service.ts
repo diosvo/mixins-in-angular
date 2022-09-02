@@ -1,17 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Params } from '@angular/router';
-import { Pagination } from '@lib/models/table';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
-
-interface IState<T> {
-  data: T[];
-  params: Params;
-  loading: boolean;
-  pagination: Pagination;
-  error: HttpErrorResponse | Error | string;
-}
-
-export type State<T> = Partial<IState<T>>;
 
 export class StateService<T> {
   private state$: BehaviorSubject<T>;

@@ -12,8 +12,8 @@
 
   <app-autocomplete #autocomplete="appAutocomplete">
     <ng-template appAutocompleteContent>
-      <ng-container *ngIf="users$ | async as users; else loading">
-        <ng-container *ngIf="users | filter: control.value as result">
+      <ng-container *ngIf="state$ | async as state; else loading">
+        <ng-container *ngIf="state.data | filter: control.value as result">
           <ng-container *ngFor="let option of result; trackByKey: 'id'">
             <app-select-option
               [value]="option.username"

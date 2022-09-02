@@ -11,7 +11,7 @@ import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
-import { HttpRequestState } from '@lib/models/server.model';
+import { State } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -50,7 +50,7 @@ const DEFAULT_FILTER = {
 })
 export class ListFunctionsComponent implements OnInit {
 
-  state$: Observable<HttpRequestState<CardItem[]>>;
+  state$: Observable<State<CardItem>>;
 
   readonly selection = groupList;
   form = this.fb.group({

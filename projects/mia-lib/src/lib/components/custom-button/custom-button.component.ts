@@ -26,6 +26,7 @@ export class CustomButtonComponent {
   @Input() loading = false;
   @Input() iconClass: string;
   @Input() buttonClass: string;
+  @Input() tooltip = '';
 
   @ContentChild(ButtonLoaderIconDirective)
   protected readonly icon: ButtonLoaderIconDirective;

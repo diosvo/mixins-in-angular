@@ -17,7 +17,11 @@
               <span class="text-error mr-1">#{{ state.article.id }}</span>
               <span>{{ state.article.title }}</span>
             </h2>
-            <custom-button variant="icon" [routerLink]="['..']">
+            <custom-button
+              variant="icon"
+              tooltip="All comments"
+              [routerLink]="['..']"
+            >
               <ng-container icon>list_alt</ng-container>
             </custom-button>
           </div>

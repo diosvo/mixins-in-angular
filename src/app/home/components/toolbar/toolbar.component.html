@@ -11,15 +11,21 @@
   </ng-container>
   <div class="flex-auto"></div>
   <ng-container *ngIf="loggedIn$ | async; else loginIcon">
-    <custom-button variant="icon" (click)="openLogoutDialog()">
+    <custom-button
+      variant="icon"
+      tooltip="Sign out"
+      buttonClass="text-white"
+      (click)="onLogout()"
+    >
       <ng-container icon>person_outline</ng-container>
     </custom-button>
   </ng-container>
   <ng-template #loginIcon>
     <custom-button
       variant="icon"
+      tooltip="Sign in"
       buttonClass="text-white"
-      (click)="openLoginDialog()"
+      (click)="onLogin()"
     >
       <ng-container icon>fingerprint</ng-container>
     </custom-button>

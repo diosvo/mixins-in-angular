@@ -36,6 +36,7 @@
       <ng-template let-user let-index="index">
         <custom-button
           variant="icon"
+          tooltip="Edit"
           iconClass="f-16 text-secondary"
           (click)="onBulk(user)"
         >
@@ -43,6 +44,7 @@
         </custom-button>
         <custom-button
           variant="icon"
+          tooltip="Delete"
           iconClass="f-16 text-secondary"
           (click)="onDelete(user)"
         >

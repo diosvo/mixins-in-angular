@@ -29,6 +29,8 @@
     mat-icon-button
     [class]="buttonClass"
     [disabled]="disabled || loading"
+    data-toggle="tooltip"
+    [title]="tooltip"
   >
     <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
   </button>

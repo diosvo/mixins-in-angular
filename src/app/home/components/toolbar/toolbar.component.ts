@@ -31,22 +31,21 @@ import { filter, take } from 'rxjs';
 export class ToolbarComponent {
 
   readonly loggedIn$ = this.authService.isLoggedIn$;
-
   readonly navigation = Object.values(EUrl);
 
   constructor(
     private readonly router: Router,
-    private readonly authService: AuthService,
     private readonly dialog: MatDialog,
+    private readonly authService: AuthService,
   ) { }
 
-  openLoginDialog(): void {
+  onLogin(): void {
     this.dialog.open(LoginComponent, {
       width: '450px',
     });
   }
 
-  openLogoutDialog(): void {
+  onLogout(): void {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {

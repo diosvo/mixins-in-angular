@@ -1,4 +1,4 @@
-import { DEFAULT_PAGINATE_PARAMS, Pagination } from '@lib/models/table';
+import { State } from '@lib/models/server.model';
 
 interface Comment {
   postId: number;
@@ -13,29 +13,17 @@ interface Article {
   body: string;
 }
 
-interface ViewArticleState {
-  id: number;
-  article: Article;
-  articles: Array<Article>,
-  comments: Array<Comment>;
-  searchTerm: string;
-  loading: boolean;
-  paginate: Pagination;
+type ArticleState = State<Article> & {
+  selected?: {
+    article: Article,
+    comments: Comment[]
+  };
 }
 
-const initialArticleState: ViewArticleState = {
-  id: undefined,
-  article: {
-    id: null,
-    userId: null,
-    title: '',
-    body: '',
-  },
-  articles: [],
-  comments: [],
-  loading: false,
-  searchTerm: '',
-  paginate: DEFAULT_PAGINATE_PARAMS
+const INITIAL_ARTICLE_STATE: ArticleState = {
+  selected: null,
+  data: [],
+  loading: true,
 };
 
-export { Comment, Article, Pagination, ViewArticleState, initialArticleState };
+export { Comment, Article, ArticleState, INITIAL_ARTICLE_STATE };

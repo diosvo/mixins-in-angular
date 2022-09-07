@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { InternalUserService, UserDetailsService } from '@lib/services/users/user-details.service';
 import { UsersService } from '@lib/services/users/users.service';
+import { ArticleDetailsService, ArticleService, InternalArticleService } from './view-article-page-state/services/view-article-state.service';
 
 export const TABLE_ROUTES: Routes = [
   {
@@ -29,6 +30,11 @@ export const TABLE_ROUTES: Routes = [
   {
     path: 'view-article-page-state',
     loadChildren: () =>
-      import('./view-article-page-state/view-article-page-state.module').then(({ ARTICLES_ROUTES }) => ARTICLES_ROUTES)
+      import('./view-article-page-state/view-article-page-state.module').then(({ ARTICLES_ROUTES }) => ARTICLES_ROUTES),
+    providers: [
+      ArticleService,
+      ArticleDetailsService,
+      InternalArticleService
+    ]
   },
 ];

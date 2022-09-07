@@ -5,7 +5,7 @@
 <ng-template #noError>
   <ng-container *ngIf="state$ | async as state; else loadingTemplate">
     <custom-table
-      [data]="state | filter: query.value"
+      [data]="state.data | filter: query.value"
       [columns]="columns"
       [pageSizeOptions]="[3, 5, 10, 20]"
     >
@@ -32,7 +32,11 @@
 
       <custom-column columnName="actions">
         <ng-template let-article>
-          <custom-button variant="icon" [routerLink]="[article.id]">
+          <custom-button
+            variant="icon"
+            iconClass="f-16 text-secondary"
+            [routerLink]="[article.id]"
+          >
             <ng-container icon>edit</ng-container>
           </custom-button>
         </ng-template>

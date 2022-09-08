@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
@@ -26,9 +25,7 @@ import { ArticleService } from '../../services/view-article-state.service';
 
     FilterPipe,
     LineBreakPipe,
-    TableColumnDirective,
-
-    MatProgressBarModule
+    TableColumnDirective
   ],
   templateUrl: './list-articles.component.html',
 })

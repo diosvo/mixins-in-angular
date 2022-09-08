@@ -3,7 +3,7 @@
 </ng-container>
 
 <ng-template #noError>
-  <ng-container *ngIf="state$ | async as state; else loadingTemplate">
+  <ng-container *ngIf="state$ | async as state">
     <custom-table
       [data]="state.data | filter: query.value"
       [columns]="columns"
@@ -43,8 +43,4 @@
       </custom-column>
     </custom-table>
   </ng-container>
-
-  <ng-template #loadingTemplate>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </ng-template>
 </ng-template>

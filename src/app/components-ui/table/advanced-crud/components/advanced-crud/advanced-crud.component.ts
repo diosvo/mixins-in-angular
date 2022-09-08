@@ -12,7 +12,6 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
@@ -34,7 +33,6 @@ import { tap } from 'rxjs/operators';
     MatButtonModule,
     MatTooltipModule,
     MatPaginatorModule,
-    MatProgressBarModule
   ],
   templateUrl: './advanced-crud.component.html',
   styleUrls: ['./advanced-crud.component.scss'],

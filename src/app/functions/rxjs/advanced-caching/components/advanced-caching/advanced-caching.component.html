@@ -11,7 +11,7 @@
 </ng-container>
 
 <custom-table
-  *ngIf="jokes$ | async as jokes; else loadingTemplate"
+  *ngIf="jokes$ | async as jokes"
   [data]="jokes"
   [columns]="columns"
   [defaultSortColumn]="'id'"
@@ -23,7 +23,3 @@
     </custom-button>
   </div>
 </custom-table>
-
-<ng-template #loadingTemplate>
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</ng-template>

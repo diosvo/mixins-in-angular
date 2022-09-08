@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
@@ -22,7 +21,6 @@ import { DetailsComponent } from '../details/details.component';
   standalone: true,
   imports: [
     CommonModule,
-    MatProgressBarModule,
 
     AlertComponent,
     CustomTableComponent,

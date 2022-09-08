@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterModule } from '@angular/router';
 import { slideInOut } from '@lib/animations/animations';
 import { AlertComponent } from '@lib/components/alert/alert.component';
@@ -17,8 +16,6 @@ import { Joke, JokesService } from '../../services/jokes.service';
   imports: [
     CommonModule,
     RouterModule,
-
-    MatProgressBarModule,
 
     LineBreakPipe,
     AlertComponent,

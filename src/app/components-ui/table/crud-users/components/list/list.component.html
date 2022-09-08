@@ -1,9 +1,4 @@
 <ng-container *ngIf="state$ | async as state">
-  <mat-progress-bar
-    *ngIf="state.loading"
-    mode="indeterminate"
-  ></mat-progress-bar>
-
   <alert-message *ngIf="state.error" type="error">
     {{ state.error }}
   </alert-message>

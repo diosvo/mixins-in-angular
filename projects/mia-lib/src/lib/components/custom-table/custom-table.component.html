@@ -17,6 +17,7 @@
       <ng-container
         *ngFor="let column of columns; let idx = index"
         [matColumnDef]="column.key"
+        [stickyEnd]="column.key === actions"
       >
         <ng-container
           *ngIf="column.key === select; then checkbox; else noCheckbox"
@@ -60,7 +61,7 @@
             [disabled]="
               !source.data.length ||
               column.disableSorting ||
-              column.key === 'actions'
+              column.key === actions
             "
           >
             <span [class.truncate-cell]="column.truncate ?? true">
@@ -98,7 +99,9 @@
       <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
       <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">No data found</div>
+        <div class="d-flex jc-center ai-center my-2">
+          <ng-template #noData></ng-template>
+        </div>
       </div>
     </mat-table>
   </div>

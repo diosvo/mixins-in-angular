@@ -61,6 +61,8 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
       overflow: hidden;
     }
 
+    // Row
+
     mat-row {
       mat-cell.mat-column {
         &-select {
@@ -77,6 +79,11 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 
         mat-cell.mat-column-actions {
           visibility: visible;
+          color: palette.$secondary;
+
+          &.mat-table-sticky {
+            background: initial;
+          }
         }
       }
 
@@ -100,6 +107,11 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
     mat-table {
       min-width: 1024px;
       overflow: initial;
+
+      mat-cell.mat-column-actions.mat-table-sticky {
+        justify-content: flex-end;
+        background: palette.$white !important;
+      }
     }
   }
 }

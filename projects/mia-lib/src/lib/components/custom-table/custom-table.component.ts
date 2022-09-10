@@ -134,7 +134,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-    this.source.sort = this.matSort;
+    this.configSorting();
     this.configPaginator();
   }
 
@@ -150,6 +150,15 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   sortTable(sort: MatSort): void {
     this.matSort.active = this.columns.find((column: TableColumn) => isEqual(column.key, sort.active)).key;
+  }
+
+  private configSorting(): void {
+    this.source.sort = this.matSort;
+    const keys = this.columns.map(({ key }) => key);
+
+    if (this.defaultSortColumn && !keys.includes(this.defaultSortColumn)) {
+      throw Error('The default key provided for sorting does not exist in the column declaration.');
+    }
   }
 
   private configPaginator(): void {

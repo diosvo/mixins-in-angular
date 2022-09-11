@@ -98,12 +98,7 @@
       ></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
-      <div
-        *matNoDataRow
-        class="d-flex flex-direction-column jc-center ai-center my-2"
-      >
-        <ng-content select="[noData]"></ng-content>
-      </div>
+      <ng-content *matNoDataRow select="[noData]"></ng-content>
     </mat-table>
   </div>
 

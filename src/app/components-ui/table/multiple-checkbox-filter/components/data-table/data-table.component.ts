@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Params } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { State } from '@lib/models/server.model';
 import { catchError, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues.service';
@@ -19,9 +19,8 @@ import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues
     CommonModule,
     ReactiveFormsModule,
 
-    MatProgressSpinnerModule,
-
     AlertComponent,
+    NoResultsComponent,
     CustomTableComponent,
     CustomInputComponent,
     CustomSelectComponent,

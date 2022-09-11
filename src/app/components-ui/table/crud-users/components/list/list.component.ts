@@ -8,6 +8,7 @@ import { CustomButtonComponent } from '@lib/components/custom-button/custom-butt
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { User } from '@lib/services/users/user-service.model';
@@ -23,6 +24,7 @@ import { DetailsComponent } from '../details/details.component';
     CommonModule,
 
     AlertComponent,
+    NoResultsComponent,
     CustomTableComponent,
     CustomInputComponent,
     CustomButtonComponent,

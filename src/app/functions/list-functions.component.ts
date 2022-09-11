@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -11,6 +11,7 @@ import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { State } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
@@ -32,6 +33,7 @@ const DEFAULT_FILTER = {
 
     AlertComponent,
     CardItemComponent,
+    NoResultsComponent,
     CustomButtonComponent,
     CustomInputComponent,
     CustomSelectComponent,
@@ -47,6 +49,7 @@ const DEFAULT_FILTER = {
         display: block;
     }
   }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListFunctionsComponent implements OnInit {
 

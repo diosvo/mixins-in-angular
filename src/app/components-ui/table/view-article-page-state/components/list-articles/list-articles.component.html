@@ -25,14 +25,10 @@
       </ng-template>
     </custom-column>
 
-    <ng-container noData *ngIf="!state.loading">
-      <span>No results match. The active filters are hiding all items.</span>
-      <a
-        (click)="query.setValue('')"
-        class="text-light-blue text-deco-underline cursor-pointer"
-      >
-        Reset filters
-      </a>
-    </ng-container>
+    <no-results
+      noData
+      *ngIf="!state.loading"
+      (click)="query.setValue('')"
+    ></no-results>
   </custom-table>
 </ng-container>

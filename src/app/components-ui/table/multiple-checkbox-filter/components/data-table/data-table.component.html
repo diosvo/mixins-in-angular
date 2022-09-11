@@ -20,7 +20,6 @@
         placeholder="State"
         formControlName="states"
         [items]="states"
-        [disabled]="state.loading"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -28,7 +27,6 @@
         placeholder="Author"
         formControlName="authors"
         [items]="authors"
-        [disabled]="state.loading"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -74,16 +72,11 @@
     </custom-column>
 
     <ng-container noData>
-      <mat-spinner *ngIf="state.loading; else notFound" diameter="50">
-      </mat-spinner>
+      <ng-container *ngIf="state.loading; else notFound">
+        <div class="text-center m-2">Loading ...</div>
+      </ng-container>
       <ng-template #notFound>
-        <span>No results match. The active filters are hiding all items.</span>
-        <a
-          (click)="form.reset()"
-          class="text-light-blue text-deco-underline cursor-pointer"
-        >
-          Reset filters
-        </a>
+        <no-results (resetFilters)="form.reset()"></no-results>
       </ng-template>
     </ng-container>
   </custom-table>

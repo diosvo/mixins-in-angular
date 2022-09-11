@@ -7,6 +7,7 @@ import { CustomButtonComponent } from '@lib/components/custom-button/custom-butt
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { LineBreakPipe } from '@lib/pipes/line-break.pipe';
 import { ArticleService } from '../../services/view-article-state.service';
@@ -19,6 +20,7 @@ import { ArticleService } from '../../services/view-article-state.service';
     RouterModule,
 
     AlertComponent,
+    NoResultsComponent,
     CustomButtonComponent,
     CustomTableComponent,
     CustomInputComponent,

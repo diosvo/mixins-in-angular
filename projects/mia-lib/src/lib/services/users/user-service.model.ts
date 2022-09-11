@@ -7,7 +7,7 @@ const endpoint: string = environment.jsonPlaceHolderUrl + 'users/';
 const id_endpoint = (id: number): string => endpoint + `${id}`;
 
 const INITIAL_USER_STATE: State<User> = {
-  data: null,
+  data: [],
   params: {
     query: ''
   },

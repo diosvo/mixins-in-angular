@@ -11,6 +11,7 @@ import { AlertComponent } from '@lib/components/alert/alert.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { State } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
@@ -31,6 +32,7 @@ const DEFAULT_FILTER = {
 
     AlertComponent,
     CardItemComponent,
+    NoResultsComponent,
     CustomButtonComponent,
     CustomInputComponent,
     CustomSelectComponent,

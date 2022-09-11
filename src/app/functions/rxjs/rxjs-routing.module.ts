@@ -12,10 +12,4 @@ export const RXJS_ROUTES: Routes = [
       .then(({ AdvancedCachingComponent }) => AdvancedCachingComponent),
     title: 'Advanced caching w/ RxJS'
   },
-  {
-    path: 'todo-state-management',
-    loadComponent: () => import('./todo-state-management/components/todo-shell/todo-shell.component')
-      .then(({ TodoShellComponent }) => TodoShellComponent),
-    title: 'State Management w/ Todo'
-  }
 ];

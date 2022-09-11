@@ -98,10 +98,11 @@
       ></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
-      <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">
-          <ng-template #noData></ng-template>
-        </div>
+      <div
+        *matNoDataRow
+        class="d-flex flex-direction-column jc-center ai-center my-2"
+      >
+        <ng-content select="[noData]"></ng-content>
       </div>
     </mat-table>
   </div>

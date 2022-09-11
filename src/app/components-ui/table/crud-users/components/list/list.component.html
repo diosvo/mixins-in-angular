@@ -4,7 +4,6 @@
   </alert-message>
 
   <custom-table
-    *ngIf="!!state.data"
     [data]="state.data | filter: query.value"
     [columns]="columns"
     [highlight]="query.value"
@@ -17,22 +16,21 @@
       </custom-button>
     </div>
 
-    <div filters>
-      <custom-input
-        class="flex-1"
-        label="search"
-        [clearFilter]="true"
-        [formControl]="query"
-      >
-      </custom-input>
-    </div>
+    <custom-input
+      filters
+      class="flex-1"
+      label="search"
+      [clearFilter]="true"
+      [formControl]="query"
+    >
+    </custom-input>
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
         <custom-button
           variant="icon"
           tooltip="Edit"
-          iconClass="f-16 text-secondary"
+          iconClass="f-16"
           (click)="onBulk(user)"
         >
           <ng-container icon>edit</ng-container>
@@ -40,12 +38,22 @@
         <custom-button
           variant="icon"
           tooltip="Delete"
-          iconClass="f-16 text-secondary"
+          iconClass="f-16"
           (click)="onDelete(user)"
         >
           <ng-container icon>delete_outline</ng-container>
         </custom-button>
       </ng-template>
     </custom-column>
+
+    <ng-container noData *ngIf="!state.loading">
+      <span>No results match. The active filters are hiding all items.</span>
+      <a
+        (click)="query.setValue('')"
+        class="text-light-blue text-deco-underline cursor-pointer"
+      >
+        Reset filters
+      </a>
+    </ng-container>
   </custom-table>
 </ng-container>

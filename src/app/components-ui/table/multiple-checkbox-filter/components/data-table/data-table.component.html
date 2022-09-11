@@ -37,13 +37,10 @@
         label="search"
         [clearFilter]="true"
         formControlName="query"
-        [disabled]="state.loading"
         placeholder="Find an issue..."
       >
       </custom-input>
     </form>
-
-    <mat-spinner loading *ngIf="state.loading" diameter="50"> </mat-spinner>
 
     <custom-column columnName="created_at">
       <ng-template let-issue>{{ issue.created_at | date }}</ng-template>
@@ -75,5 +72,19 @@
         </span>
       </ng-template>
     </custom-column>
+
+    <ng-container noData>
+      <mat-spinner *ngIf="state.loading; else notFound" diameter="50">
+      </mat-spinner>
+      <ng-template #notFound>
+        <span>No results match. The active filters are hiding all items.</span>
+        <a
+          (click)="form.reset()"
+          class="text-light-blue text-deco-underline cursor-pointer"
+        >
+          Reset filters
+        </a>
+      </ng-template>
+    </ng-container>
   </custom-table>
 </ng-container>

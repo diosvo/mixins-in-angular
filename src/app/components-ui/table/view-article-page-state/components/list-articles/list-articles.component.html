@@ -1,46 +1,38 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
+<ng-container *ngIf="state$ | async as state">
+  <custom-table
+    [data]="state.data | filter: query.value"
+    [columns]="columns"
+    [defaultSortColumn]="'title'"
+    [pageSizeOptions]="[3, 5, 10, 20]"
+  >
+    <div header class="d-flex ai-baseline jc-between">
+      <h2>List Articles</h2>
+      <custom-button variant="flat" [routerLink]="['create']">
+        Create
+      </custom-button>
+    </div>
+
+    <custom-input
+      filters
+      label="Search"
+      [formControl]="query"
+      [clearFilter]="true"
+    ></custom-input>
+
+    <custom-column columnName="body">
+      <ng-template let-article>
+        <div [innerHTML]="article.body | lineBreak"></div>
+      </ng-template>
+    </custom-column>
+
+    <ng-container noData *ngIf="!state.loading">
+      <span>No results match. The active filters are hiding all items.</span>
+      <a
+        (click)="query.setValue('')"
+        class="text-light-blue text-deco-underline cursor-pointer"
+      >
+        Reset filters
+      </a>
+    </ng-container>
+  </custom-table>
 </ng-container>
-
-<ng-template #noError>
-  <ng-container *ngIf="state$ | async as state">
-    <custom-table
-      [data]="state.data | filter: query.value"
-      [columns]="columns"
-      [pageSizeOptions]="[3, 5, 10, 20]"
-    >
-      <div header class="d-flex ai-baseline jc-between">
-        <h2>List Articles</h2>
-        <custom-button variant="flat" [routerLink]="['create']">
-          Create
-        </custom-button>
-      </div>
-
-      <div filters>
-        <custom-input
-          label="Search"
-          [formControl]="query"
-          [clearFilter]="true"
-        ></custom-input>
-      </div>
-
-      <custom-column columnName="body">
-        <ng-template let-article>
-          <div [innerHTML]="article.body | lineBreak"></div>
-        </ng-template>
-      </custom-column>
-
-      <custom-column columnName="actions">
-        <ng-template let-article>
-          <custom-button
-            variant="icon"
-            iconClass="f-16 text-secondary"
-            [routerLink]="[article.id]"
-          >
-            <ng-container icon>edit</ng-container>
-          </custom-button>
-        </ng-template>
-      </custom-column>
-    </custom-table>
-  </ng-container>
-</ng-template>

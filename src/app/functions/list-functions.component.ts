@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -17,7 +17,6 @@ import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
-const groupList = Object.values(EFunctions).sort();
 const DEFAULT_FILTER = {
   query: '',
   group: []
@@ -55,14 +54,13 @@ export class ListFunctionsComponent implements OnInit {
 
   state$: Observable<State<CardItem>>;
 
-  readonly selection = groupList;
-  form = this.fb.group({
-    query: ['', { nonNullable: true }],
-    group: [[], { nonNullable: true }]
+  readonly selection = Object.values(EFunctions).sort();
+  readonly form = new FormGroup({
+    query: new FormControl(DEFAULT_FILTER.query, { nonNullable: true }),
+    group: new FormControl(DEFAULT_FILTER.group, { nonNullable: true }),
   });
 
   constructor(
-    private readonly fb: FormBuilder,
     private readonly searchService: SearchService,
   ) { }
 
@@ -71,23 +69,13 @@ export class ListFunctionsComponent implements OnInit {
     this.state$ = this.searchService.getData(EUrl.FUNCTION, filters$, this.selection);
   }
 
-  cleanFilters(): void {
-    this.form.reset();
-  }
-
   clearAllIconActive(): boolean {
     return !this.primitiveFilters;
   }
 
   private get primitiveFilters(): boolean {
-    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value, DEFAULT_FILTER.group);
-  }
-
-  get query(): FormControl {
-    return this.form.get('query') as FormControl;
-  }
-
-  get group(): FormControl {
-    return this.form.get('group') as FormControl;
+    const { query, group } = this.form.value;
+    return isEqual(query, DEFAULT_FILTER.query)
+      && isEqual(group.length, DEFAULT_FILTER.group.length);
   }
 }

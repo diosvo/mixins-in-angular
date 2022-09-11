@@ -8,7 +8,7 @@
     mode="indeterminate"
   ></mat-progress-bar>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="!state.message">
     <mat-expansion-panel expanded>
       <!-- Header -->
       <mat-expansion-panel-header>
@@ -19,7 +19,7 @@
           <custom-button
             variant="icon"
             tooltip="Clear all"
-            (click)="cleanFilters()"
+            (click)="form.reset()"
             *ngIf="clearAllIconActive()"
           >
             <ng-container icon>clear_all</ng-container>
@@ -34,7 +34,6 @@
             [items]="selection"
             placeholder="Group"
             formControlName="group"
-            [disabled]="state.loading || state.error"
           ></custom-select>
 
           <custom-input
@@ -42,7 +41,6 @@
             label="search"
             [clearFilter]="true"
             formControlName="query"
-            [disabled]="state.loading || state.error"
             placeholder="What are you looking for today..."
           >
           </custom-input>
@@ -53,11 +51,14 @@
 
   <ng-container *ngIf="state.data">
     <ng-container *ngIf="state.data.length > 0; else notFound">
-      <card-item [data]="state.data" [searchTerm]="query.value"></card-item>
+      <card-item
+        [data]="state.data"
+        [searchTerm]="form.get('query').value"
+      ></card-item>
     </ng-container>
 
     <ng-template #notFound>
-      <no-results (resetFilters)="cleanFilters()"></no-results>
+      <no-results (resetFilters)="form.reset()"></no-results>
     </ng-template>
   </ng-container>
 </ng-container>

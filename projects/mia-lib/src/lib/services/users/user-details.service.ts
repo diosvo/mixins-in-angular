@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
-import { BehaviorSubject, map, Observable, of, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
@@ -27,13 +27,6 @@ export class InternalUserService extends BaseService<UserInput> {
 
   all(): Observable<User[]> {
     return this.list(endpoint);
-  }
-
-  byId(id: number): Observable<UserInput> {
-    return this.get(id_endpoint(id)).pipe(
-      map(({ id, name, email }) => ({ id, name, email, hobbies: ['coding', 'basketball'] })),
-      shareReplay(1)
-    );
   }
 
   create(user: UserInput): Observable<UserInput> {

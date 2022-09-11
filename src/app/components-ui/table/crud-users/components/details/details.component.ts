@@ -38,7 +38,7 @@ export class DetailsComponent implements OnInit {
   user$: Observable<User>;
 
   readonly form = this.service.form;
-  readonly hasChanged$ = this.service.onFormChanges$();
+  readonly hasChanged$ = this.service.onFormChanges$(['id', 'phone', 'address', 'company', 'username', 'website']);
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(

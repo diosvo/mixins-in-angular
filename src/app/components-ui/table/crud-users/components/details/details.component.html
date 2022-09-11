@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ state.isEdit ? "Edit" : "Create" }}</h2>
 
-<mat-dialog-content *ngIf="user$ | async; else loadingTemplate">
+<mat-dialog-content *ngIf="user$ | async">
   <form [formGroup]="form">
     <custom-input
       label="Name"
@@ -39,12 +39,6 @@
     </mat-form-field>
   </form>
 </mat-dialog-content>
-
-<ng-template #loadingTemplate>
-  <div class="d-flex jc-center ai-center">
-    <mat-spinner [diameter]="50"></mat-spinner>
-  </div>
-</ng-template>
 
 <mat-dialog-actions align="end" class="gap-1">
   <custom-button variant="outline" (click)="onSave(false)">

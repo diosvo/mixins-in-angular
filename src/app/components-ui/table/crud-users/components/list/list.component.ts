@@ -62,7 +62,10 @@ export class ListComponent implements OnInit {
       .open(DetailsComponent, {
         data: {
           isEdit: !isEmpty(user),
-          user
+          user: {
+            ...user,
+            hobbies: ['code', 'basketball']
+          }
         },
         width: '500px',
         disableClose: true,

@@ -7,7 +7,7 @@ import { AbstractFormService } from '@lib/services/base/form.service';
 import { HandleService } from '@lib/services/base/handle.service';
 import { StateService } from '@lib/services/base/state.service';
 import { BehaviorSubject, catchError, map, Observable, of, startWith } from 'rxjs';
-import { Article, ArticleState, INITIAL_ARTICLE_STATE } from '../models/article.model';
+import { Article, INITIAL_ARTICLE_STATE } from '../models/article.model';
 
 const DEFAULT_VALUE: Article = {
   id: null,
@@ -103,7 +103,7 @@ export class ArticleDetailsService extends AbstractFormService<Article>{
 }
 
 @Injectable()
-export class ArticleService extends StateService<ArticleState> {
+export class ArticleService extends StateService<Article> {
 
   readonly articles_state$ = this.select((state) => state);
 

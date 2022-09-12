@@ -13,17 +13,9 @@ interface Article {
   body: string;
 }
 
-type ArticleState = State<Article> & {
-  selected?: {
-    article: Article,
-    comments: Comment[]
-  };
-}
-
-const INITIAL_ARTICLE_STATE: ArticleState = {
-  selected: null,
+const INITIAL_ARTICLE_STATE: State<Article> = {
   data: [],
   loading: true,
 };
 
-export { Comment, Article, ArticleState, INITIAL_ARTICLE_STATE };
+export { Comment, Article, INITIAL_ARTICLE_STATE };

@@ -31,33 +31,26 @@ export class UsersService extends StateService<User> {
       });
   }
 
-  onDelete(user: User): void {
+  executeJob(action: 'update$' | 'create$' | 'remove$', id: number): void {
     this.setState({ loading: true });
+    const job = (user: User) => {
+      switch (action) {
+        case 'update$':
+          return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
+        case 'create$':
+          return this.state.data.concat(user);
+        case 'remove$':
+          return this.state.data.filter((selected: User) => !isEqual(selected.id, id));
+      }
+    };
 
-    this.service.remove$(user.id).subscribe({
-      next: () => {
-        this.snackbar.success('The selected user has been deleted');
-        this.setState({
-          data: this.state.data.filter((selected: User) => !isEqual(selected.id, user.id)),
-          loading: false
-        });
-      },
-      error: ({ message }) => this.snackbar.error(message)
-    });
-  }
-
-  onSave(edit: boolean): void {
-    this.setState({ loading: true });
-
-    this.service[edit ? 'update$' : 'create$']().subscribe({
+    this.service[action](id).subscribe({
       next: (user: User) => {
         this.setState({
-          data: edit
-            ? this.state.data.map((item: User) => isEqual(user.id, item.id) ? { ...item, ...user } : item)
-            : this.state.data.concat(user),
+          data: job(user),
           loading: false
         });
-        this.snackbar.success(`The user has been ${edit ? 'updated' : 'created'} `);
+        this.snackbar.success(`The user has been ${action.replace('$', 'd')}`);
       },
       error: ({ message }) => this.snackbar.error(message)
     });

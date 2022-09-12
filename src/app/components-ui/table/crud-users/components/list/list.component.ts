@@ -78,7 +78,7 @@ export class ListComponent implements OnInit {
         take(1)
       )
       .subscribe({
-        next: () => this.service.onSave(!isEmpty(user))
+        next: () => this.service.executeJob(isEmpty(user) ? 'create$' : 'update$', user.id)
       });
   }
 
@@ -99,7 +99,7 @@ export class ListComponent implements OnInit {
         take(1)
       )
       .subscribe({
-        next: () => this.service.onDelete(user)
+        next: () => this.service.executeJob('remove$', user.id)
       });
   }
 }

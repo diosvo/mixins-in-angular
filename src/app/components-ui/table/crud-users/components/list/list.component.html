@@ -31,6 +31,7 @@
           variant="icon"
           tooltip="Edit"
           iconClass="f-16"
+          [disabled]="state.loading"
           (click)="onBulk(user)"
         >
           <ng-container icon>edit</ng-container>
@@ -39,6 +40,7 @@
           variant="icon"
           tooltip="Delete"
           iconClass="f-16"
+          [disabled]="state.loading"
           (click)="onDelete(user)"
         >
           <ng-container icon>delete_outline</ng-container>
@@ -46,10 +48,13 @@
       </ng-template>
     </custom-column>
 
-    <no-results
-      noData
-      *ngIf="!state.loading"
-      (resetFilters)="query.setValue('')"
-    ></no-results>
+    <ng-container noData>
+      <ng-container *ngIf="state.loading; else notFound">
+        <div class="text-center m-2">Loading ...</div>
+      </ng-container>
+      <ng-template #notFound>
+        <no-results (resetFilters)="query.setValue('')"></no-results>
+      </ng-template>
+    </ng-container>
   </custom-table>
 </ng-container>

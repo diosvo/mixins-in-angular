@@ -2,7 +2,8 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
 import { of } from 'rxjs';
 import { HandleService } from '../base/handle.service';
-import { InternalService, UserDetailsService } from './user-details.service';
+import { InternalUserService, UserDetailsService } from './user-details.service';
+import { User } from './user-service.model';
 
 const user: UserInput = {
   id: 1,
@@ -11,28 +12,30 @@ const user: UserInput = {
   hobbies: ['coding', 'basketball']
 };
 
-describe('InternalService', () => {
-  let service: InternalService;
+const list_users: UserInput[] = [user];
+
+describe('InternalUserService', () => {
+  let service: InternalUserService;
 
   const mockHttp: any = {
-    get: jest.fn().mockReturnValue(of(user)),
+    get: jest.fn().mockReturnValue(of(list_users)),
     put: jest.fn().mockReturnValue(of(user)),
     post: jest.fn().mockReturnValue(of(user)),
     delete: jest.fn().mockReturnValue(of({})),
   };
 
   beforeEach(() => {
-    service = new InternalService(mockHttp, new HandleService());
+    service = new InternalUserService(mockHttp, new HandleService());
   });
 
   test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  test('byId()', (done) => {
-    service.byId(user.id).subscribe({
-      next: (response: UserInput) => {
-        expect(response).toEqual(user);
+  test('all()', (done) => {
+    service.all().subscribe({
+      next: (response: User[]) => {
+        expect(response).toEqual(list_users);
         done();
       },
       error: ({ message }) => fail(message)
@@ -71,7 +74,7 @@ describe('UserDetailsService', () => {
   let service: UserDetailsService;
 
   const mockInternalService: any = {
-    byId: jest.fn().mockReturnValue(of(user)),
+    all: jest.fn().mockReturnValue(of(list_users)),
     create: jest.fn().mockReturnValue(of(user)),
     update: jest.fn().mockReturnValue(of(user)),
     remove: jest.fn().mockReturnValue(of({})),
@@ -85,23 +88,26 @@ describe('UserDetailsService', () => {
     expect(service).toBeTruthy();
   });
 
+  test('all$()', (done) => {
+    service.all$().subscribe((response: User[]) => {
+      expect(response).toEqual(list_users);
+      done();
+    });
+  });
+
   test('buildForm()', () => {
     expect(service.buildForm()).toBeDefined();
   });
 
   test('loadFromApiAndFillForm$() to map value corresponding to specific id (Edit mode)', (done) => {
-    jest.spyOn(service.isEdit$, 'next');
-    service.loadFromApiAndFillForm$(user.id).subscribe(() => {
-      expect(service.isEdit$.next).toBeCalledWith(true);
-      expect(mockInternalService.byId).toBeCalledWith(user.id);
+    service.loadFromApiAndFillForm$(user).subscribe((response: UserInput) => {
+      expect(response).toEqual(user);
       done();
     });
   });
 
   test('initializeValue$() to get the default value (Create mode)', (done) => {
-    jest.spyOn(service.isEdit$, 'next');
     service.initializeValue$().subscribe((response: UserInput) => {
-      expect(service.isEdit$.next).toBeCalledWith(false);
       expect(response).toEqual({
         id: null,
         name: '',
@@ -113,8 +119,10 @@ describe('UserDetailsService', () => {
   });
 
   test('create$()', (done) => {
+    const { id, ...rest } = user;
+    service.form.setValue(user);
     service['create$']().subscribe(() => {
-      expect(mockInternalService.create).toBeCalledWith({ name: '', email: '', hobbies: [] });
+      expect(mockInternalService.create).toBeCalledWith(rest);
       done();
     });
   });

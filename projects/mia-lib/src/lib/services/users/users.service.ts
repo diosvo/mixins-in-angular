@@ -52,7 +52,12 @@ export class UsersService extends StateService<User> {
         });
         this.snackbar.success(`The user has been ${action.replace('$', 'd')}`);
       },
-      error: ({ message }) => this.snackbar.error(message)
+      error: ({ message }) => {
+        this.setState({
+          loading: false
+        });
+        this.snackbar.error(message);
+      }
     });
   }
 }

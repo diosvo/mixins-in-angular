@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
-  <alert-message *ngIf="state.message" type="error">
-    {{ state.message }}
+  <alert-message *ngIf="state.error" type="error">
+    {{ state.error }}
   </alert-message>
 
   <mat-progress-bar

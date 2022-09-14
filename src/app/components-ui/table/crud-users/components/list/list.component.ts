@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
           isEdit: !isEmpty(user),
           user: {
             ...user,
-            hobbies: user.hobbies ?? ['code', 'basketball']
+            hobbies: user.hobbies ?? []
           }
         },
         width: '500px',

@@ -2,31 +2,17 @@ import { State } from '@lib/models/server.model';
 import { of, throwError } from 'rxjs';
 import { mockSnackbar } from '../snackbar/snackbar.service.spec';
 import { INITIAL_USER_STATE, User } from './user-service.model';
+import { MOCK_LIST_USERS, MOCK_USER } from './user.mock';
 import { UsersService } from './users.service';
-
-const user: User = {
-  id: 1,
-  firstName: 'Dios',
-  lastName: 'Vo'
-};
-
-const list_users: User[] = [
-  user,
-  {
-    id: 2,
-    firstName: 'Thu',
-    lastName: 'Phung'
-  }
-];
 
 describe('UsersService', () => {
   let service: UsersService;
 
   const mockUserDetailsService: any = {
-    all$: jest.fn().mockReturnValue(of(list_users)),
+    all$: jest.fn().mockReturnValue(of(MOCK_LIST_USERS)),
     remove$: jest.fn().mockReturnValue(of({})),
-    create$: jest.fn().mockReturnValue(of(user)),
-    update$: jest.fn().mockReturnValue(of(user)),
+    create$: jest.fn().mockReturnValue(of(MOCK_USER)),
+    update$: jest.fn().mockReturnValue(of(MOCK_USER)),
   };
 
   beforeEach(() => {
@@ -42,7 +28,7 @@ describe('UsersService', () => {
     test('should load state when the request was successful', () => {
       service.loadState();
       expect(service['setState']).toBeCalledWith({
-        data: list_users,
+        data: MOCK_LIST_USERS,
         loading: false
       });
     });
@@ -69,11 +55,11 @@ describe('UsersService', () => {
   describe('should execute job actions', () => {
     it('should update the selected user', () => {
       service['setState']({
-        data: list_users
+        data: MOCK_LIST_USERS
       });
-      service.executeJob('update$', user.id);
+      service.executeJob('update$', MOCK_USER.id);
       expect(service['setState']).toBeCalledWith({
-        data: list_users,
+        data: MOCK_LIST_USERS,
         loading: false
       });
     });
@@ -82,18 +68,18 @@ describe('UsersService', () => {
       service['setState']({
         data: []
       });
-      service.executeJob('create$', user.id);
+      service.executeJob('create$', MOCK_USER.id);
       expect(service['setState']).toBeCalledWith({
-        data: [user],
+        data: [MOCK_USER],
         loading: false
       });
     });
 
     it('should delete the selected user', () => {
       service['setState']({
-        data: [user]
+        data: [MOCK_USER]
       });
-      service.executeJob('remove$', user.id);
+      service.executeJob('remove$', MOCK_USER.id);
       expect(service['setState']).toBeCalledWith({
         data: [],
         loading: false
@@ -102,11 +88,11 @@ describe('UsersService', () => {
 
     it('should show error message when API failed', () => {
       service['setState']({
-        data: [user]
+        data: [MOCK_USER]
       });
       mockUserDetailsService.remove$.mockReturnValue(throwError(() => new Error('Bad Request')));
 
-      service.executeJob('remove$', user.id);
+      service.executeJob('remove$', MOCK_USER.id);
 
       expect(service['setState']).toBeCalledWith({
         loading: false

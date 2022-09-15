@@ -4,23 +4,15 @@ import { of } from 'rxjs';
 import { HandleService } from '../base/handle.service';
 import { InternalUserService, UserDetailsService } from './user-details.service';
 import { User } from './user-service.model';
-
-const user: UserInput = {
-  id: 1,
-  name: 'Dios Vo',
-  email: 'vtmn1212@gmail.com',
-  hobbies: ['coding', 'basketball']
-};
-
-const list_users: UserInput[] = [user];
+import { MOCK_LIST_USERS, MOCK_USER } from './user.mock';
 
 describe('InternalUserService', () => {
   let service: InternalUserService;
 
   const mockHttp: any = {
-    get: jest.fn().mockReturnValue(of(list_users)),
-    put: jest.fn().mockReturnValue(of(user)),
-    post: jest.fn().mockReturnValue(of(user)),
+    get: jest.fn().mockReturnValue(of(MOCK_LIST_USERS)),
+    put: jest.fn().mockReturnValue(of(MOCK_USER)),
+    post: jest.fn().mockReturnValue(of(MOCK_USER)),
     delete: jest.fn().mockReturnValue(of({})),
   };
 
@@ -35,7 +27,7 @@ describe('InternalUserService', () => {
   test('all()', (done) => {
     service.all().subscribe({
       next: (response: User[]) => {
-        expect(response).toEqual(list_users);
+        expect(response).toEqual(MOCK_LIST_USERS);
         done();
       },
       error: ({ message }) => fail(message)
@@ -43,9 +35,9 @@ describe('InternalUserService', () => {
   });
 
   test('create()', (done) => {
-    service.create(user).subscribe({
+    service.create(MOCK_USER).subscribe({
       next: (response: UserInput) => {
-        expect(response).toEqual(user);
+        expect(response).toEqual(MOCK_USER);
         done();
       },
       error: ({ message }) => fail(message)
@@ -53,9 +45,9 @@ describe('InternalUserService', () => {
   });
 
   test('update()', (done) => {
-    service.update(user).subscribe({
+    service.update(MOCK_USER).subscribe({
       next: (response: UserInput) => {
-        expect(response).toEqual(user);
+        expect(response).toEqual(MOCK_USER);
         done();
       },
       error: ({ message }) => fail(message)
@@ -63,7 +55,7 @@ describe('InternalUserService', () => {
   });
 
   test('remove()', (done) => {
-    service.remove(user.id).subscribe({
+    service.remove(MOCK_USER.id).subscribe({
       next: () => done(),
       error: ({ message }) => fail(message)
     });
@@ -74,9 +66,9 @@ describe('UserDetailsService', () => {
   let service: UserDetailsService;
 
   const mockInternalService: any = {
-    all: jest.fn().mockReturnValue(of(list_users)),
-    create: jest.fn().mockReturnValue(of(user)),
-    update: jest.fn().mockReturnValue(of(user)),
+    all: jest.fn().mockReturnValue(of(MOCK_LIST_USERS)),
+    create: jest.fn().mockReturnValue(of(MOCK_USER)),
+    update: jest.fn().mockReturnValue(of(MOCK_USER)),
     remove: jest.fn().mockReturnValue(of({})),
   };
 
@@ -90,7 +82,7 @@ describe('UserDetailsService', () => {
 
   test('all$()', (done) => {
     service.all$().subscribe((response: User[]) => {
-      expect(response).toEqual(list_users);
+      expect(response).toEqual(MOCK_LIST_USERS);
       done();
     });
   });
@@ -100,8 +92,8 @@ describe('UserDetailsService', () => {
   });
 
   test('loadFromApiAndFillForm$() to map value corresponding to specific id (Edit mode)', (done) => {
-    service.loadFromApiAndFillForm$(user).subscribe((response: UserInput) => {
-      expect(response).toEqual(user);
+    service.loadFromApiAndFillForm$(MOCK_USER).subscribe((response: UserInput) => {
+      expect(response).toEqual(MOCK_USER);
       done();
     });
   });
@@ -119,8 +111,8 @@ describe('UserDetailsService', () => {
   });
 
   test('create$()', (done) => {
-    const { id, ...rest } = user;
-    service.form.setValue(user);
+    const { id, ...rest } = MOCK_USER;
+    service.form.setValue(MOCK_USER);
     service['create$']().subscribe(() => {
       expect(mockInternalService.create).toBeCalledWith(rest);
       done();
@@ -128,16 +120,16 @@ describe('UserDetailsService', () => {
   });
 
   test('update$()', (done) => {
-    service.form.addControl('id', new FormControl(user.id));
-    service.form.setValue(user);
+    service.form.addControl('id', new FormControl(MOCK_USER.id));
+    service.form.setValue(MOCK_USER);
     service['update$']().subscribe(() => {
-      expect(mockInternalService.update).toBeCalledWith(user);
+      expect(mockInternalService.update).toBeCalledWith(MOCK_USER);
       done();
     });
   });
 
   test('remove$()', (done) => {
-    service.remove$(user.id).subscribe(() => done());
-    expect(mockInternalService.remove).toBeCalledWith(user.id);
+    service.remove$(MOCK_USER.id).subscribe(() => done());
+    expect(mockInternalService.remove).toBeCalledWith(MOCK_USER.id);
   });
 });

@@ -63,11 +63,8 @@ export class ListComponent implements OnInit {
     this.dialog
       .open(DetailsComponent, {
         data: {
-          isEdit: !isEmpty(user),
-          user: {
-            ...user,
-            hobbies: user.hobbies ?? []
-          }
+          user,
+          isEdit: !isEmpty(user)
         },
         width: '500px',
         disableClose: true,

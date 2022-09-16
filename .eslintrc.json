@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": ["jest.resolver.cjs"],
   "overrides": [
     {
       "files": ["*.ts"],

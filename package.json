@@ -1,6 +1,6 @@
 {
   "name": "mixins-in-angular",
-  "author": "diosvo",
+  "author": "Dios Vo <vtmn1212@gmail.com>",
   "version": "2.0.0",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "ng serve --hmr -o",
     "build": "ng build",
     "build:lib": "ng build mia-lib",
-    "test": "jest",
+    "test": "jest --no-cache",
     "jest:cache": "jest --clearCache",
     "test:co": "jest --coverage --coverageReporters='text-summary'",
     "lint": "eslint --color --ext .ts \"src/**/*.+(ts)\"",
@@ -60,29 +60,5 @@
     "ng-packagr": "^14.2.0",
     "source-map-explorer": "^2.5.2",
     "typescript": "^4.8.2"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest-config.ts"
-    ],
-    "moduleNameMapper": {
-      "@lib(.*)": "<rootDir>/projects/mia-lib/src/lib/$1",
-      "@env(.*)": "<rootDir>/src/environments/$1",
-      "@auth(.*)": "<rootDir>/src/app/auth/$1",
-      "@home(.*)": "<rootDir>/src/app/home/$1"
-    },
-    "moduleDirectories": [
-      "node_modules",
-      "src",
-      "projects/mia-lib"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "<rootDir>/tsconfig.spec.json",
-        "stringifyContentPathRegex": "\\.html$"
-      }
-    }
   }
 }

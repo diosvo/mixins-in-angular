@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IDialogPart } from './confirm-dialog.model';
 
 @Component({
   selector: 'confirm-dialog',
@@ -12,11 +11,16 @@ import { IDialogPart } from './confirm-dialog.model';
     MatDialogModule,
     MatButtonModule,
   ],
-  templateUrl: './confirm-dialog.component.html'
+  templateUrl: './confirm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmDialogComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) readonly data: IDialogPart
+    @Inject(MAT_DIALOG_DATA) readonly data: {
+      header: string;
+      body: string;
+      btnClose?: boolean;
+    }
   ) { }
 }

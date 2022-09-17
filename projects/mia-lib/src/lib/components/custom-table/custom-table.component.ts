@@ -66,7 +66,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
-  @ViewChild('noData', { read: ElementRef }) private noDataRef: ElementRef;
 
   /** Styles */
 
@@ -96,7 +95,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   /** Checkbox */
 
   @Input() enableCheckbox = false;
-  @Output() selectedRows = new EventEmitter();
+  @Output() selectedRows = new EventEmitter<T[]>();
 
   /** Constants */
 

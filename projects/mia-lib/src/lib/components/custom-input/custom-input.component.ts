@@ -41,8 +41,7 @@ export class CustomInputComponent extends FormControlValueAccessorConnector {
   @Input() disabled = false;
   @Input() clearFilter = false;
 
-  readonly EMPTY_VALUE = '';
-  protected allow = true;
+  protected readonly EMPTY_VALUE = '';
 
   constructor(injector: Injector) {
     super(injector);

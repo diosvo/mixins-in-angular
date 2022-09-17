@@ -1,23 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NoResultsComponent } from './no-results.component';
 
 describe('NoResultsComponent', () => {
   let component: NoResultsComponent;
-  let fixture: ComponentFixture<NoResultsComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ NoResultsComponent ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(NoResultsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new NoResultsComponent();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,7 +1,7 @@
-import { CommonModule, LocationStrategy } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'unsaved-changes-dialog',
@@ -11,14 +11,8 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class UnsavedChangesDialogComponent {
-  constructor(
-    private readonly location: LocationStrategy,
-    private readonly dialog: MatDialogRef<UnsavedChangesDialogComponent>,
-  ) {
-    this.location.onPopState(() => this.dialog.close());
-  }
-}
+export class UnsavedChangesDialogComponent { }

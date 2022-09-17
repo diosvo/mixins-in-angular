@@ -1,39 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { SnackbarComponent } from './snackbar.component';
 
 describe('SnackbarComponent', () => {
   let component: SnackbarComponent;
-  let fixture: ComponentFixture<SnackbarComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SnackbarComponent],
-      providers: [
-        {
-          provide: MatSnackBarRef,
-          useValue: {
-            dismiss: jest.fn()
-          }
-        },
-        {
-          provide: MAT_SNACK_BAR_DATA,
-          useValue: {
-            data: 'Alert'
-          }
-        }
-      ]
-    })
-      .compileComponents();
-  });
+  const mockRef: any = {};
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SnackbarComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new SnackbarComponent(mockRef, 'ERROR_MESSAGE');
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 });

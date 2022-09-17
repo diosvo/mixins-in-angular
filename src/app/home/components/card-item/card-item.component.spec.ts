@@ -1,9 +1,11 @@
-import { IBaseValue } from '@home/models/search.model';
+import { EUrl } from '@home/models/url.enum';
+import { CardItem } from '@home/services/search.service';
 import { CardItemComponent } from './card-item.component';
 
-const item: IBaseValue = {
-  name: 'RxJS',
-  route: 'data-composition-ng-conf',
+const item: CardItem = {
+  name: 'Advanced Caching',
+  group_id: 'rxjs',
+  routing_path: EUrl.FUNCTION,
   description: ''
 };
 
@@ -14,8 +16,10 @@ describe('CardItemComponent', () => {
     navigate: jest.fn()
   };
 
+  const mockRoute: any = {};
+
   beforeEach(() => {
-    component = new CardItemComponent(mockRouter);
+    component = new CardItemComponent(mockRouter, mockRoute);
     component.data = [];
   });
 
@@ -24,7 +28,9 @@ describe('CardItemComponent', () => {
   });
 
   test('directItem()', () => {
-    component.directItem('functions', 'rxjs', item.route);
-    expect(mockRouter.navigate).toBeCalledWith(['functions', 'rxjs', item.route]);
+    component.directItem(item.group_id, item.routing_path);
+    expect(mockRouter.navigate).toBeCalledWith([item.group_id, item.routing_path], {
+      relativeTo: component['route']
+    });
   });
 });

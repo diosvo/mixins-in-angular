@@ -6,7 +6,7 @@ import isEqual from 'lodash.isequal';
 import { finalize, Observable } from 'rxjs';
 
 @Injectable()
-export class MonitorInterceptor implements HttpInterceptor {
+export class MonitorInterceptor<T> implements HttpInterceptor {
 
   private loggerFactory = inject(LoggerFactory);
   private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
@@ -15,7 +15,7 @@ export class MonitorInterceptor implements HttpInterceptor {
   private total = 0;
   private completed = 0;
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
 
     this.loader.show();
     this.total++;

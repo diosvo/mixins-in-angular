@@ -36,7 +36,7 @@ export class SearchService {
           loading: false
         };
       }),
-      catchError(({ message }) => of({ message, loading: false })),
+      catchError(({ message }) => of({ data: [], message, loading: false })),
       startWith({
         data: null,
         loading: true

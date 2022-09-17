@@ -4,6 +4,5 @@
     "outDir": "./out-tsc/spec",
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
-  "exclude": ["src/**/*.model.ts", "src/**/*.interface.ts"]
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

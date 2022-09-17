@@ -10,7 +10,8 @@ const state: State<CardItem> = {
       name: 'Custom Button',
       group_id: 'button',
       routing_path: EUrl.COMPONENT,
-      description: ''
+      description: '',
+      is_maintained: false
     }
   ],
   loading: false,

@@ -1,13 +1,19 @@
 <article class="d-grid container gap-1 p-2">
   <ng-container *ngFor="let item of data; trackByKey: 'routing_path'">
     <div
-      class="item d-flex jc-between ai-center p-2 bg-white bd-auto bs-light-hover cursor-pointer"
-      (click)="directItem(item.group_id, item.routing_path)"
+      data-toggle="tooltip"
+      (click)="directItem(item)"
+      class="p-2 bg-white bd-auto bs-light-hover"
+      [class]="item.is_maintained ? 'cursor-prevent' : 'cursor-pointer'"
+      [title]="item.is_maintained ? 'Site under maintenance' : item.description"
     >
-      <div>
-        <span class="f-12 text-secondary mb-1"> #{{ item.group_id }} </span>
-        <div [highlight]="searchTerm" [innerText]="item.name | titlecase"></div>
+      <div class="f-12">
+        <span class="text-secondary">#{{ item.group_id }} </span>
+        <span *ngIf="item.is_maintained" class="text-error">
+          #maintenance
+        </span>
       </div>
+      <div [highlight]="searchTerm" [innerText]="item.name | titlecase"></div>
     </div>
   </ng-container>
 </article>

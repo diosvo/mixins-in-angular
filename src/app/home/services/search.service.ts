@@ -12,6 +12,7 @@ export interface CardItem {
   group_id: string;
   routing_path: EUrl;
   description: string;
+  is_maintained: boolean;
 }
 
 @Injectable({

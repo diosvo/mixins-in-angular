@@ -10,7 +10,8 @@ const state: State<CardItem> = {
       name: 'Advanced Caching',
       group_id: 'rxjs',
       routing_path: EUrl.FUNCTION,
-      description: ''
+      description: '',
+      is_maintained: false
     }
   ],
   loading: false,

@@ -1,55 +1,70 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { IGroupValue } from '@home/models/search.model';
-import { EUrl } from '@home/models/url.enum';
-import { SearchService } from './search.service';
+import { EComponentUI, EUrl } from '@home/models/url.enum';
+import { State } from '@lib/models/server.model';
+import { of, throwError } from 'rxjs';
+import { CardItem, SearchService } from './search.service';
 
-const ui_comps: IGroupValue[] = [
+const items: CardItem[] = [
   {
-    groupName: 'button',
-    groupUrl: EUrl.COMPONENT,
-    groupDetails: [
-      {
-        name: 'Micro Interaction',
-        route: 'micro-interaction',
-        description: 'GSAP'
-      }
-    ]
+    name: 'Custom Button',
+    group_id: 'button',
+    routing_path: EUrl.COMPONENT,
+    description: '',
+    is_maintained: false
   }
 ];
 
 describe('SearchService', () => {
   let service: SearchService;
-  let http: HttpTestingController;
+
+  const mockFirebaseService: any = {
+    collection: jest.fn().mockReturnValue({
+      valueChanges: () => of(items)
+    })
+  };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
-    });
-
-    service = TestBed.inject(SearchService);
-    http = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    http.verify();
+    service = new SearchService(mockFirebaseService);
   });
 
   test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  test('should call list based on provided group', () => {
-    service['getFetch'](EUrl.COMPONENT).subscribe({
-      next: (response: IGroupValue[]) => {
-        expect(response).toEqual(ui_comps);
-        expect(response.length).toEqual(1);
-      },
-      error: ({ message }) => fail(message)
+  describe('getData()', () => {
+    test('should retrieve and filter items', (done) => {
+      service['getData'](EUrl.COMPONENT, of({ query: '', group: ['menu'] }), Object.values(EComponentUI)).subscribe({
+        next: (response: State<CardItem>) => {
+          expect(response).toEqual({
+            data: [],
+            loading: false
+          });
+        }
+      });
+      service['getData'](EUrl.COMPONENT, of({ query: '', group: [] }), Object.values(EComponentUI)).subscribe({
+        next: (response: State<CardItem>) => {
+          expect(response).toEqual({
+            data: items,
+            loading: false
+          });
+        }
+      });
+      done();
     });
 
-    const request = http.expectOne(`/assets/backend/list-items/${EUrl.COMPONENT}.json`);
-    expect(request.request.method).toBe('GET');
-    request.flush(ui_comps);
+    test('should show error if API failed', (done) => {
+      mockFirebaseService.collection.mockReturnValue({
+        valueChanges: () => throwError(() => new Error('Bad Request'))
+      });
+      service['getData'](EUrl.COMPONENT, of({ query: '', group: [] }), Object.values(EComponentUI)).subscribe({
+        next: (response: State<CardItem>) => {
+          expect(response).toEqual({
+            data: [],
+            message: 'Bad Request',
+            loading: false
+          });
+        }
+      });
+      done();
+    });
   });
 });

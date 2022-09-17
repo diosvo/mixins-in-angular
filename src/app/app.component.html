@@ -2,7 +2,7 @@
   *ngIf="{
     footer: footer$ | async,
     toolbar: toolbar$ | async,
-    loading: loading$ | async,
+    loading: loaderService.loading$ | async,
     loggedIn: authService.isLoggedIn$ | async
   } as vm"
 >

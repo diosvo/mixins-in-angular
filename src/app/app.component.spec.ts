@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from '@auth/services/auth.service';
-import { FooterModule } from '@home/components/footer/footer.module';
-import { ToolbarModule } from '@home/components/toolbar/toolbar.module';
+import { FooterComponent } from '@home/components/footer/footer.component';
+import { ToolbarComponent } from '@home/components/toolbar/toolbar.component';
 import { ActivatedParamsService } from '@lib/services/activated-params/activated-params.service';
+import { LoadingService } from '@lib/services/loading/loading.service';
 import { of } from 'rxjs';
 import { AppComponent } from './app.component';
 
@@ -17,21 +17,21 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [
-        FooterModule,
-        ToolbarModule,
+        FooterComponent,
+        ToolbarComponent,
         RouterTestingModule,
       ],
       providers: [
         {
-          provide: Title,
+          provide: AuthService,
           useValue: {
-            setTitle: jest.fn().mockReturnValue('App')
+            isLoggedIn: of(false)
           }
         },
         {
-          provide: AuthService,
+          provide: LoadingService,
           useValue: {
-            isLoggedIn: of(true)
+            loading$: of(false)
           }
         }
       ]
@@ -50,28 +50,26 @@ describe('AppComponent', () => {
 
   describe('set up app', () => {
     beforeEach(() => {
-      jest.spyOn(component.showToolbar$, 'next');
-      jest.spyOn(component.showFooter$, 'next');
+      jest.spyOn(component.toolbar$, 'next');
+      jest.spyOn(component.footer$, 'next');
     });
 
     it('should show toolbar and footer (for all components as default)', (done) => {
-      component['route']['_data$'].next({ title: 'App', toolbar: undefined, footer: undefined });
+      component['route']['_data$'].next({ toolbar: undefined, footer: undefined });
 
-      component['route'].dataMap$.subscribe(() => {
-        expect(component['titleService'].setTitle).toBeCalledWith('App');
-        expect(component.showToolbar$.next).toBeCalledWith(true);
-        expect(component.showFooter$.next).toBeCalledWith(true);
+      route.dataMap$.subscribe(() => {
+        expect(component.toolbar$.next).toBeCalledWith(true);
+        expect(component.footer$.next).toBeCalledWith(true);
         done();
       });
     });
 
     it('should hide toolbar and footer (eg: PNF)', (done) => {
-      component['route']['_data$'].next({ title: 'Page Not Found', toolbar: false, footer: false });
+      component['route']['_data$'].next({ toolbar: false, footer: false });
 
       route.dataMap$.subscribe(() => {
-        expect(component['titleService'].setTitle).toBeCalledWith('Page Not Found');
-        expect(component.showToolbar$.next).toBeCalledWith(false);
-        expect(component.showFooter$.next).toBeCalledWith(false);
+        expect(component.toolbar$.next).toBeCalledWith(false);
+        expect(component.footer$.next).toBeCalledWith(false);
         done();
       });
     });

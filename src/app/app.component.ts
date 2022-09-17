@@ -12,13 +12,12 @@ import { AuthService } from './auth/services/auth.service';
 
 export class AppComponent {
 
-  readonly loading$ = this.loader.loading$;
   readonly toolbar$ = new BehaviorSubject<boolean>(false);
   readonly footer$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     readonly authService: AuthService,
-    private readonly loader: LoadingService,
+    readonly loaderService: LoadingService,
     private readonly route: ActivatedParamsService,
   ) {
     this.route.dataMap$.subscribe({

@@ -9,15 +9,18 @@ const routes: Routes = [
   },
   {
     path: EUrl.COMPONENT,
-    loadChildren: () => import('./components-ui/components-ui-routing.module').then(({ COMPONENT_ROUTES }) => COMPONENT_ROUTES)
+    loadChildren: () =>
+      import('./components-ui/components-ui-routing.module').then(({ COMPONENT_ROUTES }) => COMPONENT_ROUTES),
   },
   {
     path: EUrl.FUNCTION,
-    loadChildren: () => import('./functions/functions-routing.module').then(({ FUNCTIONS_ROUTES }) => FUNCTIONS_ROUTES)
+    loadChildren: () =>
+      import('./functions/functions-routing.module').then(({ FUNCTIONS_ROUTES }) => FUNCTIONS_ROUTES),
   },
   {
     path: '**',
-    loadChildren: () => import('./home/components/page-not-found/page-not-found.module').then(({ PageNotFoundModule }) => PageNotFoundModule)
+    loadChildren: () =>
+      import('./home/components/page-not-found/page-not-found.module').then(({ PageNotFoundModule }) => PageNotFoundModule)
   }
 ];
 

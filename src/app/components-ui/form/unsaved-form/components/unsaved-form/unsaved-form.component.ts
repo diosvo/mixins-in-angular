@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Self } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LogicalOperator } from '@auth/utils/has-permission.directive';
+import { HasPermissionDirective, LogicalOperator } from '@auth/utils/has-permission.directive';
+import { AlertComponent } from '@lib/components/alert/alert.component';
+import { ButtonLoaderIconDirective } from '@lib/components/custom-button/button-loader-icon.directive';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { DeactivateComponent } from '@lib/guards/unsaved-changes.guard';
 import { ERole } from '@lib/models/role';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
@@ -13,6 +18,17 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unsaved-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    AlertComponent,
+    CustomInputComponent,
+    CustomButtonComponent,
+    HasPermissionDirective,
+    ButtonLoaderIconDirective,
+  ],
   templateUrl: './unsaved-form.component.html',
   providers: [DetectPermissionService],
 })

@@ -2,12 +2,12 @@ import { Routes } from '@angular/router';
 import { EComponentUI } from '@home/models/url.enum';
 import { CanLoadGuard } from '@lib/guards/can-load.guard';
 import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
-import { ListComponentUiComponent } from './list-component-ui.component';
 
 export const COMPONENT_ROUTES: Routes = [
   {
     path: '',
-    component: ListComponentUiComponent,
+    loadComponent: () => import('./list-component-ui.component')
+      .then(({ ListComponentUiComponent }) => ListComponentUiComponent),
     title: 'Components'
   },
   {
@@ -28,7 +28,7 @@ export const COMPONENT_ROUTES: Routes = [
   },
   {
     path: EComponentUI.FORM,
-    loadChildren: () => import('./form/form.module').then(({ FormModule }) => FormModule),
+    loadChildren: () => import('./form/form-routing.module').then(({ FORM_ROUTES }) => FORM_ROUTES),
     canActivate: [IsAuthenticatedGuard],
     canLoad: [CanLoadGuard]
   }

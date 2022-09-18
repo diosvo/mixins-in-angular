@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { EFunctions } from '../home/models/url.enum';
-import { ListFunctionsComponent } from './list-functions.component';
 
 export const FUNCTIONS_ROUTES: Routes = [
   {
     path: '',
-    component: ListFunctionsComponent,
-    title: 'Functions'
+    loadComponent: () => import('./list-functions.component')
+      .then(({ ListFunctionsComponent }) => ListFunctionsComponent),
+    title: 'Functions',
   },
   {
     path: EFunctions.RXJS,

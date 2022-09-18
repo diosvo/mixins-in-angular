@@ -35,7 +35,7 @@ import { MonitorInterceptor } from './interceptors/monitor.interceptor';
 
     /* init firebase config */
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
   ],
   providers: [
     {

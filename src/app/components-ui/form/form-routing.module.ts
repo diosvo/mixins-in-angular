@@ -5,7 +5,7 @@ import { ERole } from '@lib/models/role';
 export const FORM_ROUTES: Routes = [
   {
     path: 'unsaved-form',
-    loadComponent: () => import('./unsaved-form/components/unsaved-form/unsaved-form.component')
+    loadComponent: () => import('./unsaved-form/unsaved-form.component')
       .then(({ UnsavedFormComponent }) => UnsavedFormComponent),
     canDeactivate: [UnsavedChangesGuard],
     data: {

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
+import { GoogleAuthProvider } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { LoggerFactory } from '@lib/helpers/logger.factory';
+import { asUniqueArray } from '@lib/helpers/unique-array';
 import { ERole, TRole } from '@lib/models/role';
+import firebase from 'firebase/compat/app';
 import { BehaviorSubject, from, Observable, switchMap, take } from 'rxjs';
 
-import firebase from 'firebase/compat/app';
-import auth = firebase.auth;
-import FirebaseUser = firebase.User;
-
-export type FirebaseAuth = auth.UserCredential;
 
 export interface AuthUser {
   uid: string;
@@ -18,12 +17,15 @@ export interface AuthUser {
   roles: TRole[];
 }
 
+type FirebaseAuth = firebase.auth.UserCredential;
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
+  private logger = this.loggerFactory.createLogger('Authentication', 'service');
 
   private userSubj$ = new BehaviorSubject<AuthUser>(null);
   readonly user$ = this.userSubj$.asObservable();
@@ -38,6 +40,7 @@ export class AuthService {
     private readonly router: Router,
     private readonly afa: AngularFireAuth,
     private readonly afs: AngularFirestore,
+    private readonly loggerFactory: LoggerFactory
   ) {
     this.handleState();
   }
@@ -63,8 +66,7 @@ export class AuthService {
   }
 
   googleSignIn(): Observable<void> {
-    const provider = new auth.GoogleAuthProvider();
-    return from(this.afa.signInWithPopup(provider)).pipe(
+    return from(this.afa.signInWithPopup(new GoogleAuthProvider())).pipe(
       take(1),
       switchMap((response: FirebaseAuth) => this.updateUserData(response.user))
     );
@@ -96,9 +98,9 @@ export class AuthService {
       .then(() => this.router.navigate(['verify-email-address']));
   }
 
-  private async updateUserData(user: FirebaseUser): Promise<void> {
+  private async updateUserData(user: firebase.User): Promise<void> {
     if (!user) {
-      throw new Error('User is null');
+      throw new Error('No user found');
     }
 
     const { uid, email } = user;
@@ -114,7 +116,7 @@ export class AuthService {
       uid,
       email,
       expire,
-      roles: [ERole.SUBSCRIBER]
+      roles: asUniqueArray([ERole.SUBSCRIBER])
     };
     this.updateUserState(data, true);
     localStorage.setItem(this.TOKEN_KEY, JSON.stringify(data));
@@ -127,5 +129,6 @@ export class AuthService {
     }
     this.userSubj$.next(user);
     this.isLoggedIn$.next(loggedIn);
+    this.logger.log(user ? new Date(user.expire * 1000) : 'Not signed in yet');
   }
 }

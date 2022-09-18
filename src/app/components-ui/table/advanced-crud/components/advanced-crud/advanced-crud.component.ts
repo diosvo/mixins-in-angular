@@ -1,24 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  NgZone, OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
+  ChangeDetectionStrategy,
+  Component, OnInit
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
-import { ICategory } from '@lib/models/category';
-import { CategoryService } from '@lib/services/category/category.service';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { User } from '@lib/services/users/user-service.model';
+import { UsersService } from '@lib/services/users/users.service';
 
 @Component({
   selector: 'app-advanced-crud',
@@ -26,81 +16,62 @@ import { tap } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CustomInputComponent,
 
-    MatIconModule,
-    MatTableModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatPaginatorModule,
+    CustomInputComponent,
+    CustomTableComponent
   ],
   templateUrl: './advanced-crud.component.html',
   styleUrls: ['./advanced-crud.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class AdvancedCrudComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'action'];
-  dataSource = new MatTableDataSource<unknown>([]);
-  categories$: Observable<Array<ICategory>>;
+
+  readonly state$ = this.list.users_state$;
+  readonly columns: TableColumn[] = [
+    { key: 'id', flex: '10%' },
+    { key: 'name', flex: '20%' },
+    { key: 'email', flex: '20%' },
+    { key: 'phone', flex: '15%' },
+    { key: 'actions', flex: '20%', truncate: false },
+  ];
 
   form: FormGroup = this.fb.group({
     rows: this.fb.array([])
   });
   isEdit: boolean;
-  rowValue: ICategory;
-
-  @ViewChild('searchInput') searchInput: ElementRef<HTMLElement>;
-  @ViewChildren('focusInput') focusInput: QueryList<ElementRef>;
+  rowValue: User;
 
   constructor(
-    private readonly ngZone: NgZone,
     private readonly fb: FormBuilder,
-    private readonly cdr: ChangeDetectorRef,
-    private readonly service: CategoryService
+    private readonly list: UsersService,
+    private readonly details: UserDetailsService,
   ) { }
 
   ngOnInit(): void {
-    this.getCategories();
-  }
-
-  private getCategories(): void {
-    this.categories$ = this.service.all().pipe(
-      tap({
-        next: (data) => {
-          this.form = this.fb.group({
-            rows: this.fb.array(data.map(item =>
-              this.fb.group({
-                categoryId: item.categoryId,
-                categoryName: item.categoryName,
-                isEditable: [false]
-              })
-            ))
-          });
-          this.dataSource = new MatTableDataSource(this.rows.controls);
-        }
-      })
-    );
+    this.list.loadState();
   }
 
   /**
-   * @description Adding new row
+   * @description add new user
    */
 
   addNewRow(): void {
     this.isEdit = false;
-    this.rows.push(this.initRow());
-    this.dataSource = new MatTableDataSource(this.rows.controls);
+    this.rows.push(this.details.buildForm());
+    this.list.executeJob('create$', this.rowValue.id);
   }
 
   editItem(idx: number): void {
     this.isEdit = true;
     this.rowValue = this.getRowValue(idx);
     this.rows.at(idx).get('isEditable').patchValue(true);
+    this.list.executeJob('update$', this.rowValue.id);
   }
 
   deleteItem(idx: number): void {
     this.rows.removeAt(idx);
-    this.dataSource = new MatTableDataSource(this.rows.controls);
+    this.list.executeJob('remove$', this.rowValue.id);
   }
 
   saveChanges(idx: number): void {
@@ -114,10 +85,7 @@ export class AdvancedCrudComponent implements OnInit {
         break;
       }
       case true: {
-        this.rows.at(idx).patchValue({
-          categoryId: this.rowValue.categoryId,
-          categoryName: this.rowValue.categoryName,
-        });
+        this.rows.at(idx).patchValue(this.rowValue);
         this.rows.at(idx).get('isEditable').patchValue(false);
         break;
       }
@@ -131,24 +99,7 @@ export class AdvancedCrudComponent implements OnInit {
     return this.rows.at(idx).valid;
   }
 
-  onFocus(): void {
-    /**
-     * @description: another way to set autofocus: OnPush
-     * @issues: delete the first item, it returns this.focusInput.first is undefined
-     this.focusInput.changes.subscribe(() => {
-        return this.focusInput.last.nativeElement.focus();
-      });
-     */
-
-    this.ngZone.runOutsideAngular(() => {
-      setTimeout(() => {
-        this.focusInput.last.nativeElement.focus();
-        this.cdr.detectChanges();
-      });
-    });
-  }
-
-  private getRowValue(idx: number): ICategory {
+  private getRowValue(idx: number): User {
     const values = this.rows.at(idx).value;
     delete values.isEditable;
 
@@ -157,13 +108,5 @@ export class AdvancedCrudComponent implements OnInit {
 
   get rows(): FormArray {
     return this.form.get('rows') as FormArray;
-  }
-
-  private initRow(): FormGroup {
-    return this.fb.group({
-      categoryId: [null, Validators.required],
-      categoryName: [null, Validators.required],
-      isEditable: [true]
-    });
   }
 }

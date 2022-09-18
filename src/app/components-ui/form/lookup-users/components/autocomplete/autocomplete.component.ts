@@ -5,6 +5,7 @@ import { SelectOptionComponent } from '../select-option/select-option.component'
 
 @Component({
   selector: 'app-autocomplete',
+  standalone: true,
   templateUrl: './autocomplete.component.html',
   exportAs: 'appAutocomplete'
 })

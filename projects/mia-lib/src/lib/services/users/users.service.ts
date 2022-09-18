@@ -7,7 +7,9 @@ import { SnackbarService } from '../snackbar/snackbar.service';
 import { UserDetailsService } from './user-details.service';
 import { INITIAL_USER_STATE, User } from './user-service.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UsersService extends StateService<User> {
 
   readonly users_state$ = this.select((state) => state);

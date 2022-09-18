@@ -15,7 +15,9 @@ const DEFAULT_VALUE = {
   hobbies: []
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class InternalUserService extends BaseService<UserInput> {
 
   constructor(
@@ -42,7 +44,9 @@ export class InternalUserService extends BaseService<UserInput> {
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserDetailsService extends AbstractFormService<UserInput>{
 
   primary_key = 'id';

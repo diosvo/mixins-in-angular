@@ -55,7 +55,7 @@ export abstract class AbstractFormService<T> {
 
   protected abstract create$(): Observable<T>;
 
-  protected abstract update$(id: string): Observable<T>;
+  protected abstract update$(id: string | number): Observable<T>;
 
   protected pipeHandler = () =>
     pipe(

@@ -17,6 +17,7 @@
       <ng-container
         *ngFor="let column of columns; let idx = index"
         [matColumnDef]="column.key"
+        [stickyEnd]="column.key === actions"
       >
         <ng-container
           *ngIf="column.key === select; then checkbox; else noCheckbox"
@@ -60,11 +61,11 @@
             [disabled]="
               !source.data.length ||
               column.disableSorting ||
-              column.key === 'actions'
+              column.key === actions
             "
           >
             <span [class.truncate-cell]="column.truncate ?? true">
-              {{ column?.header || column?.key | uppercase }}
+              {{ column.header || column.key | uppercase }}
             </span>
           </mat-header-cell>
           <mat-cell
@@ -82,7 +83,12 @@
                 }"
               ></ng-container>
             </span>
-            <ng-template #noTemplates>{{ row[column.key] }}</ng-template>
+            <ng-template #noTemplates>
+              <span
+                [highlight]="highlight"
+                [innerHTML]="row[column.key]"
+              ></span>
+            </ng-template>
           </mat-cell>
         </ng-template>
       </ng-container>
@@ -92,10 +98,7 @@
       ></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 
-      <!-- Loading spinner -->
-      <div *matNoDataRow>
-        <div class="d-flex jc-center ai-center my-2">No data found</div>
-      </div>
+      <ng-content *matNoDataRow select="[noData]"></ng-content>
     </mat-table>
   </div>
 

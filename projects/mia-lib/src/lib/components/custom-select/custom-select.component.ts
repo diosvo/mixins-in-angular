@@ -1,17 +1,35 @@
-import { Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatSelectChange } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Required } from '@lib/decorators/required-attribute';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
 import isEqual from 'lodash.isequal';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { FilterPipe } from '../../pipes/filter.pipe';
+import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
 @Component({
   selector: 'custom-select',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    TrackByKeyDirective,
+    CustomInputComponent,
+
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatCheckboxModule
+  ],
   templateUrl: './custom-select.component.html',
   providers: [
     {
@@ -19,7 +37,8 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
       useExisting: CustomSelectComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
 
@@ -31,12 +50,14 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   @Input() bindKeyValue = false;
 
   @Input() checkAll = true;
+  @Input() disabled = false;
   @Input() placeholder = 'Select';
   @Input() searchPlaceholder = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
-  private primitiveItems: T[];
-  query = new FormControl('');
+  protected allow = false;
+  protected primitiveItems: T[];
+  protected query = new FormControl('');
 
   constructor(
     readonly injector: Injector,
@@ -60,7 +81,7 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
       startWith(this.query.value)
     );
     this.items = combineLatest([this.items as Observable<T[]>, query$]).pipe(
-      map(([data, query]) => new FilterPipe().transform(data, query) as T[]),
+      map(([data, query]) => new FilterPipe<T>().transform(data, query).sort()),
     );
   }
 
@@ -73,6 +94,10 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
 
   selectionChange(change: MatSelectChange): void {
     this.control.setValue(change.value);
+  }
+
+  openedChange(change: boolean): void {
+    this.allow = !change;
   }
 
   /* Functions to support Check All feature */
@@ -89,3 +114,6 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
     this.control.setValue(change.checked ? this.primitiveItems : []);
   }
 }
+
+// ref: https://marselbeqiri.medium.com/angular-material-custom-mat-select-with-search-functionality-4b2b69b47511
+

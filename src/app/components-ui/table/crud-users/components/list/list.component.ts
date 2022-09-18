@@ -1,27 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { UserDetailsService } from '@lib/services/users/user-details.service';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
+import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
-import isEqual from 'lodash.isequal';
-import { catchError, filter, finalize, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import isEmpty from 'lodash.isempty';
+import { filter, take } from 'rxjs';
+import { DetailsComponent } from '../details/details.component';
 
 @Component({
   selector: 'list-users',
-  templateUrl: './list.component.html'
+  standalone: true,
+  imports: [
+    CommonModule,
+
+    AlertComponent,
+    NoResultsComponent,
+    CustomTableComponent,
+    CustomInputComponent,
+    CustomButtonComponent,
+    ConfirmDialogComponent,
+
+    FilterPipe,
+    TrackByKeyDirective,
+    TableColumnDirective,
+  ],
+  templateUrl: './list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  users$: Observable<User[]>;
 
-  loading = true;
-  query = new FormControl('');
-  errorMessage$ = new Subject<string>();
+  readonly state$ = this.service.users_state$;
+  query = new FormControl('', { nonNullable: true });
 
-  columns: TableColumn[] = [
+  readonly columns: TableColumn[] = [
     { key: 'id', flex: '10%' },
     { key: 'name', flex: '20%' },
     { key: 'email', flex: '20%' },
@@ -32,21 +53,33 @@ export class ListComponent implements OnInit {
   constructor(
     private readonly dialog: MatDialog,
     private readonly service: UsersService,
-    private readonly snackbar: SnackbarService,
-    private readonly details: UserDetailsService,
   ) { }
 
   ngOnInit(): void {
-    this.users$ = this.service.all().pipe(
-      tap(() => this.loading = false),
-      catchError(({ message }) => {
-        this.errorMessage$.next(message);
-        return of(message);
-      })
-    );
+    this.service.loadState();
   }
 
-  openConfirmDialog(user: User): void {
+  onBulk(user: User): void {
+    this.dialog
+      .open(DetailsComponent, {
+        data: {
+          user,
+          isEdit: !isEmpty(user)
+        },
+        width: '500px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .pipe(
+        filter((ok: boolean) => ok),
+        take(1)
+      )
+      .subscribe({
+        next: () => this.service.executeJob(isEmpty(user) ? 'create$' : 'update$', user.id)
+      });
+  }
+
+  onDelete(user: User): void {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: {
@@ -58,23 +91,12 @@ export class ListComponent implements OnInit {
         disableClose: true,
       })
       .afterClosed()
-      .pipe(filter(result => result))
-      .subscribe(() => this.delete(user));
-  }
-
-  private delete(user: User): void {
-    this.loading = true;
-
-    this.details.remove$(user.id)
       .pipe(
-        switchMap(() => this.users$ = this.users$.pipe(
-          map((data: User[]) => data.filter(item => !isEqual(item.id, user.id)))
-        )),
-        finalize(() => this.loading = false)
+        filter((ok: boolean) => ok),
+        take(1)
       )
       .subscribe({
-        next: () => this.snackbar.success(`${user.name} has been deleted.`),
-        error: ({ message }) => this.snackbar.error(message)
+        next: () => this.service.executeJob('remove$', user.id)
       });
   }
 }

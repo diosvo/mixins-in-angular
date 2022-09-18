@@ -1,1 +1,21 @@
-@import './size', './weight', './transform', './align';
+@use "@angular/material" as mat;
+@import "./size", "./weight", "./transform", "./align";
+// custom material typography
+@import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
+
+:root {
+  --font-family: "Manrope", -apple-system, "BlinkMacSystemFont", system-ui,
+    "Roboto", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-style: normal;
+  --font-size: 0.8125rem;
+  --line-height: 1.25rem;
+  --font-text: var(--font-style) var(--font-size) var(--line-height)
+    var(--font-family);
+}
+
+$custom-typography: mat.define-typography-config(
+  $body-1: mat.define-typography-level(var(--font-size), 20px, 400),
+  $font-family: var(--font-family),
+);
+
+@include mat.core($custom-typography);

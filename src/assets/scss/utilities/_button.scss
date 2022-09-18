@@ -1,12 +1,12 @@
+@use "palette";
+
 button {
   outline: none;
-  border : 0;
+  border: 0;
 
   &:hover {
     cursor: pointer;
-
-    transition: all .1s ease;
-    box-shadow: var(--hover-light-shadow);
+    transition: all 0.2s ease-in-out;
   }
 
   &:focus {
@@ -18,11 +18,10 @@ button {
   &-pointer:hover {
     cursor: pointer;
   }
-}
 
-.disable {
-  cursor : not-allowed !important;
-  opacity: .7;
+  &-prevent:hover {
+    cursor: not-allowed;
+  }
 }
 
 .btn {

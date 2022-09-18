@@ -1,50 +1,60 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
-
-<ng-template #noError>
-  <mat-progress-bar
-    *ngIf="loading"
-    class="mb-1"
-    mode="indeterminate"
-  ></mat-progress-bar>
+<ng-container *ngIf="state$ | async as state">
+  <alert-message *ngIf="state.error" type="error">
+    {{ state.error }}
+  </alert-message>
 
   <custom-table
-    *ngIf="users$ | async as data"
-    [data]="data | filter: query.value"
+    [data]="state.data | filter: query.value"
     [columns]="columns"
+    [highlight]="query.value"
     [defaultSortColumn]="'name'"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
-      <custom-button [routerLink]="['create']"> Create User </custom-button>
+      <custom-button variant="flat" (click)="onBulk({})">
+        Create User
+      </custom-button>
     </div>
 
-    <div filters>
-      <custom-input
-        class="flex-1"
-        label="search"
-        [clearFilter]="true"
-        [formControl]="query"
-      >
-      </custom-input>
-    </div>
-
-    <custom-column columnName="email">
-      <ng-template let-user>
-        {{ user.email | lowercase }}
-      </ng-template>
-    </custom-column>
+    <custom-input
+      filters
+      class="flex-1"
+      label="search"
+      [clearFilter]="true"
+      [formControl]="query"
+    >
+    </custom-input>
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
-        <custom-button type="icon" [routerLink]="[user.id]">
-          edit
+        <custom-button
+          variant="icon"
+          tooltip="Edit"
+          iconClass="f-16"
+          [disabled]="state.loading"
+          (click)="onBulk(user)"
+        >
+          <ng-container icon>edit</ng-container>
         </custom-button>
-        <custom-button type="icon" (click)="openConfirmDialog(user)">
-          delete_outline
+        <custom-button
+          variant="icon"
+          tooltip="Delete"
+          iconClass="f-16"
+          [disabled]="state.loading"
+          (click)="onDelete(user)"
+        >
+          <ng-container icon>delete_outline</ng-container>
         </custom-button>
       </ng-template>
     </custom-column>
+
+    <ng-container noData>
+      <ng-container *ngIf="state.loading; else notFound">
+        <div class="text-center m-2">Loading ...</div>
+      </ng-container>
+      <ng-template #notFound>
+        <no-results (resetFilters)="query.setValue('')"></no-results>
+      </ng-template>
+    </ng-container>
   </custom-table>
-</ng-template>
+</ng-container>

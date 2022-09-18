@@ -1,20 +1,20 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { FakeBackendProvider } from '@backend/api/fake-be';
-import { UnsavedChangesDialogModule } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.module';
+import { FooterComponent } from '@home/components/footer/footer.component';
+import { ToolbarComponent } from '@home/components/toolbar/toolbar.component';
+import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { LoadingService } from '@lib/services/loading/loading.service';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FooterModule } from './home/components/footer/footer.module';
-import { ToolbarModule } from './home/components/toolbar/toolbar.module';
 import { MonitorInterceptor } from './interceptors/monitor.interceptor';
 
 @NgModule({
@@ -27,28 +27,27 @@ import { MonitorInterceptor } from './interceptors/monitor.interceptor';
     AppRoutingModule,
     HttpClientModule,
 
-    FooterModule,
-    ToolbarModule,
+    FooterComponent,
+    ToolbarComponent,
     MatSnackBarModule,
-    UnsavedChangesDialogModule,
+    MatProgressBarModule,
+    UnsavedChangesDialogComponent,
 
     /* init firebase config */
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
   ],
   providers: [
-    FakeBackendProvider,
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline', floatLabel: 'never' }
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MonitorInterceptor,
       multi: true
     },
-    ScreenTrackingService,
-    UserTrackingService
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline', floatLabel: 'never' }
+    },
+    LoadingService
   ],
   bootstrap: [AppComponent]
 })

@@ -15,11 +15,13 @@
   />
   <ng-container *ngIf="clearFilter" matSuffix>
     <custom-button
-      type="icon"
       *ngIf="control.value !== EMPTY_VALUE"
       (click)="control.setValue(EMPTY_VALUE)"
+      variant="icon"
+      tooltip="Clear"
+      iconClass="text-secondary"
     >
-      clear
+      <ng-container icon>clear</ng-container>
     </custom-button>
   </ng-container>
   <ng-container matSuffix>

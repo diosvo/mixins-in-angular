@@ -1,15 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-micro-interaction',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './micro-interaction.component.html',
   styleUrls: ['./micro-interaction.component.scss'],
 })
 
 export class MicroInteractionComponent implements OnInit {
-
-  constructor() { }
 
   ngOnInit(): void {
     this.mainFunction();

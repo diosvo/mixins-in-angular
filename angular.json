@@ -44,7 +44,10 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "lodash"
+              "lodash.isundefined",
+              "lodash.isequal",
+              "lodash.isempty",
+              "lodash.omit"
             ]
           },
           "configurations": {
@@ -160,8 +163,7 @@
       }
     }
   },
-  "defaultProject": "mixins-in-angular",
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
+    "analytics": "2ae0ceb5-fc9d-4547-a95e-71d87ee6875c"
   }
 }

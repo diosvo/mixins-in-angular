@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 const navList = [
   {
@@ -17,40 +18,40 @@ const navList = [
     title: 'Profile',
     icon: 'icon-user',
   },
-];
+] as const;
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
 
-  selected: number;
+  protected selected: number;
+  protected navList = navList;
 
   private sizes = {
     listItemWidth: 0,
     translateX: 0
   };
 
-  public navList = navList;
-
-  get animate(): any {
+  get animate(): { width: string, transform: string } {
     return {
       width: this.sizes.listItemWidth + 'px',
-      transform: `translateX(${ this.sizes.translateX }px)`
+      transform: `translateX(${this.sizes.translateX}px)`
     };
   }
 
-  private updateSizes(element: HTMLElement, index = 1): void {
+  onSelect(element: HTMLElement, index: number): void {
+    const width = element.getBoundingClientRect().width;
+    this.selected = index;
+
     this.sizes = {
-      listItemWidth: element.getBoundingClientRect().width,
-      translateX: element.getBoundingClientRect().width * index
+      listItemWidth: width,
+      translateX: width * this.selected
     };
-  }
-
-  onSelect(element: HTMLElement, idx: number): void {
-    this.selected = idx;
-    this.updateSizes(element, idx);
   }
 }

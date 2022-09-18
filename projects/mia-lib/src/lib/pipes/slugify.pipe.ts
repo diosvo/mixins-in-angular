@@ -1,7 +1,8 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'slugify'
+  name: 'slugify',
+  standalone: true
 })
 export class SlugifyPipe implements PipeTransform {
 
@@ -15,9 +16,3 @@ export class SlugifyPipe implements PipeTransform {
   }
 
 }
-
-@NgModule({
-  declarations: [SlugifyPipe],
-  exports: [SlugifyPipe],
-})
-export class SlugifyPipeModule { }

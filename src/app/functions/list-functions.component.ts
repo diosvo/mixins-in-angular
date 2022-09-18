@@ -1,14 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { EFunctions } from '@home/models/url.enum';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CardItemComponent } from '@home/components/card-item/card-item.component';
+import { EFunctions, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
-import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
-import isEmpty from 'lodash.isempty';
+import { AlertComponent } from '@lib/components/alert/alert.component';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
+import { State } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
-import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
-import { catchError, map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
-const groupList = Object.values(EFunctions).sort();
 const DEFAULT_FILTER = {
   query: '',
   group: []
@@ -16,7 +24,23 @@ const DEFAULT_FILTER = {
 
 @Component({
   selector: 'app-list-functions',
+  standalone: true,
   templateUrl: './list-functions.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    AlertComponent,
+    CardItemComponent,
+    NoResultsComponent,
+    CustomButtonComponent,
+    CustomInputComponent,
+    CustomSelectComponent,
+
+    MatTooltipModule,
+    MatExpansionModule,
+    MatProgressBarModule
+  ],
   styles: [`
   @import 'layout/breakpoints';
   @include screen('extra-small') {
@@ -24,52 +48,25 @@ const DEFAULT_FILTER = {
         display: block;
     }
   }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListFunctionsComponent implements OnInit {
 
-  errorMessage$ = new Subject<string>();
-  filteredData$: Observable<CardItem[]>;
+  state$: Observable<State<CardItem>>;
 
-  readonly selection = groupList;
-  functionsForm: FormGroup = this.fb.group({
-    query: [DEFAULT_FILTER.query],
-    group: [DEFAULT_FILTER.group]
+  readonly selection = Object.values(EFunctions).sort();
+  readonly form = new FormGroup({
+    query: new FormControl(DEFAULT_FILTER.query, { nonNullable: true }),
+    group: new FormControl(DEFAULT_FILTER.group, { nonNullable: true }),
   });
 
   constructor(
-    private readonly fb: FormBuilder,
     private readonly searchService: SearchService,
   ) { }
 
   ngOnInit(): void {
-    this.onFilters();
-  }
-
-  /**
-   * @description Search
-   */
-
-  private onFilters(): void {
-    const data$ = this.searchService.functionsList$;
-    const filters$ = this.functionsForm.valueChanges.pipe(
-      startWith(this.functionsForm.value),
-    );
-
-    this.filteredData$ = combineLatest([data$, filters$]).pipe(
-      map(([data, filters]) =>
-        data
-          .filter((item: CardItem) => (isEmpty(this.group.value) ? groupList : filters.group).includes(item.group_id))
-          .filter((item: CardItem) => new FilterObjectPipe().transform(item, filters.query))
-      ),
-      catchError(({ message }) => {
-        this.errorMessage$.next(message);
-        return EMPTY;
-      })
-    );
-  }
-
-  cleanFilters(): void {
-    this.functionsForm.setValue(DEFAULT_FILTER);
+    const filters$ = this.form.valueChanges.pipe(startWith(this.form.value));
+    this.state$ = this.searchService.getData(EUrl.FUNCTION, filters$, this.selection);
   }
 
   clearAllIconActive(): boolean {
@@ -77,14 +74,8 @@ export class ListFunctionsComponent implements OnInit {
   }
 
   private get primitiveFilters(): boolean {
-    return isEqual(this.query.value, DEFAULT_FILTER.query) && isEqual(this.group.value, DEFAULT_FILTER.group);
-  }
-
-  get query(): FormControl {
-    return this.functionsForm.get('query') as FormControl;
-  }
-
-  get group(): FormControl {
-    return this.functionsForm.get('group') as FormControl;
+    const { query, group } = this.form.value;
+    return isEqual(query, DEFAULT_FILTER.query)
+      && isEqual(group.length, DEFAULT_FILTER.group.length);
   }
 }

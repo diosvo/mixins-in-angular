@@ -1,58 +1,39 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Attribute, Component, ContentChild, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ButtonLoaderIconDirective } from './button-loader-icon.directive';
 
-type ButtonType = 'primary' | 'secondary' | 'text' | 'icon';
-type ButtonComponentType = typeof PrimaryButtonComponent | typeof IconButtonComponent;
-
-// Missing features:
-// secondary | text button
-// disabled state
+type ButtonType = 'basic' | 'flat' | 'outline' | 'icon';
 
 @Component({
   selector: 'custom-button',
-  templateUrl: './custom-button.component.html'
+  templateUrl: './custom-button.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ButtonLoaderIconDirective,
+
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+  ],
 })
 export class CustomButtonComponent {
-  @Input() type: ButtonType = 'primary';
 
-  get buttonComponentType(): ButtonComponentType {
-    switch (this.type) {
-      case 'primary':
-        return PrimaryButtonComponent;
-      case 'icon':
-        return IconButtonComponent;
-      case 'text':
-        return TextButtonComponent;
-    }
-  }
+  @Input() disabled = false;
+  @Input() loading = false;
+  @Input() iconClass: string;
+  @Input() buttonClass: string;
+  @Input() tooltip = '';
+
+  @ContentChild(ButtonLoaderIconDirective)
+  protected readonly icon: ButtonLoaderIconDirective;
+
+  constructor(
+    @Attribute('variant') readonly variant: ButtonType
+  ) { }
 }
 
-@Component({
-  selector: 'primary-button',
-  template: `
-    <button mat-flat-button [color]="'primary'">
-        <ng-content></ng-content>
-    </button>
-  `
-})
-export class PrimaryButtonComponent { }
-
-@Component({
-  selector: 'icon-button',
-  template: `
-    <button mat-icon-button>
-      <mat-icon class="text-secondary f-16"><ng-content></ng-content></mat-icon>
-    </button>
-  `
-})
-export class IconButtonComponent { }
-
-@Component({
-  selector: 'text-button',
-  styleUrls: ['./custom-button.component.scss'],
-  template: `
-    <button class="button-text" mat-button>
-      <ng-content></ng-content>
-    </button>
-  `
-})
-export class TextButtonComponent { }
+// 📌 : https://sreyaj.dev/creating-buttons-with-custom-loading-animations-in-angular-simple-and-easy

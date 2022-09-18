@@ -1,27 +1,16 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
-import { User } from '@lib/services/users/user-service.model';
-import { of, throwError } from 'rxjs';
+import { MOCK_USER } from '@lib/services/users/user.mock';
+import { of } from 'rxjs';
+import { DetailsComponent } from '../details/details.component';
 import { ListComponent } from './list.component';
-
-const user: User = {
-  name: 'Dios Vo',
-  email: 'vtmn1212@gmail.com',
-  hobbies: ['coding', 'basketball']
-};
-
-const list_users = [user];
 
 describe('ListComponent', () => {
   let component: ListComponent;
 
   const mockService: any = {
-    all: jest.fn().mockReturnValue(of(list_users)),
-  };
-
-  const mockDetailsService: any = {
-    delete: jest.fn().mockReturnValue(of({}))
+    loadState: jest.fn(),
+    executeJob: jest.fn().mockReturnValue(of(MOCK_USER)),
   };
 
   const mockDialog: any = {
@@ -29,66 +18,80 @@ describe('ListComponent', () => {
   };
 
   beforeEach(() => {
-    component = new ListComponent(mockDialog, mockService, mockSnackbar, mockDetailsService);
+    component = new ListComponent(mockDialog, mockService);
   });
 
   test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('call list users when the API returns', () => {
-    test('success', (done) => {
+  describe('ngOnInit()', () => {
+    test('should load state', () => {
       component.ngOnInit();
-      component.users$.subscribe((response: Array<User>) => {
-        expect(response).toEqual(list_users);
-        done();
-      });
-    });
-
-    test('error', () => {
-      jest.spyOn(component.errorMessage$, 'next');
-      mockService.all.mockReturnValue(throwError(() => new Error('ERROR_MESSAGE')));
-
-      component.ngOnInit();
-      component.users$.subscribe(() => expect(component.errorMessage$.next).toBeCalledWith('ERROR_MESSAGE'));
+      expect(mockService.loadState).toBeCalled();
     });
   });
 
-  describe('openConfirmDialog()', () => {
-    test('should call delete methos when the user clicks on Confirm button', () => {
-      jest.spyOn(component as any, 'delete');
+  describe('onBulk()', () => {
+    beforeEach(() => {
       jest.spyOn(mockDialog, 'open').mockReturnValue(
         { afterClosed: () => of(true) } as MatDialogRef<typeof ListComponent>
       );
+    });
 
-      component.openConfirmDialog(user);
+    test('should open dialog to update user', () => {
+      component.onBulk(MOCK_USER);
+      expect(mockDialog.open).toBeCalledWith(DetailsComponent, {
+        data: {
+          user: MOCK_USER,
+          isEdit: true,
+        },
+        width: '500px',
+        disableClose: true,
+      });
+      expect(mockService.executeJob).toBeCalledWith('update$', MOCK_USER.id);
+    });
 
+    test('should open dialog to create new user', () => {
+      component.onBulk({});
+      expect(mockDialog.open).toBeCalledWith(DetailsComponent, {
+        data: {
+          user: {},
+          isEdit: false,
+        },
+        width: '500px',
+        disableClose: true,
+      });
+      expect(mockService.executeJob).toBeCalledWith('create$', undefined);
+    });
+  });
+
+  describe('onDelete()', () => {
+    afterEach(() => {
       expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
         data: {
           header: 'Delete',
-          body: `Are you sure you want to delete ${user.name}?`,
+          body: `Are you sure you want to delete ${MOCK_USER.name}?`,
           btnClose: false
         },
         width: '500px',
         disableClose: true,
       });
-      expect(component['delete']).toBeCalledWith(user);
+    });
+
+    test('should call delete method when the user clicks on Confirm button', () => {
+      jest.spyOn(mockDialog, 'open').mockReturnValue(
+        { afterClosed: () => of(true) } as MatDialogRef<typeof ListComponent>
+      );
+      component.onDelete(MOCK_USER);
+      expect(mockService.executeJob).toBeCalledWith('remove$', MOCK_USER.id);
     });
 
     test('should not call delete method when the user clicks on Close button', () => {
       jest.spyOn(mockDialog, 'open').mockReturnValue(
         { afterClosed: () => of(false) } as MatDialogRef<typeof ListComponent>
       );
-      component.openConfirmDialog(user);
-      expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
-        data: {
-          header: 'Delete',
-          body: `Are you sure you want to delete ${user.name}?`,
-          btnClose: false
-        },
-        width: '500px',
-        disableClose: true,
-      });
+      component.onDelete(MOCK_USER);
     });
   });
 });

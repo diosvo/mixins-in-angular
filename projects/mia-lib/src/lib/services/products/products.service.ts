@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoggerFactory } from '@lib/helpers/logger.factory';
 import { IProduct } from '@lib/models/product';
-import { CategoryService } from '@lib/services/category/category.service';
 import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 
@@ -40,7 +39,7 @@ export class ProductsService {
     );
 
   withCategory$ =
-    combineLatest([this.all$, this.categoryService.all$]) // [ Array<IProduct>, Array<ICategory> ]
+    combineLatest([this.all$, of([])]) // [ Array<IProduct>, Array<ICategory> ]
       .pipe(
         map(([products, categories]) =>
           products.map(
@@ -64,7 +63,6 @@ export class ProductsService {
   constructor(
     private readonly http: HttpClient,
     private readonly loggerFactory: LoggerFactory,
-    private readonly categoryService: CategoryService,
   ) { }
 
   /**
@@ -95,7 +93,7 @@ export class ProductsService {
 
   start(): void {
     // Start the related services
-    this.categoryService.start();
+    // this.categoryService.start();
     this.refresh.next();
   }
 }

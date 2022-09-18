@@ -1,33 +1,65 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, startWith, switchMap } from 'rxjs';
-import { BaseService } from '../base/base.service';
-import { HandleService } from '../base/handle.service';
-import { endpoint, User } from './user-service.model';
+import { State } from '@lib/models/server.model';
+import isEqual from 'lodash.isequal';
+import { catchError, map, of, startWith } from 'rxjs';
+import { StateService } from '../base/state.service';
+import { SnackbarService } from '../snackbar/snackbar.service';
+import { UserDetailsService } from './user-details.service';
+import { INITIAL_USER_STATE, User } from './user-service.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService extends StateService<User> {
 
-export class UsersService extends BaseService<User> {
+  readonly users_state$ = this.select((state) => state);
 
   constructor(
-    protected readonly http: HttpClient,
-    protected readonly handle: HandleService
+    private readonly snackbar: SnackbarService,
+    private readonly service: UserDetailsService,
   ) {
-    super(http, handle);
+    super(INITIAL_USER_STATE);
   }
 
-  all(): Observable<User[]> {
-    return this.list(endpoint);
-  }
-
-  lookup(data: Observable<User[]>, inclusion: Observable<number[]>): Observable<User[]> {
-    return inclusion.pipe(
-      startWith([]),
-      switchMap((ids: number[]) =>
-        data.pipe(
-          map((data: User[]) => data.filter((item: User) => ids.includes(item.id)))
-        )
+  loadState(): void {
+    this.service.all$()
+      .pipe(
+        map((data: User[]) => ({ data, loading: false })),
+        catchError(({ message }) => of({ data: [], error: message, loading: false })),
+        startWith(INITIAL_USER_STATE)
       )
-    );
+      .subscribe({
+        next: (state: State<User>) => this.setState(state)
+      });
+  }
+
+  executeJob(action: 'update$' | 'create$' | 'remove$', id: number): void {
+    this.setState({ loading: true });
+    const job = (user: User) => {
+      switch (action) {
+        case 'update$':
+          return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
+        case 'create$':
+          return this.state.data.concat(user);
+        case 'remove$':
+          return this.state.data.filter((selected: User) => !isEqual(selected.id, id));
+      }
+    };
+
+    this.service[action](id).subscribe({
+      next: (user: User) => {
+        this.setState({
+          data: job(user),
+          loading: false
+        });
+        this.snackbar.success(`The user has been ${action.replace('$', 'd')}`);
+      },
+      error: ({ message }) => {
+        this.setState({
+          loading: false
+        });
+        this.snackbar.error(message);
+      }
+    });
   }
 }

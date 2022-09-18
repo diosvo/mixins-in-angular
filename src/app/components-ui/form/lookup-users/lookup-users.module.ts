@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
-import { CustomTableModule } from '@lib/components/custom-table/custom-table.module';
-import { TrackByKeyDirectiveModule } from '@lib/directives/track-by-key.directive';
+import { CustomTableComponent } from '@lib/components/custom-table/custom-table.component';
+import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { UsersService } from '@lib/services/users/users.service';
-import { FilterPipeModule } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
+import { FilterPipe } from 'projects/mia-lib/src/lib/pipes/filter.pipe';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { SelectOptionComponent } from './components/select-option/select-option.component';
@@ -36,9 +36,9 @@ import { AutocompleteDirective } from './utils/autocomplete.directive';
       }
     ]),
 
-    FilterPipeModule,
-    CustomTableModule,
-    TrackByKeyDirectiveModule,
+    FilterPipe,
+    CustomTableComponent,
+    TrackByKeyDirective,
 
     MatProgressSpinnerModule
   ],

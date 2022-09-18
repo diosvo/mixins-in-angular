@@ -1,6 +1,6 @@
 {
   "name": "mixins-in-angular",
-  "author": "diosvo",
+  "author": "Dios Vo <vtmn1212@gmail.com>",
   "version": "2.0.0",
   "type": "module",
   "scripts": {
@@ -9,9 +9,9 @@
     "dev": "ng serve --hmr -o",
     "build": "ng build",
     "build:lib": "ng build mia-lib",
-    "test": "jest",
+    "test": "jest --no-cache",
     "jest:cache": "jest --clearCache",
-    "test:co": "jest --coverage --silent",
+    "test:co": "jest --coverage --coverageReporters='text-summary'",
     "lint": "eslint --color --ext .ts \"src/**/*.+(ts)\"",
     "lint:fix": "yarn lint --fix",
     "build:source-map": "ng build --configuration=production --source-map",
@@ -19,69 +19,46 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "~14.2.0",
+    "@angular/cdk": "^14.2.0",
+    "@angular/common": "~14.2.0",
+    "@angular/compiler": "~14.2.0",
+    "@angular/core": "~14.2.0",
     "@angular/fire": "^7.4.1",
-    "firebase": "^9.8.3",
-    "@angular/animations": "~14.0.4",
-    "@angular/cdk": "^14.0.4",
-    "@angular/common": "~14.0.4",
-    "@angular/compiler": "~14.0.4",
-    "@angular/core": "~14.0.4",
-    "@angular/forms": "~14.0.4",
-    "@angular/material": "^14.0.4",
-    "@angular/platform-browser": "~14.0.4",
-    "@angular/platform-browser-dynamic": "~14.0.4",
-    "@angular/router": "~14.0.4",
-    "rxjs": "~7.5.1",
+    "@angular/forms": "~14.2.0",
+    "@angular/material": "^14.2.0",
+    "@angular/platform-browser": "~14.2.0",
+    "@angular/platform-browser-dynamic": "~14.2.0",
+    "@angular/router": "~14.2.0",
+    "firebase": "^9.9.3",
+    "rxjs": "~7.5.6",
     "tslib": "^2.4.0",
-    "zone.js": "~0.11.6"
+    "zone.js": "~0.11.8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.0.4",
-    "@angular-eslint/builder": "14.0.0",
-    "@angular-eslint/eslint-plugin": "14.0.0",
-    "@angular-eslint/eslint-plugin-template": "14.0.0",
-    "@angular-eslint/schematics": "14.0.0",
-    "@angular-eslint/template-parser": "14.0.0",
-    "@angular/cli": "^14.0.4",
-    "@angular/compiler-cli": "~14.0.4",
-    "@types/jest": "^28.1.3",
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "5.30.0",
-    "@typescript-eslint/experimental-utils": "^5.30.0",
-    "@typescript-eslint/parser": "5.30.0",
-    "eslint": "^8.18.0",
-    "gsap": "^3.10.4",
-    "jest": "^28.1.2",
-    "jest-preset-angular": "12.1.0",
+    "@angular-devkit/build-angular": "^14.2.1",
+    "@angular-eslint/builder": "14.0.3",
+    "@angular-eslint/eslint-plugin": "14.0.3",
+    "@angular-eslint/eslint-plugin-template": "14.0.3",
+    "@angular-eslint/schematics": "14.0.3",
+    "@angular-eslint/template-parser": "14.0.3",
+    "@angular/cli": "^14.2.1",
+    "@angular/compiler-cli": "~14.2.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.7.14",
+    "@typescript-eslint/eslint-plugin": "5.36.1",
+    "@typescript-eslint/experimental-utils": "^5.36.1",
+    "@typescript-eslint/parser": "5.36.1",
+    "eslint": "^8.23.0",
+    "gsap": "^3.11.0",
+    "jest": "^29.0.1",
+    "jest-preset-angular": "12.2.2",
     "lodash.isempty": "^4.4.0",
     "lodash.isequal": "^4.5.0",
     "lodash.isundefined": "^3.0.1",
     "lodash.omit": "^4.5.0",
-    "ng-packagr": "^14.0.2",
+    "ng-packagr": "^14.2.0",
     "source-map-explorer": "^2.5.2",
-    "typescript": "^4.7.4"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest-config.ts"
-    ],
-    "moduleNameMapper": {
-      "@lib(.*)": "<rootDir>/projects/mia-lib/src/lib/$1",
-      "@env(.*)": "<rootDir>/src/environments/$1",
-      "@auth(.*)": "<rootDir>/src/app/auth/$1",
-      "@home(.*)": "<rootDir>/src/app/home/$1"
-    },
-    "moduleDirectories": [
-      "node_modules",
-      "src",
-      "projects/mia-lib"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "<rootDir>/tsconfig.spec.json",
-        "stringifyContentPathRegex": "\\.html$"
-      }
-    }
+    "typescript": "^4.8.2"
   }
 }

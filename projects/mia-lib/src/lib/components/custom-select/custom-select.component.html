@@ -1,10 +1,11 @@
-<mat-form-field [appearance]="appearance">
+<mat-form-field [appearance]="appearance" class="width-100">
   <mat-label>{{ placeholder }}</mat-label>
   <mat-select
     #panel
     [multiple]="checkAll"
     [formControl]="control"
     [sortComparator]="sortFunc"
+    (openedChange)="openedChange($event)"
     (selectionChange)="selectionChange($event)"
   >
     <!-- Search Input & Check All -->
@@ -38,7 +39,7 @@
       <span
         *ngIf="control.value.length > 0"
         class="text-dark-blue f-12 cursor-pointer"
-        (click)="control.setValue([]); panel.close()"
+        (click)="control.setValue(primitiveItems); panel.close()"
       >
         Clear selection
       </span>

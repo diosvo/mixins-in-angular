@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-search-page',
@@ -16,7 +15,7 @@ import { Observable, Subject } from 'rxjs';
 })
 export class SearchPageComponent implements OnInit {
 
-  users$: Observable<User[]>;
+  state$ = this.service.users_state$;
   selected$ = new Subject<string>();
   control = new FormControl('', Validators.required);
 
@@ -25,7 +24,7 @@ export class SearchPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.users$ = this.service.all();
+    this.service.loadState();
   }
 
   stateChanges(name: string): void {

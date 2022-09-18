@@ -1,23 +1,23 @@
 import { SortDirection } from '@angular/material/sort';
 
-interface PaginateParams {
+interface Pagination {
   limit: number;
-  start: number;
+  offset: number;
   sort: string; // depended on key
   order: SortDirection;
 }
 
-const DEFAULT_PAGINATE_PARAMS: PaginateParams = {
+const DEFAULT_PAGINATE_PARAMS: Pagination = {
   limit: 100,
-  start: 0,
+  offset: 0,
   sort: 'id',
   order: 'asc'
 };
 
-function concatQueries(params: PaginateParams): string {
-  const queries = `?_start=${params.start}&_limit=${params.limit}`;
+function concatQueries(params: Pagination): string {
+  const queries = `?_start=${params.offset}&_limit=${params.limit}`;
   const sort = `&_order=${params.order}&_sort=${params.sort}`;
   return params.order && params.sort ? queries.concat(sort) : queries;
 }
 
-export { PaginateParams, DEFAULT_PAGINATE_PARAMS, concatQueries };
+export { Pagination, DEFAULT_PAGINATE_PARAMS, concatQueries };

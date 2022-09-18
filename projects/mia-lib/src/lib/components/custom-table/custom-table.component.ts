@@ -1,49 +1,76 @@
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Required } from '@lib/decorators/required-attribute';
+import { HighlightDirective } from '@lib/directives/highlight.directive';
 import { NgChanges } from '@lib/helpers/mark-function-properties';
+import { SlugifyPipe } from '@lib/pipes/slugify.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
-export interface TableColumn {
-  key: string;
-  flex?: string;
-  header?: string;
-  tooltip?: boolean;
-  truncate?: boolean;
-  disableSorting?: boolean;
+interface ColumnProperties {
+  flex: string;
+  header: string;
+  tooltip: boolean;
+  truncate: boolean;
+  disableSorting: boolean;
 }
+
+export type TableColumn = { key: string } & Partial<ColumnProperties>;
 
 @Component({
   selector: 'custom-table',
   templateUrl: './custom-table.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSortModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+
+    SlugifyPipe,
+    HighlightDirective
+  ],
   styleUrls: ['./custom-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'standard' }
+    },
+  ]
 })
 
 export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
 
   /** Definitions: data */
 
-  @Input() set data(source: T[]) {
+  @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
+    this.configPaginator();
     this.source.sort = this.matSort;
-    this.source.paginator = this.paginator;
   }
   @Input() trackByKey: string;
-  @Input() columns: TableColumn[] = [];
+  @Input() @Required columns: TableColumn[] = [];
   @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
 
   /** Styles */
 
-  @Input() style: Record<string, string>;
+  @Input() highlight: string;
+  @Input() style: Record<string, unknown>;
 
   /** Pagination */
 
@@ -56,7 +83,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() length: number;
   @Input() pageSize: number;
   @Input() pageIndex = 0;
-  @Input() pageSizeOptions: Array<number>;
+  @Input() pageSizeOptions: number[];
   @Output() pageChanges = new EventEmitter<PageEvent>();
 
   /** Sort */
@@ -65,22 +92,22 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   @Input() defaultSortDirection: SortDirection = 'asc';
   @ViewChild(MatSort) private readonly matSort: MatSort;
 
-  /** Filter */
-
-  @Input() filterable = false;
-
   /** Checkbox */
 
-  readonly select = 'select';
   @Input() enableCheckbox = false;
-  @Output() selectedRows = new EventEmitter();
+  @Output() selectedRows = new EventEmitter<T[]>();
+
+  /** Constants */
+
+  readonly select = 'select';
+  readonly actions = 'actions';
 
   /** construct columns definitions  */
 
   @ContentChildren(TableColumnDirective) private columnDefs: QueryList<TableColumnDirective>;
-  get columnTemplates(): { [key: string]: TemplateRef<any> } {
+  get columnTemplates(): Record<string, TemplateRef<ElementRef>> {
     if (!isEmpty(this.columnDefs)) {
-      const columnTemplates: { [key: string]: TemplateRef<any> } = {};
+      const columnTemplates: Record<string, TemplateRef<ElementRef>> = {};
       for (const column of this.columnDefs.toArray()) {
         columnTemplates[column.columnName] = column.columnTemplate;
       }
@@ -90,9 +117,9 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
   displayColumns: string[];
 
-  readonly DEFAULT_PAGESIZE = 5;
-  source = new MatTableDataSource<T>([]);
-  selection = new SelectionModel<T>(true, []); // store selection data
+  protected readonly DEFAULT_PAGESIZE = 5;
+  protected source = new MatTableDataSource<T>([]);
+  protected selection = new SelectionModel<T>(true, []); // store selection data
 
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
@@ -106,7 +133,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-    this.source.sort = this.matSort;
+    this.configSorting();
     this.configPaginator();
   }
 
@@ -122,6 +149,15 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 
   sortTable(sort: MatSort): void {
     this.matSort.active = this.columns.find((column: TableColumn) => isEqual(column.key, sort.active)).key;
+  }
+
+  private configSorting(): void {
+    this.source.sort = this.matSort;
+    const keys = this.columns.map(({ key }) => key);
+
+    if (this.defaultSortColumn && !keys.includes(this.defaultSortColumn)) {
+      throw Error('The default key provided for sorting does not exist in the column declaration.');
+    }
   }
 
   private configPaginator(): void {
@@ -174,3 +210,5 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     return this.trackByKey ? item[this.trackByKey] : item;
   }
 }
+
+// 🛠 https://material.io/components/data-tables#usage

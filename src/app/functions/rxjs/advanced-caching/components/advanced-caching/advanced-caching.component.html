@@ -1,0 +1,25 @@
+<ng-container *ngIf="showNotification$ | async">
+  <div class="m-2" @slideInOut>
+    <alert-message type="warning">
+      <div>
+        There's new data available.
+        <u class="cursor-pointer" (click)="update$.next()">Click</u> to reload
+        the data
+      </div>
+    </alert-message>
+  </div>
+</ng-container>
+
+<custom-table
+  *ngIf="jokes$ | async as jokes"
+  [data]="jokes"
+  [columns]="columns"
+  [defaultSortColumn]="'id'"
+>
+  <div header class="d-flex ai-baseline jc-between">
+    <h2>Advanced Caching</h2>
+    <custom-button variant="flat" (click)="forceReload()">
+      Fetch new jokes
+    </custom-button>
+  </div>
+</custom-table>

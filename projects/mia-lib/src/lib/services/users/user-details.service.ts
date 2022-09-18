@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
-import { BehaviorSubject, map, Observable, of, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BaseService } from '../base/base.service';
 import { AbstractFormService } from '../base/form.service';
 import { HandleService } from '../base/handle.service';
-import { endpoint, id_endpoint } from './user-service.model';
+import { endpoint, id_endpoint, User } from './user-service.model';
 
 const DEFAULT_VALUE = {
   id: null,
@@ -15,8 +15,10 @@ const DEFAULT_VALUE = {
   hobbies: []
 };
 
-@Injectable()
-export class InternalService extends BaseService<UserInput> {
+@Injectable({
+  providedIn: 'root'
+})
+export class InternalUserService extends BaseService<UserInput> {
 
   constructor(
     protected readonly http: HttpClient,
@@ -25,11 +27,8 @@ export class InternalService extends BaseService<UserInput> {
     super(http, handle);
   }
 
-  byId(id: number): Observable<UserInput> {
-    return this.get(id_endpoint(id)).pipe(
-      map(({ id, name, email }) => ({ id, name, email, hobbies: ['coding', 'basketball'] })),
-      shareReplay(1)
-    );
+  all(): Observable<User[]> {
+    return this.list(endpoint);
   }
 
   create(user: UserInput): Observable<UserInput> {
@@ -45,7 +44,9 @@ export class InternalService extends BaseService<UserInput> {
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserDetailsService extends AbstractFormService<UserInput>{
 
   primary_key = 'id';
@@ -54,9 +55,13 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   constructor(
     protected override fb: FormBuilder,
-    private readonly internal: InternalService,
+    private readonly internal: InternalUserService,
   ) {
     super(fb);
+  }
+
+  all$(): Observable<User[]> {
+    return this.internal.all();
   }
 
   buildForm(): FormGroup {
@@ -64,26 +69,24 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
       id: [DEFAULT_VALUE.id],
       name: [DEFAULT_VALUE.name, Validators.required],
       email: [DEFAULT_VALUE.email, [Validators.required, Validators.email]],
-      hobbies: [DEFAULT_VALUE.hobbies]
+      hobbies: [DEFAULT_VALUE.hobbies, { nonNullable: true }]
     });
   }
 
-  loadFromApiAndFillForm$(id: number): Observable<UserInput> {
-    this.isEdit$.next(true);
-    return this.internal.byId(id).pipe(this.pipeHandler());
+  loadFromApiAndFillForm$(user: User): Observable<UserInput> {
+    return of(user).pipe(this.pipeHandler());
   }
 
   initializeValue$(): Observable<UserInput> {
-    this.isEdit$.next(false);
     return of(DEFAULT_VALUE).pipe(this.pipeHandler());
   }
 
-  protected create$(): Observable<UserInput> {
+  create$(): Observable<UserInput> {
     delete this.getFormValue()[this.primary_key];
     return this.internal.create(this.getFormValue());
   }
 
-  protected update$(): Observable<UserInput> {
+  update$(): Observable<UserInput> {
     return this.internal.update(this.getFormValue());
   }
 

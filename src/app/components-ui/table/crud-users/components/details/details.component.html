@@ -1,74 +1,54 @@
-<div class="bg-white w-500 bd-auto p-2 m-2">
-  <ng-container *ngIf="errorMessage$ | async as message; else noError">
-    <span class="text-error">{{ message }}</span>
-  </ng-container>
+<h2 mat-dialog-title>{{ state.isEdit ? "Edit" : "Create" }}</h2>
 
-  <ng-template #noError>
-    <div *ngIf="loading" class="d-flex jc-center ai-center">
-      <mat-spinner [diameter]="50"></mat-spinner>
-    </div>
-
-    <ng-container *ngIf="!loading">
-      <mat-progress-bar
-        *ngIf="saving"
-        class="mb-1"
-        mode="indeterminate"
-      ></mat-progress-bar>
-
-      <div class="d-flex jc-between ai-center">
-        <div>{{ (service.isEdit$ | async) ? "Details" : "Create" }}</div>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="saveChanges()"
-          [disabled]="!enableSaveButton()"
+<mat-dialog-content *ngIf="user$ | async">
+  <form [formGroup]="form">
+    <custom-input
+      label="Name"
+      [required]="true"
+      formControlName="name"
+    ></custom-input>
+    <custom-input
+      label="Email"
+      type="email"
+      formControlName="email"
+    ></custom-input>
+    <mat-form-field class="width-100" appearance="standard">
+      <mat-label>Hobbies</mat-label>
+      <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
+        <mat-chip
+          *ngFor="let item of hobbies.value; let idx = index"
+          [removable]="true"
+          (removed)="removeHobby(idx)"
         >
-          Save
-        </button>
-      </div>
+          {{ item }}
+          <button matChipRemove>&times;</button>
+        </mat-chip>
+        <input
+          [matChipInputFor]="chipList"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addHobby($event)"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        />
+      </mat-chip-list>
+      <mat-error *ngIf="hobbies.hasError('duplicate')">
+        Duplicated values.
+      </mat-error>
+      <mat-error *ngIf="hobbies.hasError('invalid')">
+        Value should be string
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
 
-      <hr />
-
-      <form [formGroup]="service.form">
-        <custom-input
-          label="Name"
-          [required]="true"
-          formControlName="name"
-        ></custom-input>
-        <custom-input
-          label="Email"
-          type="email"
-          formControlName="email"
-        ></custom-input>
-        <mat-form-field class="width-100" appearance="standard">
-          <mat-chip-list
-            #chipList
-            formControlName="hobbies"
-            aria-label="Hobbies"
-          >
-            <mat-chip
-              *ngFor="let item of hobbies.value; let idx = index"
-              [removable]="true"
-              (removed)="removeHobby(idx)"
-            >
-              {{ item }}
-              <button matChipRemove>&times;</button>
-            </mat-chip>
-            <input
-              [matChipInputFor]="chipList"
-              [matChipInputAddOnBlur]="true"
-              (matChipInputTokenEnd)="addHobby($event)"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            />
-          </mat-chip-list>
-          <mat-error *ngIf="hobbies.hasError('duplicate')">
-            Duplicated values.
-          </mat-error>
-          <mat-error *ngIf="hobbies.hasError('invalid')">
-            Value should be string
-          </mat-error>
-        </mat-form-field>
-      </form>
-    </ng-container>
-  </ng-template>
-</div>
+<mat-dialog-actions align="end" class="gap-1">
+  <custom-button variant="outline" (click)="onSave(false)">
+    Close
+  </custom-button>
+  <custom-button
+    variant="flat"
+    (click)="onSave(true)"
+    [disabled]="(hasChanged$ | async) === false || form.invalid"
+  >
+    Save
+  </custom-button>
+</mat-dialog-actions>

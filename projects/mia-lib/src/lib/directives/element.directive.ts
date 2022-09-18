@@ -1,9 +1,10 @@
-import { Directive, ElementRef, NgModule } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 
 
 @Directive({
   selector: '[elementRef]',
-  exportAs: 'elementRef'
+  exportAs: 'elementRef',
+  standalone: true
 })
 export class ElementDirective<T extends Element> extends ElementRef<T> {
 
@@ -12,12 +13,6 @@ export class ElementDirective<T extends Element> extends ElementRef<T> {
   }
 
 }
-
-@NgModule({
-  declarations: [ElementDirective],
-  exports: [ElementDirective]
-})
-export class ElementDirectiveModule { }
 
 /** 
  * @usage <input #ref="elementRef" elementRef />

@@ -1,4 +1,4 @@
-@use 'palette';
+@use "palette";
 
 $-easeCubic: cubic-bezier(0.65, 0, 0, 1);
 
@@ -17,38 +17,37 @@ $-easeCubic: cubic-bezier(0.65, 0, 0, 1);
 }
 
 .navbar {
-  max-width : 25rem;
-  margin-top: 1rem;
+  max-width: 25rem;
 
   .nav {
-    border-bottom-left-radius : 1rem;
+    border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
 
     &__link {
-      transform : translateY(2rem);
-      transition: all .2s $-easeCubic;
+      transform: translateY(2rem);
+      transition: all 0.2s $-easeCubic;
     }
 
     &__item.active {
       .nav__link {
-        transform : translateY(1rem);
-        opacity   : 1;
+        transform: translateY(1rem);
+        opacity: 1;
         visibility: visible;
       }
 
       .icon {
-        fill                     : palette.$light-blue;
-        animation                : nav-interaction .4s;
+        fill: palette.$light-blue;
+        animation: nav-interaction 0.4s;
         animation-iteration-count: 1;
       }
     }
 
     .icon {
-      transition: all .2s $-easeCubic;
+      transition: all 0.2s $-easeCubic;
     }
 
     .slider {
-      height    : 4px;
+      height: 4px;
       transition: all 0.5s $-easeCubic;
     }
   }

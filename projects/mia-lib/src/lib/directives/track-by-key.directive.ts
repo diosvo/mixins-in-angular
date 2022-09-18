@@ -1,8 +1,9 @@
 import { NgForOf } from '@angular/common';
-import { Directive, Host, Input, NgModule } from '@angular/core';
+import { Directive, Host, Input } from '@angular/core';
 
 @Directive({
   selector: '[ngForTrackByKey]',
+  standalone: true
 })
 export class TrackByKeyDirective<T>  {
 
@@ -22,9 +23,3 @@ export class TrackByKeyDirective<T>  {
 /**
  * @usageNotes *ngFor="let <item> of <list>; trackByKey: '<key_name>'"
  */
-
-@NgModule({
-  declarations: [TrackByKeyDirective],
-  exports: [TrackByKeyDirective]
-})
-export class TrackByKeyDirectiveModule { }

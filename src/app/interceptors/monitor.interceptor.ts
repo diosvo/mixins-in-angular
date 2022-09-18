@@ -1,20 +1,39 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LoggerFactory } from '@lib/helpers/logger.factory';
+import { LoadingService } from '@lib/services/loading/loading.service';
+import isEqual from 'lodash.isequal';
 import { finalize, Observable } from 'rxjs';
 
 @Injectable()
-export class MonitorInterceptor implements HttpInterceptor {
+export class MonitorInterceptor<T> implements HttpInterceptor {
+
+  private loggerFactory = inject(LoggerFactory);
   private logger = this.loggerFactory.createLogger('MonitorInterceptor', 'auth');
 
-  constructor(private readonly loggerFactory: LoggerFactory) { }
+  private loader = inject(LoadingService);
+  private total = 0;
+  private completed = 0;
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
+
+    this.loader.show();
+    this.total++;
 
     const begin = performance.now();
 
     return next.handle(request).pipe(
-      finalize(() => this.logRequestTime(begin, request.url, request.method))
+      finalize(() => {
+        this.completed++;
+
+        if (isEqual(this.completed, this.total)) {
+          this.loader.hide();
+          this.total = 0;
+          this.completed = 0;
+        }
+
+        this.logRequestTime(begin, request.url, request.method);
+      })
     );
   }
 

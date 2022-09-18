@@ -1,41 +1,35 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { EComponentUI } from '@home/models/url.enum';
 import { CanLoadGuard } from '@lib/guards/can-load.guard';
 import { IsAuthenticatedGuard } from '@lib/guards/is-authenticated.guard';
-import { ListComponentUiComponent } from './list-component-ui.component';
 
-const routes: Routes = [
+export const COMPONENT_ROUTES: Routes = [
   {
     path: '',
-    component: ListComponentUiComponent,
-    data: { title: 'Components' }
+    loadComponent: () => import('./list-component-ui.component')
+      .then(({ ListComponentUiComponent }) => ListComponentUiComponent),
+    title: 'Components'
   },
   {
     path: EComponentUI.BUTTON,
-    loadChildren: () => import('./button/button.module').then(({ ButtonModule }) => ButtonModule)
+    loadChildren: () => import('./button/button-routing.module').then(({ BUTTON_ROUTES }) => BUTTON_ROUTES)
   },
   {
     path: EComponentUI.CARD,
-    loadChildren: () => import('./card/card.module').then(({ CardModule }) => CardModule)
+    loadChildren: () => import('./card/card-routing.module').then(({ CARD_ROUTES }) => CARD_ROUTES)
   },
   {
     path: EComponentUI.MENU,
-    loadChildren: () => import('./menu/menu.module').then(({ MenuModule }) => MenuModule)
+    loadChildren: () => import('./menu/menu-routing.module').then(({ MENU_ROUTES }) => MENU_ROUTES)
   },
   {
     path: EComponentUI.TABLE,
-    loadChildren: () => import('./table/table.module').then(({ TableModule }) => TableModule)
+    loadChildren: () => import('./table/table-routing.module').then(({ TABLE_ROUTES }) => TABLE_ROUTES)
   },
   {
     path: EComponentUI.FORM,
-    loadChildren: () => import('./form/form.module').then(({ FormModule }) => FormModule),
+    loadChildren: () => import('./form/form-routing.module').then(({ FORM_ROUTES }) => FORM_ROUTES),
     canActivate: [IsAuthenticatedGuard],
     canLoad: [CanLoadGuard]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class ComponentsUiRoutingModule { }

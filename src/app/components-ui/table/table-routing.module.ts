@@ -1,26 +1,22 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const TABLE_ROUTES: Routes = [
   {
     path: 'multiple-checkbox-filter',
-    loadChildren: () => import('./multiple-checkbox-filter/multiple-checkbox-filter.module').then(({ MultipleCheckboxFilterModule }) => MultipleCheckboxFilterModule)
+    loadComponent: () =>
+      import('./multiple-checkbox-filter/components/data-table/data-table.component').then(({ DataTableComponent }) => DataTableComponent),
+    title: 'Angular Github Issues'
   },
   {
     path: 'advanced-crud',
-    loadChildren: () => import('./advanced-crud/advanced-crud.module').then(({ AdvancedCrudModule }) => AdvancedCrudModule)
+    loadComponent: () =>
+      import('./advanced-crud/components/advanced-crud/advanced-crud.component').then(({ AdvancedCrudComponent }) => AdvancedCrudComponent),
+    title: 'Mat-table: Advanced CRUD',
   },
   {
     path: 'crud-users',
-    loadChildren: () => import('./crud-users/crud-users.module').then(({ CrudUsersModule }) => CrudUsersModule)
-  },
-  {
-    path: 'view-article-page-state',
-    loadChildren: () => import('./view-article-page-state/view-article-page-state.module').then(({ ViewArticlePageStateModule }) => ViewArticlePageStateModule)
+    loadComponent: () =>
+      import('./crud-users/components/list/list.component').then(({ ListComponent }) => ListComponent),
+    title: 'Users Management',
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class TableRoutingModule { }

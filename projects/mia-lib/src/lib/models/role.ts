@@ -1,7 +1,9 @@
 enum ERole {
-  ADMIN = 'Admin',
-  GUEST = 'Guest',
-  CUSTOMER = 'Customer',
+  ADMIN = 'admin',
+  GUEST = 'guest',
+  SUBSCRIBER = 'subscriber'
 }
 
-export { ERole };
+type TRole = Lowercase<keyof typeof ERole>
+
+export { ERole, TRole };

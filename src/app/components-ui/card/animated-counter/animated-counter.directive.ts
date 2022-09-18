@@ -7,6 +7,7 @@ const DEFAULT_ANIMATION_SPEED = 8;
 
 @Directive({
   selector: '[appAnimatedCounter]',
+  standalone: true
 })
 export class AnimatedCounterDirective implements OnInit {
   @Input('appAnimatedCounter') value: number;

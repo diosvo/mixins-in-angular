@@ -1,26 +1,32 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
+<ng-container *ngIf="state$ | async as state">
+  <alert-message *ngIf="state.message" type="error">
+    {{ state.message }}
+  </alert-message>
 
-<ng-template #noError>
   <custom-table
-    *ngIf="issues$ | async as data; else loadingTmpl"
-    [data]="data"
+    [data]="state.data"
+    [length]="1000"
     [columns]="columns"
     [defaultSortColumn]="'created_at'"
-    [length]="resultsLength"
     [pageSizeOptions]="[30]"
+    [showFirstLastButtons]="true"
     (pageChanges)="pageChanges($event)"
     [style]="{ 'max-height': '300px' }"
   >
-    <h2 header>Github: Angular Issues</h2>
+    <h2 header>Github Issues</h2>
 
-    <!-- Filters selection -->
-    <form filters [formGroup]="filterForm" class="d-flex gap-1 width-100">
+    <form filters [formGroup]="form">
       <custom-select
         placeholder="State"
-        formControlName="state"
+        formControlName="states"
         [items]="states"
+        searchPlaceholder="Search"
+      ></custom-select>
+
+      <custom-select
+        placeholder="Author"
+        formControlName="authors"
+        [items]="authors"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -34,10 +40,21 @@
       </custom-input>
     </form>
 
-    <!-- Custom columns -->
-
     <custom-column columnName="created_at">
       <ng-template let-issue>{{ issue.created_at | date }}</ng-template>
+    </custom-column>
+
+    <custom-column columnName="number">
+      <ng-template let-issue>
+        <a
+          target="_blank"
+          [href]="issue.html_url"
+          rel="noopener noreferrer"
+          class="cursor-pointer text-deco-none text-black text-hover-dark-blue"
+        >
+          {{ issue.number }}
+        </a>
+      </ng-template>
     </custom-column>
 
     <custom-column columnName="state">
@@ -53,9 +70,14 @@
         </span>
       </ng-template>
     </custom-column>
-  </custom-table>
 
-  <ng-template #loadingTmpl>
-    <div class="d-flex jc-center my-2">...loading</div>
-  </ng-template>
-</ng-template>
+    <ng-container noData>
+      <ng-container *ngIf="state.loading; else notFound">
+        <div class="text-center m-2">Loading ...</div>
+      </ng-container>
+      <ng-template #notFound>
+        <no-results (resetFilters)="form.reset()"></no-results>
+      </ng-template>
+    </ng-container>
+  </custom-table>
+</ng-container>

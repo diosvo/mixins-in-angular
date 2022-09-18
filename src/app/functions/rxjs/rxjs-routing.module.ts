@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const RXJS_ROUTES: Routes = [
   {
     path: 'data-composition-ng-conf',
-    loadChildren: () => import('./data-composition-ng-conf/data-composition-ng-conf.module').then(({ DataCompositionNgConfModule }) => DataCompositionNgConfModule)
-  }
+    loadChildren: () => import('./data-composition-ng-conf/data-composition-ng-conf-routing.module')
+      .then(({ DATA_COMPOSITION_ROUTES }) => DATA_COMPOSITION_ROUTES)
+  },
+  {
+    path: 'advanced-caching',
+    loadComponent: () => import('./advanced-caching/components/advanced-caching/advanced-caching.component')
+      .then(({ AdvancedCachingComponent }) => AdvancedCachingComponent),
+    title: 'Advanced caching w/ RxJS'
+  },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class RxjsRoutingModule { }

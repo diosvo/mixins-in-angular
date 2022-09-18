@@ -1,33 +1,33 @@
 <mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-100">
   <ng-container *ngFor="let item of navigation; trackByKey">
     <custom-button
-      type="text"
-      class="opacity-0.8"
-      routerLinkActive="opacity-1"
+      variant="basic"
+      class="opacity-0.5"
       [routerLink]="['/', item]"
+      routerLinkActive="opacity-1"
     >
-      {{ item === "components-ui" ? "Components" : (item | titlecase) }}
+      {{ item | titlecase }}
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>
-  <a
-    title="Login"
-    mat-icon-button
-    *ngIf="(authService.isLoggedIn$ | async) === false"
-    class="text-white"
-    data-toggle="tooltip"
-    (click)="openLoginDialog()"
-  >
-    <mat-icon>public</mat-icon>
-  </a>
-  <a
-    title="Logged In"
-    mat-icon-button
-    *ngIf="authService.isLoggedIn$ | async"
-    class="text-white"
-    data-toggle="tooltip"
-    (click)="openLogoutDialog()"
-  >
-    <mat-icon>vpn_lock</mat-icon>
-  </a>
+  <ng-container *ngIf="loggedIn$ | async; else loginIcon">
+    <custom-button
+      variant="icon"
+      tooltip="Sign out"
+      buttonClass="text-white"
+      (click)="onLogout()"
+    >
+      <ng-container icon>person_outline</ng-container>
+    </custom-button>
+  </ng-container>
+  <ng-template #loginIcon>
+    <custom-button
+      variant="icon"
+      tooltip="Sign in"
+      buttonClass="text-white"
+      (click)="onLogin()"
+    >
+      <ng-container icon>fingerprint</ng-container>
+    </custom-button>
+  </ng-template>
 </mat-toolbar>

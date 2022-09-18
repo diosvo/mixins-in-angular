@@ -1,63 +1,63 @@
-import { HttpClientModule } from '@angular/common/http';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AuthModule } from '@auth/auth.module';
-import { AlertModule } from '@lib/components/alert/alert.module';
+import { EUrl } from '@home/models/url.enum';
+import { CardItem } from '@home/services/search.service';
+import { State } from '@lib/models/server.model';
 import { of } from 'rxjs';
 import { ListFunctionsComponent } from './list-functions.component';
 
-describe.skip('ListFunctionsComponent', () => {
+const state: State<CardItem> = {
+  data: [
+    {
+      name: 'Advanced Caching',
+      group_id: 'rxjs',
+      routing_path: EUrl.FUNCTION,
+      description: '',
+      is_maintained: false
+    }
+  ],
+  loading: false,
+  error: null
+};
+
+describe('ListFunctionsComponent', () => {
   let component: ListFunctionsComponent;
 
-  const route = {
-    queryParams: of({ group: 'rxjs', query: '' })
+  const mockService: any = {
+    getData: jest.fn().mockReturnValue(of(state))
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ListFunctionsComponent],
-      imports: [
-        AuthModule,
-        AlertModule,
-
-        HttpClientModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-
-        MatIconModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSelectModule,
-        MatTooltipModule,
-        MatExpansionModule,
-        MatFormFieldModule,
-        MatProgressBarModule
-      ],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: route
-        }
-      ]
-    })
-      .compileComponents();
-  }));
-
   beforeEach(() => {
-    // component = new ListFunctionsComponent();
+    component = new ListFunctionsComponent(mockService);
   });
 
   test('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('ngOnInit()', () => {
+    test('should get the current state', (done) => {
+      component.ngOnInit();
+      component.state$.subscribe((response: State<CardItem>) => {
+        expect(response).toEqual(state);
+        done();
+      });
+    });
+  });
+
+  describe('clearAllIconActive()', () => {
+    test('should hide clear all icon if group is all and query is empty value', () => {
+      component.form.setValue({
+        group: [],
+        query: ''
+      });
+      expect(component.clearAllIconActive()).toBe(false);
+    });
+
+    test('should show clear all icon if query has value and group is not all selected', () => {
+      component.form.setValue({
+        group: [],
+        query: 'test'
+      });
+      expect(component.clearAllIconActive()).toBe(true);
+    });
   });
 });

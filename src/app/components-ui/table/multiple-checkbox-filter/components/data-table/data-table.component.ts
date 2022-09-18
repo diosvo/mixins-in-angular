@@ -1,40 +1,57 @@
-import { Component, OnInit, Self } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
-import { TableColumn } from '@lib/components/custom-table/custom-table.component';
-import { FilterObjectPipe } from '@lib/pipes/filter.pipe';
-import isEmpty from 'lodash.isempty';
-import { catchError, combineLatest, map, Observable, startWith, Subject, switchMap, throwError } from 'rxjs';
-import { GithubApi, GithubIssue } from '../../models/service.model';
-import { GithubRepoIssuesService } from '../../service/github-repo-issues.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Params } from '@angular/router';
+import { AlertComponent } from '@lib/components/alert/alert.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
+import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
+import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
+import { State } from '@lib/models/server.model';
+import { catchError, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues.service';
 
 @Component({
   selector: 'app-data-table',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    AlertComponent,
+    NoResultsComponent,
+    CustomTableComponent,
+    CustomInputComponent,
+    CustomSelectComponent,
+    TableColumnDirective
+  ],
+  styleUrls: ['./data-table.component.scss'],
+  providers: [GithubRepoIssuesService],
   templateUrl: './data-table.component.html',
-  styles: ['@use \'chip\';'],
-  providers: [GithubRepoIssuesService]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class DataTableComponent implements OnInit {
 
-  issues$: Observable<GithubIssue[]>;
-  errorMessage$ = new Subject<boolean>();
+  state$: Observable<State<Issue>>;
 
-  readonly states = ['open', 'closed'];
+  readonly states = ['is\:open', 'is:\closed'];
+  readonly authors = ['none', 'collaborator', 'member'];
 
   columns: TableColumn[] = [
-    { key: 'created_at', flex: '15%' },
-    { key: 'state', disableSorting: true, flex: '15%' },
-    { key: 'number', flex: '15%' },
-    { key: 'title', flex: '55%' },
+    { key: 'id', flex: '10%' },
+    { key: 'created_at', flex: '10%' },
+    { key: 'state', disableSorting: true, flex: '10%' },
+    { key: 'number', flex: '10%' },
+    { key: 'title', flex: '50%' },
   ];
-  filterForm: FormGroup = this.fb.group({
-    query: ['', { initialValueIsDefault: true }],
-    state: [[], { initialValueIsDefault: true }]
+  protected form = this.fb.group({
+    query: [''],
+    states: [this.states],
+    authors: [[]],
   });
-
-  resultsLength: number;
-  private _pageIndex$ = new Subject<number>();
+  private params$ = new Subject<Params>();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -42,41 +59,20 @@ export class DataTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getIssues();
-  }
-
-  private getIssues(): void {
-    const data$ = this._pageIndex$.pipe(
-      startWith(0),
-      switchMap((page: number) => this.service.getRepoIssues(page)),
-      map((data: GithubApi): GithubIssue[] => {
-        if (isEmpty(data)) {
-          return [];
-        }
-
-        this.resultsLength = data.total_count;
-        return data.items;
+    this.state$ = this.params$.pipe(
+      startWith({ page: '0', ...this.form.value }),
+      switchMap(({ page, ...rest }) => {
+        return this.service.getRepoIssues({ page, ...rest }).pipe(
+          map(({ items }) => ({ data: items, loading: false })),
+          catchError(({ message }) => of({ message, loading: false })),
+          startWith({ data: [], loading: true }),
+          shareReplay(1),
+        );
       }),
     );
-    const filters$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
-
-    this.issues$ = combineLatest([data$, filters$]).pipe(
-      map(([data, params]): GithubIssue[] =>
-        data
-          .filter((item: GithubIssue) => new FilterObjectPipe().transform(item, params.query))
-          .filter((item: GithubIssue) => {
-            const collection = isEmpty(params.state) ? this.states : params.state;
-            return collection.includes(item.state);
-          })
-      ),
-      catchError(({ message }) => {
-        this.errorMessage$.next(message);
-        return throwError(() => new Error(message));
-      })
-    );
   }
 
-  pageChanges({ pageIndex }: PageEvent): void {
-    this._pageIndex$.next(pageIndex);
+  pageChanges({ pageIndex }): void {
+    this.params$.next({ page: pageIndex.toString(), ...this.form.value });
   }
 }

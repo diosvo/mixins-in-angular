@@ -1,72 +1,64 @@
-<ng-container *ngIf="errorMessage$ | async as message; else noError">
-  <alert-message type="error"> {{ message }} </alert-message>
-</ng-container>
+<ng-container *ngIf="state$ | async as state">
+  <alert-message *ngIf="state.error" type="error">
+    {{ state.error }}
+  </alert-message>
 
-<ng-template #noError>
-  <ng-template #loadingTmpl>
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </ng-template>
+  <mat-progress-bar
+    *ngIf="state.loading"
+    mode="indeterminate"
+  ></mat-progress-bar>
 
-  <!-- Search -->
-  <ng-container *ngIf="filteredData$ | async as data; else loadingTmpl">
-    <mat-accordion>
-      <mat-expansion-panel>
-        <!-- Header -->
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Reactive programming with RxJS 6+, ...
-          </mat-panel-title>
-          <mat-panel-description class="jc-flex-end">
-            <custom-button
-              type="icon"
-              (click)="cleanFilters()"
-              *ngIf="clearAllIconActive()"
-            >
-              clear_all
-            </custom-button>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <!-- Content -->
-        <ng-template matExpansionPanelContent>
-          <form
-            [formGroup]="functionsForm"
-            class="panel-container d-flex gap-1"
+  <mat-accordion *ngIf="!state.message">
+    <mat-expansion-panel expanded>
+      <!-- Header -->
+      <mat-expansion-panel-header>
+        <mat-panel-title class="f-14" [style.flex-grow]="2">
+          Reactive programming with RxJS 7.5+, ...
+        </mat-panel-title>
+        <mat-panel-description class="jc-flex-end">
+          <custom-button
+            variant="icon"
+            tooltip="Clear all"
+            (click)="form.reset()"
+            *ngIf="clearAllIconActive()"
           >
-            <custom-select
-              [items]="selection"
-              formControlName="group"
-              searchPlaceholder="Find the group..."
-            ></custom-select>
+            <ng-container icon>clear_all</ng-container>
+          </custom-button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-            <custom-input
-              class="flex-1"
-              label="search"
-              [clearFilter]="true"
-              formControlName="query"
-              placeholder="What are you looking for today..."
-            >
-            </custom-input>
-          </form>
-        </ng-template>
-      </mat-expansion-panel>
-    </mat-accordion>
+      <!-- Content -->
+      <ng-template matExpansionPanelContent>
+        <form [formGroup]="form" class="panel-container d-flex gap-1">
+          <custom-select
+            [items]="selection"
+            placeholder="Group"
+            formControlName="group"
+          ></custom-select>
 
-    <ng-container *ngIf="data.length > 0; else notFound">
-      <card-item [data]="data"></card-item>
+          <custom-input
+            class="flex-1"
+            label="search"
+            [clearFilter]="true"
+            formControlName="query"
+            placeholder="What are you looking for today..."
+          >
+          </custom-input>
+        </form>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <ng-container *ngIf="state.data">
+    <ng-container *ngIf="state.data.length > 0; else notFound">
+      <card-item
+        [data]="state.data"
+        [searchTerm]="form.get('query').value"
+      ></card-item>
     </ng-container>
 
     <ng-template #notFound>
-      <div class="text-center my-2">
-        <span>No results match. The active filters are hiding all items.</span>
-        <br class="my-1" />
-        <a
-          (click)="cleanFilters()"
-          class="text-light-blue text-deco-underline cursor-pointer"
-        >
-          Reset filters.
-        </a>
-      </div>
+      <no-results (resetFilters)="form.reset()"></no-results>
     </ng-template>
   </ng-container>
-</ng-template>
+</ng-container>

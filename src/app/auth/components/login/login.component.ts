@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '@auth/services/auth.service';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
-import { BehaviorSubject, finalize, Observable, take } from 'rxjs';
+import isEqual from 'lodash.isequal';
+import { BehaviorSubject, catchError, EMPTY, finalize, Observable, take } from 'rxjs';
 
 enum EMode {
   LOGIN = 'login',
@@ -15,7 +16,8 @@ type TMode = Lowercase<keyof typeof EMode>
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
 
@@ -64,11 +66,19 @@ export class LoginComponent {
         action$ = this.service.emailSignIn({ email, password });
         break;
       }
+      case this.mode.FORGOT_PASSWORD: {
+        action$ = this.service.resetPassword(password);
+        break;
+      }
     }
 
     action$
       .pipe(
         take(1),
+        catchError(({ message }) => {
+          this.snackbar.error(message);
+          return EMPTY;
+        }),
         finalize(() => {
           this.form.enable();
           this.loading = false;
@@ -76,7 +86,7 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => {
-          if (this.mode$.value === EMode.REGISTER) {
+          if (isEqual(this.mode$.value, EMode.REGISTER)) {
             return this.login();
           }
           this.dialogRef.close();
@@ -86,6 +96,7 @@ export class LoginComponent {
   }
 
   googleSignIn(): void {
+    this.loading = true;
     this.service.googleSignIn().subscribe({
       next: () => this.dialogRef.close()
     });

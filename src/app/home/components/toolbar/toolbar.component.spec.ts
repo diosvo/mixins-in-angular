@@ -1,8 +1,7 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { ToolbarComponent } from './toolbar.component';
 
 const info = {
@@ -29,9 +28,8 @@ describe('ToolbarComponent', () => {
   beforeEach(() => {
     component = new ToolbarComponent(
       mockRouter,
-      mockService,
       mockDialog,
-      mockSnackbar
+      mockService,
     );
   });
 
@@ -39,22 +37,14 @@ describe('ToolbarComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  test('openLoginDialog()', () => {
-    jest.spyOn(component as any, 'login');
-    jest.spyOn(mockDialog, 'open').mockReturnValue({
-      afterClosed: () => of(info)
-    } as MatDialogRef<typeof ToolbarComponent>);
-
-    component.openLoginDialog();
-
+  test('onLogin()', () => {
+    component.onLogin();
     expect(mockDialog.open).toBeCalledWith(LoginComponent, {
-      width: '400px',
-      disableClose: true,
+      width: '450px',
     });
-    expect(component['login']).toBeCalledWith(info);
   });
 
-  describe('openLogoutDialog()', () => {
+  describe('onLogout()', () => {
     afterEach(() => {
       expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
         data: {
@@ -71,30 +61,17 @@ describe('ToolbarComponent', () => {
       jest.spyOn(mockDialog, 'open').mockReturnValue({
         afterClosed: () => of(true)
       } as MatDialogRef<typeof ToolbarComponent>);
-      component.openLogoutDialog();
+      component.onLogout();
 
       expect(mockService.logout).toBeCalled();
-      expect(mockRouter.navigateByUrl).toBeCalledWith('/components');
+      expect(mockRouter.navigateByUrl).toBeCalledWith('/components-ui');
     });
 
     test('should close the dialog if the user clicks on Close button', () => {
       jest.spyOn(mockDialog, 'open').mockReturnValue({
         afterClosed: () => of(false)
       } as MatDialogRef<typeof ToolbarComponent>);
-      component.openLogoutDialog();
-    });
-  });
-
-  describe('login()', () => {
-    test('should show success message when login successfully', () => {
-      component['login'](info);
-      expect(mockSnackbar.success).toBeCalledWith('Login successfully!');
-    });
-
-    test('should show error message when login fail', () => {
-      mockService.login.mockReturnValue(throwError(() => new Error('Something went wrong. Please try again!')));
-      component['login'](info);
-      expect(mockSnackbar.error).toBeCalledWith('Something went wrong. Please try again!');
+      component.onLogout();
     });
   });
 });

@@ -37,7 +37,8 @@ describe('CardItemComponent', () => {
       });
     });
 
-    test('should prevent user to access page when is_maintained is true', () => {
+    test('should prevent user to access page when both is_maintained and prod_mode are true', () => {
+      (component as any)['prod_mode'] = true;
       component.directItem({
         ...item,
         is_maintained: true

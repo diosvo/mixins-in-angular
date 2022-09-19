@@ -1,37 +1,15 @@
-$colors: ('lightpurple': #9AB3F5,
-  'lightgrey' : #F1F3F8,
-  'lightgreen' : #E8FFFF,
-  'lightorange': #FFE8D6);
+@use "palette";
 
-$-title  : #616161;
-$-shadow: #D4D4F7 0 0.25rem 0.5rem 0;
-$-hover-shadow: 0.625rem 1rem rgba(125 125 125 / 20%);
+$colors: (
+  "lightpurple": #9ab3f5,
+  "lightgrey": #f47c7c,
+  "lightgreen": #e8ffff,
+  "lightorange": #ffe8d6,
+);
 
-.card {
-  box-shadow: $-shadow;
-  transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
-
-  @each $name,
-  $color in $colors {
-    &.#{$name} {
-      background-color: rgba($color, 0.9);
-    }
-  }
-
-  &:hover {
-    box-shadow: $-hover-shadow;
-  }
-
-  &-content {
-    .card-title h4 {
-      letter-spacing: 0.5px;
-    }
-
-    .title {
-      &-dark {
-        color: $-title;
-      }
-    }
+@each $name, $color in $colors {
+  .#{$name} {
+    background-color: rgba($color, 0.9);
   }
 }
 

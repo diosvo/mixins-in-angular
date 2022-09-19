@@ -52,7 +52,7 @@ const data: AnimatedCounterModel[] = [
 })
 
 export class AnimatedCounterComponent implements AfterViewInit {
-  animatedCardList = of(data);
+  readonly animatedCardList = of(data);
 
   @ViewChild('el', { static: false }) el: ElementRef<HTMLDivElement>;
 

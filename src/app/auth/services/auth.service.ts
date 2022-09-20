@@ -80,8 +80,8 @@ export class AuthService {
     );
   }
 
-  resetPassword(password: string): Observable<void> {
-    return from(this.afa.sendPasswordResetEmail(password));
+  resetPassword(email: string): Observable<void> {
+    return from(this.afa.sendPasswordResetEmail(email));
   }
 
   async logout(): Promise<void> {

@@ -23,7 +23,7 @@ export class LoginComponent {
 
   form = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
-    password: [null, [Validators.required]]
+    password: [null, [Validators.required, Validators.minLength(6)]]
   });
   hidePassword = true;
 
@@ -51,28 +51,10 @@ export class LoginComponent {
   }
 
   onAction(): void {
-    let action$: Observable<void>;
-
     this.loading = true;
     this.form.disable();
-    const { email, password } = this.form.value;
 
-    switch (this.mode$.value) {
-      case this.mode.REGISTER: {
-        action$ = this.service.emailRegister({ email, password });
-        break;
-      }
-      case this.mode.LOGIN: {
-        action$ = this.service.emailSignIn({ email, password });
-        break;
-      }
-      case this.mode.FORGOT_PASSWORD: {
-        action$ = this.service.resetPassword(password);
-        break;
-      }
-    }
-
-    action$
+    this.executeJob$()
       .pipe(
         take(1),
         catchError(({ message }) => {
@@ -90,15 +72,44 @@ export class LoginComponent {
             return this.login();
           }
           this.dialogRef.close();
-        },
-        error: ({ message }) => this.snackbar.error(message)
+        }
       });
+  }
+
+  private executeJob$(): Observable<void> {
+    const { email, password } = this.form.value;
+
+    switch (this.mode$.value) {
+      case this.mode.REGISTER: {
+        return this.service.emailRegister({ email, password });
+      }
+      case this.mode.LOGIN: {
+        return this.service.emailSignIn({ email, password });
+      }
+      case this.mode.FORGOT_PASSWORD: {
+        return this.service.resetPassword(email);
+      }
+    }
   }
 
   googleSignIn(): void {
     this.loading = true;
-    this.service.googleSignIn().subscribe({
-      next: () => this.dialogRef.close()
+    Object.keys(this.form.value).forEach((key: string) => {
+      this.form.get(key).clearValidators();
+      this.form.get(key).updateValueAndValidity();
     });
+
+    this.service.googleSignIn()
+      .pipe(
+        take(1),
+        catchError(({ message }) => {
+          this.snackbar.error(message);
+          return EMPTY;
+        }),
+        finalize(() => this.dialogRef.close())
+      )
+      .subscribe({
+        next: () => this.dialogRef.close()
+      });
   }
 }

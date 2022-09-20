@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthModule } from '@auth/auth.module';
@@ -24,7 +25,8 @@ import { filter, take } from 'rxjs';
     CustomButtonComponent,
     ConfirmDialogComponent,
 
-    MatToolbarModule
+    MatMenuModule,
+    MatToolbarModule,
   ],
   templateUrl: './toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

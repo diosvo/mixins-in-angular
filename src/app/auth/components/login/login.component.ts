@@ -21,9 +21,9 @@ type TMode = Lowercase<keyof typeof EMode>
 })
 export class LoginComponent {
 
-  form = this.fb.group({
-    email: [null, [Validators.required, Validators.email]],
-    password: [null, [Validators.required, Validators.minLength(6)]]
+  readonly form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
   hidePassword = true;
 

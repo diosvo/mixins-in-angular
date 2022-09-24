@@ -20,8 +20,25 @@
       <ng-container icon>person_outline</ng-container>
     </custom-button>
     <mat-menu #options="matMenu">
-      <button mat-menu-item>Profile</button>
-      <hr [style.margin]="0" />
+      <mat-card
+        class="mx-1 mb-1"
+        [style.padding.px]="8"
+        *ngIf="user$ | async as user"
+      >
+        <mat-card-header class="cursor-pointer" (click)="updateProfile()">
+          <img
+            mat-card-avatar
+            [src]="user.photoURL ?? 'assets/images/blank-profile.png'"
+          />
+          <mat-card-title class="f-14 fw-bold" [style.margin-bottom.px]="8">
+            {{ user.displayName ?? "Anonymous" }}
+          </mat-card-title>
+          <mat-card-subtitle class="f-11" [style.margin-bottom]="0">
+            {{ user.email }}
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
       <button mat-menu-item (click)="onLogout()">Sign out</button>
     </mat-menu>
   </ng-container>

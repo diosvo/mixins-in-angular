@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,13 +27,15 @@ import { filter, take } from 'rxjs';
     ConfirmDialogComponent,
 
     MatMenuModule,
+    MatCardModule,
     MatToolbarModule,
   ],
   templateUrl: './toolbar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarComponent {
 
+  readonly user$ = this.authService.user$;
   readonly loggedIn$ = this.authService.isLoggedIn$;
   readonly navigation = Object.values(EUrl);
 
@@ -70,5 +73,9 @@ export class ToolbarComponent {
           this.router.navigateByUrl('/components-ui');
         }
       });
+  }
+
+  updateProfile(): void {
+    console.log(this.authService.user);
   }
 }

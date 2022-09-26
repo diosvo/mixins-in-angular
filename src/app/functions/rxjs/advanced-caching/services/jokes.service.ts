@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseService } from '@lib/services/base/base.service';
-import { HandleService } from '@lib/services/base/handle.service';
+import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
 import { map, Observable, shareReplay, Subject, switchMap, takeUntil, timer } from 'rxjs';
 
@@ -30,7 +30,7 @@ export class JokesService extends BaseService<JokeResponse> {
 
   constructor(
     protected readonly http: HttpClient,
-    protected readonly handle: HandleService,
+    protected readonly handle: ErrorHandlerService,
     private readonly destroy$: DestroyService
   ) {
     super(http, handle);

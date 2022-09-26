@@ -1,4 +1,4 @@
-import { HandleService } from '@lib/services/base/handle.service';
+import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
 import { of } from 'rxjs';
 import { GithubApi } from '../models/service.model';
 import { GithubRepoIssuesService } from './github-repo-issues.service';
@@ -16,7 +16,7 @@ describe('GithubRepoIssuesService', () => {
   };
 
   beforeEach(() => {
-    service = new GithubRepoIssuesService(mockHttp, new HandleService());
+    service = new GithubRepoIssuesService(mockHttp, new ErrorHandlerService());
   });
 
   test('should be created', () => {

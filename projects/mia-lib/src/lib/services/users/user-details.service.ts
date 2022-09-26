@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserInput } from '@lib/models/user';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BaseService } from '../base/base.service';
+import { ErrorHandlerService } from '../base/error-handler.service';
 import { AbstractFormService } from '../base/form.service';
-import { HandleService } from '../base/handle.service';
 import { endpoint, id_endpoint, User } from './user-service.model';
 
 const DEFAULT_VALUE = {
@@ -22,7 +22,7 @@ export class InternalUserService extends BaseService<UserInput> {
 
   constructor(
     protected readonly http: HttpClient,
-    protected readonly handle: HandleService,
+    protected readonly handle: ErrorHandlerService,
   ) {
     super(http, handle);
   }

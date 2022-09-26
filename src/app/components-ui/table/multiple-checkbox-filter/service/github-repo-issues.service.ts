@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { BaseService } from '@lib/services/base/base.service';
-import { HandleService } from '@lib/services/base/handle.service';
+import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
 import { Observable } from 'rxjs';
 
 export interface Issue {
@@ -30,7 +30,7 @@ export class GithubRepoIssuesService extends BaseService<ResponseApi> {
 
   constructor(
     protected readonly http: HttpClient,
-    protected readonly handle: HandleService
+    protected readonly handle: ErrorHandlerService
   ) {
     super(http, handle);
   }

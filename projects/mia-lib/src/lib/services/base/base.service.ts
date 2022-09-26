@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import isUndefined from 'lodash.isundefined';
 import { catchError, shareReplay, take } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { HandleService } from './handle.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 export enum EMethod {
   GET = 'get',
@@ -20,7 +20,7 @@ export abstract class BaseService<T> {
 
   protected constructor(
     protected readonly httpClient: HttpClient,
-    protected readonly handle: HandleService,
+    protected readonly handle: ErrorHandlerService,
   ) { }
 
   protected list(url: string): Observable<T[]> {
@@ -55,7 +55,7 @@ export abstract class BaseService<T> {
       return this.httpClient[method](url, body).pipe(
         take(1),
         shareReplay(1),
-        catchError(this.handle.errorHandler(this.constructor.name))
+        catchError(this.handle.handleError(this.constructor.name))
       );
     };
 }

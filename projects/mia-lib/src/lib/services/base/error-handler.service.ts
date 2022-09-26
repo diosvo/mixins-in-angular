@@ -1,13 +1,14 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { Injectable, isDevMode } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
+import { environment } from '@env/environment';
 import { Observable, throwError, TimeoutError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+export class ErrorHandlerService implements ErrorHandler {
 
-export class HandleService {
-  errorHandler = (name: string) =>
+  handleError = (name: string) =>
     (error: TimeoutError | ErrorEvent | HttpErrorResponse): Observable<never> => {
       const throwMessage = this.env(name);
 
@@ -38,6 +39,12 @@ export class HandleService {
       }
     };
 
-  private env = (name: string) =>
-    (message: string) => throwError(() => new Error(isDevMode() ? `${message}. (${name})` : `${message}`));
+  private env = (name: string) => (message: string) => {
+    const error_message = `${message}.`;
+    return throwError(() => new Error(
+      environment.production
+        ? error_message
+        : error_message.concat(` (${name})`)
+    ));
+  };
 }

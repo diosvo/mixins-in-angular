@@ -4,7 +4,8 @@
   </alert-message>
 
   <custom-table
-    [data]="state.data | filter: query.value"
+    *ngIf="state.data | filter: query.value as filtered_data"
+    [data]="filtered_data"
     [columns]="columns"
     [highlight]="query.value"
     [defaultSortColumn]="'name'"
@@ -22,6 +23,7 @@
       label="search"
       [clearFilter]="true"
       [formControl]="query"
+      *ngIf="state.data.length > 1"
     >
     </custom-input>
 
@@ -49,11 +51,16 @@
     </custom-column>
 
     <ng-container noData>
-      <ng-container *ngIf="state.loading; else notFound">
+      <ng-container *ngIf="state.loading; else getData">
         <div class="text-center m-2">Loading ...</div>
       </ng-container>
-      <ng-template #notFound>
-        <no-results (resetFilters)="query.setValue('')"></no-results>
+      <ng-template #getData>
+        <ng-container *ngIf="state.data.length > 1; else noConfigured">
+          <no-results (resetFilters)="query.setValue('')"></no-results>
+        </ng-container>
+        <ng-template #noConfigured>
+          <div class="text-center m-2">No users have been configured.</div>
+        </ng-template>
       </ng-template>
     </ng-container>
   </custom-table>

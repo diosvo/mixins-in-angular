@@ -3,6 +3,7 @@ import { fromEvent, map, Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-select-option',
+  standalone: true,
   templateUrl: './select-option.component.html'
 })
 export class SelectOptionComponent implements OnInit {

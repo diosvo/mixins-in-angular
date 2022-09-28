@@ -8,6 +8,7 @@ import { AutocompleteComponent } from '../components/autocomplete/autocomplete.c
 
 @Directive({
   selector: '[appAutocomplete]',
+  standalone: true
 })
 export class AutocompleteDirective implements OnInit, OnDestroy {
 

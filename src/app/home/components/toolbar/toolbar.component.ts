@@ -9,7 +9,7 @@ import { AuthModule } from '@auth/auth.module';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
-import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent, Dialog } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { filter, take } from 'rxjs';
@@ -54,9 +54,9 @@ export class ToolbarComponent {
   onLogout(): void {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: {
-          header: 'logout',
-          body: 'Are you sure you want to logout?',
+        data: <Dialog>{
+          title: 'logout',
+          content: 'Are you sure you want to logout?',
           btnClose: false
         },
         width: '400px',

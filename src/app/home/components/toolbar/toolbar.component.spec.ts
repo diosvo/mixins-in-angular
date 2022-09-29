@@ -1,6 +1,6 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { LoginComponent } from '@auth/components/login/login.component';
-import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent, Dialog } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { of } from 'rxjs';
 import { ToolbarComponent } from './toolbar.component';
 
@@ -47,9 +47,9 @@ describe('ToolbarComponent', () => {
   describe('onLogout()', () => {
     afterEach(() => {
       expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
-        data: {
-          header: 'logout',
-          body: 'Are you sure you want to logout?',
+        data: <Dialog>{
+          title: 'logout',
+          content: 'Are you sure you want to logout?',
           btnClose: false
         },
         width: '400px',

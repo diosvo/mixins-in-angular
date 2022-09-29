@@ -5,8 +5,8 @@ describe('ConfirmDialogComponent', () => {
 
   beforeEach(() => {
     component = new ConfirmDialogComponent({
-      header: 'logout',
-      body: 'Are you sure you want to logout?'
+      title: 'logout',
+      content: 'Are you sure you want to logout?'
     });
   });
 

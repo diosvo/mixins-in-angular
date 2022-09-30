@@ -1,3 +1,5 @@
+import isEqual from 'lodash.isequal';
+
 /** 
  * @description check duplicated values
  * @returns boolean
@@ -5,36 +7,30 @@
 
 const hasDuplicates = (array: Array<unknown>): boolean => new Set(array).size !== array.length;
 
-/** 
- * @description check duplicated values
- * @returns true if the deprecate function returns true for ALL, otherwise is false
- */
-
-const all = (array: Array<unknown>, fn = Boolean): boolean => array.every(fn);
-
-/** 
- * @returns capitalize every word
- */
-
-const capitalize = (words: string): string => words.replace(/\b[a-z]/g, character => character.toUpperCase());
-
-/** 
- * @returns flattens an array recursively.
- */
-
 const deepFlatten = (array: Array<unknown>): Array<unknown> => [].concat(...array.map(item => (Array.isArray(item) ? deepFlatten(item) : item)));
 
-/** 
- * @returns finds the difference between two arrays
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to exclude.
+ * @returns (Array): Returns the new array of filtered values.
  */
 
-const difference = (array_1: Array<unknown>, array_2: Array<unknown>): Array<unknown> => array_1.filter(item => !new Set(array_2).has(item));
+const diff = <T>(
+  array: Array<T>, values: Array<T>
+) => array.filter((item: T) => !new Set(values).has(item));
 
-/** 
- * @returns finds the difference between two arrays, after applying a given function to each element of both lists
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to exclude.
+ * @argument [iteratee=_.identity] (Function): The iteratee invoked per element.
+ * @returns (Array): Returns the new array of filtered values.
  */
 
-const differenceBy = (array_1: Array<unknown>, array_2: Array<unknown>, fn: Function): Array<unknown> => array_1.filter(item => !new Set(array_2).has(fn(item)));
+const diffBy = <T>(
+  array: T[],
+  values: T[],
+  iteratee: string
+) => array.filter((v) => !values.some((u) => isEqual(v[iteratee], u[iteratee])));
 
 /** 
  * @returns sorted by key in the array
@@ -42,4 +38,4 @@ const differenceBy = (array_1: Array<unknown>, array_2: Array<unknown>, fn: Func
 
 const sortBy = (array: Array<unknown>, key: string): Array<unknown> => array.sort((prev, next) => prev[key].localeCompare(next[key]));
 
-export { hasDuplicates, deepFlatten, sortBy };
+export { hasDuplicates, deepFlatten, sortBy, diff, diffBy };

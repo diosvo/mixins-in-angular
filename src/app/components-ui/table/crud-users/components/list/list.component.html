@@ -1,3 +1,10 @@
+<ng-template #selectionTpl let-users>
+  <div>This will delete selected users. Are you sure?</div>
+  <ul>
+    <li *ngFor="let user of users">#{{ user.id }} {{ user.name }}</li>
+  </ul>
+</ng-template>
+
 <ng-container *ngIf="state$ | async as state">
   <alert-message *ngIf="state.error" type="error">
     {{ state.error }}
@@ -9,6 +16,8 @@
     [columns]="columns"
     [highlight]="query.value"
     [defaultSortColumn]="'name'"
+    [enableCheckbox]="true"
+    (selectedRows)="selection = $event"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
@@ -17,15 +26,29 @@
       </custom-button>
     </div>
 
-    <custom-input
-      filters
-      class="flex-1"
-      label="search"
-      [clearFilter]="true"
-      [formControl]="query"
-      *ngIf="state.data.length > 1"
-    >
-    </custom-input>
+    <div filters class="d-flex ai-baseline jc-between">
+      <custom-input
+        filters
+        label="search"
+        [clearFilter]="true"
+        [formControl]="query"
+        *ngIf="state.data.length > 1"
+      >
+      </custom-input>
+      <div class="flex-1"></div>
+      <ng-container *ngIf="selection.length > 0">
+        {{ selection.length }}
+        {selection.length, plural, =1 {user} other {users} } selected
+      </ng-container>
+      <custom-button
+        class="ml-1"
+        variant="outline"
+        [disabled]="selection.length < 1"
+        (click)="onDelete(selection)"
+      >
+        Delete selected users
+      </custom-button>
+    </div>
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
@@ -33,6 +56,7 @@
           variant="icon"
           tooltip="Edit"
           iconClass="f-16"
+          [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onBulk(user)"
         >
@@ -42,8 +66,9 @@
           variant="icon"
           tooltip="Delete"
           iconClass="f-16"
+          [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
-          (click)="onDelete(user)"
+          (click)="onDelete([user])"
         >
           <ng-container icon>delete_outline</ng-container>
         </custom-button>

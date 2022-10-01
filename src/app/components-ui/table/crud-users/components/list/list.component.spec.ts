@@ -1,6 +1,7 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
-import { MOCK_USER } from '@lib/services/users/user.mock';
+import { EAction } from '@lib/models/table';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
 import { of } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';
 import { ListComponent } from './list.component';
@@ -10,7 +11,8 @@ describe('ListComponent', () => {
 
   const mockService: any = {
     loadState: jest.fn(),
-    executeJob: jest.fn().mockReturnValue(of(MOCK_USER)),
+    adjust: jest.fn().mockReturnValue(of(MOCK_USER)),
+    delete: jest.fn().mockReturnValue(of([])),
   };
 
   const mockDialog: any = {
@@ -19,6 +21,10 @@ describe('ListComponent', () => {
 
   beforeEach(() => {
     component = new ListComponent(mockDialog, mockService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should create', () => {
@@ -49,7 +55,7 @@ describe('ListComponent', () => {
         width: '500px',
         disableClose: true,
       });
-      expect(mockService.executeJob).toBeCalledWith('update$', MOCK_USER.id);
+      expect(mockService.adjust).toBeCalledWith(EAction.UPDATE, MOCK_USER.id);
     });
 
     test('should open dialog to create new user', () => {
@@ -62,36 +68,52 @@ describe('ListComponent', () => {
         width: '500px',
         disableClose: true,
       });
-      expect(mockService.executeJob).toBeCalledWith('create$', undefined);
+      expect(mockService.adjust).toBeCalledWith(EAction.CREATE, undefined);
     });
   });
 
   describe('onDelete()', () => {
-    afterEach(() => {
-      expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
-        data: {
-          header: 'Delete',
-          body: `Are you sure you want to delete ${MOCK_USER.name}?`,
-          btnClose: false
-        },
-        width: '500px',
-        disableClose: true,
+    describe('should call delete method when the user clicks on Confirm button', () => {
+      beforeEach(() => {
+        jest.spyOn(mockDialog, 'open').mockReturnValue(
+          { afterClosed: () => of(true) } as MatDialogRef<typeof ListComponent>
+        );
       });
-    });
 
-    test('should call delete method when the user clicks on Confirm button', () => {
-      jest.spyOn(mockDialog, 'open').mockReturnValue(
-        { afterClosed: () => of(true) } as MatDialogRef<typeof ListComponent>
-      );
-      component.onDelete(MOCK_USER);
-      expect(mockService.executeJob).toBeCalledWith('remove$', MOCK_USER.id);
+      test('should delete 1 user', () => {
+        component.onDelete([MOCK_USER]);
+        expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
+          data: {
+            title: 'Delete',
+            content: `Are you sure you want to delete ${MOCK_USER.name}?`,
+          },
+          width: '450px',
+          disableClose: true,
+        });
+        expect(mockService.delete).toBeCalledWith([MOCK_USER]);
+      });
+
+      test('should delete multiple users', () => {
+        component.onDelete(MOCK_LIST_USERS);
+        expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
+          data: {
+            title: 'Delete',
+            template: component['selectionRef'],
+            details: MOCK_LIST_USERS
+          },
+          width: '450px',
+          disableClose: true,
+        });
+        expect(mockService.delete).toBeCalledWith(MOCK_LIST_USERS);
+      });
     });
 
     test('should not call delete method when the user clicks on Close button', () => {
       jest.spyOn(mockDialog, 'open').mockReturnValue(
         { afterClosed: () => of(false) } as MatDialogRef<typeof ListComponent>
       );
-      component.onDelete(MOCK_USER);
+      component.onDelete(MOCK_LIST_USERS);
+      expect(mockService.delete).not.toBeCalled();
     });
   });
 });

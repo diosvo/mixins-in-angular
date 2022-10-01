@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertComponent } from '@lib/components/alert/alert.component';
-import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent, Dialog } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { EAction } from '@lib/models/table';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
@@ -39,8 +40,11 @@ import { DetailsComponent } from '../details/details.component';
 })
 export class ListComponent implements OnInit {
 
+  protected selection = [];
   readonly state$ = this.service.users_state$;
+
   query = new FormControl('', { nonNullable: true });
+  @ViewChild('selectionTpl') private readonly selectionRef: TemplateRef<ElementRef>;
 
   readonly columns: TableColumn[] = [
     { key: 'id', flex: '10%' },
@@ -75,19 +79,30 @@ export class ListComponent implements OnInit {
         take(1)
       )
       .subscribe({
-        next: () => this.service.executeJob(isEmpty(user) ? 'create$' : 'update$', user.id)
+        next: () => this.service.adjust(isEmpty(user) ? EAction.CREATE : EAction.UPDATE, user.id)
       });
   }
 
-  onDelete(user: User): void {
+  onDelete(users: User[]): void {
+    let data: Dialog;
+
+    if (users.length > 1) {
+      data = {
+        title: 'Delete',
+        template: this.selectionRef,
+        details: users
+      };
+    } else {
+      data = {
+        title: 'Delete',
+        content: `Are you sure you want to delete ${users.at(0).name}?`
+      };
+    }
+
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: {
-          header: 'Delete',
-          body: `Are you sure you want to delete ${user.name}?`,
-          btnClose: false
-        },
-        width: '500px',
+        data,
+        width: '450px',
         disableClose: true,
       })
       .afterClosed()
@@ -96,7 +111,7 @@ export class ListComponent implements OnInit {
         take(1)
       )
       .subscribe({
-        next: () => this.service.executeJob('remove$', user.id)
+        next: () => this.service.delete(users)
       });
   }
 }

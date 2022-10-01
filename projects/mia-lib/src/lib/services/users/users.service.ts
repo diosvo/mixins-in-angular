@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { State } from '@lib/models/server.model';
+import { BulkAction, EAction } from '@lib/models/table';
+import { diffBy } from '@lib/utils/array-utils';
 import isEqual from 'lodash.isequal';
-import { catchError, map, of, startWith } from 'rxjs';
+import { catchError, forkJoin, map, of, startWith } from 'rxjs';
 import { StateService } from '../base/state.service';
 import { SnackbarService } from '../snackbar/snackbar.service';
 import { UserDetailsService } from './user-details.service';
@@ -33,26 +35,49 @@ export class UsersService extends StateService<User> {
       });
   }
 
-  executeJob(action: 'update$' | 'create$' | 'remove$', id: number): void {
+  adjust(action: BulkAction, id: number): void {
     this.setState({ loading: true });
     const job = (user: User) => {
       switch (action) {
-        case 'update$':
+        case EAction.UPDATE:
           return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
-        case 'create$':
+        case EAction.CREATE:
           return this.state.data.concat(user);
-        case 'remove$':
-          return this.state.data.filter((selected: User) => !isEqual(selected.id, id));
       }
     };
 
-    this.service[action](id).subscribe({
+    this.service[`${action}$`]().subscribe({
       next: (user: User) => {
         this.setState({
           data: job(user),
           loading: false
         });
-        this.snackbar.success(`The user has been ${action.replace('$', 'd')}`);
+        this.snackbar.success(`The user has been ${action.concat('d')}`);
+      },
+      error: ({ message }) => {
+        this.setState({
+          loading: false
+        });
+        this.snackbar.error(message);
+      }
+    });
+  }
+
+  delete(users: User[]): void {
+    this.setState({ loading: true });
+    const selection$ = users.map(({ id }) => this.service.remove$(id));
+
+    forkJoin(selection$).subscribe({
+      next: () => {
+        this.setState({
+          data: diffBy(this.state.data, users, 'id'),
+          loading: false
+        });
+        this.snackbar.success(
+          users.length > 1
+            ? 'The selected users have been deleted'
+            : 'The user has been deleted'
+        );
       },
       error: ({ message }) => {
         this.setState({

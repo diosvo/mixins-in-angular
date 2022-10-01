@@ -78,6 +78,11 @@ describe('ListComponent', () => {
         jest.spyOn(mockDialog, 'open').mockReturnValue(
           { afterClosed: () => of(true) } as MatDialogRef<typeof ListComponent>
         );
+        jest.spyOn(component, 'onCancel');
+      });
+
+      afterEach(() => {
+        expect(component.onCancel).toBeCalled();
       });
 
       test('should delete 1 user', () => {
@@ -114,6 +119,16 @@ describe('ListComponent', () => {
       );
       component.onDelete(MOCK_LIST_USERS);
       expect(mockService.delete).not.toBeCalled();
+    });
+  });
+
+  describe('onCancel()', () => {
+    test('should deselect all items when the user click on Cancel button', () => {
+      (component as any).table = {
+        deselectAll: jest.fn()
+      };
+      component.onCancel();
+      expect(component['table'].deselectAll).toBeCalled();
     });
   });
 });

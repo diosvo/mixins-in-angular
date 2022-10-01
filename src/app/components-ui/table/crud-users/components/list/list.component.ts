@@ -43,7 +43,8 @@ export class ListComponent implements OnInit {
   protected selection = [];
   readonly state$ = this.service.users_state$;
 
-  query = new FormControl('', { nonNullable: true });
+  protected query = new FormControl('', { nonNullable: true });
+  @ViewChild(CustomTableComponent) private readonly table: CustomTableComponent<User>;
   @ViewChild('selectionTpl') private readonly selectionRef: TemplateRef<ElementRef>;
 
   readonly columns: TableColumn[] = [
@@ -111,7 +112,14 @@ export class ListComponent implements OnInit {
         take(1)
       )
       .subscribe({
-        next: () => this.service.delete(users)
+        next: () => {
+          this.service.delete(users);
+          this.onCancel();
+        }
       });
+  }
+
+  onCancel(): void {
+    this.table.deselectAll();
   }
 }

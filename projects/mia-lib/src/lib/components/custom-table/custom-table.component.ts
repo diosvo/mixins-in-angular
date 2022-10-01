@@ -162,20 +162,21 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
 
   private configDisplayColumns(): void {
+    const FIRST_INDEX = 0;
     this.displayColumns = this.columns.map(({ key }) => key);
 
     if (this.enableCheckbox) {
       // no exists yet
       if (!this.displayColumns.includes(this.select)) {
-        this.displayColumns.splice(0, 0, this.select);
-        this.columns.splice(0, 0, {
+        this.displayColumns.splice(FIRST_INDEX, FIRST_INDEX, this.select);
+        this.columns.splice(FIRST_INDEX, FIRST_INDEX, {
           key: this.select
         });
       }
       // no data configured or no data found
       if (this.source.data.length < 1) {
-        this.displayColumns.splice(0, 1);
-        this.columns.splice(0, 1);
+        this.displayColumns.splice(FIRST_INDEX, 1);
+        this.columns.splice(FIRST_INDEX, 1);
       }
     }
   }
@@ -207,11 +208,11 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   masterToggle(): void {
     this.isAllSelected()
-      ? this.clearAllSelection()
+      ? this.deselectAll()
       : this.source.data.forEach((row: T) => this.selection.select(row));
   }
 
-  clearAllSelection(): void {
+  deselectAll(): void {
     this.selection.clear();
     this.selectedRows.emit([]);
   }

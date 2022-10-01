@@ -6,6 +6,7 @@ import {
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
+import { EAction } from '@lib/models/table';
 import { UserDetailsService } from '@lib/services/users/user-details.service';
 import { User } from '@lib/services/users/user-service.model';
 import { UsersService } from '@lib/services/users/users.service';
@@ -59,19 +60,19 @@ export class AdvancedCrudComponent implements OnInit {
   addNewRow(): void {
     this.isEdit = false;
     this.rows.push(this.details.buildForm());
-    this.list.executeJob('create$', this.rowValue.id);
+    this.list.adjust(EAction.CREATE, this.rowValue.id);
   }
 
   editItem(idx: number): void {
     this.isEdit = true;
     this.rowValue = this.getRowValue(idx);
     this.rows.at(idx).get('isEditable').patchValue(true);
-    this.list.executeJob('update$', this.rowValue.id);
+    this.list.adjust(EAction.UPDATE, this.rowValue.id);
   }
 
   deleteItem(idx: number): void {
     this.rows.removeAt(idx);
-    this.list.executeJob('remove$', this.rowValue.id);
+    this.list.delete([this.rowValue]);
   }
 
   saveChanges(idx: number): void {

@@ -1,13 +1,11 @@
 import isEqual from 'lodash.isequal';
 
-/** 
- * @description check duplicated values
- * @returns boolean
+/**
+ * @argument array (Array): The array to inspect.
+ * @returns (boolean) Returns true if value is duplicated, else false.
  */
 
-const hasDuplicates = (array: Array<unknown>): boolean => new Set(array).size !== array.length;
-
-const deepFlatten = (array: Array<unknown>): Array<unknown> => [].concat(...array.map(item => (Array.isArray(item) ? deepFlatten(item) : item)));
+const hasDuplicates = <T>(array: T[]): boolean => !isEqual(new Set(array).size, array.length);
 
 /**
  * @argument array (Array): The array to inspect.
@@ -15,27 +13,34 @@ const deepFlatten = (array: Array<unknown>): Array<unknown> => [].concat(...arra
  * @returns (Array): Returns the new array of filtered values.
  */
 
-const diff = <T>(
-  array: Array<T>, values: Array<T>
-) => array.filter((item: T) => !new Set(values).has(item));
+const diff = <T>(array: T[], values: T[]): T[] => array.filter((item: T) => !new Set(values).has(item));
 
 /**
  * @argument array (Array): The array to inspect.
  * @argument [values] (...Array): The values to exclude.
- * @argument [iteratee=_.identity] (Function): The iteratee invoked per element.
+ * @argument [_.identity] (string): The `_.property` iteratee shorthand.
  * @returns (Array): Returns the new array of filtered values.
  */
 
-const diffBy = <T>(
-  array: T[],
-  values: T[],
-  iteratee: string
-) => array.filter((v) => !values.some((u) => isEqual(v[iteratee], u[iteratee])));
+const diffBy = <T>(array: T[], values: T[], _identity: string): T[] =>
+  array.filter((v: T) => !values.some((u: T) => isEqual(v[_identity], u[_identity])));
 
-/** 
- * @returns sorted by key in the array
- */
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to combine.
+ * @returns (Array): Returns the new array of combined values.
+*/
 
-const sortBy = (array: Array<unknown>, key: string): Array<unknown> => array.sort((prev, next) => prev[key].localeCompare(next[key]));
+const union = <T>(array: T[], values: T[]): T[] => diff(array, values).concat(values);
 
-export { hasDuplicates, deepFlatten, sortBy, diff, diffBy };
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to combine.
+ * @argument [_.identity] (string): The `_.property` iteratee shorthand.
+ * @returns (Array): Returns the new array of combined values.
+*/
+
+const unionBy = <T>(array: T[], values: T[], _identity: string): T[] => diffBy(array, values, _identity).concat(values);
+
+export { hasDuplicates, diff, diffBy, union, unionBy };
+

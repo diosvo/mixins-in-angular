@@ -1,19 +1,29 @@
-import { deepFlatten, sortBy } from './array-utils';
+import { User } from '@lib/services/users/user-service.model';
+import { MOCK_EXTENDED_USER, MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
+import { diff, diffBy, hasDuplicates, union, unionBy } from './array-utils';
 
 describe('./array-utils', () => {
-  test('deepFlatten() to flat nested array', () => {
-    expect(deepFlatten([1, 2, [3, 4]])).toEqual([1, 2, 3, 4]);
-    expect(deepFlatten([[1, [2]], [3, 4]])).toEqual([1, 2, 3, 4]);
+  test('hasDuplicates()', () => {
+    expect(hasDuplicates([1, 1, 2, 3, 1])).toBe(true);
   });
 
-  test('sortBy() to sort array by key', () => {
-    const users = [
-      { name: 'Vo' },
-      { name: 'Dios' }
-    ];
-    expect(sortBy(users, 'name')).toEqual([
-      { name: 'Dios' },
-      { name: 'Vo' }
-    ]);
+  test('diff()', () => {
+    expect(diff([1, 2], [1])).toEqual([2]);
+  });
+
+  test('diffBy()', () => {
+    expect(diffBy(MOCK_LIST_USERS, [MOCK_USER], 'id')).toEqual([MOCK_EXTENDED_USER]);
+  });
+
+  test('union()', () => {
+    expect(union([2, 1], [1])).toEqual([2, 1]);
+  });
+
+  test('unionBy()', () => {
+    const USER: User = {
+      ...MOCK_EXTENDED_USER,
+      firstName: 'Any'
+    };
+    expect(unionBy(MOCK_LIST_USERS, [USER], 'id')).toEqual([MOCK_USER, USER]);
   });
 });

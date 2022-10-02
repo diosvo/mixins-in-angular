@@ -1,12 +1,29 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { User } from '@lib/services/users/user-service.model';
+import { MOCK_USER } from '@lib/services/users/user.mock';
 import { CustomTableComponent } from './custom-table.component';
 
 describe('CustomTableComponent', () => {
   let component: CustomTableComponent<unknown>;
+  let windowSpy;
+
+  const key_id = {
+    key: 'id'
+  };
+
+  const key_select = {
+    key: 'select'
+  };
 
   beforeEach(() => {
     component = new CustomTableComponent<unknown>();
+    windowSpy = jest.spyOn(window, 'requestAnimationFrame');
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    windowSpy.mockRestore();
   });
 
   test('should create', () => {
@@ -36,7 +53,7 @@ describe('CustomTableComponent', () => {
 
   describe('ngOnChanges() to detect data changes', () => {
     beforeEach(() => {
-      component.source = new MatTableDataSource<unknown>([]);
+      component['source'] = new MatTableDataSource<unknown>([]);
     });
 
     test('should re-defined pageSize when pageSizeOptions changes', () => {
@@ -54,25 +71,17 @@ describe('CustomTableComponent', () => {
     });
   });
 
-  describe('ngOnInit()', () => {
-    test('should call configDisplayColumns() method', () => {
-      jest.spyOn(component as any, 'configDisplayColumns');
-      component.ngOnInit();
-      expect(component['configDisplayColumns']).toBeCalled();
-    });
-  });
-
   // TODO: columnDefs is undefined
   describe.skip('ngAfterViewInit()', () => {
     test('should show views after after views are initialized', () => {
       jest.spyOn(component as any, 'configColumnTemplates');
       jest.spyOn(component as any, 'configPaginator');
-      component.source = new MatTableDataSource([]);
+      component['source'] = new MatTableDataSource([]);
 
       component.ngAfterViewInit();
 
       expect(component['configColumnTemplates']).toBeCalled();
-      expect(component.source.sort).toEqual(component['matSort']);
+      expect(component['source'].sort).toEqual(component['matSort']);
       expect(component['configPaginator']).toBeCalled();
     });
   });
@@ -80,7 +89,7 @@ describe('CustomTableComponent', () => {
   describe('setDataSource()', () => {
     test('should update table view whenever the source changes', () => {
       component['setDataSource']([]);
-      expect(component.source.data).toEqual([]);
+      expect(component['source'].data).toEqual([]);
     });
   });
 
@@ -108,68 +117,108 @@ describe('CustomTableComponent', () => {
     });
   });
 
+  describe('configSorting()', () => {
+    beforeEach(() => {
+      component['source'] = new MatTableDataSource<User>([MOCK_USER]);
+    });
+
+    test('should config sorting correctly', () => {
+      component.columns = [key_id];
+      component.defaultSortColumn = 'id';
+
+      component['configSorting']();
+      expect(component['source'].sort).toEqual(component['matSort']);
+    });
+
+    test('show error if the provided key does not exist in columns declaration', () => {
+      component.columns = [key_id];
+      component.defaultSortColumn = 'test';
+
+      expect(() => component['configSorting']()).toThrow('The provided default key for sorting does not exist in the column declaration.');
+    });
+  });
+
   describe('configPaginator()', () => {
     test('call paginator if length property is undefined', () => {
       component.length = undefined;
       component['configPaginator']();
-      expect(component.source.paginator).toEqual(component['paginator']);
+      expect(component['source'].paginator).toEqual(component['paginator']);
     });
 
     test('call matPaginator if length property is defined', () => {
       component.length = 1;
       component['configPaginator']();
-      expect(component.source.paginator).toEqual(component['matPaginator']);
+      expect(component['source'].paginator).toEqual(component['matPaginator']);
     });
   });
 
-  describe('configDisplayColumns() to determine what columns will be shown', () => {
-    beforeEach(() => component.columns = [{ key: 'id' }]);
+  describe('configDisplayColumns()', () => {
+    describe('if [enableCheckbox] is true (select column will be the first column on data table)', () => {
+      beforeEach(() => {
+        component.enableCheckbox = true;
+      });
 
-    test('when checkbox is enable (select column will be the first column on data table)', () => {
-      component.enableCheckbox = true;
-      component['configDisplayColumns']();
+      test('should add the select column if it does not exist', () => {
+        component.columns = [key_id];
+        component['source'] = new MatTableDataSource<User>([MOCK_USER]);
 
-      expect(component.displayColumns).toEqual([component.select, 'id']);
-      expect(component.columns).toEqual([
-        { key: component.select },
-        { key: 'id' }
-      ]);
+        component['configDisplayColumns']();
+
+        expect(component.displayColumns).toEqual([component.select, 'id']);
+        expect(component.columns).toEqual([key_select, key_id]);
+      });
+
+      test('should remove the select column if no data configured or no data found', () => {
+        component.columns = [key_select, key_id];
+        component['source'] = new MatTableDataSource<User>([]);
+
+        component['configDisplayColumns']();
+
+        expect(component.displayColumns).toEqual(['id']);
+        expect(component.columns).toEqual([key_id]);
+      });
     });
 
-    test('when checkbox is disable', () => {
-      component.enableCheckbox = false;
-      component['configDisplayColumns']();
+    describe('if [enableCheckbox] is false', () => {
+      test('should not add select key into the columns declaration', () => {
+        component.columns = [key_id];
+        component.enableCheckbox = false;
 
-      expect(component.displayColumns).toEqual(['id']);
-      expect(component.columns).toEqual([
-        { key: 'id' }
-      ]);
+        component['configDisplayColumns']();
+
+        expect(component.displayColumns).toEqual(['id']);
+        expect(component.columns).toEqual([key_id]);
+      });
     });
   });
 
-  test.skip('onPageChanged()', () => {
-    jest.spyOn(component.pageChanges, 'emit');
-    component['tableRef'] = {
-      nativeElement: {
-        scrollIntoView: jest.fn()
-      }
-    } as any;
+  test('onPageChanged()', () => {
     const page: PageEvent = {
       pageIndex: 0,
       pageSize: 10,
       length: 10
     };
+    jest.spyOn(component.pageChanges, 'emit');
+
+    component['tableRef'] = {
+      nativeElement: {
+        scrollIntoView: jest.fn()
+      }
+    } as any;
+    windowSpy.requestAnimationFrame = jest.fn().mockImplementationOnce(() => {
+      return () => component['tableRef'];
+    });
 
     component.onPageChanged(page);
 
     expect(component.pageChanges.emit).toBeCalledWith(page);
     expect(component.pageIndex).toBe(page.pageIndex);
     expect(component.pageSize).toBe(page.pageSize);
-    expect(component['tableRef'].nativeElement.scrollIntoView).toBeCalledWith({ behavior: 'smooth', block: 'end', inline: 'start' });
+    // expect(component['tableRef'].nativeElement.scrollIntoView).toBeCalledWith({ behavior: 'smooth', block: 'end', inline: 'start' });
   });
 
   describe('isAllSelected() to check master toggle state', () => {
-    beforeEach(() => component.source = { data: [{ id: 1 }] } as any);
+    beforeEach(() => component['source'] = { data: [{ id: 1 }] } as any);
 
     test('when all items are checked', () => {
       component['selection'] = { selected: [{ id: 1 }] } as any;
@@ -188,7 +237,7 @@ describe('CustomTableComponent', () => {
         clear: jest.fn(),
         select: jest.fn().mockReturnValue({})
       } as any;
-      component.source = { data: [{ id: 1 }] } as any;
+      component['source'] = { data: [{ id: 1 }] } as any;
     });
 
     test('checked when check all items in data source', () => {
@@ -200,7 +249,7 @@ describe('CustomTableComponent', () => {
     test('indeterminate when check item/s from data source', () => {
       jest.spyOn(component, 'isAllSelected').mockReturnValue(false);
       component.masterToggle();
-      component.source.data.forEach(row => expect(component['selection'].select(row)));
+      component['source'].data.forEach(row => expect(component['selection'].select(row)));
     });
   });
 });

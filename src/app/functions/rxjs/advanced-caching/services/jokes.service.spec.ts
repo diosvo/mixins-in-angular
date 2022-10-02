@@ -1,16 +1,20 @@
-import { TestBed } from '@angular/core/testing';
-
+import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
+import { DestroyService } from '@lib/services/destroy/destroy.service';
+import { of } from 'rxjs';
 import { JokesService } from './jokes.service';
 
 describe('JokesService', () => {
   let service: JokesService;
 
+  const mockHttp: any = {
+    get: jest.fn().mockReturnValue(of([])),
+  };
+
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(JokesService);
+    service = new JokesService(mockHttp, new ErrorHandlerService(), new DestroyService());
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 });

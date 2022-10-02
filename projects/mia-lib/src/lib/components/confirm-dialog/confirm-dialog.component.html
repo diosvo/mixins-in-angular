@@ -1,23 +1,22 @@
-<div class="d-flex jc-between">
-  <h2 mat-dialog-title [innerHTML]="data.header | titlecase"></h2>
-  <button
-    mat-icon-button
-    mat-dialog-close
-    *ngIf="data.btnClose"
-    class="dialog-close-button"
-  >
-    <span class="text-secondary f-20" [style.font-family]="'wide-font'">
-      &times;
-    </span>
-  </button>
-</div>
-<mat-dialog-content [innerHTML]="data.body"></mat-dialog-content>
+<h3
+  class="fw-bold"
+  [style.margin-top.px]="-8"
+  [style.margin-bottom.px]="8"
+  mat-dialog-title
+>
+  {{ data.title | titlecase }}
+</h3>
+
+<mat-dialog-content>
+  <ng-container *ngIf="data.content">{{ data.content }}</ng-container>
+  <ng-container
+    *ngIf="data.template"
+    [ngTemplateOutlet]="data.template"
+    [ngTemplateOutletContext]="{ $implicit: data.details }"
+  ></ng-container>
+</mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button color="warn" mat-dialog-close>Close</button>
-  <button
-    mat-flat-button
-    color="primary"
-    [mat-dialog-close]="true"
-    [innerHTML]="'OK'"
-  ></button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="true">OK</button>
 </mat-dialog-actions>

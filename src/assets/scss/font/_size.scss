@@ -1,16 +1,9 @@
-$-sizes: 12,
-13,
-14,
-16,
-20,
-24,
-32,
-48;
+$-sizes: 11, 12, 13, 14, 16, 20, 24, 32, 48;
 
 .f {
   @each $size in $-sizes {
     &-#{$size} {
-      font-size: $size * 1px;
+      font-size: calc($size * 1px) !important;
     }
   }
 }

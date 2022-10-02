@@ -1,23 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { of } from 'rxjs';
 import { AdvancedCachingComponent } from './advanced-caching.component';
 
 describe('AdvancedCachingComponent', () => {
   let component: AdvancedCachingComponent;
-  let fixture: ComponentFixture<AdvancedCachingComponent>;
+
+  const mockService: any = {
+    jokes: of([]),
+    forceReload: jest.fn(),
+  };
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ AdvancedCachingComponent ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(AdvancedCachingComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new AdvancedCachingComponent(mockService);
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 });

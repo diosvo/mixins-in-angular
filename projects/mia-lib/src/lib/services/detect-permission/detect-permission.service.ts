@@ -17,7 +17,9 @@ export class DetectPermissionService {
   isAuthorized(): void {
     this.activatedRoute.data.subscribe({
       next: ({ roles }) => {
-        if (!this.authService.user) return false;
+        if (!this.authService.user) {
+          return false;
+        };
 
         const checkRole = (role: TRole) => this.authService.user.roles.includes(role);
         this.hasPermission = roles.some(checkRole);

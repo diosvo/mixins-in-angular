@@ -1,4 +1,4 @@
-@use 'palette';
+@use "palette";
 
 @mixin border($n) {
   border: $n * 1px;
@@ -45,5 +45,11 @@
 hr {
   height: 1px;
   margin: 1rem -1rem;
-  color : rgba($color: palette.$light, $alpha: 0.3);
+  color: rgba($color: palette.$light, $alpha: 0.3);
+}
+
+.divider-vertical {
+  display: block;
+  height: 1.25rem;
+  border-right: 1px solid rgba($color: palette.$light, $alpha: 0.3);
 }

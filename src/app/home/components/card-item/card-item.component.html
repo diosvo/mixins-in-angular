@@ -9,7 +9,7 @@
     >
       <div class="f-12">
         <span class="text-secondary">#{{ item.group_id }} </span>
-        <span *ngIf="item.is_maintained" class="text-error">
+        <span *ngIf="item.is_maintained && prod_mode" class="text-error">
           #maintenance
         </span>
       </div>

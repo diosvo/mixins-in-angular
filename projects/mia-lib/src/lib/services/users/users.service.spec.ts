@@ -1,4 +1,5 @@
 import { State } from '@lib/models/server.model';
+import { EAction } from '@lib/models/table';
 import { of, throwError } from 'rxjs';
 import { mockSnackbar } from '../snackbar/snackbar.service.spec';
 import { INITIAL_USER_STATE, User } from './user-service.model';
@@ -18,6 +19,10 @@ describe('UsersService', () => {
   beforeEach(() => {
     service = new UsersService(mockSnackbar, mockUserDetailsService);
     jest.spyOn(service as any, 'setState');
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should initialize service', () => {
@@ -52,47 +57,78 @@ describe('UsersService', () => {
     });
   });
 
-  describe('should execute job actions', () => {
-    it('should update the selected user', () => {
+  describe('should adjust selected user', () => {
+    test('should update the selected user', () => {
       service['setState']({
         data: MOCK_LIST_USERS
       });
-      service.executeJob('update$', MOCK_USER.id);
+      service.adjust(EAction.UPDATE, MOCK_USER.id);
       expect(service['setState']).toBeCalledWith({
         data: MOCK_LIST_USERS,
         loading: false
       });
     });
 
-    it('should create new user', () => {
+    test('should create new user', () => {
       service['setState']({
         data: []
       });
-      service.executeJob('create$', MOCK_USER.id);
+      service.adjust(EAction.CREATE, null);
       expect(service['setState']).toBeCalledWith({
         data: [MOCK_USER],
         loading: false
       });
     });
 
-    it('should delete the selected user', () => {
+    test('should show error message when API failed', () => {
       service['setState']({
         data: [MOCK_USER]
       });
-      service.executeJob('remove$', MOCK_USER.id);
+      mockUserDetailsService.update$.mockReturnValue(throwError(() => new Error('Bad Request')));
+
+      service.adjust(EAction.UPDATE, MOCK_USER.id);
+
+      expect(service['setState']).toBeCalledWith({
+        loading: false
+      });
+      expect(mockSnackbar.error).toBeCalledWith('Bad Request');
+    });
+  });
+
+  describe('should delete selected users', () => {
+    test('should delete 1 user', () => {
+      service['setState']({
+        data: [MOCK_USER]
+      });
+      service.delete([MOCK_USER]);
+
       expect(service['setState']).toBeCalledWith({
         data: [],
         loading: false
       });
+      expect(mockSnackbar.success).toBeCalledWith('The user has been deleted');
     });
 
-    it('should show error message when API failed', () => {
+    test('should delete multiple users', () => {
+      service['setState']({
+        data: MOCK_LIST_USERS
+      });
+      service.delete(MOCK_LIST_USERS);
+
+      expect(service['setState']).toBeCalledWith({
+        data: [],
+        loading: false
+      });
+      expect(mockSnackbar.success).toBeCalledWith('The selected users have been deleted');
+    });
+
+    test('should show error message when API failed', () => {
       service['setState']({
         data: [MOCK_USER]
       });
       mockUserDetailsService.remove$.mockReturnValue(throwError(() => new Error('Bad Request')));
 
-      service.executeJob('remove$', MOCK_USER.id);
+      service.delete([MOCK_USER]);
 
       expect(service['setState']).toBeCalledWith({
         loading: false

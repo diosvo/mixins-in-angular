@@ -1,13 +1,23 @@
+<ng-template #selectionTpl let-users>
+  <div>This will delete selected users. Are you sure?</div>
+  <ul>
+    <li *ngFor="let user of users">#{{ user.id }} {{ user.name }}</li>
+  </ul>
+</ng-template>
+
 <ng-container *ngIf="state$ | async as state">
   <alert-message *ngIf="state.error" type="error">
     {{ state.error }}
   </alert-message>
 
   <custom-table
-    [data]="state.data | filter: query.value"
+    *ngIf="state.data | filter: query.value as filtered_data"
+    [data]="filtered_data"
     [columns]="columns"
     [highlight]="query.value"
     [defaultSortColumn]="'name'"
+    [enableCheckbox]="true"
+    (selectedRows)="selection = $event"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
@@ -16,14 +26,41 @@
       </custom-button>
     </div>
 
-    <custom-input
-      filters
-      class="flex-1"
-      label="search"
-      [clearFilter]="true"
-      [formControl]="query"
-    >
-    </custom-input>
+    <div filters>
+      <ng-container *ngIf="selection.length > 0; else basicTpl">
+        <section
+          class="bg-light-blue text-white d-flex ai-center jc-between pl-2 py-1"
+        >
+          <div *ngIf="selection.length > 0" class="flex-1">
+            {{ selection.length }}
+            {selection.length, plural, =1 {user} other {users} } selected
+          </div>
+
+          <ng-container>
+            <custom-button variant="basic" (click)="onDelete(selection)">
+              Delete
+            </custom-button>
+            <div class="divider-vertical"></div>
+            <custom-button variant="basic" (click)="onCancel()">
+              Cancel
+            </custom-button>
+          </ng-container>
+        </section>
+      </ng-container>
+
+      <!-- Basic template -->
+      <ng-template #basicTpl>
+        <custom-input
+          filters
+          *ngIf="state.data.length > 0"
+          label="search"
+          [clearFilter]="true"
+          [formControl]="query"
+          placeholder="type to search..."
+        >
+        </custom-input>
+      </ng-template>
+    </div>
 
     <custom-column columnName="actions">
       <ng-template let-user let-index="index">
@@ -31,6 +68,7 @@
           variant="icon"
           tooltip="Edit"
           iconClass="f-16"
+          [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onBulk(user)"
         >
@@ -40,8 +78,9 @@
           variant="icon"
           tooltip="Delete"
           iconClass="f-16"
+          [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
-          (click)="onDelete(user)"
+          (click)="onDelete([user])"
         >
           <ng-container icon>delete_outline</ng-container>
         </custom-button>
@@ -49,11 +88,16 @@
     </custom-column>
 
     <ng-container noData>
-      <ng-container *ngIf="state.loading; else notFound">
+      <ng-container *ngIf="state.loading; else getData">
         <div class="text-center m-2">Loading ...</div>
       </ng-container>
-      <ng-template #notFound>
-        <no-results (resetFilters)="query.setValue('')"></no-results>
+      <ng-template #getData>
+        <ng-container *ngIf="state.data.length > 0; else noConfigured">
+          <no-results (resetFilters)="query.setValue('')"></no-results>
+        </ng-container>
+        <ng-template #noConfigured>
+          <div class="text-center m-2">No users have been configured.</div>
+        </ng-template>
       </ng-template>
     </ng-container>
   </custom-table>

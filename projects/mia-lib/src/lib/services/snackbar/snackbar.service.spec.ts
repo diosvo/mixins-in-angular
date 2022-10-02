@@ -4,7 +4,8 @@ import { SnackbarService } from './snackbar.service';
 
 export const mockSnackbar: any = {
   success: jest.fn(),
-  error: jest.fn()
+  warning: jest.fn(),
+  error: jest.fn(),
 };
 
 describe('SnackbarService', () => {

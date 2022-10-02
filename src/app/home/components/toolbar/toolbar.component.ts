@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthModule } from '@auth/auth.module';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
-import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent, Dialog } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { filter, take } from 'rxjs';
@@ -24,13 +26,16 @@ import { filter, take } from 'rxjs';
     CustomButtonComponent,
     ConfirmDialogComponent,
 
-    MatToolbarModule
+    MatMenuModule,
+    MatCardModule,
+    MatToolbarModule,
   ],
   templateUrl: './toolbar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarComponent {
 
+  readonly user$ = this.authService.user$;
   readonly loggedIn$ = this.authService.isLoggedIn$;
   readonly navigation = Object.values(EUrl);
 
@@ -49,9 +54,9 @@ export class ToolbarComponent {
   onLogout(): void {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: {
-          header: 'logout',
-          body: 'Are you sure you want to logout?',
+        data: <Dialog>{
+          title: 'logout',
+          content: 'Are you sure you want to logout?',
           btnClose: false
         },
         width: '400px',
@@ -68,5 +73,9 @@ export class ToolbarComponent {
           this.router.navigateByUrl('/components-ui');
         }
       });
+  }
+
+  updateProfile(): void {
+    console.log(this.authService.user);
   }
 }

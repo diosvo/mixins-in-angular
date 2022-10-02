@@ -10,10 +10,10 @@ import firebase from 'firebase/compat/app';
 import { BehaviorSubject, from, Observable, switchMap, take } from 'rxjs';
 
 
-export interface AuthUser {
-  uid: string;
-  email: string;
+export interface AuthUser extends firebase.UserInfo {
   expire: number;
+  providerId: string;
+  emailVerified: boolean;
   roles: TRole[];
 }
 
@@ -80,8 +80,8 @@ export class AuthService {
     );
   }
 
-  resetPassword(password: string): Observable<void> {
-    return from(this.afa.sendPasswordResetEmail(password));
+  resetPassword(email: string): Observable<void> {
+    return from(this.afa.sendPasswordResetEmail(email));
   }
 
   async logout(): Promise<void> {
@@ -103,7 +103,7 @@ export class AuthService {
       throw new Error('No user found');
     }
 
-    const { uid, email } = user;
+    const { uid, email, displayName, emailVerified, phoneNumber, photoURL, providerId } = user;
     const idToken = await user.getIdToken();
     const expire = JSON.parse(
       Buffer
@@ -114,7 +114,12 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<AuthUser> = this.afs.doc(`users/${uid}`);
     const data: AuthUser = {
       uid,
+      displayName,
       email,
+      emailVerified,
+      providerId,
+      phoneNumber,
+      photoURL,
       expire,
       roles: asUniqueArray([ERole.SUBSCRIBER])
     };
@@ -129,6 +134,6 @@ export class AuthService {
     }
     this.userSubj$.next(user);
     this.isLoggedIn$.next(loggedIn);
-    this.logger.log(user ? new Date(user.expire * 1000) : 'Not signed in yet');
+    this.logger.log(user ? new Date(user.expire * 1000) : 'No user is signed in.');
   }
 }

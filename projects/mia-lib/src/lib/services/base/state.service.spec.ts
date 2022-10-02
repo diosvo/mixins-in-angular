@@ -1,21 +1,18 @@
+import { State } from '@lib/models/server.model';
 import { User } from '../users/user-service.model';
-import { State, StateService } from './state.service';
+import { MOCK_LIST_USERS } from '../users/user.mock';
+import { StateService } from './state.service';
 
 const user_state: State<User> = {
-  data: [
-    {
-      firstName: 'Dios',
-      lastName: 'Vo',
-    }
-  ],
+  data: MOCK_LIST_USERS,
   loading: false
 };
 
 describe('StateService', () => {
-  let service: StateService<State<User>>;
+  let service: StateService<User>;
 
   beforeEach(() => {
-    service = new StateService<State<User>>(user_state);
+    service = new StateService<User>(user_state);
   });
 
   test('should initialize service', () => {

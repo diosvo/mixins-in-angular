@@ -15,6 +15,8 @@ export const FORM_ROUTES: Routes = [
   },
   {
     path: 'lookup-users',
-    loadChildren: () => import('./lookup-users/lookup-users.module').then(({ LookupUsersModule }) => LookupUsersModule)
+    loadComponent: () => import('./lookup-users/components/search-page/search-page.component')
+      .then(({ SearchPageComponent }) => SearchPageComponent),
+    title: 'Autocomplete',
   }
 ];

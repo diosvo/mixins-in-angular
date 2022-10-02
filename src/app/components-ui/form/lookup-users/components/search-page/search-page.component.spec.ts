@@ -1,12 +1,20 @@
+import { State } from '@lib/models/server.model';
 import { User } from '@lib/services/users/user-service.model';
+import { MOCK_LIST_USERS } from '@lib/services/users/user.mock';
 import { of } from 'rxjs';
 import { SearchPageComponent } from './search-page.component';
 
 describe('SearchPageComponent', () => {
   let component: SearchPageComponent;
 
+  const user_state: State<User> = {
+    data: MOCK_LIST_USERS,
+    loading: false
+  };
+
   const mockService: any = {
-    all: jest.fn().mockReturnValue(of([])),
+    loadState: jest.fn(),
+    users_state$: of(user_state),
   };
 
   beforeEach(() => {
@@ -19,10 +27,11 @@ describe('SearchPageComponent', () => {
 
   test('ngOnInit() to set up component after page load', (done) => {
     component.ngOnInit();
-    component.users$.subscribe((response: User[]) => {
-      expect(response).toEqual([]);
+    component.state$.subscribe((state: State<User>) => {
+      expect(state).toEqual(user_state);
       done();
     });
+    expect(mockService.loadState).toBeCalled();
   });
 
   test('stateChanges()', () => {

@@ -14,10 +14,12 @@ const DEFAULT_PAGINATE_PARAMS: Pagination = {
   order: 'asc'
 };
 
-function concatQueries(params: Pagination): string {
-  const queries = `?_start=${params.offset}&_limit=${params.limit}`;
-  const sort = `&_order=${params.order}&_sort=${params.sort}`;
-  return params.order && params.sort ? queries.concat(sort) : queries;
+enum EAction {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
 }
 
-export { Pagination, DEFAULT_PAGINATE_PARAMS, concatQueries };
+type BulkAction = Lowercase<keyof typeof EAction>;
+
+export { Pagination, EAction, BulkAction, DEFAULT_PAGINATE_PARAMS };

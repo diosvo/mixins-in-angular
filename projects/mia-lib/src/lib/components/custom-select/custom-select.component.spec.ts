@@ -47,10 +47,10 @@ describe('CustomSelectComponent', () => {
   describe('watchForChanges()', () => {
     test('should filter data whenever query changes', () => {
       component.items = of([value]);
-      component.query.setValue('');
+      component['query'].setValue('');
 
       component['watchForChanges']();
-      component.query.setValue('aaaa');
+      component['query'].setValue('aaaa');
 
       (component.items as Observable<string[]>).subscribe((response: string[]) => {
         expect(response).toEqual([]);

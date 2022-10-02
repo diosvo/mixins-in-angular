@@ -1,7 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '@auth/services/auth.service';
 import { ERole } from '@lib/models/role';
 import { of } from 'rxjs';
 import { DetectPermissionService } from './detect-permission.service';
@@ -9,33 +5,22 @@ import { DetectPermissionService } from './detect-permission.service';
 describe('DetectPermissionService', () => {
   let service: DetectPermissionService;
 
-  const route = ({
+  const mockRoute: any = {
     data: of({ roles: [ERole.ADMIN] })
-  }) as any;
+  };
 
-  const user = {
-    roles: [ERole.ADMIN, ERole.GUEST]
+  let mockAuthService: any = {
+    user: {
+      roles: [ERole.ADMIN, ERole.GUEST]
+    }
   };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: route
-        },
-        {
-          provide: AuthService,
-          useValue: {
-            user: user
-          }
-        },
-        DetectPermissionService
-      ]
-    });
+    service = new DetectPermissionService(mockAuthService, mockRoute);
+  });
 
-    service = TestBed.inject(DetectPermissionService);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should be created', () => {
@@ -43,19 +28,19 @@ describe('DetectPermissionService', () => {
   });
 
   describe('isAuthorized() to determine if the user has role', () => {
-    test('returns true if user has permissions', () => {
+    test('returns true if the user has permissions', () => {
       service.isAuthorized();
       expect(service.hasPermission).toBe(true);
     });
 
-    test('returns false if user does NOT have permissions', () => {
-      user.roles = [ERole.CUSTOMER];
+    test('returns false if the user does NOT have permissions', () => {
+      mockAuthService.user.roles = [ERole.SUBSCRIBER];
       service.isAuthorized();
       expect(service.hasPermission).toBe(false);
     });
 
     test('returns false if user does NOT log in', () => {
-      service['authService'].user = null;
+      mockAuthService.user = null;
       service.isAuthorized();
       expect(service.hasPermission).toBe(false);
     });

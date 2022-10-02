@@ -4,20 +4,24 @@ import { HasPermissionDirective, LogicalOperator } from './has-permission.direct
 describe('HasPermissionDirective', () => {
   let directive: HasPermissionDirective;
 
-  const service = {
+  const service: any = {
     user: {
       username: 'diosvo',
       password: '123456',
       roles: [ERole.ADMIN]
     }
-  } as any;
+  };
 
-  const templateRef = {} as any;
+  const templateRef: any = {};
 
-  const viewContainer = {
+  const viewContainer: any = {
     clear: jest.fn(),
     createEmbeddedView: jest.fn()
-  } as any;
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test('should create an instance', () => {
     directive = new HasPermissionDirective(service, viewContainer, templateRef);
@@ -26,9 +30,9 @@ describe('HasPermissionDirective', () => {
 
   test('set hasPermission', () => {
     jest.spyOn(directive as any, 'updateView');
-    directive.hasPermission = [ERole.ADMIN, ERole.CUSTOMER];
+    directive.hasPermission = [ERole.ADMIN, ERole.GUEST];
 
-    expect(directive['_permissions']).toEqual([ERole.ADMIN, ERole.CUSTOMER]);
+    expect(directive['_permissions']).toEqual([ERole.ADMIN, ERole.GUEST]);
     expect(directive['updateView']).toBeCalled();
   });
 
@@ -58,7 +62,9 @@ describe('HasPermissionDirective', () => {
 
   describe('should call updateView()', () => {
     describe('when user has permission and', () => {
-      beforeEach(() => jest.spyOn(directive as any, 'checkPermission').mockReturnValue(true));
+      beforeEach(() => {
+        jest.spyOn(directive as any, 'checkPermission').mockReturnValue(true);
+      });
 
       test('template has NOT added; should add view into the DOM', () => {
         directive['_isHidden'] = true;
@@ -77,7 +83,6 @@ describe('HasPermissionDirective', () => {
 
     test('when user does NOT have permission; remove view from DOM', () => {
       jest.spyOn(directive as any, 'checkPermission').mockReturnValue(false);
-
       directive['updateView']();
 
       expect(directive['_isHidden']).toBe(true);

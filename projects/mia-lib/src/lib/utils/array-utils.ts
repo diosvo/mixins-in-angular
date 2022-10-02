@@ -1,45 +1,46 @@
-/** 
- * @description check duplicated values
- * @returns boolean
+import isEqual from 'lodash.isequal';
+
+/**
+ * @argument array (Array): The array to inspect.
+ * @returns (boolean) Returns true if value is duplicated, else false.
  */
 
-const hasDuplicates = (array: Array<unknown>): boolean => new Set(array).size !== array.length;
+const hasDuplicates = <T>(array: T[]): boolean => !isEqual(new Set(array).size, array.length);
 
-/** 
- * @description check duplicated values
- * @returns true if the deprecate function returns true for ALL, otherwise is false
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to exclude.
+ * @returns (Array): Returns the new array of filtered values.
  */
 
-const all = (array: Array<unknown>, fn = Boolean): boolean => array.every(fn);
+const diff = <T>(array: T[], values: T[]): T[] => array.filter((item: T) => !new Set(values).has(item));
 
-/** 
- * @returns capitalize every word
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to exclude.
+ * @argument [_.identity] (string): The `_.property` iteratee shorthand.
+ * @returns (Array): Returns the new array of filtered values.
  */
 
-const capitalize = (words: string): string => words.replace(/\b[a-z]/g, character => character.toUpperCase());
+const diffBy = <T>(array: T[], values: T[], _identity: string): T[] =>
+  array.filter((v: T) => !values.some((u: T) => isEqual(v[_identity], u[_identity])));
 
-/** 
- * @returns flattens an array recursively.
- */
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to combine.
+ * @returns (Array): Returns the new array of combined values.
+*/
 
-const deepFlatten = (array: Array<unknown>): Array<unknown> => [].concat(...array.map(item => (Array.isArray(item) ? deepFlatten(item) : item)));
+const union = <T>(array: T[], values: T[]): T[] => diff(array, values).concat(values);
 
-/** 
- * @returns finds the difference between two arrays
- */
+/**
+ * @argument array (Array): The array to inspect.
+ * @argument [values] (...Array): The values to combine.
+ * @argument [_.identity] (string): The `_.property` iteratee shorthand.
+ * @returns (Array): Returns the new array of combined values.
+*/
 
-const difference = (array_1: Array<unknown>, array_2: Array<unknown>): Array<unknown> => array_1.filter(item => !new Set(array_2).has(item));
+const unionBy = <T>(array: T[], values: T[], _identity: string): T[] => diffBy(array, values, _identity).concat(values);
 
-/** 
- * @returns finds the difference between two arrays, after applying a given function to each element of both lists
- */
+export { hasDuplicates, diff, diffBy, union, unionBy };
 
-const differenceBy = (array_1: Array<unknown>, array_2: Array<unknown>, fn: Function): Array<unknown> => array_1.filter(item => !new Set(array_2).has(fn(item)));
-
-/** 
- * @returns sorted by key in the array
- */
-
-const sortBy = (array: Array<unknown>, key: string): Array<unknown> => array.sort((prev, next) => prev[key].localeCompare(next[key]));
-
-export { hasDuplicates, deepFlatten, sortBy };

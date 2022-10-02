@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
-  OnChanges, OnInit, Output, QueryList, TemplateRef, ViewChild
+  OnChanges, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -54,12 +54,12 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
   ]
 })
 
-export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit {
-
+export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   /** Definitions: data */
 
   @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
+    this.configDisplayColumns();
     this.configPaginator();
     this.source.sort = this.matSort;
   }
@@ -127,10 +127,6 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     }
   }
 
-  ngOnInit(): void {
-    this.configDisplayColumns();
-  }
-
   ngAfterViewInit(): void {
     this.configColumnTemplates();
     this.configSorting();
@@ -156,7 +152,7 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
     const keys = this.columns.map(({ key }) => key);
 
     if (this.defaultSortColumn && !keys.includes(this.defaultSortColumn)) {
-      throw Error('The default key provided for sorting does not exist in the column declaration.');
+      throw Error('The provided default key for sorting does not exist in the column declaration.');
     }
   }
 
@@ -166,13 +162,22 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   private configDisplayColumns(): void {
+    const FIRST_INDEX = 0;
     this.displayColumns = this.columns.map(({ key }) => key);
 
-    if (this.enableCheckbox && this.displayColumns.indexOf(this.select) < 0) {
-      this.displayColumns.splice(0, 0, this.select);
-      this.columns.splice(0, 0, {
-        key: this.select
-      });
+    if (this.enableCheckbox) {
+      // no exists yet
+      if (!this.displayColumns.includes(this.select)) {
+        this.displayColumns.splice(FIRST_INDEX, FIRST_INDEX, this.select);
+        this.columns.splice(FIRST_INDEX, FIRST_INDEX, {
+          key: this.select
+        });
+      }
+      // no data configured or no data found
+      if (this.source.data.length < 1) {
+        this.displayColumns.splice(FIRST_INDEX, 1);
+        this.columns.splice(FIRST_INDEX, 1);
+      }
     }
   }
 
@@ -202,7 +207,14 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
   }
 
   masterToggle(): void {
-    this.isAllSelected() ? this.selection.clear() : this.source.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.deselectAll()
+      : this.source.data.forEach((row: T) => this.selection.select(row));
+  }
+
+  deselectAll(): void {
+    this.selection.clear();
+    this.selectedRows.emit([]);
   }
 
   trackByFn(_: number, item: T): T {
@@ -212,3 +224,4 @@ export class CustomTableComponent<T> implements OnChanges, OnInit, AfterViewInit
 }
 
 // 🛠 https://material.io/components/data-tables#usage
+// 🛠 https://carbondesignsystem.com/components/data-table/usage/

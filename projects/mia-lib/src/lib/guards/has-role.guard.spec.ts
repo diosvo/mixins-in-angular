@@ -1,59 +1,40 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AuthService } from '@auth/services/auth.service';
 import { ERole } from '@lib/models/role';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
 import { HasRoleGuard } from './has-role.guard';
 
 describe('HasRoleGuard', () => {
   let guard: HasRoleGuard;
-  let service: AuthService;
 
-  const snackbar = {
-    warning: jest.fn()
+  const mockAuthService: any = {
+    user: {
+      roles: [ERole.SUBSCRIBER]
+    }
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {
-          provide: SnackbarService,
-          useValue: snackbar
-        },
-        {
-          provide: AuthService,
-          useValue: {
-            user: {
-              roles: [ERole.ADMIN, ERole.GUEST]
-            }
-          }
-        }
-      ],
-    });
-  }));
-
   beforeEach(() => {
-    guard = TestBed.inject(HasRoleGuard);
-    service = TestBed.inject(AuthService);
+    guard = new HasRoleGuard(mockAuthService, mockSnackbar);
   });
 
-  it('should allow to access if user has role', () => {
-    const route = ({
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should allow to access if the user has matched roles', () => {
+    const route: any = ({
       data: {
-        roles: [ERole.ADMIN]
+        roles: [ERole.SUBSCRIBER]
       }
-    }) as any;
+    });
     expect(guard.canActivate(route)).toBe(true);
   });
 
-  it('should NOT allow to access if user does NOT have required role', () => {
-    const route = ({
+  test('should NOT allow to access if user does NOT have matched roles', () => {
+    const route: any = ({
       data: {
-        roles: [ERole.CUSTOMER]
+        roles: [ERole.ADMIN]
       }
-    }) as any;
+    });
     expect(guard.canActivate(route)).toBe(false);
-    expect(snackbar.warning).toBeCalledWith('You are not authorized to access this page.');
+    expect(mockSnackbar.warning).toBeCalledWith('You are not authorized to access this page.');
   });
 });

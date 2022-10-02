@@ -1,30 +1,25 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AdvancedCrudComponent } from './advanced-crud.component';
 
 describe('AdvancedCrudComponent', () => {
   let component: AdvancedCrudComponent;
-  let fixture: ComponentFixture<AdvancedCrudComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [AdvancedCrudComponent],
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
+  const mockUserService: any = {
+    loadState: jest.fn(),
+    adjust: jest.fn(),
+    delete: jest.fn()
+  };
 
-        MatProgressBarModule
-      ],
-    })
-      .compileComponents();
-  }));
+  const mockUserDetailsService: any = {
+    buildForm: new FormGroup({})
+  };
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdvancedCrudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new AdvancedCrudComponent(
+      new FormBuilder(),
+      mockUserService,
+      mockUserDetailsService
+    );
   });
 
   test('should create', () => {

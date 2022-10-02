@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
+import { TRole } from '@lib/models/role';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 
 @Injectable({
@@ -14,7 +15,7 @@ export class HasRoleGuard implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const checkRole = (role: string) => this.authService.user.roles.includes(role);
+    const checkRole = (role: TRole) => this.authService.user.roles.includes(role);
     const isAuthorized = route.data.roles.some(checkRole);
 
     if (!isAuthorized) {

@@ -59,6 +59,10 @@ describe('UnsavedChangesGuard', () => {
       };
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     test('should save changes (when the user clicks on Save button)', (done) => {
       jest.spyOn(dialog, 'open').mockReturnValue(
         { afterClosed: () => of(false) } as MatDialogRef<typeof UnsavedChangesDialogComponent>
@@ -70,7 +74,7 @@ describe('UnsavedChangesGuard', () => {
           expect(component.saveChanges).toBeCalledWith('http://localhost:4200/ui-components');
           done();
         },
-        error: error => fail(error),
+        error: ({ message }) => fail(message),
       });
     });
 
@@ -84,7 +88,7 @@ describe('UnsavedChangesGuard', () => {
           expect(discard).toBe(true);
           done();
         },
-        error: error => fail(error),
+        error: ({ message }) => fail(message),
       });
     });
   });
@@ -101,7 +105,7 @@ describe('UnsavedChangesGuard', () => {
           expect(changes).toBe(true);
           done();
         },
-        error: error => fail(error),
+        error: ({ message }) => fail(message),
       });
     });
 
@@ -116,7 +120,7 @@ describe('UnsavedChangesGuard', () => {
           expect(changes).toBe(true);
           done();
         },
-        error: error => fail(error),
+        error: ({ message }) => fail(message),
       });
     });
   });

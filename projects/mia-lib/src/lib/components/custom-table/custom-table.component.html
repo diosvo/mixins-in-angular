@@ -10,7 +10,7 @@
       [trackBy]="trackByFn"
       matSort
       matSortDisableClear
-      [matSortActive]="source.data.length > 0 && defaultSortColumn"
+      [matSortActive]="defaultSortColumn"
       (matSortChange)="sortTable($event)"
       [matSortDirection]="defaultSortDirection"
     >

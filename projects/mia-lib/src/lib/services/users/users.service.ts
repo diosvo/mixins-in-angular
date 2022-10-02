@@ -42,7 +42,11 @@ export class UsersService extends StateService<User> {
         case EAction.UPDATE:
           return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
         case EAction.CREATE:
-          return this.state.data.concat(user);
+          const ids = this.state.data.length > 0 ? this.state.data.map(({ id }) => id) : [0];
+          return this.state.data.concat({
+            ...user,
+            id: Math.max(...ids) + 1
+          });
       }
     };
 

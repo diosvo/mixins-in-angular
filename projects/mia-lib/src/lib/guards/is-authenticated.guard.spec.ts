@@ -1,56 +1,54 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { AuthService } from '@auth/services/auth.service';
-import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
+import { mockSnackbar } from '@lib/services/snackbar/snackbar.service.spec';
+import { of } from 'rxjs';
 import { IsAuthenticatedGuard } from './is-authenticated.guard';
 
 describe('IsAuthenticatedGuard', () => {
   let guard: IsAuthenticatedGuard;
-  let service: AuthService;
 
-  const snackbar = {
-    warning: jest.fn()
+  const mockAuthService: any = {
+    isLoggedIn$: of(true)
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        {
-          provide: SnackbarService,
-          useValue: snackbar
-        }
-      ],
-    });
-  }));
+  const mockLoggerService: any = {
+    createLogger: jest.fn().mockImplementation(() => {
+      return {
+        log: jest.fn().mockReturnValue('activated')
+      };
+    })
+  };
 
   beforeEach(() => {
-    guard = TestBed.inject(IsAuthenticatedGuard);
-    service = TestBed.inject(AuthService);
+    guard = new IsAuthenticatedGuard(mockAuthService, mockSnackbar, mockLoggerService);
   });
 
-  it('should allow to access if user has logged in', (done) => {
-    service['_isLoggedIn$'].next(true);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
+  test('should init guard', () => {
+    expect(guard).toBeTruthy();
+  });
+
+  test('should allow to access if the user is logged in', (done) => {
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {
         expect(allowed).toBe(true);
         done();
       },
-      error: error => fail(error),
+      error: ({ message }) => fail(message),
     });
   });
 
-  it('should NOT allow to access if user has NOT logged in', (done) => {
-    service['_isLoggedIn$'].next(false);
-
+  test('should NOT allow to access if the user is NOT logged in', (done) => {
+    mockAuthService.isLoggedIn$ = of(false);
     guard.canActivate().subscribe({
       next: (allowed: boolean) => {
         expect(allowed).toBe(false);
-        expect(snackbar.warning).toBeCalledWith('You must log in first');
+        expect(guard['logger'].log).toBeCalledWith('activated');
+        expect(mockSnackbar.warning).toBeCalledWith('You must log in first');
         done();
       },
-      error: error => fail(error),
+      error: ({ message }) => fail(message),
     });
   });
 });

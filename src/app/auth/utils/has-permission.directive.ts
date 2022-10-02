@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthService, AuthUser } from '@auth/services/auth.service';
+import { TRole } from '@lib/models/role';
 import isEqual from 'lodash.isequal';
 
 export enum LogicalOperator {
@@ -7,7 +8,7 @@ export enum LogicalOperator {
   AND = 'AND',
 }
 
-type Operator = `${Uppercase<LogicalOperator>}`;
+type Operator = keyof typeof LogicalOperator;
 
 
 /**
@@ -68,7 +69,7 @@ export class HasPermissionDirective implements OnInit {
     if (this._currentUser && this._currentUser.roles) {
       for (const checkPermission of this._permissions) {
         const permissionFound = this._currentUser.roles.find(
-          (permission: string) => isEqual(permission.toLowerCase(), checkPermission.toLowerCase())
+          (permission: TRole) => isEqual(permission.toLowerCase(), checkPermission.toLowerCase())
         );
 
         if (permissionFound) {

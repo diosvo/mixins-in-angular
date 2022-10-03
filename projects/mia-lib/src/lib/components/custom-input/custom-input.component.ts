@@ -43,7 +43,7 @@ export class CustomInputComponent extends FormControlValueAccessorConnector {
 
   protected readonly EMPTY_VALUE = '';
 
-  constructor(injector: Injector) {
-    super(injector);
+  constructor(readonly injector: Injector) {
+    super();
   }
 }

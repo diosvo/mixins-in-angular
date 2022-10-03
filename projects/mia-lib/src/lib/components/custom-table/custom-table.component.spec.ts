@@ -1,7 +1,7 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from '@lib/services/users/user-service.model';
-import { MOCK_USER } from '@lib/services/users/user.mock';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
 import { CustomTableComponent } from './custom-table.component';
 
 describe('CustomTableComponent', () => {
@@ -218,10 +218,12 @@ describe('CustomTableComponent', () => {
   });
 
   describe('isAllSelected() to check master toggle state', () => {
-    beforeEach(() => component['source'] = { data: [{ id: 1 }] } as any);
+    beforeEach(() => {
+      component['source'] = new MatTableDataSource<User>(MOCK_LIST_USERS);
+    });
 
     test('when all items are checked', () => {
-      component['selection'] = { selected: [{ id: 1 }] } as any;
+      component['selection'] = { selected: MOCK_LIST_USERS } as any;
       expect(component.isAllSelected()).toBe(true);
     });
 

@@ -104,7 +104,7 @@ export class AdvancedCrudComponent implements OnInit {
     const values = this.rows.at(idx).value;
     delete values.isEditable;
 
-    return this.rowValue = values;
+    return values;
   }
 
   get rows(): FormArray {

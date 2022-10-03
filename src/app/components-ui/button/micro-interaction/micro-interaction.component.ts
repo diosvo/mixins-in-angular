@@ -41,7 +41,7 @@ export class MicroInteractionComponent implements OnInit {
         borderRadius: '50%',
         width: '2.5em',
         height: '2.5em',
-        duration: .7
+        duration: 0.7
       }, '-=.5s')
 
       .to(rule, {

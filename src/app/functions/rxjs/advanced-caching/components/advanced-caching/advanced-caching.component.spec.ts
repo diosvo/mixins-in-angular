@@ -9,7 +9,7 @@ describe('AdvancedCachingComponent', () => {
     forceReload: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     component = new AdvancedCachingComponent(mockService);
   });
 

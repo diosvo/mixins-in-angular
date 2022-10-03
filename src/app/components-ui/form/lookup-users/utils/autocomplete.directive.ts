@@ -86,7 +86,7 @@ export class AutocompleteDirective implements OnInit, OnDestroy {
         filter((event: MouseEvent) => {
           const target = event.target as HTMLElement;
           const notOrigin = target !== origin;
-          const notOverlay = !!overlayRef && (overlayRef.overlayElement.contains(target) === false); // isn't the dropdown or any one of its children
+          const notOverlay = Boolean(overlayRef) && (overlayRef.overlayElement.contains(target) === false); // isn't the dropdown or any one of its children
           return notOrigin && notOverlay;
         }),
         takeUntil(overlayRef.detachments())

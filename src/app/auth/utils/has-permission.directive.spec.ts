@@ -39,7 +39,7 @@ describe('HasPermissionDirective', () => {
   describe('set hasPermissionOp when operator is', () => {
     beforeEach(() => jest.spyOn(directive as any, 'updateView'));
 
-    test(LogicalOperator.OR + ' as default', () => {
+    test(LogicalOperator.OR, () => {
       directive.hasPermissionOp = LogicalOperator.OR;
       expect(directive['_logicalOperator']).toBe(LogicalOperator.OR);
       expect(directive['updateView']).toBeCalled();

@@ -5,5 +5,4 @@
  * @returns nested keys suggestion
  */
 
-// @ts-ignore
 export type NestedKeyOf<O extends object> = { [Key in keyof O & (string | number)]: O[Key] extends object ? `${Key}.${NestedKeyOf<O[Key]>}` : Key }[keyof O & (string | number)];

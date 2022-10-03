@@ -40,7 +40,7 @@ export class NavbarComponent {
 
   get animate(): { width: string, transform: string } {
     return {
-      width: this.sizes.listItemWidth + 'px',
+      width: `${this.sizes.listItemWidth}px`,
       transform: `translateX(${this.sizes.translateX}px)`
     };
   }

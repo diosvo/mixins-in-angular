@@ -1,9 +1,7 @@
-import { Component, Injector, Input, ViewChild } from '@angular/core';
+import { Component, inject, Injector, Input, ViewChild } from '@angular/core';
 import { AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormControlDirective } from '@angular/forms';
 
-@Component({
-  template: ''
-})
+@Component({})
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export abstract class FormControlValueAccessorConnector implements ControlValueAccessor {
   // used to synchronize a standalone FormControl instance
@@ -12,7 +10,7 @@ export abstract class FormControlValueAccessorConnector implements ControlValueA
   @Input() formControl?: FormControl;
   @Input() formControlName?: string;
 
-  protected constructor(protected injector: Injector) { }
+  protected injector = inject(Injector);
 
   /* make connection with provided formControl of parents */
 

@@ -38,11 +38,11 @@ export class UsersService extends StateService<User> {
   adjust(action: BulkAction, id: number): void {
     this.setState({ loading: true });
     const job = (user: User) => {
+      const ids = this.state.data.length > 0 ? this.state.data.map(({ id }) => id) : [0];
       switch (action) {
         case EAction.UPDATE:
           return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
         case EAction.CREATE:
-          const ids = this.state.data.length > 0 ? this.state.data.map(({ id }) => id) : [0];
           return this.state.data.concat({
             ...user,
             id: Math.max(...ids) + 1

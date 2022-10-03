@@ -9,7 +9,7 @@ describe('DetectPermissionService', () => {
     data: of({ roles: [ERole.ADMIN] })
   };
 
-  let mockAuthService: any = {
+  const mockAuthService: any = {
     user: {
       roles: [ERole.ADMIN, ERole.GUEST]
     }

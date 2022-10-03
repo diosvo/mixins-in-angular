@@ -59,8 +59,8 @@ export class CustomSelectComponent<T> extends FormControlValueAccessorConnector 
   protected primitiveItems: T[];
   protected query = new FormControl('');
 
-  constructor(readonly injector: Injector) {
-    super();
+  constructor(injector: Injector) {
+    super(injector);
   }
 
   ngOnChanges(changes: NgChanges<CustomSelectComponent<T>>): void {

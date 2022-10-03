@@ -111,10 +111,10 @@ describe('UserDetailsService', () => {
   });
 
   test('create$()', (done) => {
-    delete MOCK_USER.id;
+    const { id, ...rest } = MOCK_USER;
     service.form.setValue(MOCK_USER);
     service['create$']().subscribe(() => {
-      expect(mockInternalService.create).toBeCalledWith(MOCK_USER);
+      expect(mockInternalService.create).toBeCalledWith(rest);
       done();
     });
   });

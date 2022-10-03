@@ -1,4 +1,4 @@
-import { Component, inject, Injector, Input, ViewChild } from '@angular/core';
+import { Component, Injector, Input, ViewChild } from '@angular/core';
 import { AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormControlDirective } from '@angular/forms';
 
 @Component({})
@@ -10,7 +10,7 @@ export abstract class FormControlValueAccessorConnector implements ControlValueA
   @Input() formControl?: FormControl;
   @Input() formControlName?: string;
 
-  protected injector = inject(Injector);
+  protected constructor(protected injector: Injector) { }
 
   /* make connection with provided formControl of parents */
 

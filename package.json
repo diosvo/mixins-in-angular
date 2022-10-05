@@ -11,7 +11,7 @@
     "build:lib": "ng build mia-lib",
     "test": "jest --no-cache",
     "jest:cache": "jest --clearCache",
-    "test:co": "jest --coverage --coverageReporters='text-summary'",
+    "test:co": "jest --coverage --silent",
     "lint": "eslint --color --ext .ts \"src/**/*.+(ts)\"",
     "lint:fix": "yarn lint --fix",
     "build:source-map": "ng build --configuration=production --source-map",

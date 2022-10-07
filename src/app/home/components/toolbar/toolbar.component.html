@@ -1,12 +1,13 @@
 <mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-100">
-  <ng-container *ngFor="let item of navigation; trackByKey">
+  <img class="height-inherit" src="assets/images/logo/header.jpg" alt="me" />
+  <ng-container *ngFor="let item of navigation; trackByKey: 'path'">
     <custom-button
       variant="basic"
       class="opacity-0.5"
-      [routerLink]="['/', item]"
+      [routerLink]="['/', item.path]"
       routerLinkActive="opacity-1"
     >
-      {{ item | titlecase }}
+      {{ item.display_name }}
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>
@@ -46,7 +47,7 @@
     <custom-button
       variant="icon"
       tooltip="Sign in"
-      buttonClass="text-white"
+      iconClass="text-white"
       (click)="onLogin()"
     >
       <ng-container icon>fingerprint</ng-container>

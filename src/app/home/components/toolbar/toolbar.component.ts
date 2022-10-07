@@ -37,7 +37,16 @@ export class ToolbarComponent {
 
   readonly user$ = this.authService.user$;
   readonly loggedIn$ = this.authService.isLoggedIn$;
-  readonly navigation = Object.values(EUrl);
+  readonly navigation = [
+    {
+      display_name: 'Components',
+      path: EUrl.COMPONENT
+    },
+    {
+      display_name: 'Functions',
+      path: EUrl.FUNCTION
+    }
+  ];
 
   constructor(
     private readonly router: Router,

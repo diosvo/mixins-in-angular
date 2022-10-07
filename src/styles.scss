@@ -1,10 +1,10 @@
-@use 'main';
+@use "main";
 
 *,
 *::before,
 *::after {
-  padding   : 0;
-  margin    : 0;
+  padding: 0;
+  margin: 0;
   box-sizing: inherit;
 }
 
@@ -13,7 +13,7 @@ html {
 }
 
 body {
-  background-color: #F0F2F5;
+  background-color: #f6f6f6;
   font: var(--font-text);
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;

@@ -1,5 +1,3 @@
-@use "main";
-
 *,
 *::before,
 *::after {
@@ -13,8 +11,7 @@ html {
 }
 
 body {
-  background-color: #f6f6f6;
-  font: var(--font-text);
+  background-color: var(--base-02);
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,12 +1,4 @@
-@use "palette";
-
-@mixin border($n) {
-  border: $n * 1px;
-}
-
-@mixin border-radius($n) {
-  border-radius: $n * 1px;
-}
+$-radius: 12, 24;
 
 .bd {
   &-auto {
@@ -14,42 +6,20 @@
   }
 
   &-none {
-    @include border(0);
+    border: 0;
   }
 
   &-circle {
     border-radius: 50%;
   }
 
-  &-radius {
-    &-12 {
-      @include border-radius(12);
-    }
-
-    &-24 {
-      @include border-radius(24);
-    }
-
-    &-32 {
-      @include border-radius(32);
+  @each $unit in $-radius {
+    &-radius-#{$unit} {
+      border-radius: $unit * 1px;
     }
   }
 
   &-light {
-    border: 1px solid lightgray;
+    border: 1px solid var(--base-03);
   }
-}
-
-// for: <hr />
-
-hr {
-  height: 1px;
-  margin: 1rem -1rem;
-  color: rgba($color: palette.$light, $alpha: 0.3);
-}
-
-.divider-vertical {
-  display: block;
-  height: 1.25rem;
-  border-right: 1px solid rgba($color: palette.$light, $alpha: 0.3);
 }

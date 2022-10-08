@@ -1,24 +1,11 @@
-@use 'palette';
-
-$-icon-fill-dark : #131313;
-$-icon-fill-light: #737373;
+$-icon-fill-light: #959595;
 
 .icon {
   &-dark {
-    fill: $-icon-fill-dark;
+    fill: var(--base-08);
   }
 
   &-light {
     fill: $-icon-fill-light;
-  }
-}
-
-.icon {
-  &-valid {
-    color: palette.$success;
-  }
-
-  &-invalid {
-    color: palette.$error;
   }
 }

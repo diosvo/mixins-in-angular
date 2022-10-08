@@ -1,16 +1,12 @@
-@use "palette";
 @import "layout/breakpoints";
 
 $-unit-px: 2px;
-$-hover: rgba(0, 0, 0, 0.04);
 $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 
 .custom-table {
   display: flex;
   flex-direction: column;
-
-  border-bottom: none;
-  border: 1px solid palette.$shade;
+  border: 1px solid var(--base-03);
 
   mat-table {
     overflow: auto;
@@ -18,10 +14,6 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
     // Header
 
     mat-header {
-      &-row {
-        z-index: 1 !important;
-      }
-
       &-cell {
         padding: $-cell-pd;
 
@@ -38,7 +30,11 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
     [aria-sort="ascending"],
     [aria-sort="descending"] {
       font-weight: bold;
-      color: palette.$black;
+      color: var(--text-01);
+
+      .mat-sort-header-arrow {
+        color: var(--text-01);
+      }
     }
 
     // Cell
@@ -75,11 +71,11 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
       }
 
       &:hover {
-        background-color: $-hover;
+        background-color: var(--base-02);
 
         mat-cell.mat-column-actions {
           visibility: visible;
-          color: palette.$secondary;
+          color: var(--base-05);
 
           &.mat-table-sticky {
             background: initial;
@@ -95,7 +91,7 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 }
 
 .custom-pagination {
-  border: 1px solid palette.$shade;
+  border: 1px solid var(--base-03);
   border-top: none;
 }
 
@@ -110,7 +106,7 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 
       mat-cell.mat-column-actions.mat-table-sticky {
         justify-content: flex-end;
-        background: palette.$white !important;
+        background: var(--base-01) !important;
       }
     }
   }

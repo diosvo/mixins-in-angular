@@ -1,36 +1,27 @@
-@use 'palette';
+$-colors: (
+  "primary": var(--primary),
+  "primary-active": var(--primary-active),
+  "secondary": var(--text-02),
+  "white": var(--base-01),
+  "link": var(--link),
+  "error": var(--error-fill),
+);
 
-$-colors: ('white': palette.$white,
-  'black': palette.$black,
-  'error': palette.$error,
-  'light': palette.$light,
-  'secondary': palette.$secondary,
-  'dark-blue': palette.$dark-blue,
-  'light-blue': palette.$light-blue,
+$-colors-hover: (
+  "link-hover": var(--link-hover),
+  "action-icon-hover": var(--base-06),
 );
 
 .text {
-
-  @each $name,
-  $color in $-colors {
+  @each $name, $color in $-colors {
     &-#{$name} {
       color: $color;
     }
   }
 
-}
-
-$-colors-hovered: ('dark-blue': palette.$dark-blue,
-  'light-blue': palette.$light-blue,
-);
-
-.text-hover {
-
-  @each $name,
-  $color in $-colors-hovered {
+  @each $name, $color in $-colors-hover {
     &-#{$name}:hover {
       color: $color;
     }
   }
-
 }

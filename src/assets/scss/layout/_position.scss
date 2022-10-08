@@ -2,33 +2,14 @@
   top: $n * 1rem;
 }
 
-@mixin bottom($n) {
-  bottom: $n * 1rem;
-}
-
-@mixin left($n) {
-  left: $n * 1rem;
-}
-
-@mixin z-index($n) {
-  z-index: $n;
-}
+$-indexes: 1;
+$-positions: relative, absolute, sticky, fixed;
 
 .position {
-  &-relative {
-    position: relative;
-  }
-
-  &-absolute {
-    position: absolute;
-  }
-
-  &-sticky {
-    position: sticky;
-  }
-
-  &-fixed {
-    position: fixed;
+  @each $position in $-positions {
+    &-#{$position} {
+      position: $position;
+    }
   }
 }
 
@@ -36,44 +17,18 @@
   &-0 {
     @include top(0);
   }
-
-  &-1 {
-    @include top(1);
-  }
-}
-
-.bottom {
-  &-0 {
-    @include bottom(0);
-  }
-}
-
-.left {
-  &-1 {
-    @include left(1);
-  }
 }
 
 .z-index {
-  &-1 {
-    @include z-index(1);
-  }
-
-  &-10 {
-    @include z-index(10);
-  }
-
-  &-20 {
-    @include z-index(20);
-  }
-
-  &-100 {
-    @include z-index(100);
+  @each $index in $-indexes {
+    &-#{$index} {
+      z-index: $index;
+    }
   }
 }
 
 .fixed-auto-center {
-  top      : 50%;
-  left     : 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }

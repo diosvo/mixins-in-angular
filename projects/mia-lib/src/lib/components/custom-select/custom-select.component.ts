@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnCh
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
@@ -28,7 +29,8 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatDividerModule,
+    MatCheckboxModule,
   ],
   templateUrl: './custom-select.component.html',
   providers: [

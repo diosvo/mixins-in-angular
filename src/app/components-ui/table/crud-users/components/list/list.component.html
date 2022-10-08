@@ -29,7 +29,7 @@
     <div filters>
       <ng-container *ngIf="selection.length > 0; else basicTpl">
         <section
-          class="bg-light-blue text-white d-flex ai-center jc-between pl-2 py-1"
+          class="bg-primary text-white d-flex ai-center jc-between pl-2 py-1"
         >
           <div *ngIf="selection.length > 0" class="flex-1">
             {{ selection.length }}
@@ -67,7 +67,7 @@
         <custom-button
           variant="icon"
           tooltip="Edit"
-          iconClass="f-16"
+          iconClass="f-16 text-action-icon-hover"
           [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onBulk(user)"
@@ -77,7 +77,7 @@
         <custom-button
           variant="icon"
           tooltip="Delete"
-          iconClass="f-16"
+          iconClass="f-16 text-action-icon-hover"
           [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onDelete([user])"

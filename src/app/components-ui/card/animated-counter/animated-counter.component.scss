@@ -1,10 +1,8 @@
-@use "palette";
-
 $colors: (
-  "lightpurple": #9ab3f5,
-  "lightgrey": #f47c7c,
-  "lightgreen": #e8ffff,
-  "lightorange": #ffe8d6,
+  "support-01": #a8cef1,
+  "support-09": #dab3f9,
+  "support-11": #fee797,
+  "support-15": #7fd7cc,
 );
 
 @each $name, $color in $colors {

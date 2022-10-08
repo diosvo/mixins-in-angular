@@ -18,7 +18,7 @@
         [formControl]="query"
       >
       </custom-input>
-      <hr class="my-0" />
+      <mat-divider [style.margin-inline.rem]="-1"></mat-divider>
     </div>
 
     <div
@@ -45,7 +45,7 @@
       </span>
     </div>
 
-    <hr *ngIf="checkAll" class="m-0" />
+    <mat-divider *ngIf="checkAll"></mat-divider>
 
     <!-- Options -->
     <ng-container *ngIf="items | async as data; else waitingResponse">

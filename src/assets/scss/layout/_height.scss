@@ -1,6 +1,4 @@
-@mixin height-px($i) {
-  height: $i * 1px;
-}
+$-items: 10, 32, 40, 100, 300;
 
 .full-screen-height {
   height: 100vh;
@@ -14,6 +12,14 @@
   min-height: 0;
 }
 
+.h {
+  @each $item in $-items {
+    &-#{$item} {
+      height: $item * 1px;
+    }
+  }
+}
+
 .height {
   &-inherit {
     height: inherit;
@@ -21,43 +27,5 @@
 
   &-100 {
     height: 100%;
-  }
-}
-
-.h {
-  &-10 {
-    @include height-px(10);
-  }
-
-  &-25 {
-    @include height-px(25);
-  }
-
-  &-32 {
-    @include height-px(32);
-  }
-
-  &-40 {
-    @include height-px(40);
-  }
-
-  &-50 {
-    @include height-px(50);
-  }
-
-  &-100 {
-    @include height-px(100);
-  }
-
-  &-300 {
-    @include height-px(300);
-  }
-
-  &-400 {
-    @include height-px(400);
-  }
-
-  &-500 {
-    @include height-px(500);
   }
 }

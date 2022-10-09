@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@auth/services/auth.service';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import isEqual from 'lodash.isequal';
 import { BehaviorSubject, catchError, EMPTY, finalize, Observable, take } from 'rxjs';
@@ -17,6 +22,18 @@ type TMode = Lowercase<keyof typeof EMode>
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+
+    MatDialogModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+
+    CustomButtonComponent,
+    CustomInputComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {

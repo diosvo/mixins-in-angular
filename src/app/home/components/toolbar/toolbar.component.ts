@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
-import { AuthModule } from '@auth/auth.module';
 import { LoginComponent } from '@auth/components/login/login.component';
 import { AuthService } from '@auth/services/auth.service';
 import { EUrl } from '@home/models/url.enum';
@@ -21,7 +20,7 @@ import { filter, take } from 'rxjs';
     CommonModule,
     RouterModule,
 
-    AuthModule,
+    LoginComponent,
     TrackByKeyDirective,
     CustomButtonComponent,
     ConfirmDialogComponent,

@@ -19,8 +19,9 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () =>
-      import('./home/components/page-not-found/page-not-found.module').then(({ PageNotFoundModule }) => PageNotFoundModule)
+    loadComponent: () =>
+      import('./home/components/page-not-found/page-not-found.component').then(({ PageNotFoundComponent }) => PageNotFoundComponent),
+    data: { toolbar: false, footer: false }
   }
 ];
 

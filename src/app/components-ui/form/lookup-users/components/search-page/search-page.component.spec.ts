@@ -1,6 +1,6 @@
 import { State } from '@lib/models/server.model';
-import { User } from '@lib/services/users/user-service.model';
-import { MOCK_LIST_USERS } from '@lib/services/users/user.mock';
+import { User } from '@lib/services/json-placeholder/users/user-service.model';
+import { MOCK_LIST_USERS } from '@lib/services/json-placeholder/users/user.mock';
 import { of } from 'rxjs';
 import { SearchPageComponent } from './search-page.component';
 

@@ -4,8 +4,8 @@ import { BulkAction, EAction } from '@lib/models/table';
 import { diffBy } from '@lib/utils/array-utils';
 import isEqual from 'lodash.isequal';
 import { catchError, forkJoin, map, of, startWith } from 'rxjs';
-import { StateService } from '../base/state.service';
-import { SnackbarService } from '../snackbar/snackbar.service';
+import { StateService } from '../../base/state.service';
+import { SnackbarService } from '../../snackbar/snackbar.service';
 import { UserDetailsService } from './user-details.service';
 import { INITIAL_USER_STATE, User } from './user-service.model';
 

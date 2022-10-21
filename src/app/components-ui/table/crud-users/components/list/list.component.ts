@@ -12,8 +12,8 @@ import { NoResultsComponent } from '@lib/components/no-results/no-results.compon
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { EAction } from '@lib/models/table';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
-import { User } from '@lib/services/users/user-service.model';
-import { UsersService } from '@lib/services/users/users.service';
+import { User } from '@lib/services/json-placeholder/users/user-service.model';
+import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 import isEmpty from 'lodash.isempty';
 import { filter, take } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';

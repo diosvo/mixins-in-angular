@@ -1,7 +1,7 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { User } from '@lib/services/users/user-service.model';
-import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
+import { User } from '@lib/services/json-placeholder/users/user-service.model';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/json-placeholder/users/user.mock';
 import { CustomTableComponent } from './custom-table.component';
 
 describe('CustomTableComponent', () => {

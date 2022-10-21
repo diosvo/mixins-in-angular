@@ -1,6 +1,6 @@
 import { environment } from '@env/environment';
+import { IUser } from '@lib/models/json-placeholder/user.model';
 import { State } from '@lib/models/server.model';
-import { IUser } from '@lib/models/user';
 
 type User = Partial<IUser>;
 const endpoint: string = environment.jsonPlaceHolderUrl + 'users/';

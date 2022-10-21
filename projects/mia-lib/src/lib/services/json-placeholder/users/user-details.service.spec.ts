@@ -1,7 +1,7 @@
 import { FormBuilder, FormControl } from '@angular/forms';
-import { UserInput } from '@lib/models/user';
+import { UserInput } from '@lib/models/json-placeholder/user.model';
 import { of } from 'rxjs';
-import { ErrorHandlerService } from '../base/error-handler.service';
+import { ErrorHandlerService } from '../../base/error-handler.service';
 import { InternalUserService, UserDetailsService } from './user-details.service';
 import { User } from './user-service.model';
 import { MOCK_LIST_USERS, MOCK_USER } from './user.mock';

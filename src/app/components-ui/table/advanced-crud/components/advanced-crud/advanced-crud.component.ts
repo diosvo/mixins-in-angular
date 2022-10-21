@@ -7,9 +7,9 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { EAction } from '@lib/models/table';
-import { UserDetailsService } from '@lib/services/users/user-details.service';
-import { User } from '@lib/services/users/user-service.model';
-import { UsersService } from '@lib/services/users/users.service';
+import { UserDetailsService } from '@lib/services/json-placeholder/users/user-details.service';
+import { User } from '@lib/services/json-placeholder/users/user-service.model';
+import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 
 @Component({
   selector: 'app-advanced-crud',

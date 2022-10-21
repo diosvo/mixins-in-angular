@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
-import { UsersService } from '@lib/services/users/users.service';
+import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 import { Subject } from 'rxjs';
 import { AutocompleteContentDirective } from '../../utils/autocomplete-content.directive';
 import { AutocompleteDirective } from '../../utils/autocomplete.directive';

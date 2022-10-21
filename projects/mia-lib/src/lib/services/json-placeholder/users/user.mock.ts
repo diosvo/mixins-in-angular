@@ -1,5 +1,5 @@
-import { UserInput } from '@lib/models/user';
-import { User } from '@lib/services/users/user-service.model';
+import { UserInput } from '@lib/models/json-placeholder/user.model';
+import { User } from '@lib/services/json-placeholder/users/user-service.model';
 
 const MOCK_USER_ID: number = 1 as const;
 

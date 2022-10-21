@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserInput } from '@lib/models/user';
+import { UserInput } from '@lib/models/json-placeholder/user.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { BaseService } from '../base/base.service';
-import { ErrorHandlerService } from '../base/error-handler.service';
-import { AbstractFormService } from '../base/form.service';
+import { BaseService } from '../../base/base.service';
+import { ErrorHandlerService } from '../../base/error-handler.service';
+import { AbstractFormService } from '../../base/form.service';
 import { endpoint, id_endpoint, User } from './user-service.model';
 
 const DEFAULT_VALUE = {

@@ -1,7 +1,7 @@
 import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { User } from '../users/user-service.model';
+import { User } from '../json-placeholder/users/user-service.model';
 import { AbstractFormService } from './form.service';
 
 const user: User = {

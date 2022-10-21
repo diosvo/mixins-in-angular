@@ -1,7 +1,7 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { EAction } from '@lib/models/table';
-import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/json-placeholder/users/user.mock';
 import { of } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';
 import { ListComponent } from './list.component';

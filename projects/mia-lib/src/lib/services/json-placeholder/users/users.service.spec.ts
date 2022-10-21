@@ -1,7 +1,7 @@
 import { State } from '@lib/models/server.model';
 import { EAction } from '@lib/models/table';
 import { of, throwError } from 'rxjs';
-import { mockSnackbar } from '../snackbar/snackbar.service.spec';
+import { mockSnackbar } from '../../snackbar/snackbar.service.spec';
 import { INITIAL_USER_STATE, User } from './user-service.model';
 import { MOCK_LIST_USERS, MOCK_USER } from './user.mock';
 import { UsersService } from './users.service';

@@ -17,6 +17,8 @@ export enum EMethod {
 
 export type Method = Lowercase<`${EMethod}`>;
 
+const CACHE_SIZE = 1 as const;
+
 @Injectable()
 export abstract class BaseService<T> {
 
@@ -61,7 +63,7 @@ export abstract class BaseService<T> {
 
       return this.httpClient[method](url, body).pipe(
         take(1),
-        shareReplay(1),
+        shareReplay(CACHE_SIZE),
         catchError(this.handle.handleError(this.constructor.name))
       );
     };

@@ -32,11 +32,11 @@ export class InternalUserService extends BaseService<UserInput> {
   }
 
   create(user: UserInput): Observable<UserInput> {
-    return this.add(endpoint, { body: user });
+    return this.add(endpoint, user);
   }
 
   update(user: UserInput): Observable<UserInput> {
-    return this.edit(id_endpoint(user.id), { body: user });
+    return this.edit(id_endpoint(user.id), user);
   }
 
   remove(id: number): Observable<unknown> {

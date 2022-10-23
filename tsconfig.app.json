@@ -16,13 +16,11 @@
     "@lib/directives/*": ["projects/mia-lib/src/lib/directives/*"],
     "@lib/guards/*": ["projects/mia-lib/src/lib/guards/*"],
     "@lib/helpers/*": ["projects/mia-lib/src/lib/helpers/*"],
+    "@lib/mocks/*": ["projects/mia-lib/src/lib/mocks/*"],
     "@lib/models/*": ["projects/mia-lib/src/lib/models/*"],
     "@lib/services/*": ["projects/mia-lib/src/lib/services/*"],
     "@lib/pipes/*": ["projects/mia-lib/src/lib/pipes/*"],
     "@lib/utils/*": ["projects/mia-lib/src/lib/utils/*"],
     "@lib/decorators/*": ["projects/mia-lib/src/lib/decorators/*"],
-    "@backend/api/*": ["src/assets/backend/api/*"],
-    "@backend/data/*": ["src/assets/backend/data/*"],
-    "@backend/list-items/*": ["src/assets/backend/list-items/*"]
   }
 }

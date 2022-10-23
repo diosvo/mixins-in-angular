@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MOCK_USER } from '@lib/services/json-placeholder/users/user.mock';
+import { MOCK_USER } from 'projects/mia-lib/src/lib/mocks/json-placeholder/user.mock';
 import { of } from 'rxjs';
 import { DetailsComponent } from './details.component';
 

@@ -1,6 +1,6 @@
 import { State } from '@lib/models/server.model';
+import { MOCK_LIST_USERS } from '../../mocks/json-placeholder/user.mock';
 import { User } from '../json-placeholder/users/user-service.model';
-import { MOCK_LIST_USERS } from '../json-placeholder/users/user.mock';
 import { StateService } from './state.service';
 
 const user_state: State<User> = {

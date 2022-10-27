@@ -2,7 +2,7 @@
   top: $n * 1rem;
 }
 
-$-indexes: 1;
+$-indexes: 1, 1000;
 $-positions: relative, absolute, sticky, fixed;
 
 .position {

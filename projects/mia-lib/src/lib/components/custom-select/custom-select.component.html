@@ -3,12 +3,11 @@
   <mat-select
     #panel
     [multiple]="checkAll"
-    [formControl]="control"
     [sortComparator]="sortFunc"
     (openedChange)="openedChange($event)"
     (selectionChange)="selectionChange($event)"
   >
-    <!-- Search Input & Check All -->
+    <!-- Search Input -->
     <div class="pt-1 px-2 position-sticky bg-white top-0 z-index-1">
       <custom-input
         class="width-100"
@@ -21,54 +20,47 @@
       <mat-divider [style.margin-inline.rem]="-1"></mat-divider>
     </div>
 
-    <div
-      *ngIf="checkAll"
-      class="d-flex jc-between ai-center gap-1 mx-2"
-      [style.height.px]="42"
-    >
-      <mat-checkbox
-        color="warn"
-        title="Select All"
-        data-toggle="tooltip"
-        (change)="toggleSelection($event)"
-        [checked]="hasValue() && isAllSelected()"
-      >
-        <span>All</span>
-      </mat-checkbox>
+    <ng-container *ngIf="items$ | async as data; else waitingResponse">
+      <!-- Select All -->
+      <ng-container *ngIf="data.length > 0 && checkAll">
+        <div
+          class="d-flex jc-between ai-center gap-1 mx-2"
+          [style.height.px]="42"
+        >
+          <mat-checkbox
+            color="warn"
+            title="Select All"
+            data-toggle="tooltip"
+            [checked]="isAllSelected"
+            (change)="masterToggle($event)"
+          >
+            <span>All</span>
+          </mat-checkbox>
 
-      <span
-        *ngIf="control.value.length > 0"
-        class="text-dark-blue f-12 cursor-pointer"
-        (click)="control.setValue([]); panel.close()"
-      >
-        Clear selection
-      </span>
-    </div>
+          <span
+            *ngIf="control.value.length > 0"
+            class="text-dark-blue f-12 cursor-pointer"
+            (click)="control.setValue([]); selection.clear()"
+          >
+            Clear selection
+          </span>
+        </div>
 
-    <mat-divider *ngIf="checkAll"></mat-divider>
+        <mat-divider></mat-divider>
+      </ng-container>
 
-    <!-- Options -->
-    <ng-container *ngIf="items | async as data; else waitingResponse">
-      <ng-container *ngFor="let item of data; trackByKey: bindLabelKey">
-        <ng-container *ngIf="bindKeyValue; else basicTemplate">
-          <ng-container
-            [ngTemplateOutlet]="optionTemplate"
-            [ngTemplateOutletContext]="{ $implicit: item[bindValueKey] }"
-          ></ng-container>
-        </ng-container>
-
-        <ng-template #basicTemplate>
-          <ng-container
-            [ngTemplateOutlet]="optionTemplate"
-            [ngTemplateOutletContext]="{ $implicit: item }"
-          ></ng-container>
-        </ng-template>
-
-        <ng-template #optionTemplate let-value>
-          <mat-option [value]="value">
-            {{ value | titlecase }}
-          </mat-option>
-        </ng-template>
+      <!-- Options -->
+      <ng-container *ngFor="let item of data; trackByKey: bindLabelKey ?? item">
+        <mat-option [value]="bindLabelKey ? item[bindValueKey] : item">
+          <span
+            [highlight]="query.value"
+            [innerText]="
+              bindLabelKey
+                ? (item[bindValueKey] | titlecase)
+                : (item | titlecase)
+            "
+          ></span>
+        </mat-option>
       </ng-container>
 
       <ng-container *ngIf="data.length < 1">
@@ -77,7 +69,7 @@
     </ng-container>
 
     <ng-template #waitingResponse>
-      <mat-option [disabled]="true">Please wait...</mat-option>
+      <div class="p-2">Please wait...</div>
     </ng-template>
   </mat-select>
 </mat-form-field>

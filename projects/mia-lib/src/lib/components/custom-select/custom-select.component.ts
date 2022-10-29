@@ -1,18 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { AsyncPipe, NgForOf, NgIf, TitleCasePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Injector, Input, OnInit } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { Required } from '@lib/decorators/required-attribute';
+import { HighlightDirective } from '@lib/directives/highlight.directive';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
-import { NgChanges } from '@lib/helpers/mark-function-properties';
+import { FilterPipe } from '@lib/pipes/filter.pipe';
 import isEqual from 'lodash.isequal';
-import { combineLatest, map, Observable, of, startWith } from 'rxjs';
-import { FilterPipe } from '../../pipes/filter.pipe';
+import { distinctUntilChanged, Observable, of, startWith, switchMap } from 'rxjs';
 import { CustomInputComponent } from '../custom-input/custom-input.component';
 import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
 
@@ -20,17 +19,22 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
   selector: 'custom-select',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    AsyncPipe,
+    TitleCasePipe,
     ReactiveFormsModule,
 
+    FilterPipe,
+    HighlightDirective,
     TrackByKeyDirective,
+
     CustomInputComponent,
 
-    MatIconModule,
-    MatButtonModule,
     MatSelectModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatFormFieldModule,
   ],
   templateUrl: './custom-select.component.html',
   providers: [
@@ -42,76 +46,65 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit, OnChanges {
+export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit {
 
-  @Input() @Required items: T[] | Observable<T[]>;
-  @Output() readonly selected = new EventEmitter<T[]>();
+  @Input() @Required items: T[];
 
   @Input() bindLabelKey: string;
   @Input() bindValueKey: string;
-  @Input() bindKeyValue = false;
 
   @Input() checkAll = true;
-  @Input() disabled = false;
-  @Input() placeholder = 'Select';
-  @Input() searchPlaceholder = 'Search';
+  @Input() placeholder = $localize`Select`;
+  @Input() searchPlaceholder = $localize`Search`;
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
-  protected allow = false;
-  protected primitiveItems: T[];
-  protected query = new FormControl('');
+  protected items$: Observable<T[]>;
+  protected query = new FormControl('', { nonNullable: true });
+
+  protected selection = new SelectionModel<T>(true, []);
 
   constructor(injector: Injector) {
     super(injector);
   }
 
-  ngOnChanges(changes: NgChanges<CustomSelectComponent<T>>): void {
-    if (changes.items && changes.items.firstChange && this.items instanceof Array) {
-      this.primitiveItems = this.items;
-      this.items = of(this.items);
+  ngOnInit(): void {
+    this.items$ = this.query.valueChanges.pipe(
+      startWith(this.query.value),
+      distinctUntilChanged(),
+      switchMap((query: string) => {
+        const data = new FilterPipe<T>().transform(this.items, query);
+        return of(data);
+      })
+    );
+  }
+
+  selectionChange(change: MatSelectChange): void {
+    this.selection.setSelection(...change.value);
+  }
+
+  openedChange(opened: boolean): void {
+    this.query.reset();
+    // only emit control value after closing the panel
+    if (!opened) {
+      this.control.setValue(this.selection.selected);
     }
   }
 
-  ngOnInit(): void {
-    this.watchForChanges();
-  }
-
-  private watchForChanges(): void {
-    const query$ = this.query.valueChanges.pipe(
-      startWith(this.query.value)
-    );
-    this.items = combineLatest([this.items as Observable<T[]>, query$]).pipe(
-      map(([data, query]) => new FilterPipe<T>().transform(data, query).sort()),
-    );
-  }
-
   sortFunc(prev?: T, next?: T): number {
-    if (this.bindKeyValue) {
+    if (this.bindLabelKey) {
       return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
     }
     return 1;
   }
 
-  selectionChange(change: MatSelectChange): void {
-    this.control.setValue(change.value);
+  get isAllSelected(): boolean {
+    return isEqual(this.items.length, this.selection.selected.length);
   }
 
-  openedChange(change: boolean): void {
-    this.allow = !change;
-  }
-
-  /* Functions to support Check All feature */
-
-  hasValue(): boolean {
-    return this.primitiveItems.length > 0;
-  }
-
-  isAllSelected(): boolean {
-    return isEqual(this.control.value.length, this.primitiveItems.length);
-  }
-
-  toggleSelection(change: MatCheckboxChange): void {
-    this.control.setValue(change.checked ? this.primitiveItems : []);
+  masterToggle(event: MatCheckboxChange): void {
+    event.checked
+      ? this.selection.setSelection(...this.items)
+      : this.selection.deselect();
   }
 }
 

@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +20,6 @@ import { iif, Observable } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
 
     CustomInputComponent,
     CustomButtonComponent,
@@ -35,7 +34,7 @@ import { iif, Observable } from 'rxjs';
 })
 export class DetailsComponent implements OnInit {
 
-  user$: Observable<User>;
+  protected user$: Observable<User>;
 
   readonly form = this.service.form;
   readonly hasChanged$ = this.service.onFormChanges$(['id', 'phone', 'address', 'company', 'username', 'website']);

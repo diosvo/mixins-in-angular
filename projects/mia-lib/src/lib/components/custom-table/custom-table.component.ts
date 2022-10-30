@@ -61,7 +61,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     this.setDataSource(source);
     this.configDisplayColumns();
     this.configPaginator();
-    this.source.sort = this.matSort;
+    this.configSorting();
   }
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];
@@ -129,8 +129,6 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-    this.configSorting();
-    this.configPaginator();
   }
 
   private setDataSource(source: T[]): void {

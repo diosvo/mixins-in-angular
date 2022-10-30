@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { EUrl } from '@home/models/url.enum';
 
-const routes: Routes = [
+export const APP_ROUTES: Routes = [
   {
     path: '', redirectTo: EUrl.COMPONENT, pathMatch: 'full',
   },
@@ -24,11 +22,3 @@ const routes: Routes = [
     data: { toolbar: false, footer: false }
   }
 ];
-
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ]
-})
-export class AppRoutingModule { }

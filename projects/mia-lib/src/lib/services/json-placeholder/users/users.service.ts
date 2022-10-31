@@ -12,7 +12,7 @@ import { INITIAL_USER_STATE, User } from './user-service.model';
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService extends StateService<User> {
+export class UsersService extends StateService<State<User>> {
 
   readonly users_state$ = this.select((state) => state);
 

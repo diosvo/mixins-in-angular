@@ -22,7 +22,6 @@ import { AuthService } from './auth/services/auth.service';
     ToolbarComponent,
     MatProgressBarModule,
   ],
-  providers: [LoadingService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

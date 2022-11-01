@@ -1,5 +1,6 @@
 <mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-1000">
   <img
+    lazyImg
     class="height-inherit mr-1"
     src="assets/images/logo/header.jpg"
     alt="me"
@@ -32,6 +33,7 @@
       >
         <mat-card-header class="cursor-pointer" (click)="updateProfile()">
           <img
+            lazyImg
             mat-card-avatar
             [src]="user.photoURL ?? 'assets/images/blank-profile.png'"
           />

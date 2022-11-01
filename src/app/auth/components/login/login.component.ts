@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@auth/services/auth.service';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { LazyImageDirective } from '@lib/directives/lazy-image.directive';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import isEqual from 'lodash.isequal';
 import { BehaviorSubject, catchError, EMPTY, finalize, Observable, take } from 'rxjs';
@@ -31,8 +32,9 @@ type TMode = Lowercase<keyof typeof EMode>
     MatDividerModule,
     MatProgressSpinnerModule,
 
-    CustomButtonComponent,
+    LazyImageDirective,
     CustomInputComponent,
+    CustomButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

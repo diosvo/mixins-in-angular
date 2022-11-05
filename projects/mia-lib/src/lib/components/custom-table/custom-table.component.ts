@@ -149,7 +149,9 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     this.source.sort = this.matSort;
     const keys = this.columns.map(({ key }) => key);
 
-    if (this.defaultSortColumn && !keys.includes(this.defaultSortColumn)) {
+    if (isEmpty(this.defaultSortColumn)) {
+      this.defaultSortColumn = keys[0];
+    } else if (!keys.includes(this.defaultSortColumn)) {
       throw Error('The provided default key for sorting does not exist in the column declaration.');
     }
   }

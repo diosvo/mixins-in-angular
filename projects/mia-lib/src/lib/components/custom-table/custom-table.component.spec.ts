@@ -1,7 +1,7 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/mocks/json-placeholder/user.mock';
 import { User } from '@lib/services/json-placeholder/users/user-service.model';
-import { MOCK_LIST_USERS, MOCK_USER } from 'projects/mia-lib/src/lib/mocks/json-placeholder/user.mock';
 import { CustomTableComponent } from './custom-table.component';
 
 describe('CustomTableComponent', () => {
@@ -120,6 +120,14 @@ describe('CustomTableComponent', () => {
   describe('configSorting()', () => {
     beforeEach(() => {
       component['source'] = new MatTableDataSource<User>([MOCK_USER]);
+    });
+
+    test('should get the first property if no default key is passed in', () => {
+      component.columns = [key_id];
+      component.defaultSortColumn = undefined;
+
+      component['configSorting']();
+      expect(component.defaultSortColumn).toEqual(key_id.key);
     });
 
     test('should config sorting correctly', () => {

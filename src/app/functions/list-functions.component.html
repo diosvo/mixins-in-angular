@@ -29,7 +29,11 @@
 
       <!-- Content -->
       <ng-template matExpansionPanelContent>
-        <form [formGroup]="form" class="panel-container d-flex gap-1">
+        <form
+          [formGroup]="form"
+          name="functions"
+          class="panel-container d-flex gap-1"
+        >
           <custom-select
             [items]="selection"
             placeholder="Group"

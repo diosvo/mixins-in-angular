@@ -14,7 +14,7 @@ type Strategy = 'change' | 'unload';
 export class FormStorageDirective<T> implements OnInit {
 
   @Input() name: string; // should same as the routing path
-  @Input() saveStrategy: Strategy = 'unload';
+  @Input() saveStrategy: Strategy = 'change';
   @Input() debounceTime = 300; // apply for 'change' strategy
 
   constructor(
@@ -41,9 +41,6 @@ export class FormStorageDirective<T> implements OnInit {
 
     const values = await this.storage.getItem(this.key);
     if (values) this.group.patchValue(values);
-
-    console.log(this.group.value);
-
   }
 
   private changeStrategy(): void {

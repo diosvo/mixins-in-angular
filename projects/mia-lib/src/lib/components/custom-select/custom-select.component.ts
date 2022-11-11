@@ -13,7 +13,7 @@ import { FilterPipe } from '@lib/pipes/filter.pipe';
 import isEqual from 'lodash.isequal';
 import { distinctUntilChanged, Observable, of, startWith, switchMap } from 'rxjs';
 import { CustomInputComponent } from '../custom-input/custom-input.component';
-import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
+import { ControlAccessorConnector } from '../form/helpers/control-accessor-connector.component';
 
 @Component({
   selector: 'custom-select',
@@ -46,7 +46,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomSelectComponent<T> extends FormControlValueAccessorConnector implements OnInit {
+export class CustomSelectComponent<T> extends ControlAccessorConnector implements OnInit {
 
   @Input() @Required items: T[];
 

@@ -16,7 +16,7 @@
   <ng-container *ngIf="clearFilter" matSuffix>
     <custom-button
       *ngIf="control.value !== EMPTY_VALUE"
-      (click)="control.setValue(EMPTY_VALUE)"
+      (click)="control.setValue(EMPTY_VALUE); $event.stopPropagation()"
       variant="icon"
       tooltip="Clear"
       iconClass="text-secondary"

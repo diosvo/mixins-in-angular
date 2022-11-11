@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { FloatLabelType, MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CustomButtonComponent } from '../custom-button/custom-button.component';
-import { FormControlValueAccessorConnector } from '../form-control-value-accessor-connector/form-control-value-accessor-connector.component';
+import { ControlAccessorConnector } from '../form/helpers/control-accessor-connector.component';
 
 @Component({
   selector: 'custom-input',
@@ -27,7 +27,7 @@ import { FormControlValueAccessorConnector } from '../form-control-value-accesso
   ]
 })
 
-export class CustomInputComponent extends FormControlValueAccessorConnector {
+export class CustomInputComponent extends ControlAccessorConnector {
   // Field
   @Input() style = 'width: 100%';
   @Input() floatLabel: FloatLabelType = 'auto';

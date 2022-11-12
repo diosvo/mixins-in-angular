@@ -27,7 +27,6 @@
           [matChipInputFor]="chipList"
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addHobby($event)"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         />
       </mat-chip-list>
       <mat-error *ngIf="hobbies.hasError('duplicate')">

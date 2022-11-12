@@ -1,8 +1,10 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -37,7 +39,16 @@ bootstrapApplication(AppComponent, {
     },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline', floatLabel: 'never' }
+      useValue: {
+        appearance: 'outline',
+        floatLabel: 'never'
+      }
+    },
+    {
+      provide: MAT_CHIPS_DEFAULT_OPTIONS,
+      useValue: {
+        separatorKeyCodes: [ENTER, COMMA]
+      }
     },
     LoadingService,
   ],

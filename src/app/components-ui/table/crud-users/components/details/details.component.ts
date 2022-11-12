@@ -39,7 +39,6 @@ export class DetailsComponent implements OnInit {
 
   readonly form = this.service.form;
   readonly hasChanged$ = this.service.onFormChanges$(['id', 'phone', 'address', 'company', 'username', 'website']);
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) readonly state: {

@@ -1,14 +1,14 @@
-import { SelectionModel } from '@angular/cdk/collections';
 import { AsyncPipe, NgForOf, NgIf, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnInit } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { Required } from '@lib/decorators/required-attribute';
 import { HighlightDirective } from '@lib/directives/highlight.directive';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { NgChanges } from '@lib/helpers/mark-function-properties';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import isEqual from 'lodash.isequal';
 import { distinctUntilChanged, Observable, of, startWith, switchMap } from 'rxjs';
@@ -46,7 +46,7 @@ import { ControlAccessorConnector } from '../form/helpers/control-accessor-conne
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomSelectComponent<T> extends ControlAccessorConnector implements OnInit {
+export class CustomSelectComponent<T> extends ControlAccessorConnector implements OnChanges, OnInit {
 
   @Input() @Required items: T[];
 
@@ -61,10 +61,17 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
   protected items$: Observable<T[]>;
   protected query = new FormControl('', { nonNullable: true });
 
-  protected selection = new SelectionModel<T>(true, []);
+  private primitiveItems: T[];
 
   constructor(injector: Injector) {
     super(injector);
+  }
+
+  ngOnChanges(changes: NgChanges<CustomSelectComponent<T>>): void {
+    this.control.setValue(this.control.value, { emitEvent: false });
+    if (changes.items && changes.items.firstChange) {
+      this.primitiveItems = this.items;
+    }
   }
 
   ngOnInit(): void {
@@ -78,35 +85,15 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
     );
   }
 
-  selectionChange(change: MatSelectChange): void {
-    this.selection.setSelection(...change.value);
-  }
-
-  openedChange(opened: boolean): void {
-    this.query.reset();
-    // only emit control value after closing the panel
-    if (!opened) {
-      this.control.setValue(this.selection.selected);
-    }
-  }
-
-  sortFunc(prev?: T, next?: T): number {
-    if (this.bindLabelKey) {
-      return prev[this.bindLabelKey] < next[this.bindLabelKey] ? -1 : 1;
-    }
-    return 1;
-  }
-
   get isAllSelected(): boolean {
-    return isEqual(this.items.length, this.selection.selected.length);
+    return isEqual(this.control.value.length, this.primitiveItems.length);
   }
 
   masterToggle(event: MatCheckboxChange): void {
-    event.checked
-      ? this.selection.setSelection(...this.items)
-      : this.selection.deselect();
+    this.control.setValue(event.checked ? this.primitiveItems : []);
   }
 }
 
-// ref: https://marselbeqiri.medium.com/angular-material-custom-mat-select-with-search-functionality-4b2b69b47511
+// 🛠 https://marselbeqiri.medium.com/angular-material-custom-mat-select-with-search-functionality-4b2b69b47511
+// 🛠 https://codesandbox.io/s/givp5?file=/src/utils.js
 

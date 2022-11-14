@@ -1,12 +1,6 @@
 <mat-form-field [appearance]="appearance" class="width-100">
   <mat-label>{{ placeholder }}</mat-label>
-  <mat-select
-    #panel
-    [multiple]="checkAll"
-    [sortComparator]="sortFunc"
-    (openedChange)="openedChange($event)"
-    (selectionChange)="selectionChange($event)"
-  >
+  <mat-select [multiple]="checkAll" [formControl]="control">
     <!-- Search Input -->
     <div class="pt-1 px-2 position-sticky bg-white top-0 z-index-1">
       <custom-input
@@ -40,7 +34,7 @@
           <span
             *ngIf="control.value.length > 0"
             class="text-dark-blue f-12 cursor-pointer"
-            (click)="control.setValue([]); selection.clear()"
+            (click)="control.setValue([])"
           >
             Clear selection
           </span>

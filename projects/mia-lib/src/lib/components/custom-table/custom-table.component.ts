@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgFor, NgIf, NgTemplateOutlet, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, Output, QueryList, TemplateRef, ViewChild
@@ -34,7 +34,13 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
   templateUrl: './custom-table.component.html',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    NgClass,
+    TitleCasePipe,
+    UpperCasePipe,
+    NgTemplateOutlet,
+
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
@@ -59,6 +65,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
+    this.displayedColumns = this.columns.map(({ key }) => key);
     this.configDisplayColumns();
     this.configPaginator();
     this.configSorting();
@@ -115,7 +122,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
     return {};
   }
-  displayColumns: string[];
+  protected displayedColumns: string[]; // columns declaration + able to add/ remove columns
 
   protected readonly DEFAULT_PAGESIZE = 5;
   protected source = new MatTableDataSource<T>([]);
@@ -147,11 +154,10 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   private configSorting(): void {
     this.source.sort = this.matSort;
-    const keys = this.columns.map(({ key }) => key);
 
     if (isEmpty(this.defaultSortColumn)) {
-      this.defaultSortColumn = keys[0];
-    } else if (!keys.includes(this.defaultSortColumn)) {
+      this.defaultSortColumn = this.displayedColumns[0];
+    } else if (!this.displayedColumns.includes(this.defaultSortColumn)) {
       throw Error('The provided default key for sorting does not exist in the column declaration.');
     }
   }
@@ -163,15 +169,10 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   private configDisplayColumns(): void {
     const FIRST_INDEX = 0;
-    this.displayColumns = this.columns.map(({ key }) => key);
 
     if (this.enableCheckbox) {
-      // no exists yet
-      if (!this.displayColumns.includes(this.select)) {
-        this.displayColumns.splice(FIRST_INDEX, FIRST_INDEX, this.select);
-        this.columns.splice(FIRST_INDEX, FIRST_INDEX, {
-          key: this.select
-        });
+      if (!this.displayedColumns.includes(this.select)) {
+        this.displayedColumns.unshift(this.select);
       }
       // no data configured or no data found
       if (this.source.data.length < 1) {

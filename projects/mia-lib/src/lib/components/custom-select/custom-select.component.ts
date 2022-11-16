@@ -68,7 +68,6 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
   }
 
   ngOnChanges(changes: NgChanges<CustomSelectComponent<T>>): void {
-    this.control.setValue(this.control.value, { emitEvent: false });
     if (changes.items && changes.items.firstChange) {
       this.primitiveItems = this.items;
     }
@@ -93,7 +92,3 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
     this.control.setValue(event.checked ? this.primitiveItems : []);
   }
 }
-
-// 🛠 https://marselbeqiri.medium.com/angular-material-custom-mat-select-with-search-functionality-4b2b69b47511
-// 🛠 https://codesandbox.io/s/givp5?file=/src/utils.js
-

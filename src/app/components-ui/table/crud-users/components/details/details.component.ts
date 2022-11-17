@@ -1,5 +1,4 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
@@ -8,10 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { ControlErrorContainerDirective } from '@lib/directives/form/control-error-container.directive';
+import { ControlErrorsDirective } from '@lib/directives/form/control-errors.directive';
 import { UserDetailsService } from '@lib/services/json-placeholder/users/user-details.service';
 import { User } from '@lib/services/json-placeholder/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
-import { Regex } from '@lib/utils/form-validation';
+import { Regex } from '@lib/utils/validation';
 import isEqual from 'lodash.isequal';
 import { iif, Observable } from 'rxjs';
 
@@ -19,11 +20,16 @@ import { iif, Observable } from 'rxjs';
   selector: 'user-details',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    AsyncPipe,
     ReactiveFormsModule,
 
     CustomInputComponent,
     CustomButtonComponent,
+
+    ControlErrorsDirective,
+    ControlErrorContainerDirective,
 
     MatChipsModule,
     MatDialogModule,

@@ -3012,6 +3012,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@mervick/mdi-icons@^4.0.1":
+  version "4.0.1"
+  resolved "https://artifactory.menloinfra.com/artifactory/api/npm/npm/@mervick/mdi-icons/-/mdi-icons-4.0.1.tgz#38e862581c7e91ac665a4e6796e2c42bcccc107b"
+  integrity sha1-OOhiWBx+kaxmWk5nluLEK8zMEHs=
+
 "@ngtools/webpack@14.2.4":
   version "14.2.4"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-14.2.4.tgz#1ebc02c6d89b0fbd9edc857c937c6d840423fce3"

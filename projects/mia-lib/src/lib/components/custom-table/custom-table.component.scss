@@ -1,8 +1,5 @@
 @import "layout/breakpoints";
 
-$-unit-px: 2px;
-$-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
-
 .custom-table {
   display: flex;
   flex-direction: column;
@@ -14,15 +11,10 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
     // Header
 
     mat-header {
-      &-cell {
-        padding: $-cell-pd;
-
-        &.mat-column-select {
-          flex: 0 0 3rem;
-        }
-
-        span {
-          font-size: calc($-unit-px * 6);
+      &-cell.mat-column {
+        &-expand,
+        &-select {
+          flex: 2;
         }
       }
     }
@@ -31,17 +23,11 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
     [aria-sort="descending"] {
       font-weight: bold;
       color: var(--text-01);
-
-      .mat-sort-header-arrow {
-        color: var(--text-01);
-      }
     }
 
     // Cell
 
     mat-cell {
-      min-height: calc($-unit-px * 21);
-      padding: $-cell-pd;
     }
 
     // Text that is longer than the column width is truncated with an ellipsis
@@ -61,8 +47,9 @@ $-cell-pd: calc($-unit-px * 4) calc($-unit-px * 8);
 
     mat-row {
       mat-cell.mat-column {
+        &-expand,
         &-select {
-          flex: 0 0 3rem;
+          flex: 2;
         }
 
         &-actions {

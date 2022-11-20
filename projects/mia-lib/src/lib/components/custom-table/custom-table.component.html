@@ -13,12 +13,51 @@
       [matSortActive]="defaultSortColumn"
       (matSortChange)="sortTable($event)"
       [matSortDirection]="defaultSortDirection"
+      [multiTemplateDataRows]="enableExpansion"
     >
+      <!-- Expansion -->
+      <ng-container matColumnDef="expand">
+        <mat-header-cell *matHeaderCellDef aria-label="row actions">
+          &nbsp;
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let row"
+          class="cursor-pointer"
+          aria-label="expand row"
+          (click)="row.isExpanded = !row.isExpanded"
+        >
+          <i
+            *ngIf="row.isExpanded"
+            class="mdi mdi-keyboard-arrow-up text-error"
+          ></i>
+          <i
+            *ngIf="!row.isExpanded"
+            class="mdi mdi-keyboard-arrow-down text-secondary"
+          ></i>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+          [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'"
+        >
+          <ng-container
+            [ngTemplateOutlet]="expandedTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: row
+            }"
+          ></ng-container>
+        </mat-cell>
+      </ng-container>
+
       <!-- Checkbox selection -->
       <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef [class.px-2]="enableExpansion">
           <mat-checkbox
             color="warn"
+            ariaLabel="select all"
             (change)="
               $event ? masterToggle() : null;
               selectedRows.emit(selection.selected)
@@ -29,9 +68,10 @@
           >
           </mat-checkbox>
         </mat-header-cell>
-        <mat-cell *matCellDef="let row">
+        <mat-cell *matCellDef="let row" [class.px-2]="enableExpansion">
           <mat-checkbox
             color="primary"
+            ariaLabel="selected row"
             (click)="$event.stopPropagation()"
             (change)="
               $event ? selection.toggle(row) : null;
@@ -43,7 +83,7 @@
         </mat-cell>
       </ng-container>
 
-      <!-- Default declaration columns -->
+      <!-- Column declaration -->
       <ng-container
         *ngFor="let column of columns; let idx = index"
         [matColumnDef]="column.key"
@@ -89,7 +129,16 @@
         *matHeaderRowDef="displayedColumns; sticky: true"
       ></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-
+      <ng-container *ngIf="enableExpansion">
+        <mat-row
+          *matRowDef="let row; columns: ['expandedDetail']"
+          [class.py-2]="row.isExpanded"
+          [style]="{
+            'min-height': row.isExpanded ? '' : '0',
+            'border-bottom': row.isExpanded ? '' : 'none'
+          }"
+        ></mat-row>
+      </ng-container>
       <ng-content *matNoDataRow select="[noData]"></ng-content>
     </mat-table>
   </div>

@@ -1,11 +1,11 @@
-<div class="alert-{{ type }} d-flex ai-center p-2" [class.bd-auto]="hasBorder">
+<div class="alert-{{ type }} d-flex p-2" [class.bd-auto]="hasBorder">
   <ng-container [ngSwitch]="type">
     <i
       *ngSwitchCase="'warning'"
-      class="mdi-outlined mdi-warning-amber mdi-2x"
+      class="mdi-outlined mdi-warning-amber mdi-2x top-0"
     ></i>
-    <i *ngSwitchCase="'info'" class="mdi mdi-info-outline mdi-2x"></i>
-    <i *ngSwitchCase="'error'" class="mdi mdi-error-outline mdi-2x"></i>
+    <i *ngSwitchCase="'info'" class="mdi mdi-info-outline mdi-2x top-0"></i>
+    <i *ngSwitchCase="'error'" class="mdi mdi-error-outline mdi-2x top-0"></i>
   </ng-container>
   <div class="as-center ml-1 flex-1">
     <ng-content></ng-content>

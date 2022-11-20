@@ -19,6 +19,7 @@
   <ng-container *ngIf="loggedIn$ | async; else loginIcon">
     <custom-button
       variant="icon"
+      iconClass="f-24"
       tooltip="Sign out"
       buttonClass="text-white"
       [matMenuTriggerFor]="options"
@@ -53,7 +54,7 @@
     <custom-button
       variant="icon"
       tooltip="Sign in"
-      iconClass="text-white"
+      iconClass="text-white f-24"
       (click)="onLogin()"
     >
       <ng-container icon>fingerprint</ng-container>

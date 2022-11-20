@@ -8,10 +8,6 @@ $-items: 10, 32, 40, 100, 300;
   max-height: 100%;
 }
 
-.min-height {
-  min-height: 0;
-}
-
 .h {
   @each $item in $-items {
     &-#{$item} {

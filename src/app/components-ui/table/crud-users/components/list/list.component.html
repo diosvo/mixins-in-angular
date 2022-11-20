@@ -1,5 +1,5 @@
 <ng-template #selectionTpl let-users>
-  <div>This will delete selected users. Are you sure?</div>
+  <div i18n>This will delete selected users. Are you sure?</div>
   <ul>
     <li *ngFor="let user of users">#{{ user.id }} {{ user.name }}</li>
   </ul>
@@ -18,30 +18,31 @@
     [defaultSortColumn]="'name'"
     [enableCheckbox]="true"
     (selectedRows)="selection = $event"
+    [enableExpansion]="true"
   >
     <div header class="d-flex ai-baseline jc-between">
       <h2>List Users</h2>
-      <custom-button variant="flat" (click)="onBulk({})">
+      <custom-button variant="flat" (click)="onBulk({})" i18n>
         Create User
       </custom-button>
     </div>
 
     <div filters>
-      <ng-container *ngIf="selection.length > 0; else basicTpl">
+      <ng-container *ngIf="selection.length > 0; else searchingTemplate">
         <section
           class="bg-primary text-white d-flex ai-center jc-between pl-2 py-1"
         >
-          <div *ngIf="selection.length > 0" class="flex-1">
+          <div *ngIf="selection.length > 0" class="flex-1" i18n>
             {{ selection.length }}
             {selection.length, plural, =1 {user} other {users} } selected
           </div>
 
           <ng-container>
-            <custom-button variant="basic" (click)="onDelete(selection)">
+            <custom-button variant="basic" (click)="onDelete(selection)" i18n>
               Delete
             </custom-button>
             <span>|</span>
-            <custom-button variant="basic" (click)="onCancel()">
+            <custom-button variant="basic" (click)="onCancel()" i18n>
               Cancel
             </custom-button>
           </ng-container>
@@ -49,7 +50,7 @@
       </ng-container>
 
       <!-- Basic template -->
-      <ng-template #basicTpl>
+      <ng-template #searchingTemplate>
         <custom-input
           filters
           *ngIf="state.data.length > 0"
@@ -86,6 +87,32 @@
         </custom-button>
       </ng-template>
     </custom-column>
+
+    <ng-template #expandedDetail let-user>
+      <div class="d-flex width-100">
+        <div [style.flex.%]="15">
+          <i class="mdi mdi-contact-phone mr-1"></i>
+          <span class="f-12">{{ user.phone }}</span>
+        </div>
+        <div [style.flex.%]="35">
+          <i class="mdi mdi-person-pin-circle mr-1"></i>
+          <span class="f-12">
+            {{ user.address.suite }} {{ user.address.street }}
+            {{ user.address.city }} {{ user.address.zipcode }}
+          </span>
+        </div>
+        <div [style.flex.%]="35">
+          <i class="mdi-outlined mdi-account-balance mr-1"></i>
+          <span class="f-12">
+            {{ user.company.name }} / {{ user.company.catchPhrase }}
+          </span>
+        </div>
+        <div [style.flex.%]="15">
+          <i class="mdi-round mdi-public mr-1"></i>
+          <span class="f-12">{{ user.website }}</span>
+        </div>
+      </div>
+    </ng-template>
 
     <ng-container noData>
       <ng-container *ngIf="state.loading; else getData">

@@ -28,7 +28,7 @@ export class InternalUserService extends BaseService<UserInput> {
   }
 
   all(): Observable<User[]> {
-    return this.list(endpoint);
+    return this.list(endpoint) as Observable<User[]>;
   }
 
   create(user: UserInput): Observable<UserInput> {

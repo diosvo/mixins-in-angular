@@ -9,6 +9,7 @@ import { CustomButtonComponent } from '@lib/components/custom-button/custom-butt
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { ControlErrorContainerDirective } from '@lib/directives/form/control-error-container.directive';
 import { ControlErrorsDirective } from '@lib/directives/form/control-errors.directive';
+import { UserInput } from '@lib/models/json-placeholder/user.model';
 import { UserDetailsService } from '@lib/services/json-placeholder/users/user-details.service';
 import { User } from '@lib/services/json-placeholder/users/user-service.model';
 import { hasDuplicates } from '@lib/utils/array-utils';
@@ -41,7 +42,7 @@ import { iif, Observable } from 'rxjs';
 })
 export class DetailsComponent implements OnInit {
 
-  protected user$: Observable<User>;
+  protected user$: Observable<UserInput>;
 
   readonly form = this.service.form;
   readonly hasChanged$ = this.service.onFormChanges$(['id', 'phone', 'address', 'company', 'username', 'website']);

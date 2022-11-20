@@ -11,12 +11,30 @@ const MOCK_USER: UserInput = {
 };
 
 const MOCK_EXTENDED_USER: User = {
-  id: 2,
-  firstName: 'Thu',
-  lastName: 'Phung'
+  id: 1,
+  name: 'Leanne Graham',
+  username: 'Bret',
+  email: 'Sincere@april.biz',
+  address: {
+    street: 'Kulas Light',
+    suite: 'Apt. 556',
+    city: 'Gwenborough',
+    zipcode: '92998-3874',
+    geo: {
+      lat: '-37.3159',
+      lng: '81.1496'
+    }
+  },
+  phone: '1-770-736-8031 x56442',
+  website: 'hildegard.org',
+  company: {
+    name: 'Romaguera-Crona',
+    catchPhrase: 'Multi-layered client-server neural-net',
+    bs: 'harness real-time e-markets'
+  }
 };
 
-const MOCK_LIST_USERS: User[] = [MOCK_USER, MOCK_EXTENDED_USER];
+const MOCK_LIST_USERS: User[] = [MOCK_EXTENDED_USER];
 
 export { MOCK_USER_ID, MOCK_USER, MOCK_EXTENDED_USER, MOCK_LIST_USERS };
 

@@ -116,6 +116,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   /* Expansion */
 
   @Input() enableExpansion = false;
+  @Input() rightPanel = false;
   @ContentChild('expandedDetail') expandedTemplate: TemplateRef<ElementRef>;
 
   /** Constants */
@@ -158,6 +159,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
 
   getIndex(index: number): number {
+    // TODO: now pageSize returns `NaN` cus it's undefined
     return this.length
       ? index
       : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
@@ -190,7 +192,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
     if (this.enableExpansion) {
       if (!this.displayedColumns.includes(this.expand)) {
-        this.displayedColumns.unshift(this.expand);
+        this.rightPanel ? this.displayedColumns.push(this.expand) : this.displayedColumns.unshift(this.expand);
       }
     }
   }

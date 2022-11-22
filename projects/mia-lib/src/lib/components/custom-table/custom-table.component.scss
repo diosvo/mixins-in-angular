@@ -52,7 +52,8 @@
           flex: 2;
         }
 
-        &-actions {
+        &-actions,
+        &-expand.right-panel {
           visibility: hidden;
         }
       }
@@ -60,11 +61,14 @@
       &:hover {
         background-color: var(--base-02);
 
-        mat-cell.mat-column-actions {
-          visibility: visible;
-          color: var(--base-05);
+        mat-cell {
+          &.mat-column-actions,
+          &.mat-column-expand.right-panel {
+            visibility: visible;
+            color: var(--base-05);
+          }
 
-          &.mat-table-sticky {
+          &.mat-column-actions.mat-table-sticky {
             background: initial;
           }
         }

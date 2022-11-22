@@ -23,17 +23,28 @@
         <mat-cell
           *matCellDef="let row"
           class="cursor-pointer"
+          [class.right-panel]="rightPanel"
           aria-label="expand row"
           (click)="row.isExpanded = !row.isExpanded"
         >
-          <i
-            *ngIf="row.isExpanded"
-            class="mdi mdi-keyboard-arrow-up text-error"
-          ></i>
-          <i
-            *ngIf="!row.isExpanded"
-            class="mdi mdi-keyboard-arrow-down text-secondary"
-          ></i>
+          <ng-container *ngIf="rightPanel; else defaultPanel">
+            <i
+              *ngIf="!row.isExpanded"
+              matTooltip="More details"
+              matTooltipPosition="above"
+              class="mdi-outlined mdi-list-alt f-16 text-link-hover"
+            ></i>
+          </ng-container>
+          <ng-template #defaultPanel>
+            <i
+              *ngIf="row.isExpanded"
+              class="mdi mdi-keyboard-arrow-up text-error"
+            ></i>
+            <i
+              *ngIf="!row.isExpanded"
+              class="mdi mdi-keyboard-arrow-down text-secondary"
+            ></i>
+          </ng-template>
         </mat-cell>
       </ng-container>
 
@@ -125,6 +136,7 @@
         </mat-cell>
       </ng-container>
 
+      <!-- Define columns -->
       <mat-header-row
         *matHeaderRowDef="displayedColumns; sticky: true"
       ></mat-header-row>

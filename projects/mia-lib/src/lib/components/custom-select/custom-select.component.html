@@ -45,7 +45,9 @@
         </ng-container>
 
         <ng-template #basicOption>
-          <mat-option *ngIf="!checkAll" value="[]" i18n> All </mat-option>
+          <mat-option *ngIf="!checkAll" [value]="primitiveItems" i18n>
+            All
+          </mat-option>
         </ng-template>
 
         <!-- Options -->

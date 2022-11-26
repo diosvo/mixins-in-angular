@@ -1,5 +1,5 @@
 <ng-container *ngIf="state$ | async as state">
-  <alert-message *ngIf="state.message" type="error">
+  <alert-message *ngIf="state.message" type="error" [hasBorder]="false">
     {{ state.message }}
   </alert-message>
 
@@ -13,20 +13,16 @@
     (pageChanges)="pageChanges($event)"
     [style]="{ 'max-height': '300px' }"
   >
-    <h2 header>Github Issues</h2>
+    <h2 header i18n>Github Issues</h2>
 
     <form filters [formGroup]="form">
       <custom-select
         placeholder="State"
         formControlName="states"
-        [items]="states"
-        searchPlaceholder="Search"
-      ></custom-select>
-
-      <custom-select
-        placeholder="Author"
-        formControlName="authors"
-        [items]="authors"
+        [items]="FILTERS.states"
+        [checkAll]="false"
+        [bindLabelKey]="'label'"
+        [bindValueKey]="'value'"
         searchPlaceholder="Search"
       ></custom-select>
 
@@ -72,11 +68,18 @@
     </custom-column>
 
     <ng-container noData>
-      <ng-container *ngIf="state.loading; else notFound">
-        <div class="text-center m-2">Loading ...</div>
+      <ng-container *ngIf="state.loading; else getData">
+        <div class="text-center m-2" i18n>Loading ...</div>
       </ng-container>
-      <ng-template #notFound>
-        <no-results (resetFilters)="form.reset()"></no-results>
+      <ng-template #getData>
+        <ng-container *ngIf="state.message; else noResults">
+          <div class="text-center m-2" i18n>
+            An error occurred. Please try again later.
+          </div>
+        </ng-container>
+        <ng-template #noResults>
+          <no-results (resetFilters)="query.setValue('')"></no-results>
+        </ng-template>
       </ng-template>
     </ng-container>
   </custom-table>

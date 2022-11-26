@@ -61,7 +61,7 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
   protected items$: Observable<T[]>;
   protected query = new FormControl('', { nonNullable: true });
 
-  private primitiveItems: T[];
+  protected primitiveItems: T[];
 
   constructor(injector: Injector) {
     super(injector);

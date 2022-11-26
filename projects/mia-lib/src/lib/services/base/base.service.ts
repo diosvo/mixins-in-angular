@@ -47,7 +47,7 @@ export abstract class BaseService<T> {
     return this.fetch(EMethod.PATCH)(url)({ body }) as Observable<T>;
   }
 
-  protected delete(url: string): Observable<unknown> {
+  protected delete(url: string): Observable<{}> {
     return this.fetch(EMethod.DELETE)(url)({});
   }
 
@@ -68,9 +68,23 @@ export abstract class BaseService<T> {
       );
     };
 
+  /**
+   * @description
+   * - select params that need to filter log events
+   * - get key-value of the interval time
+   * - this will filter all falsy values ("", 0, false, null, undefined)
+   * @returns a text string in standard URL-encoded notation
+   */
+
   private serializeParams(params: Params): string {
-    return Object.entries(params)
-      .filter(([key, value]) => !isUndefined(value) || !isEmpty(value))
-      .map(([key, value]) => `${key}=${value}`).join('&');
+    const serialize = Object.entries(params).reduce(
+      (accumulator, [key, value]) => value ? (accumulator[key] = value, accumulator) : accumulator,
+      {}
+    );
+
+    const search_params = new URLSearchParams(serialize);
+    search_params.sort();
+
+    return search_params.toString();
   }
 }

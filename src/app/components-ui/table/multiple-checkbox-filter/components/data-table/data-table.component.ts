@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Params } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
@@ -9,14 +9,16 @@ import { TableColumnDirective } from '@lib/components/custom-table/custom-table-
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { State } from '@lib/models/server.model';
-import { catchError, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { distinctUntilChanged, Observable, startWith, switchMap } from 'rxjs';
 import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues.service';
 
 @Component({
-  selector: 'app-data-table',
+  selector: 'github-issues-data-table',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    DatePipe,
+    AsyncPipe,
     ReactiveFormsModule,
 
     AlertComponent,
@@ -34,45 +36,36 @@ import { GithubRepoIssuesService, Issue } from '../../service/github-repo-issues
 
 export class DataTableComponent implements OnInit {
 
-  state$: Observable<State<Issue>>;
+  protected state$: Observable<State<Issue>>;
+  protected FILTERS = this.service.FILTERS_OPTIONS;
 
-  readonly states = ['is\:open', 'is:\closed'];
-  readonly authors = ['none', 'collaborator', 'member'];
-
-  columns: TableColumn[] = [
+  protected readonly columns: TableColumn[] = [
     { key: 'id', flex: '10%' },
     { key: 'created_at', flex: '10%' },
     { key: 'state', disableSorting: true, flex: '10%' },
     { key: 'number', flex: '10%' },
     { key: 'title', flex: '50%' },
   ];
-  protected form = this.fb.group({
+  protected form = this.fb.nonNullable.group({
+    page: [0],
     query: [''],
-    states: [this.states],
-    authors: [[]],
+    states: [this.service.DEFAULT_STATES],
   });
-  private params$ = new Subject<Params>();
 
   constructor(
     private readonly fb: FormBuilder,
-    @Self() private readonly service: GithubRepoIssuesService
+    private readonly service: GithubRepoIssuesService
   ) { }
 
   ngOnInit(): void {
-    this.state$ = this.params$.pipe(
-      startWith({ page: '0', ...this.form.value }),
-      switchMap(({ page, ...rest }) => {
-        return this.service.getRepoIssues({ page, ...rest }).pipe(
-          map(({ items }) => ({ data: items, loading: false })),
-          catchError(({ message }) => of({ message, loading: false })),
-          startWith({ data: [], loading: true }),
-          shareReplay(1),
-        );
-      }),
+    this.state$ = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      distinctUntilChanged(),
+      switchMap((values: Params) => this.service.getRepoIssues(values)),
     );
   }
 
   pageChanges({ pageIndex }): void {
-    this.params$.next({ page: pageIndex.toString(), ...this.form.value });
+    this.form.patchValue({ page: pageIndex });
   }
 }

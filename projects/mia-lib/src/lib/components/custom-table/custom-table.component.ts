@@ -75,9 +75,12 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
     this.displayedColumns = this.columns.map(({ key }) => key);
-    this.configDisplayColumns();
-    this.configPaginator();
-    this.configSorting();
+
+    if (source.length > 0) {
+      this.configDisplayColumns();
+      this.configPaginator();
+      this.configSorting();
+    }
   }
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];

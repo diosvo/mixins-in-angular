@@ -2,11 +2,7 @@
 
 <mat-dialog-content *ngIf="user$ | async">
   <form [formGroup]="form">
-    <custom-input
-      label="Name"
-      [required]="true"
-      formControlName="name"
-    ></custom-input>
+    <custom-input label="Name" formControlName="name"></custom-input>
     <custom-input
       label="Email"
       type="email"

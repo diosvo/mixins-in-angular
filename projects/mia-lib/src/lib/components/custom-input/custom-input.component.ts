@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, TitleCasePipe } from '@angular/common';
 import { Component, forwardRef, Injector, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { FloatLabelType, MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
@@ -11,8 +11,10 @@ import { ControlAccessorConnector } from '../form/helpers/control-accessor-conne
   templateUrl: './custom-input.component.html',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    TitleCasePipe,
     ReactiveFormsModule,
+
     CustomButtonComponent,
 
     MatInputModule,
@@ -38,7 +40,6 @@ export class CustomInputComponent extends ControlAccessorConnector {
   @Input() label?: string;
   @Input() placeholder?: string;
   @Input() readonly = false;
-  @Input() disabled = false;
   @Input() clearFilter = false;
 
   protected readonly EMPTY_VALUE = '';

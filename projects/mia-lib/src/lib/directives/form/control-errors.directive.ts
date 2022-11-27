@@ -6,9 +6,13 @@ import { EMPTY, merge, Observable, takeUntil } from 'rxjs';
 import { ControlErrorContainerDirective } from './control-error-container.directive';
 import { FormSubmitDirective } from './form-submit.directive';
 
-export const DEFAULT_ERRORS = {
+export const DEFAULT_ERRORS: Record<string, Function> = {
+  min: ({ min, actual }) => $localize`Expect min value is ${min} but got ${actual}`,
+  max: ({ max, actual }) => $localize`Expect max value is ${max} but got ${actual}`,
   required: () => $localize`This field is required`,
-  minLength: ({ requiredLength, actualLength }) => $localize`Expect ${requiredLength} but got ${actualLength}`
+  email: () => $localize`The email address is incorrect format`,
+  minLength: ({ requiredLength, actualLength }) => $localize`Expect minimum of ${requiredLength} characters but got ${actualLength}`,
+  maxLength: ({ requiredLength, actualLength }) => $localize`Expect maximum of ${requiredLength} characters but got ${actualLength}`,
 };
 
 export const FORM_ERRORS = new InjectionToken('FORM_ERRORS', {
@@ -64,7 +68,7 @@ export class ControlErrorsDirective implements OnInit {
       this.ref = this.vcr.createComponent(ControlErrorComponent);
     }
 
-    this.ref.instance.text = text;
+    this.ref.instance.error = text;
   }
 
 }

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, OnInit, Self } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
   selector: 'app-unsaved-form',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
     ReactiveFormsModule,
 
     AlertComponent,
@@ -67,6 +67,10 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   canDeactivate(): boolean {
     return !this.hasChanged || !this.detectPermission.hasPermission;
+  }
+
+  discardChanges(): void {
+    // intentional
   }
 
   saveChanges(url?: string): void {

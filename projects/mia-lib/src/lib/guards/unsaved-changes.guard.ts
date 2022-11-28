@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate, GuardsCheckEnd, Router } from '@angular/router';
-import { UnsavedChangesDialogComponent } from '@lib/components/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
-import isEqual from 'lodash.isequal';
 import { Observable, of } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { UnsavedChangesDialogComponent } from '../components/unsaved-changes-dialog/unsaved-changes-dialog.component';
 
 export interface DeactivateComponent {
   internalNavigation?: boolean;
   canDeactivate: () => boolean;
   saveChanges: (url: string) => void;
+  discardChanges?: () => void;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
 
@@ -27,27 +27,29 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
   canDeactivate(component: DeactivateComponent): Observable<boolean> {
     if (!component.canDeactivate() && !component.internalNavigation) {
       const dialogRef = this.dialog.open(UnsavedChangesDialogComponent, {
-        width: '400px',
+        width: '500px',
         disableClose: true
       });
 
       dialogRef.afterClosed()
         .pipe(
-          filter((action: unknown) => !isEqual(action, 'close') && !isEqual(action, true)),
           take(1),
           takeUntil(this.destroy$)
         )
         .subscribe({
-          next: () => {
-            this.router.events
-              .pipe(
-                filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd),
-                take(1),
-                takeUntil(this.destroy$)
-              )
-              .subscribe({
-                next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
-              });
+          next: (discard: boolean) => {
+            if (discard) {
+              component.discardChanges();
+            } else {
+              this.router.events
+                .pipe(
+                  filter((event): event is GuardsCheckEnd => event instanceof GuardsCheckEnd),
+                  take(1)
+                )
+                .subscribe({
+                  next: (router: GuardsCheckEnd) => component.saveChanges(router.urlAfterRedirects)
+                });
+            }
           }
         });
 
@@ -56,7 +58,7 @@ export class UnsavedChangesGuard implements CanDeactivate<DeactivateComponent> {
       );
     }
 
-    // No pending changes, else show confirm dialog.
+    // If there has no changes, else show dialog
     return of(true);
   }
 }

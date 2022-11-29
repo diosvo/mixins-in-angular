@@ -5,6 +5,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -27,6 +28,7 @@ bootstrapApplication(AppComponent, {
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule,
 
+      MatDialogModule,
       MatSnackBarModule,
       ReactiveFormsModule,
     ]),

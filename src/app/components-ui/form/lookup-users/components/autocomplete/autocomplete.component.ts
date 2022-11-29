@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, ContentChild, ContentChildren, QueryList, TemplateRef, ViewChild } from '@angular/core';
 import { merge, Observable, switchMap } from 'rxjs';
 import { AutocompleteContentDirective } from '../../utils/autocomplete-content.directive';
@@ -8,7 +8,7 @@ import { SelectOptionComponent } from '../select-option/select-option.component'
   selector: 'app-autocomplete',
   standalone: true,
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     AutocompleteContentDirective
   ],
   templateUrl: './autocomplete.component.html',

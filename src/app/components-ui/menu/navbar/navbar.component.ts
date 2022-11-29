@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 const navList = [
@@ -23,7 +22,6 @@ const navList = [
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

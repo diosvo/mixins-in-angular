@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -26,7 +26,8 @@ const DEFAULT_FILTER = {
   selector: 'list-component-ui',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    AsyncPipe,
     ReactiveFormsModule,
 
     AlertComponent,

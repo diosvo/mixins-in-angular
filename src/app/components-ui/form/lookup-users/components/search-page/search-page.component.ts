@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -16,7 +16,9 @@ import { SelectOptionComponent } from '../select-option/select-option.component'
   templateUrl: './search-page.component.html',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    AsyncPipe,
     ReactiveFormsModule,
 
     AutocompleteComponent,

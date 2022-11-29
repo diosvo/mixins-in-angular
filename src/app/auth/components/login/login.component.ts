@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -25,7 +25,9 @@ type TMode = Lowercase<keyof typeof EMode>
   templateUrl: './login.component.html',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
     ReactiveFormsModule,
 
     MatDialogModule,

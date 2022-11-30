@@ -37,6 +37,7 @@
         suffix
         variant="icon"
         iconClass="text-secondary"
+        *ngIf="form.get('password').value"
         tooltip="{{ hidePassword ? 'View' : 'Hide' }}"
         (click)="hidePassword = !hidePassword"
       >
@@ -54,12 +55,13 @@
       <a
         *ngIf="[mode.REGISTER, mode.FORGOT_PASSWORD].includes(mode$.value)"
         (click)="login()"
+        i18n
       >
         Already have an account?
       </a>
       <ng-container *ngIf="mode$.value === mode.LOGIN">
-        <a (click)="register()"> Don't have an account? </a>
-        <a (click)="forgotPassword()"> Forgot password? </a>
+        <a (click)="register()" i18n> Don't have an account? </a>
+        <a (click)="forgotPassword()" i18n> Forgot password? </a>
       </ng-container>
     </div>
 
@@ -73,9 +75,11 @@
         [disabled]="form.invalid || loading"
       >
         <ng-container [ngSwitch]="mode$.value">
-          <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
-          <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
-          <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
+          <ng-container *ngSwitchCase="mode.LOGIN" i18n> Login </ng-container>
+          <ng-container *ngSwitchCase="mode.REGISTER" i18n>
+            Register
+          </ng-container>
+          <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD" i18n>
             Reset password
           </ng-container>
         </ng-container>

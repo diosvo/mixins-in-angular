@@ -21,9 +21,3 @@ button {
     cursor: not-allowed;
   }
 }
-
-// Override AM
-
-.mat-icon-button.mat-button-disabled {
-  cursor: not-allowed !important;
-}

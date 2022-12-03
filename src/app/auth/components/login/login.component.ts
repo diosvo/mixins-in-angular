@@ -130,7 +130,7 @@ export class LoginComponent {
         finalize(() => this.dialogRef.close())
       )
       .subscribe({
-        next: () => this.dialogRef.close()
+        // next: () => this.dialogRef.close()
       });
   }
 }

@@ -43,7 +43,7 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "./node_modules/@mervick/mdi-icons/css/material-icons.min.css",
+              "./node_modules/@mdi/font/css/materialdesignicons.css",
               "src/styles.scss",
               "src/assets/scss/main.scss",
               "src/assets/scss/custom/custom.scss"

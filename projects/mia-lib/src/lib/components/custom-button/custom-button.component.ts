@@ -1,8 +1,6 @@
 import { NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
-import { Attribute, ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
+import { Attribute, ChangeDetectionStrategy, Component, ContentChild, Input, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ButtonLoaderIconDirective } from './button-loader-icon.directive';
 
 type ButtonType = 'basic' | 'flat' | 'outline' | 'icon';
@@ -18,9 +16,7 @@ type ButtonType = 'basic' | 'flat' | 'outline' | 'icon';
     NgTemplateOutlet,
     ButtonLoaderIconDirective,
 
-    MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

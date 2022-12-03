@@ -21,10 +21,9 @@
       variant="icon"
       iconClass="f-24"
       tooltip="Sign out"
-      buttonClass="text-white"
+      iconClass="mdi-account-outline mdi-24px text-white"
       [matMenuTriggerFor]="options"
     >
-      <ng-container icon>person_outline</ng-container>
     </custom-button>
     <mat-menu #options="matMenu">
       <mat-card
@@ -54,10 +53,9 @@
     <custom-button
       variant="icon"
       tooltip="Sign in"
-      iconClass="text-white f-24"
+      iconClass="mdi-fingerprint mdi-24px text-white"
       (click)="onLogin()"
     >
-      <ng-container icon>fingerprint</ng-container>
     </custom-button>
   </ng-template>
 </mat-toolbar>

@@ -36,14 +36,15 @@
       <custom-button
         suffix
         variant="icon"
-        iconClass="text-secondary"
         *ngIf="form.get('password').value"
-        tooltip="{{ hidePassword ? 'View' : 'Hide' }}"
+        [iconClass]="
+          hidePassword
+            ? 'mdi-eye-off-outline mdi-18px text-secondary'
+            : 'mdi-eye-outline mdi-18px text-secondary'
+        "
+        [tooltip]="hidePassword ? 'View' : 'Hide'"
         (click)="hidePassword = !hidePassword"
       >
-        <ng-container icon>
-          {{ hidePassword ? "visibility_off" : "visibility" }}
-        </ng-container>
       </custom-button>
     </custom-input>
 

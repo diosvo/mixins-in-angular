@@ -73,22 +73,20 @@
         <custom-button
           variant="icon"
           tooltip="Edit"
-          iconClass="f-16 text-action-icon-hover"
+          iconClass="mdi-pencil-outline text-action-icon-hover"
           [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onBulk(user)"
         >
-          <ng-container icon>edit</ng-container>
         </custom-button>
         <custom-button
           variant="icon"
           tooltip="Delete"
-          iconClass="f-16 text-action-icon-hover"
+          iconClass="mdi-delete-outline text-action-icon-hover"
           [class.visibility-hidden]="selection.length > 1"
           [disabled]="state.loading"
           (click)="onDelete([user])"
         >
-          <ng-container icon>delete_outline</ng-container>
         </custom-button>
       </ng-template>
     </custom-column>

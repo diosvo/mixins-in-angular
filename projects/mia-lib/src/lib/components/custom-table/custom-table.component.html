@@ -23,28 +23,17 @@
         <mat-cell
           *matCellDef="let row"
           class="cursor-pointer"
-          [class.right-panel]="rightPanel"
           aria-label="expand row"
           (click)="row.isExpanded = !row.isExpanded"
         >
-          <ng-container *ngIf="rightPanel; else defaultPanel">
-            <i
-              *ngIf="!row.isExpanded"
-              matTooltip="More details"
-              matTooltipPosition="above"
-              class="mdi-outlined mdi-list-alt f-16 text-link-hover"
-            ></i>
-          </ng-container>
-          <ng-template #defaultPanel>
-            <i
-              *ngIf="row.isExpanded"
-              class="mdi mdi-keyboard-arrow-up text-error"
-            ></i>
-            <i
-              *ngIf="!row.isExpanded"
-              class="mdi mdi-keyboard-arrow-down text-secondary"
-            ></i>
-          </ng-template>
+          <i
+            *ngIf="row.isExpanded"
+            class="mdi mdi-unfold-more-horizontal text-error"
+          ></i>
+          <i
+            *ngIf="!row.isExpanded"
+            class="mdi mdi-unfold-less-horizontal text-secondary"
+          ></i>
         </mat-cell>
       </ng-container>
 
@@ -118,15 +107,11 @@
           *matCellDef="let row; let idx = index"
           [style.flex]="column.flex"
           [matTooltip]="column.tooltip ? row[column.key] : null"
-          [id]="column.key + '-row-' + getIndex(idx)"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
             <ng-container
               [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
-              [ngTemplateOutletContext]="{
-                $implicit: row,
-                index: getIndex(idx)
-              }"
+              [ngTemplateOutletContext]="{ $implicit: row }"
             ></ng-container>
           </span>
           <ng-template #noTemplates>
@@ -144,6 +129,7 @@
         <mat-row
           *matRowDef="let row; columns: ['expandedDetail']"
           [class.py-2]="row.isExpanded"
+          [class.visibility-hidden]="!row.isExpanded"
           [style]="{
             'min-height': row.isExpanded ? '' : '0',
             'border-bottom': row.isExpanded ? '' : 'none'

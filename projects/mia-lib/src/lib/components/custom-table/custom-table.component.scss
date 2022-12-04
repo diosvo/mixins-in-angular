@@ -52,8 +52,7 @@
           flex: 2;
         }
 
-        &-actions,
-        &-expand.right-panel {
+        &-actions {
           visibility: hidden;
         }
       }
@@ -62,8 +61,7 @@
         background-color: var(--base-02);
 
         mat-cell {
-          &.mat-column-actions,
-          &.mat-column-expand.right-panel {
+          &.mat-column-actions {
             visibility: visible;
             color: var(--base-05);
           }

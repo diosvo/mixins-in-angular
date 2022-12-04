@@ -70,6 +70,7 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
 })
 
 export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
+
   /** Definitions: data */
 
   @Input() @Required set data(source: T[]) {
@@ -119,7 +120,6 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   /* Expansion */
 
   @Input() enableExpansion = false;
-  @Input() rightPanel = false;
   @ContentChild('expandedDetail') expandedTemplate: TemplateRef<ElementRef>;
 
   /** Constants */
@@ -161,13 +161,6 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     this.source = new MatTableDataSource<T>(source);
   }
 
-  getIndex(index: number): number {
-    // TODO: now pageSize returns `NaN` cus it's undefined
-    return this.length
-      ? index
-      : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
-  }
-
   sortTable(sort: MatSort): void {
     this.matSort.active = this.columns.find((column: TableColumn) => isEqual(column.key, sort.active)).key;
   }
@@ -195,7 +188,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
     if (this.enableExpansion) {
       if (!this.displayedColumns.includes(this.expand)) {
-        this.rightPanel ? this.displayedColumns.push(this.expand) : this.displayedColumns.unshift(this.expand);
+        this.displayedColumns.unshift(this.expand);
       }
     }
   }

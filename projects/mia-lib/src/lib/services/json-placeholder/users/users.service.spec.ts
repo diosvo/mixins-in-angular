@@ -1,9 +1,10 @@
+import { User } from '@lib/models/json-placeholder/user.model';
 import { State } from '@lib/models/server.model';
 import { EAction } from '@lib/models/table';
 import { of, throwError } from 'rxjs';
 import { MOCK_LIST_USERS, MOCK_USER } from '../../../mocks/json-placeholder/user.mock';
 import { mockSnackbar } from '../../snackbar/snackbar.service.spec';
-import { INITIAL_USER_STATE, User } from './user-service.model';
+import { INITIAL_USER_STATE } from './user-service.model';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -59,12 +60,18 @@ describe('UsersService', () => {
 
   describe('should adjust selected user', () => {
     test('should update the selected user', () => {
+      const ANOTHER_USER: User = {
+        ...MOCK_USER,
+        id: 2
+      };
+      const EXTENDED_LIST: User[] = MOCK_LIST_USERS.concat(ANOTHER_USER);
       service['setState']({
-        data: MOCK_LIST_USERS
+        data: EXTENDED_LIST
       });
+
       service.adjust(EAction.UPDATE, MOCK_USER.id);
       expect(service['setState']).toBeCalledWith({
-        data: MOCK_LIST_USERS,
+        data: EXTENDED_LIST,
         loading: false
       });
     });
@@ -75,14 +82,14 @@ describe('UsersService', () => {
       });
       service.adjust(EAction.CREATE, null);
       expect(service['setState']).toBeCalledWith({
-        data: [MOCK_USER],
+        data: MOCK_LIST_USERS,
         loading: false
       });
     });
 
     test('should show error message when API failed', () => {
       service['setState']({
-        data: [MOCK_USER]
+        data: MOCK_LIST_USERS
       });
       mockUserDetailsService.update$.mockReturnValue(throwError(() => new Error('Bad Request')));
 
@@ -110,10 +117,11 @@ describe('UsersService', () => {
     });
 
     test('should delete multiple users', () => {
+      const DUPLICATE_USERS = MOCK_LIST_USERS.concat(MOCK_USER);
       service['setState']({
-        data: MOCK_LIST_USERS
+        data: DUPLICATE_USERS
       });
-      service.delete(MOCK_LIST_USERS);
+      service.delete(DUPLICATE_USERS);
 
       expect(service['setState']).toBeCalledWith({
         data: [],
@@ -124,11 +132,11 @@ describe('UsersService', () => {
 
     test('should show error message when API failed', () => {
       service['setState']({
-        data: [MOCK_USER]
+        data: MOCK_LIST_USERS
       });
       mockUserDetailsService.remove$.mockReturnValue(throwError(() => new Error('Bad Request')));
 
-      service.delete([MOCK_USER]);
+      service.delete(MOCK_LIST_USERS);
 
       expect(service['setState']).toBeCalledWith({
         loading: false

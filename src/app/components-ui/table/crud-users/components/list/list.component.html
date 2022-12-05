@@ -11,7 +11,7 @@
   </alert-message>
 
   <custom-table
-    *ngIf="state.data | filter: query.value as filtered_data"
+    *ngIf="state.data | filter : query.value as filtered_data"
     [data]="filtered_data"
     [columns]="columns"
     [highlight]="query.value"
@@ -94,24 +94,24 @@
     <ng-template #expandedDetail let-user>
       <div class="d-flex width-100">
         <div [style.flex.%]="15">
-          <i class="mdi mdi-contact-phone mr-1"></i>
+          <i class="mdi mdi-phone-in-talk-outline mr-1"></i>
           <span class="f-12">{{ user.phone }}</span>
         </div>
         <div [style.flex.%]="35">
-          <i class="mdi mdi-person-pin-circle mr-1"></i>
+          <i class="mdi mdi-pin-outline mr-1"></i>
           <span class="f-12">
             {{ user.address.suite }} {{ user.address.street }}
             {{ user.address.city }} {{ user.address.zipcode }}
           </span>
         </div>
         <div [style.flex.%]="35">
-          <i class="mdi-outlined mdi-account-balance mr-1"></i>
+          <i class="mdi mdi-toolbox-outline mr-1"></i>
           <span class="f-12">
             {{ user.company.name }} / {{ user.company.catchPhrase }}
           </span>
         </div>
         <div [style.flex.%]="15">
-          <i class="mdi-round mdi-public mr-1"></i>
+          <i class="mdi mdi-globe-model mr-1"></i>
           <span class="f-12">{{ user.website }}</span>
         </div>
       </div>

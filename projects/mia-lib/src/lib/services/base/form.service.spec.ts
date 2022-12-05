@@ -1,8 +1,10 @@
 import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MOCK_USER_ID } from '@lib/mocks/json-placeholder/user.mock';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { User } from '../json-placeholder/users/user-service.model';
 import { AbstractFormService } from './form.service';
+
+type User = Record<string, string>;
 
 const user: User = {
   firstName: 'Dios',
@@ -31,7 +33,7 @@ class Form extends AbstractFormService<User> {
     return of(user);
   }
 
-  protected update$(id = 0): Observable<User> {
+  protected update$(id = MOCK_USER_ID.toString()): Observable<User> {
     return of({ id, ...user });
   }
 }
@@ -104,7 +106,7 @@ describe('AbstractFormService', () => {
     test('should call update$ function when isEdit$ value is true', (done) => {
       service.isEdit$.next(true);
       service.save$().subscribe((response: User) => {
-        expect(response).toEqual({ id: 0, ...user });
+        expect(response).toEqual({ id: MOCK_USER_ID.toString(), ...user });
         done();
       });
     });

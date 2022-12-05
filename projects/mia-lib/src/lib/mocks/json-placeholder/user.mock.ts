@@ -1,20 +1,17 @@
-import { UserInput } from '@lib/models/json-placeholder/user.model';
-import { User } from '@lib/services/json-placeholder/users/user-service.model';
+import { User, UserInput } from '@lib/models/json-placeholder/user.model';
 
 const MOCK_USER_ID: number = 1 as const;
 
-const MOCK_USER: UserInput = {
+const MOCK_USER_INPUT: UserInput = {
   id: MOCK_USER_ID,
-  name: 'Dios Vo',
-  email: 'vtmn1212@gmail.com',
+  name: 'Leanne Graham',
+  email: 'Sincere@april.biz',
   hobbies: ['coding', 'basketball']
 };
 
-const MOCK_EXTENDED_USER: User = {
-  id: 1,
-  name: 'Leanne Graham',
+const MOCK_USER: User = {
+  ...MOCK_USER_INPUT,
   username: 'Bret',
-  email: 'Sincere@april.biz',
   address: {
     street: 'Kulas Light',
     suite: 'Apt. 556',
@@ -34,7 +31,7 @@ const MOCK_EXTENDED_USER: User = {
   }
 };
 
-const MOCK_LIST_USERS: User[] = [MOCK_EXTENDED_USER];
+const MOCK_LIST_USERS: User[] = [MOCK_USER];
 
-export { MOCK_USER_ID, MOCK_USER, MOCK_EXTENDED_USER, MOCK_LIST_USERS };
+export { MOCK_USER_ID, MOCK_USER_INPUT, MOCK_USER, MOCK_LIST_USERS };
 

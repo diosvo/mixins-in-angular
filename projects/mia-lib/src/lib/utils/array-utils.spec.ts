@@ -1,5 +1,5 @@
-import { User } from '@lib/services/json-placeholder/users/user-service.model';
-import { MOCK_EXTENDED_USER, MOCK_LIST_USERS, MOCK_USER } from 'projects/mia-lib/src/lib/mocks/json-placeholder/user.mock';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/mocks/json-placeholder/user.mock';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { diff, diffBy, hasDuplicates, union, unionBy } from './array-utils';
 
 describe('./array-utils', () => {
@@ -12,7 +12,7 @@ describe('./array-utils', () => {
   });
 
   test('diffBy()', () => {
-    expect(diffBy(MOCK_LIST_USERS, [MOCK_USER], 'id')).toEqual([MOCK_EXTENDED_USER]);
+    expect(diffBy(MOCK_LIST_USERS, [MOCK_USER], 'id')).toEqual([MOCK_USER]);
   });
 
   test('union()', () => {
@@ -21,8 +21,8 @@ describe('./array-utils', () => {
 
   test('unionBy()', () => {
     const USER: User = {
-      ...MOCK_EXTENDED_USER,
-      firstName: 'Any'
+      ...MOCK_USER,
+      username: 'Any'
     };
     expect(unionBy(MOCK_LIST_USERS, [USER], 'id')).toEqual([MOCK_USER, USER]);
   });

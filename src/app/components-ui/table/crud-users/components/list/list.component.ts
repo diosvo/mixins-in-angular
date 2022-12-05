@@ -10,9 +10,9 @@ import { TableColumnDirective } from '@lib/components/custom-table/custom-table-
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { EAction } from '@lib/models/table';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
-import { User } from '@lib/services/json-placeholder/users/user-service.model';
 import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 import isEmpty from 'lodash.isempty';
 import { filter, take } from 'rxjs';

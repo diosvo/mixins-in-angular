@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserInput } from '@lib/models/json-placeholder/user.model';
+import { User, UserInput } from '@lib/models/json-placeholder/user.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { BaseService } from '../../base/base.service';
 import { ErrorHandlerService } from '../../base/error-handler.service';
 import { AbstractFormService } from '../../base/form.service';
-import { endpoint, id_endpoint, User } from './user-service.model';
+import { endpoint, id_endpoint } from './user-service.model';
 
-const DEFAULT_VALUE = {
+const DEFAULT_VALUES: UserInput = {
   id: null,
   name: '',
   email: '',
-  hobbies: []
+  hobbies: [],
 };
 
 @Injectable({
@@ -51,7 +51,7 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   primary_key = 'id';
   isEdit$ = new BehaviorSubject<boolean>(false);
-  primitiveValue$ = new BehaviorSubject<UserInput>(DEFAULT_VALUE);
+  primitiveValue$ = new BehaviorSubject<UserInput>(DEFAULT_VALUES);
 
   constructor(
     protected override fb: FormBuilder,
@@ -66,10 +66,10 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
 
   buildForm(): FormGroup {
     return this.fb.group({
-      id: [DEFAULT_VALUE.id],
-      name: [DEFAULT_VALUE.name, Validators.required],
-      email: [DEFAULT_VALUE.email, [Validators.required, Validators.email]],
-      hobbies: [DEFAULT_VALUE.hobbies, { nonNullable: true }]
+      id: [DEFAULT_VALUES.id],
+      name: [DEFAULT_VALUES.name, Validators.required],
+      email: [DEFAULT_VALUES.email, [Validators.required, Validators.email]],
+      hobbies: [DEFAULT_VALUES.hobbies, { nonNullable: true }]
     });
   }
 
@@ -78,7 +78,7 @@ export class UserDetailsService extends AbstractFormService<UserInput>{
   }
 
   initializeValue$(): Observable<UserInput> {
-    return of(DEFAULT_VALUE).pipe(this.pipeHandler());
+    return of(DEFAULT_VALUES).pipe(this.pipeHandler());
   }
 
   create$(): Observable<UserInput> {

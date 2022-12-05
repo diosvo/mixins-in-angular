@@ -13,4 +13,5 @@ const INITIAL_USER_STATE: State<User> = {
   loading: true
 };
 
-export { User, endpoint, id_endpoint, INITIAL_USER_STATE };
+export { endpoint, id_endpoint, INITIAL_USER_STATE };
+

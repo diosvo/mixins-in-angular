@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MOCK_USER } from '@lib/mocks/json-placeholder/user.mock';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { State } from '@lib/models/server.model';
 import { BulkAction, EAction } from '@lib/models/table';
 import { diffBy } from '@lib/utils/array-utils';
@@ -7,7 +9,7 @@ import { catchError, forkJoin, map, of, startWith } from 'rxjs';
 import { StateService } from '../../base/state.service';
 import { SnackbarService } from '../../snackbar/snackbar.service';
 import { UserDetailsService } from './user-details.service';
-import { INITIAL_USER_STATE, User } from './user-service.model';
+import { INITIAL_USER_STATE } from './user-service.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,7 @@ export class UsersService extends StateService<State<User>> {
           return this.state.data.map((item: User) => isEqual(item.id, id) ? { ...item, ...user } : item);
         case EAction.CREATE:
           return this.state.data.concat({
+            ...MOCK_USER,
             ...user,
             id: Math.max(...ids) + 1
           });

@@ -12,7 +12,7 @@ describe('./array-utils', () => {
   });
 
   test('diffBy()', () => {
-    expect(diffBy(MOCK_LIST_USERS, [MOCK_USER], 'id')).toEqual([MOCK_USER]);
+    expect(diffBy(MOCK_LIST_USERS, [MOCK_USER], 'id')).toEqual([]);
   });
 
   test('union()', () => {
@@ -22,8 +22,8 @@ describe('./array-utils', () => {
   test('unionBy()', () => {
     const USER: User = {
       ...MOCK_USER,
-      username: 'Any'
+      id: 2
     };
-    expect(unionBy(MOCK_LIST_USERS, [USER], 'id')).toEqual([MOCK_USER, USER]);
+    expect(unionBy([MOCK_USER], [USER], 'id')).toEqual([MOCK_USER, USER]);
   });
 });

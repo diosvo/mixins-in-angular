@@ -1,6 +1,7 @@
+import { Params } from '@angular/router';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { State } from '@lib/models/server.model';
 import { MOCK_LIST_USERS, MOCK_USER } from '../../mocks/json-placeholder/user.mock';
-import { User } from '../json-placeholder/users/user-service.model';
 import { StateService } from './state.service';
 
 const user_state: State<User> = {
@@ -40,7 +41,7 @@ describe('StateService', () => {
   });
 
   describe('filteredData()', () => {
-    function run(filter_by, inject, expected) {
+    function run(filter_by: string, inject: Params, expected): void {
       it(`should filter data by ${filter_by}`, () => {
         expect(service.filteredData(inject.data, inject.params, inject.keys)).toEqual(expected);
       });
@@ -49,10 +50,10 @@ describe('StateService', () => {
     run('query string with provided keys',
       {
         data: MOCK_LIST_USERS,
-        params: { query: 'dios' },
+        params: { query: MOCK_USER.name },
         keys: ['name']
       },
-      [MOCK_USER]
+      MOCK_LIST_USERS
     );
 
     run('item key',
@@ -67,10 +68,10 @@ describe('StateService', () => {
     run('item key and query string',
       {
         data: MOCK_LIST_USERS,
-        params: { email: 'vtmn1212@gmail.com', query: 'dios' },
+        params: { email: MOCK_USER.email, query: MOCK_USER.name },
         keys: ['name', 'id']
       },
-      [MOCK_USER]
+      MOCK_LIST_USERS
     );
   });
 });

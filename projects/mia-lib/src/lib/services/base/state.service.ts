@@ -50,7 +50,7 @@ export class StateService<T> {
         .reduce((accumulator, key) => accumulator.concat(item[key]), '');
 
       const parsed = (value: unknown) => value.toString().trim().toLowerCase();
-      const matched = (param_value: string, item_value: unknown) => param_value
+      const matched = (param_value: string, item_value: unknown) => parsed(param_value)
         .replace(/\s*,\s*|\s+,/g, ' ').match(/\b\S+\b/g)
         .includes(parsed(item_value));
 

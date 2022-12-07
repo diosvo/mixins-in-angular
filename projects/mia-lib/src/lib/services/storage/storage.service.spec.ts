@@ -1,16 +1,26 @@
-import { TestBed } from '@angular/core/testing';
-
+import { User } from '@lib/models/json-placeholder/user.model';
 import { StorageService } from './storage.service';
 
+class MockStorageService implements StorageService<User> {
+  getItem(key: string): Promise<User> {
+    throw new Error('Method not implemented.');
+  }
+  setItem(key: string, value: unknown): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  removeItem(key: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+}
+
 describe('StorageService', () => {
-  let service: StorageService;
+  let service: MockStorageService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(StorageService);
+    service = new MockStorageService();
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 });

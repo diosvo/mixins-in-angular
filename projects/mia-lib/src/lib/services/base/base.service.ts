@@ -77,10 +77,21 @@ export abstract class BaseService<T> {
    */
 
   private serializeParams(params: Params): string {
-    const serialize = Object.entries(params).reduce(
-      (accumulator, [key, value]) => value ? (accumulator[key] = value, accumulator) : accumulator,
-      {}
-    );
+    const serialize = Object.entries(params).reduce((accumulator, [key, value]) => {
+      if (value) {
+        const queries = [];
+        if (typeof value === 'object') {
+          value.forEach((element: string) =>
+            queries.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(value[element])}`)
+          );
+        } else {
+          queries.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+        }
+        return accumulator = queries.join('&');
+      } else {
+        return accumulator;
+      }
+    }, {});
 
     const search_params = new URLSearchParams(serialize);
     search_params.sort();

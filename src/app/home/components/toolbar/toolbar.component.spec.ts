@@ -25,11 +25,16 @@ describe('ToolbarComponent', () => {
     logout: jest.fn()
   };
 
+  const mockLoadingService: any = {
+    loading$: of(false),
+  };
+
   beforeEach(() => {
     component = new ToolbarComponent(
       mockRouter,
       mockDialog,
       mockService,
+      mockLoadingService
     );
   });
 

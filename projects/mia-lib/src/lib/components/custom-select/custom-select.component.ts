@@ -54,8 +54,8 @@ export class CustomSelectComponent<T> extends ControlAccessorConnector implement
   @Input() bindValueKey: string;
 
   @Input() checkAll = true;
-  @Input() placeholder = $localize`Select`;
-  @Input() searchPlaceholder = $localize`Search`;
+  @Input() placeholder = 'Select';
+  @Input() searchPlaceholder = 'Search';
   @Input() appearance: MatFormFieldAppearance | 'none' = 'outline';
 
   protected items$: Observable<T[]>;

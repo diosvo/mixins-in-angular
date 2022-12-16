@@ -1,5 +1,5 @@
 import { NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
-import { Attribute, ChangeDetectionStrategy, Component, ContentChild, Input, ViewEncapsulation } from '@angular/core';
+import { Attribute, ChangeDetectionStrategy, Component, ContentChild, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ButtonLoaderIconDirective } from './button-loader-icon.directive';
 

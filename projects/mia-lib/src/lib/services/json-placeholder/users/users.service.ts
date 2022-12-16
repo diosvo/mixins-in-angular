@@ -50,6 +50,8 @@ export class UsersService extends StateService<State<User>> {
             ...user,
             id: Math.max(...ids) + 1
           });
+        default:
+          break;
       }
     };
 

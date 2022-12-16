@@ -1,4 +1,18 @@
 <ng-container *ngIf="state$ | async as state">
+  <mat-form-field class="example-form-field" appearance="outline">
+    <mat-label>Clearable input</mat-label>
+    <input matInput type="text" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Choose an option</mat-label>
+    <mat-select>
+      <mat-option value="option1">Option 1</mat-option>
+      <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+      <mat-option value="option3">Option 3</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <alert-message *ngIf="state.error" type="error" [hasBorder]="false">
     {{ state.error }}
   </alert-message>

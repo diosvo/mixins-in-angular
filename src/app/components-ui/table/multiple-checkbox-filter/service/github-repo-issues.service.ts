@@ -47,7 +47,7 @@ export class GithubRepoIssuesService extends BaseService<{ items: Issue[] }> {
   getRepoIssues(queries: Params): Observable<State<Issue>> {
     const { states, page } = queries;
 
-    let params = {
+    const params = {
       page: page + 1,
       q: states,
     };

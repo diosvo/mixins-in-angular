@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { of } from 'rxjs';
@@ -45,7 +46,13 @@ const data: AnimatedCounterModel[] = [
 @Component({
   selector: 'app-animated-counter',
   standalone: true,
-  imports: [AnimatedCounterDirective],
+  imports: [
+    NgForOf,
+    NgClass,
+    AsyncPipe,
+
+    AnimatedCounterDirective
+  ],
   templateUrl: './animated-counter.component.html',
   styleUrls: ['./animated-counter.component.scss']
 })

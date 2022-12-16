@@ -2,7 +2,10 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 import { CardItemComponent } from '@home/components/card-item/card-item.component';
 import { EComponentUI, EUrl } from '@home/models/url.enum';
 import { CardItem, SearchService } from '@home/services/search.service';
@@ -39,7 +42,10 @@ const DEFAULT_FILTER = {
     CustomSelectComponent,
 
     MatExpansionModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
   ],
   templateUrl: './list-component-ui.component.html',
   styles: [`

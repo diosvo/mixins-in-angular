@@ -7,7 +7,7 @@ import { BaseService } from '@lib/services/base/base.service';
 import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
 import { Observable } from 'rxjs';
 
-const API_ENDPOINT = environment.jsonPlaceHolderUrl + 'comments/';
+const API_ENDPOINT = environment.jsonPlaceHolderUrl.concat('comments');
 
 @Injectable({
   providedIn: 'root'

@@ -3014,7 +3014,7 @@
 
 "@mdi/font@^7.0.96":
   version "7.0.96"
-  resolved "https://artifactory.menloinfra.com/artifactory/api/npm/npm/@mdi/font/-/font-7.0.96.tgz#9853c222623072f5575b4039c8c195ea929b61fc"
+  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-7.0.96.tgz#9853c222623072f5575b4039c8c195ea929b61fc"
   integrity sha1-mFPCImIwcvVXW0A5yMGV6pKbYfw=
 
 "@ngtools/webpack@14.2.4":

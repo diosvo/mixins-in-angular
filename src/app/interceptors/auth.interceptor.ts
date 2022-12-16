@@ -1,40 +1,38 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
-import isEqual from 'lodash.isequal';
-import { catchError, Observable, throwError } from 'rxjs';
+import { EUrl } from '@home/models/url.enum';
+import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  private router = inject(Router);
-  private service = inject(AuthService);
+  constructor(
+    private readonly router: Router,
+    private readonly service: AuthService,
+    private readonly handle: ErrorHandlerService
+  ) { }
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
-    const token = this.service.user.expire.toString();
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
-    if (token) {
+    if (this.service.user) {
+      const token = this.service.user.expire.toString();
+
       request = request.clone({
-        setHeaders: { Authorization: `Key ${token}` }
+        setHeaders: { Authorization: `Key ${token}` } // expire time will be token temporarily
       });
     }
 
     return next.handle(request).pipe(
-      catchError((error: Error) => {
-        this.router.navigateByUrl('/components-ui');
-
-        if (error instanceof HttpErrorResponse) {
-          if (isEqual(error.status), HttpStatusCode.Unauthorized) {
-            this.service.updateUserState(null, false);
-            return throwError(() => new Error('Your session has been expired.'));;
-          }
+      tap({
+        error: () => {
+          this.service.updateUserState(null, false);
+          this.router.navigateByUrl(`/${EUrl.COMPONENT}`);
         }
-        return throwError(() => new Error(error.message));
-      })
+      }),
+      // catchError(this.handle.handleError(this.constructor.name)) // ERROR: selector is not a function
     );
   }
 }

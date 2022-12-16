@@ -1,19 +1,18 @@
-@use 'palette';
-@use 'colors/severity'as severity;
+@use "colors/severity" as severity;
 
 .chip {
   &-success {
-    @include severity.chip-config(palette.$success);
+    @include severity.chip-config(green);
   }
 
   &-error {
-    @include severity.chip-config(palette.$error);
+    @include severity.chip-config(red);
   }
 
   &-spacing {
     display: inline-block;
 
-    padding      : 0.125rem 0.5rem;
+    padding: 0.125rem 0.5rem;
     border-radius: 1rem;
   }
 }

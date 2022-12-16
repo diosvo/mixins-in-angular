@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,10 +10,10 @@ import { TableColumnDirective } from '@lib/components/custom-table/custom-table-
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { EAction } from '@lib/models/table';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
-import { User } from '@lib/services/users/user-service.model';
-import { UsersService } from '@lib/services/users/users.service';
+import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 import isEmpty from 'lodash.isempty';
 import { filter, take } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';
@@ -22,7 +22,9 @@ import { DetailsComponent } from '../details/details.component';
   selector: 'list-users',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    AsyncPipe,
 
     AlertComponent,
     NoResultsComponent,

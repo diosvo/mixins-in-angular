@@ -1,8 +1,14 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { User } from '@lib/services/users/user-service.model';
-import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
-import { CustomTableComponent } from './custom-table.component';
+import { MOCK_LIST_USERS } from '@lib/mocks/json-placeholder/user.mock';
+import { User } from '@lib/models/json-placeholder/user.model';
+import { CustomTableComponent, TableColumn } from './custom-table.component';
+
+const columns: TableColumn[] = [
+  { key: 'id', flex: '100%' },
+];
+
+const mapped_column_keys = ['id'];
 
 describe('CustomTableComponent', () => {
   let component: CustomTableComponent<unknown>;
@@ -10,10 +16,6 @@ describe('CustomTableComponent', () => {
 
   const key_id = {
     key: 'id'
-  };
-
-  const key_select = {
-    key: 'select'
   };
 
   beforeEach(() => {
@@ -31,16 +33,37 @@ describe('CustomTableComponent', () => {
   });
 
   describe('should update input decorator value', () => {
-    test('@Input data', () => {
-      jest.spyOn(component as any, 'setDataSource');
-      component.data = [];
-      expect(component['setDataSource']).toBeCalledWith([]);
-    });
+    describe('@Input data', () => {
+      beforeEach(() => {
+        component.columns = columns;
+        jest.spyOn(component as any, 'configDisplayColumns');
+        jest.spyOn(component as any, 'configPaginator');
+        jest.spyOn(component as any, 'configSorting');
+      });
 
-    test('@Input data', () => {
-      const value = { length: 10 };
-      component['matPaginator'] = { ...value } as any;
-      expect(component['paginator']).toEqual({ ...value });
+      afterEach(() => {
+        expect(component['displayedColumns']).toEqual(mapped_column_keys);
+      });
+
+      test('should not call any configurations when no data found', () => {
+        jest.spyOn(component as any, 'setDataSource');
+        component.data = [];
+
+        expect(component['setDataSource']).toBeCalledWith([]);
+        expect(component['configDisplayColumns']).not.toBeCalled();
+        expect(component['configPaginator']).not.toBeCalled();
+        expect(component['configSorting']).not.toBeCalled();
+      });
+
+      test('should call configurations when data is passed in', () => {
+        jest.spyOn(component as any, 'setDataSource');
+        component.data = MOCK_LIST_USERS;
+
+        expect(component['setDataSource']).toBeCalledWith(MOCK_LIST_USERS);
+        expect(component['configDisplayColumns']).toBeCalled();
+        expect(component['configPaginator']).toBeCalled();
+        expect(component['configSorting']).toBeCalled();
+      });
     });
   });
 
@@ -93,47 +116,26 @@ describe('CustomTableComponent', () => {
     });
   });
 
-  describe('getIndex()', () => {
-    test('returns an index directly when the data is fetching from server side', () => {
-      component.length = 1;
-      expect(component.getIndex(1)).toBe(1);
-    });
-
-    describe('modify an index when the data is fetching from client side', () => {
-      beforeEach(() => {
-        component.length = undefined;
-        component.pageIndex = 1;
-      });
-
-      test('if pageSize is undefined', () => {
-        component.pageSize = undefined;
-        expect(component.getIndex(1)).toBe(6);
-      });
-
-      test('if pageSize is defined', () => {
-        component.pageSize = 10;
-        expect(component.getIndex(1)).toBe(11);
-      });
-    });
-  });
-
   describe('configSorting()', () => {
     beforeEach(() => {
-      component['source'] = new MatTableDataSource<User>([MOCK_USER]);
+      component['source'] = new MatTableDataSource<User>(MOCK_LIST_USERS);
+      component['displayedColumns'] = mapped_column_keys;
+    });
+
+    test('should get the first property if no default key is passed in', () => {
+      component.defaultSortColumn = undefined;
+      component['configSorting']();
+      expect(component.defaultSortColumn).toEqual(key_id.key);
     });
 
     test('should config sorting correctly', () => {
-      component.columns = [key_id];
-      component.defaultSortColumn = 'id';
-
+      component.defaultSortColumn = key_id.key;
       component['configSorting']();
       expect(component['source'].sort).toEqual(component['matSort']);
     });
 
     test('show error if the provided key does not exist in columns declaration', () => {
-      component.columns = [key_id];
       component.defaultSortColumn = 'test';
-
       expect(() => component['configSorting']()).toThrow('The provided default key for sorting does not exist in the column declaration.');
     });
   });
@@ -153,42 +155,20 @@ describe('CustomTableComponent', () => {
   });
 
   describe('configDisplayColumns()', () => {
-    describe('if [enableCheckbox] is true (select column will be the first column on data table)', () => {
-      beforeEach(() => {
-        component.enableCheckbox = true;
-      });
-
-      test('should add the select column if it does not exist', () => {
-        component.columns = [key_id];
-        component['source'] = new MatTableDataSource<User>([MOCK_USER]);
-
-        component['configDisplayColumns']();
-
-        expect(component.displayColumns).toEqual([component.select, 'id']);
-        expect(component.columns).toEqual([key_select, key_id]);
-      });
-
-      test('should remove the select column if no data configured or no data found', () => {
-        component.columns = [key_select, key_id];
-        component['source'] = new MatTableDataSource<User>([]);
-
-        component['configDisplayColumns']();
-
-        expect(component.displayColumns).toEqual(['id']);
-        expect(component.columns).toEqual([key_id]);
-      });
+    beforeEach(() => {
+      component['displayedColumns'] = mapped_column_keys;
     });
 
-    describe('if [enableCheckbox] is false', () => {
-      test('should not add select key into the columns declaration', () => {
-        component.columns = [key_id];
-        component.enableCheckbox = false;
+    test('should add the [select] column if [enableCheckbox] is truthy', () => {
+      component.enableCheckbox = true;
+      component['configDisplayColumns']();
+      expect(component['displayedColumns']).toEqual([component.select, key_id.key]);
+    });
 
-        component['configDisplayColumns']();
-
-        expect(component.displayColumns).toEqual(['id']);
-        expect(component.columns).toEqual([key_id]);
-      });
+    test('should add the [select] column if [enableExpansion] is truthy', () => {
+      component.enableExpansion = true;
+      component['configDisplayColumns']();
+      expect(component['displayedColumns']).toEqual([component.expand, component.select, key_id.key]);
     });
   });
 

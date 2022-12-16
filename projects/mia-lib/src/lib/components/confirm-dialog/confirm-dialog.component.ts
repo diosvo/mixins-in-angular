@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, Inject, TemplateRef } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -16,7 +16,10 @@ export type Dialog = Required<Pick<IDialog, 'title'>> & Partial<Omit<IDialog, 't
   selector: 'confirm-dialog',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    TitleCasePipe,
+    NgTemplateOutlet,
+
     MatDialogModule,
     MatButtonModule,
   ],

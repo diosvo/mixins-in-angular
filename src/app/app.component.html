@@ -2,12 +2,10 @@
   *ngIf="{
     footer: footer$ | async,
     toolbar: toolbar$ | async,
-    loading: loaderService.loading$ | async,
     loggedIn: authService.isLoggedIn$ | async
   } as vm"
 >
   <toolbar *ngIf="vm.toolbar"></toolbar>
-  <mat-progress-bar *ngIf="vm.loading" mode="indeterminate"></mat-progress-bar>
   <router-outlet></router-outlet>
   <app-footer *ngIf="vm.loggedIn && vm.footer"></app-footer>
 </ng-container>

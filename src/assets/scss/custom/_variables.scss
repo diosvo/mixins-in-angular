@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
+
+// typography
+
+$font-family: "Manrope", -apple-system, "BlinkMacSystemFont", system-ui,
+  "Roboto", "Segoe UI", "Helvetica Neue", sans-serif;
+$font-style: normal;
+$font-size: 0.8125rem;
+$line-height: 1.25rem;
+$font-text: normal $font-size $line-height $font-family;
+
+// palette
+
+$primary: (
+  50: #e8ebf9,
+  100: #c4cbef,
+  200: #9daae5,
+  300: #7489db,
+  400: #526ed3,
+  500: #2b54cb,
+  600: #244cc0,
+  700: #1741b4,
+  800: #0637a8,
+  900: #002592,
+
+  contrast: (),
+);
+
+$accent: (
+  50: #fbe9e7,
+  100: #ffccbc,
+  200: #ffaa91,
+  300: #ff8965,
+  400: #ff6f43,
+  500: #ff5522,
+  600: #f44f1e,
+  700: #e64819,
+  800: #d84115,
+  900: #bf340c,
+
+  contrast: (),
+);

@@ -1,10 +1,8 @@
-@use 'main';
-
 *,
 *::before,
 *::after {
-  padding   : 0;
-  margin    : 0;
+  padding: 0;
+  margin: 0;
   box-sizing: inherit;
 }
 
@@ -13,8 +11,7 @@ html {
 }
 
 body {
-  background-color: #F0F2F5;
-  font: var(--font-text);
+  background-color: var(--base-02);
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,4 +28,9 @@ ul {
   a {
     text-decoration: none;
   }
+}
+
+// override class when using mat-button-icon with @mdi/font
+.mat-form-field-suffix {
+  top: -0.25em !important;
 }

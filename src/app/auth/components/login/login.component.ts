@@ -1,7 +1,13 @@
+import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@auth/services/auth.service';
+import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
+import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { LazyImageDirective } from '@lib/directives/lazy-image.directive';
 import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
 import isEqual from 'lodash.isequal';
 import { BehaviorSubject, catchError, EMPTY, finalize, Observable, take } from 'rxjs';
@@ -17,6 +23,21 @@ type TMode = Lowercase<keyof typeof EMode>
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
+    ReactiveFormsModule,
+
+    MatDialogModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+
+    LazyImageDirective,
+    CustomInputComponent,
+    CustomButtonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
@@ -109,7 +130,7 @@ export class LoginComponent {
         finalize(() => this.dialogRef.close())
       )
       .subscribe({
-        next: () => this.dialogRef.close()
+        // next: () => this.dialogRef.close()
       });
   }
 }

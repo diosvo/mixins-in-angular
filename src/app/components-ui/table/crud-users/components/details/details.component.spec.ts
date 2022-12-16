@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MOCK_USER } from '@lib/services/users/user.mock';
+import { MOCK_USER } from '@lib/mocks/json-placeholder/user.mock';
 import { of } from 'rxjs';
 import { DetailsComponent } from './details.component';
 
@@ -38,7 +38,7 @@ describe('DetailsComponent', () => {
   describe('ngOnInit() to set up component after page load', () => {
     test('should map value when  the user clicks on Edit button', (done) => {
       component.ngOnInit();
-      component.user$.subscribe(() => {
+      component['user$'].subscribe(() => {
         expect(mockService.loadFromApiAndFillForm$).toBeCalledWith(mockDialogData.user);
         done();
       });
@@ -50,7 +50,7 @@ describe('DetailsComponent', () => {
         isEdit: false
       };
       component.ngOnInit();
-      component.user$.subscribe(() => {
+      component['user$'].subscribe(() => {
         expect(mockService.initializeValue$).toBeCalled();
         done();
       });

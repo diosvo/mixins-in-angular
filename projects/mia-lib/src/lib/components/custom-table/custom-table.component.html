@@ -1,4 +1,4 @@
-<main class="bg-white bd-auto m-2 p-2">
+<main class="bg-white bd-auto bs-light m-2 p-2">
   <ng-content select="[header]"></ng-content>
   <ng-content select="[filters]"></ng-content>
 
@@ -13,91 +13,129 @@
       [matSortActive]="defaultSortColumn"
       (matSortChange)="sortTable($event)"
       [matSortDirection]="defaultSortDirection"
+      [multiTemplateDataRows]="enableExpansion"
     >
+      <!-- Expansion -->
+      <ng-container matColumnDef="expand">
+        <mat-header-cell *matHeaderCellDef aria-label="row actions">
+          &nbsp;
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let row"
+          class="cursor-pointer"
+          aria-label="expand row"
+          (click)="row.isExpanded = !row.isExpanded"
+        >
+          <i
+            *ngIf="row.isExpanded"
+            class="mdi mdi-unfold-more-horizontal text-error"
+          ></i>
+          <i
+            *ngIf="!row.isExpanded"
+            class="mdi mdi-unfold-less-horizontal text-secondary"
+          ></i>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <mat-cell
+          *matCellDef="let row"
+          [attr.colspan]="displayedColumns.length"
+          [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'"
+        >
+          <ng-container
+            [ngTemplateOutlet]="expandedTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: row
+            }"
+          ></ng-container>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Checkbox selection -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef [class.px-2]="enableExpansion">
+          <mat-checkbox
+            color="warn"
+            ariaLabel="select all"
+            (change)="
+              $event ? masterToggle() : null;
+              selectedRows.emit(selection.selected)
+            "
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" [class.px-2]="enableExpansion">
+          <mat-checkbox
+            color="primary"
+            ariaLabel="selected row"
+            (click)="$event.stopPropagation()"
+            (change)="
+              $event ? selection.toggle(row) : null;
+              selectedRows.emit(selection.selected)
+            "
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Column declaration -->
       <ng-container
         *ngFor="let column of columns; let idx = index"
         [matColumnDef]="column.key"
         [stickyEnd]="column.key === actions"
       >
-        <ng-container
-          *ngIf="column.key === select; then checkbox; else noCheckbox"
-        ></ng-container>
-
-        <!-- Checkbox -->
-        <ng-template #checkbox>
-          <mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              color="warn"
-              (change)="
-                $event ? masterToggle() : null;
-                selectedRows.emit(selection.selected)
-              "
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-            >
-            </mat-checkbox>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let row">
-            <mat-checkbox
-              color="primary"
-              (click)="$event.stopPropagation()"
-              (change)="
-                $event ? selection.toggle(row) : null;
-                selectedRows.emit(selection.selected)
-              "
-              [checked]="selection.isSelected(row)"
-            >
-            </mat-checkbox>
-          </mat-cell>
-        </ng-template>
-
-        <!-- No Checkbox -->
-        <ng-template #noCheckbox>
-          <mat-header-cell
-            *matHeaderCellDef
-            disableClear
-            mat-sort-header
-            [style.flex]="column.flex"
-            [disabled]="
-              !source.data.length ||
-              column.disableSorting ||
-              column.key === actions
-            "
-          >
-            <span [class.truncate-cell]="column.truncate ?? true">
-              {{ column.header || column.key | uppercase }}
-            </span>
-          </mat-header-cell>
-          <mat-cell
-            *matCellDef="let row; let idx = index"
-            [style.flex]="column.flex"
-            [matTooltip]="column.tooltip ? row[column.key] : null"
-            [id]="column.key + '-row-' + getIndex(idx)"
-          >
-            <span [class.truncate-cell]="column.truncate ?? true">
-              <ng-container
-                [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
-                [ngTemplateOutletContext]="{
-                  $implicit: row,
-                  index: getIndex(idx)
-                }"
-              ></ng-container>
-            </span>
-            <ng-template #noTemplates>
-              <span
-                [highlight]="highlight"
-                [innerHTML]="row[column.key]"
-              ></span>
-            </ng-template>
-          </mat-cell>
-        </ng-template>
+        <mat-header-cell
+          *matHeaderCellDef
+          disableClear
+          mat-sort-header
+          [style.flex]="column.flex"
+          [disabled]="
+            !source.data.length ||
+            column.disableSorting ||
+            column.key === actions
+          "
+        >
+          <span [class.truncate-cell]="column.truncate ?? true">
+            {{ column.header || column.key | uppercase }}
+          </span>
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let row; let idx = index"
+          [style.flex]="column.flex"
+          [matTooltip]="column.tooltip ? row[column.key] : null"
+        >
+          <span [class.truncate-cell]="column.truncate ?? true">
+            <ng-container
+              [ngTemplateOutlet]="columnTemplates[column.key] || noTemplates"
+              [ngTemplateOutletContext]="{ $implicit: row }"
+            ></ng-container>
+          </span>
+          <ng-template #noTemplates>
+            <span [highlight]="highlight" [innerHTML]="row[column.key]"></span>
+          </ng-template>
+        </mat-cell>
       </ng-container>
 
+      <!-- Define columns -->
       <mat-header-row
-        *matHeaderRowDef="displayColumns; sticky: true"
+        *matHeaderRowDef="displayedColumns; sticky: true"
       ></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
-
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <ng-container *ngIf="enableExpansion">
+        <mat-row
+          *matRowDef="let row; columns: ['expandedDetail']"
+          [class.py-2]="row.isExpanded"
+          [class.visibility-hidden]="!row.isExpanded"
+          [style]="{
+            'min-height': row.isExpanded ? '' : '0',
+            'border-bottom': row.isExpanded ? '' : 'none'
+          }"
+        ></mat-row>
+      </ng-container>
       <ng-content *matNoDataRow select="[noData]"></ng-content>
     </mat-table>
   </div>

@@ -10,13 +10,13 @@
         <svg class="icon icon-light w-32 h-32">
           <use attr.href="assets/svg/icons.svg#{{ item.icon }}"></use>
         </svg>
-        <a class="nav__link opacity-0 visibility-hidden fw-500 text-secondary">
+        <a class="nav__link opacity-0 visibility-hidden text-secondary">
           {{ item.title }}
         </a>
       </li>
       <div
         [style]="animate"
-        class="slider position-absolute top-0 bg-light-blue bd-radius-12"
+        class="slider position-absolute top-0 bg-primary bd-radius-12"
       ></div>
     </ng-container>
   </ul>

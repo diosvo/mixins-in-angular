@@ -1,5 +1,3 @@
-@use "palette";
-
 button {
   outline: none;
   border: 0;
@@ -22,16 +20,4 @@ button {
   &-prevent:hover {
     cursor: not-allowed;
   }
-}
-
-.btn {
-  &-circle {
-    border-radius: 50%;
-  }
-}
-
-// Override AM
-
-.mat-icon-button.mat-button-disabled {
-  cursor: not-allowed !important;
 }

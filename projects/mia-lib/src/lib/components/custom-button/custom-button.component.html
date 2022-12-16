@@ -32,7 +32,7 @@
     data-toggle="tooltip"
     [title]="tooltip"
   >
-    <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
+    <i [style.line-height]="'unset'" class="mdi" [class]="iconClass"></i>
   </button>
 </ng-container>
 
@@ -43,19 +43,11 @@
       *ngTemplateOutlet="icon?.template || defaultLoader"
     ></ng-container>
     <ng-template #defaultLoader>
-      <mat-icon>
-        <mat-spinner diameter="20" color="accent"> </mat-spinner>
-      </mat-icon>
+      <i class="mdi mdi-loading mdi-spin mdi-18px text-white"></i>
     </ng-template>
   </ng-container>
   <ng-template #notLoading>
     <!-- default label -->
     <ng-content></ng-content>
   </ng-template>
-</ng-template>
-
-<ng-template #iconTemplate>
-  <mat-icon [class]="iconClass">
-    <ng-content select="[icon]"> </ng-content>
-  </mat-icon>
 </ng-template>

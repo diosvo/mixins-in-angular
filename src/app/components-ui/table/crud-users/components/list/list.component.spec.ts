@@ -1,7 +1,8 @@
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@lib/components/confirm-dialog/confirm-dialog.component';
+import { MOCK_LIST_USERS, MOCK_USER } from '@lib/mocks/json-placeholder/user.mock';
+import { User } from '@lib/models/json-placeholder/user.model';
 import { EAction } from '@lib/models/table';
-import { MOCK_LIST_USERS, MOCK_USER } from '@lib/services/users/user.mock';
 import { of } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';
 import { ListComponent } from './list.component';
@@ -59,7 +60,7 @@ describe('ListComponent', () => {
     });
 
     test('should open dialog to create new user', () => {
-      component.onBulk({});
+      component.onBulk({} as User);
       expect(mockDialog.open).toBeCalledWith(DetailsComponent, {
         data: {
           user: {},
@@ -99,17 +100,18 @@ describe('ListComponent', () => {
       });
 
       test('should delete multiple users', () => {
-        component.onDelete(MOCK_LIST_USERS);
+        const DUPLICATE_USERS = MOCK_LIST_USERS.concat(MOCK_USER);
+        component.onDelete(DUPLICATE_USERS);
         expect(mockDialog.open).toBeCalledWith(ConfirmDialogComponent, {
           data: {
             title: 'Delete',
             template: component['selectionRef'],
-            details: MOCK_LIST_USERS
+            details: DUPLICATE_USERS
           },
           width: '450px',
           disableClose: true,
         });
-        expect(mockService.delete).toBeCalledWith(MOCK_LIST_USERS);
+        expect(mockService.delete).toBeCalledWith(DUPLICATE_USERS);
       });
     });
 

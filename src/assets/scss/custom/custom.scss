@@ -1,0 +1,51 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "./variables" as var;
+
+// typography
+
+$custom-typography: mat.define-typography-config(
+  $body-1: mat.define-typography-level(var.$font-size, 20px, 400),
+  $font-family: var.$font-family,
+);
+
+// palette
+
+$custom-primary: mat.define-palette(var.$primary, 400);
+$custom-accent: mat.define-palette(var.$accent, 400);
+
+$custom-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $custom-primary,
+      accent: $custom-accent,
+    ),
+  )
+);
+
+// config
+
+@include mat.core($custom-typography);
+@include mat.all-component-themes($custom-theme);
+
+// export global variables
+
+:root {
+  --font-text: #{var.$font-style var.$font-size var.$line-height
+    var.$font-family};
+  --primary: #{map-get($custom-primary, 400)};
+  --primary-active: #{#314692};
+  --base-01: #{#fff};
+  --base-02: #{#f6f6f6};
+  --base-03: #{#ededed};
+  --base-04: #{#d7d7d7};
+  --base-05: #{#b0b0b0};
+  --base-06: #{#959595};
+  --base-08: #{#333};
+  --text-01: #{#1b1f3b};
+  --text-02: #{rgba(27, 31, 59, 0.65)};
+  --text-03: #{rgba(27, 31, 59, 0.4)};
+  --link: #{map-get($custom-primary, 400)};
+  --link-hover: #{#6c86e2};
+  --error-fill: #{#f45725};
+}

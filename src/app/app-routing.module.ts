@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { EUrl } from '@home/models/url.enum';
 
-const routes: Routes = [
+export const APP_ROUTES: Routes = [
   {
     path: '', redirectTo: EUrl.COMPONENT, pathMatch: 'full',
   },
@@ -19,15 +17,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () =>
-      import('./home/components/page-not-found/page-not-found.module').then(({ PageNotFoundModule }) => PageNotFoundModule)
+    loadComponent: () =>
+      import('./home/components/page-not-found/page-not-found.component').then(({ PageNotFoundComponent }) => PageNotFoundComponent),
+    data: { toolbar: false, footer: false }
   }
 ];
-
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ]
-})
-export class AppRoutingModule { }

@@ -1,23 +1,29 @@
-<mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-100">
-  <ng-container *ngFor="let item of navigation; trackByKey">
+<mat-toolbar color="primary" class="d-flex position-sticky top-0 z-index-1000">
+  <img
+    lazyImg
+    class="height-inherit mr-1"
+    src="assets/images/logo/header.jpg"
+    alt="me"
+  />
+  <ng-container *ngFor="let item of navigation; trackByKey: 'path'">
     <custom-button
       variant="basic"
       class="opacity-0.5"
-      [routerLink]="['/', item]"
+      [routerLink]="['/', item.path]"
       routerLinkActive="opacity-1"
     >
-      {{ item | titlecase }}
+      {{ item.display_name }}
     </custom-button>
   </ng-container>
   <div class="flex-auto"></div>
   <ng-container *ngIf="loggedIn$ | async; else loginIcon">
     <custom-button
       variant="icon"
+      iconClass="f-24"
       tooltip="Sign out"
-      buttonClass="text-white"
+      iconClass="mdi-account-outline mdi-24px text-white"
       [matMenuTriggerFor]="options"
     >
-      <ng-container icon>person_outline</ng-container>
     </custom-button>
     <mat-menu #options="matMenu">
       <mat-card
@@ -27,6 +33,7 @@
       >
         <mat-card-header class="cursor-pointer" (click)="updateProfile()">
           <img
+            lazyImg
             mat-card-avatar
             [src]="user.photoURL ?? 'assets/images/blank-profile.png'"
           />
@@ -46,10 +53,13 @@
     <custom-button
       variant="icon"
       tooltip="Sign in"
-      buttonClass="text-white"
+      iconClass="mdi-fingerprint mdi-24px text-white"
       (click)="onLogin()"
     >
-      <ng-container icon>fingerprint</ng-container>
     </custom-button>
   </ng-template>
 </mat-toolbar>
+<mat-progress-bar
+  *ngIf="loaderService.loading$ | async"
+  mode="indeterminate"
+></mat-progress-bar>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgForOf, NgIf, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '@env/environment';
@@ -12,7 +12,10 @@ import { SnackbarService } from '@lib/services/snackbar/snackbar.service';
   selector: 'card-item',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    TitleCasePipe,
+
     HighlightDirective,
     TrackByKeyDirective
   ],

@@ -1,7 +1,8 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
+  AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,6 +25,7 @@ interface ColumnProperties {
   header: string;
   tooltip: boolean;
   truncate: boolean;
+  isExpanded: boolean;
   disableSorting: boolean;
 }
 
@@ -34,7 +36,13 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
   templateUrl: './custom-table.component.html',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgForOf,
+    NgClass,
+    TitleCasePipe,
+    UpperCasePipe,
+    NgTemplateOutlet,
+
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
@@ -45,6 +53,13 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
     HighlightDirective
   ],
   styleUrls: ['./custom-table.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -55,13 +70,18 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
 })
 
 export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
+
   /** Definitions: data */
 
   @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
-    this.configDisplayColumns();
-    this.configPaginator();
-    this.source.sort = this.matSort;
+    this.displayedColumns = this.columns.map(({ key }) => key);
+
+    if (source.length > 0) {
+      this.configDisplayColumns();
+      this.configPaginator();
+      this.configSorting();
+    }
   }
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];
@@ -97,9 +117,15 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   @Input() enableCheckbox = false;
   @Output() selectedRows = new EventEmitter<T[]>();
 
+  /* Expansion */
+
+  @Input() enableExpansion = false;
+  @ContentChild('expandedDetail') expandedTemplate: TemplateRef<ElementRef>;
+
   /** Constants */
 
   readonly select = 'select';
+  readonly expand = 'expand';
   readonly actions = 'actions';
 
   /** construct columns definitions  */
@@ -115,7 +141,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
     return {};
   }
-  displayColumns: string[];
+  protected displayedColumns: string[]; // columns declaration + able to add/ remove columns
 
   protected readonly DEFAULT_PAGESIZE = 5;
   protected source = new MatTableDataSource<T>([]);
@@ -129,18 +155,10 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.configColumnTemplates();
-    this.configSorting();
-    this.configPaginator();
   }
 
   private setDataSource(source: T[]): void {
     this.source = new MatTableDataSource<T>(source);
-  }
-
-  getIndex(index: number): number {
-    return this.length
-      ? index
-      : this.pageIndex * (this.pageSize ?? this.DEFAULT_PAGESIZE) + index;
   }
 
   sortTable(sort: MatSort): void {
@@ -149,9 +167,10 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   private configSorting(): void {
     this.source.sort = this.matSort;
-    const keys = this.columns.map(({ key }) => key);
 
-    if (this.defaultSortColumn && !keys.includes(this.defaultSortColumn)) {
+    if (isEmpty(this.defaultSortColumn)) {
+      this.defaultSortColumn = this.displayedColumns[0];
+    } else if (!this.displayedColumns.includes(this.defaultSortColumn)) {
       throw Error('The provided default key for sorting does not exist in the column declaration.');
     }
   }
@@ -162,21 +181,14 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
 
   private configDisplayColumns(): void {
-    const FIRST_INDEX = 0;
-    this.displayColumns = this.columns.map(({ key }) => key);
-
     if (this.enableCheckbox) {
-      // no exists yet
-      if (!this.displayColumns.includes(this.select)) {
-        this.displayColumns.splice(FIRST_INDEX, FIRST_INDEX, this.select);
-        this.columns.splice(FIRST_INDEX, FIRST_INDEX, {
-          key: this.select
-        });
+      if (!this.displayedColumns.includes(this.select)) {
+        this.displayedColumns.unshift(this.select);
       }
-      // no data configured or no data found
-      if (this.source.data.length < 1) {
-        this.displayColumns.splice(FIRST_INDEX, 1);
-        this.columns.splice(FIRST_INDEX, 1);
+    }
+    if (this.enableExpansion) {
+      if (!this.displayedColumns.includes(this.expand)) {
+        this.displayedColumns.unshift(this.expand);
       }
     }
   }
@@ -222,6 +234,3 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     return this.trackByKey ? item[this.trackByKey] : item;
   }
 }
-
-// 🛠 https://material.io/components/data-tables#usage
-// 🛠 https://carbondesignsystem.com/components/data-table/usage/

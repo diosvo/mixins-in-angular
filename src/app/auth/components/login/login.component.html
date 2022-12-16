@@ -7,6 +7,7 @@
       (click)="googleSignIn()"
     >
       <img
+        lazyImg
         width="16"
         class="mr-2"
         alt="google"
@@ -16,8 +17,9 @@
         Sign {{ mode$.value === mode.LOGIN ? "in" : "up" }} with Google
       </span>
     </custom-button>
-    <hr />
   </ng-container>
+
+  <mat-divider [style.margin]="'1rem -1.5rem'"></mat-divider>
 
   <ng-container>
     <!-- Fields -->
@@ -34,13 +36,15 @@
       <custom-button
         suffix
         variant="icon"
-        iconClass="text-secondary"
-        tooltip="{{ hidePassword ? 'View' : 'Hide' }}"
+        *ngIf="form.get('password').value"
+        [iconClass]="
+          hidePassword
+            ? 'mdi-eye-off-outline mdi-18px text-secondary'
+            : 'mdi-eye-outline mdi-18px text-secondary'
+        "
+        [tooltip]="hidePassword ? 'View' : 'Hide'"
         (click)="hidePassword = !hidePassword"
       >
-        <ng-container icon>
-          {{ hidePassword ? "visibility_off" : "visibility" }}
-        </ng-container>
       </custom-button>
     </custom-input>
 
@@ -52,12 +56,13 @@
       <a
         *ngIf="[mode.REGISTER, mode.FORGOT_PASSWORD].includes(mode$.value)"
         (click)="login()"
+        i18n
       >
         Already have an account?
       </a>
       <ng-container *ngIf="mode$.value === mode.LOGIN">
-        <a (click)="register()"> Don't have an account? </a>
-        <a (click)="forgotPassword()"> Forgot password? </a>
+        <a (click)="register()" i18n> Don't have an account? </a>
+        <a (click)="forgotPassword()" i18n> Forgot password? </a>
       </ng-container>
     </div>
 
@@ -71,9 +76,11 @@
         [disabled]="form.invalid || loading"
       >
         <ng-container [ngSwitch]="mode$.value">
-          <ng-container *ngSwitchCase="mode.LOGIN"> Login </ng-container>
-          <ng-container *ngSwitchCase="mode.REGISTER"> Register </ng-container>
-          <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD">
+          <ng-container *ngSwitchCase="mode.LOGIN" i18n> Login </ng-container>
+          <ng-container *ngSwitchCase="mode.REGISTER" i18n>
+            Register
+          </ng-container>
+          <ng-container *ngSwitchCase="mode.FORGOT_PASSWORD" i18n>
             Reset password
           </ng-container>
         </ng-container>

@@ -1,5 +1,5 @@
 <ng-container *ngIf="state$ | async as state">
-  <alert-message *ngIf="state.error" type="error">
+  <alert-message *ngIf="state.error" type="error" [hasBorder]="false">
     {{ state.error }}
   </alert-message>
 
@@ -18,18 +18,22 @@
         <mat-panel-description class="jc-flex-end">
           <custom-button
             variant="icon"
+            iconClass="mdi-notification-clear-all mdi-24px"
             tooltip="Clear all"
             (click)="form.reset()"
             *ngIf="clearAllIconActive()"
           >
-            <ng-container icon>clear_all</ng-container>
           </custom-button>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <!-- Content -->
       <ng-template matExpansionPanelContent>
-        <form [formGroup]="form" class="panel-container d-flex gap-1">
+        <form
+          [formGroup]="form"
+          name="functions"
+          class="panel-container d-flex gap-1"
+        >
           <custom-select
             [items]="selection"
             placeholder="Group"

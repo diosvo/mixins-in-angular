@@ -1,19 +1,16 @@
-<h2 mat-dialog-title>{{ state.isEdit ? "Edit" : "Create" }}</h2>
+<h2 mat-dialog-title i18n>{{ state.isEdit ? "Edit" : "Create" }}</h2>
 
 <mat-dialog-content *ngIf="user$ | async">
   <form [formGroup]="form">
-    <custom-input
-      label="Name"
-      [required]="true"
-      formControlName="name"
-    ></custom-input>
+    <custom-input label="Name" formControlName="name"></custom-input>
     <custom-input
       label="Email"
       type="email"
+      controlErrorContainer
       formControlName="email"
     ></custom-input>
     <mat-form-field class="width-100" appearance="standard">
-      <mat-label>Hobbies</mat-label>
+      <mat-label i18n>Hobbies</mat-label>
       <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
         <mat-chip
           *ngFor="let item of hobbies.value; let idx = index"
@@ -27,13 +24,12 @@
           [matChipInputFor]="chipList"
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addHobby($event)"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         />
       </mat-chip-list>
-      <mat-error *ngIf="hobbies.hasError('duplicate')">
+      <mat-error *ngIf="hobbies.hasError('duplicate')" i18n>
         Duplicated values.
       </mat-error>
-      <mat-error *ngIf="hobbies.hasError('invalid')">
+      <mat-error *ngIf="hobbies.hasError('invalid')" i18n>
         Value should be string
       </mat-error>
     </mat-form-field>
@@ -41,13 +37,14 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="gap-1">
-  <custom-button variant="outline" (click)="onSave(false)">
+  <custom-button variant="outline" (click)="onSave(false)" i18n>
     Close
   </custom-button>
   <custom-button
     variant="flat"
     (click)="onSave(true)"
     [disabled]="(hasChanged$ | async) === false || form.invalid"
+    i18n
   >
     Save
   </custom-button>

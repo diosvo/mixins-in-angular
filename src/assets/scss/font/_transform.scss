@@ -1,23 +1,18 @@
-.text-deco {
-  &-none {
-    text-decoration: none;
-  }
+$-decorations: none, underline;
+$-transformations: none, uppercase, capitalize;
 
-  &-underline {
-    text-decoration: underline;
+.text-deco {
+  @each $item in $-decorations {
+    &-#{$item} {
+      text-decoration: $item;
+    }
   }
 }
 
 .text {
-  &-none {
-    text-transform: none;
-  }
-
-  &-uppercase {
-    text-transform: uppercase;
-  }
-
-  &-capitalize {
-    text-transform: capitalize;
+  @each $item in $-transformations {
+    &-#{$item} {
+      text-transform: $item;
+    }
   }
 }

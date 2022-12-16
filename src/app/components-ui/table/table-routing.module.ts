@@ -8,12 +8,6 @@ export const TABLE_ROUTES: Routes = [
     title: 'Angular Github Issues'
   },
   {
-    path: 'advanced-crud',
-    loadComponent: () =>
-      import('./advanced-crud/components/advanced-crud/advanced-crud.component').then(({ AdvancedCrudComponent }) => AdvancedCrudComponent),
-    title: 'Mat-table: Advanced CRUD',
-  },
-  {
     path: 'crud-users',
     loadComponent: () =>
       import('./crud-users/components/list/list.component').then(({ ListComponent }) => ListComponent),

@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
+import { State } from '@lib/models/server.model';
 import { BaseService } from '@lib/services/base/base.service';
 import { ErrorHandlerService } from '@lib/services/base/error-handler.service';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, pluck, startWith } from 'rxjs';
 
 export interface Issue {
   id: number;
@@ -19,14 +20,22 @@ export interface Issue {
   }[]
 }
 
-export interface ResponseApi {
-  items: Issue[];
-  total_count: number;
+interface Option {
+  label: string;
+  value: unknown;
 }
 
 @Injectable()
+export class GithubRepoIssuesService extends BaseService<{ items: Issue[] }> {
 
-export class GithubRepoIssuesService extends BaseService<ResponseApi> {
+  readonly FILTERS_OPTIONS: Record<string, Option[]> = {
+    states: [
+      { label: 'Open', value: 'is:\open' },
+      { label: 'Closed', value: 'is:\closed' }
+    ]
+  };
+
+  readonly DEFAULT_STATES = this.FILTERS_OPTIONS.states.map(({ value }) => value).join(' ');
 
   constructor(
     protected readonly http: HttpClient,
@@ -35,12 +44,23 @@ export class GithubRepoIssuesService extends BaseService<ResponseApi> {
     super(http, handle);
   }
 
-  getRepoIssues(params: Params): Observable<ResponseApi> {
-    const { page, states } = params;
+  getRepoIssues(queries: Params): Observable<State<Issue>> {
+    const { states, page } = queries;
 
-    const base_url = `https://api.github.com/search/issues?q=${states.join().replace(',', ' ')}`;
-    const request_api = page ? base_url.concat(`&page=${+page + 1}`) : base_url;
+    const params = {
+      page: page + 1,
+      q: states,
+    };
 
-    return this.get(request_api);
+    if (typeof states === 'object') {
+      params.q = this.DEFAULT_STATES;
+    }
+
+    return this.list('https://api.github.com/search/issues', params).pipe(
+      pluck(('items')),
+      map((data: Issue[]) => ({ data, loading: false })),
+      catchError(({ message }) => of({ data: [], message, loading: false })),
+      startWith({ data: [], loading: true }),
+    );
   }
 }

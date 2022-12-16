@@ -6,11 +6,19 @@
     "mixins-in-angular": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        },
         "@schematics/angular:application": {
           "strict": true
+        },
+        "@schematics/angular:component": {
+          "style": "scss",
+          "standalone": true,
+          "changeDetection": "OnPush"
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
+        },
+        "@schematics/angular:directive": {
+          "standalone": true
         }
       },
       "root": "",
@@ -35,7 +43,10 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "./node_modules/@mdi/font/css/materialdesignicons.css",
+              "src/styles.scss",
+              "src/assets/scss/main.scss",
+              "src/assets/scss/custom/custom.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

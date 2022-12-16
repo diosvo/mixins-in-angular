@@ -55,7 +55,8 @@ describe('UnsavedChangesGuard', () => {
       component = {
         internalNavigation: false,
         canDeactivate: jest.fn().mockReturnValue(false),
-        saveChanges: jest.fn()
+        saveChanges: jest.fn(),
+        discardChanges: jest.fn(),
       };
     });
 
@@ -98,7 +99,8 @@ describe('UnsavedChangesGuard', () => {
       const component = {
         internalNavigation: false,
         canDeactivate: jest.fn().mockReturnValue(true),
-        saveChanges: jest.fn()
+        saveChanges: jest.fn(),
+        discardChanges: jest.fn(),
       };
       guard.canDeactivate(component).subscribe({
         next: (changes: boolean) => {
@@ -113,7 +115,8 @@ describe('UnsavedChangesGuard', () => {
       const component = {
         internalNavigation: true,
         canDeactivate: jest.fn().mockReturnValue(true),
-        saveChanges: jest.fn()
+        saveChanges: jest.fn(),
+        discardChanges: jest.fn(),
       };
       guard.canDeactivate(component).subscribe({
         next: (changes: boolean) => {

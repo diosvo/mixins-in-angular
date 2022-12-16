@@ -1,5 +1,3 @@
-@use "palette";
-
 $-easeCubic: cubic-bezier(0.65, 0, 0, 1);
 
 @keyframes nav-interaction {
@@ -36,7 +34,7 @@ $-easeCubic: cubic-bezier(0.65, 0, 0, 1);
       }
 
       .icon {
-        fill: palette.$light-blue;
+        fill: var(--primary);
         animation: nav-interaction 0.4s;
         animation-iteration-count: 1;
       }

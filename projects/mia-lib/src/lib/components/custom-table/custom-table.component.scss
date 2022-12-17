@@ -1,9 +1,19 @@
 @import "layout/breakpoints";
 
+$-border: 1px solid var(--base-03);
+
+@mixin fixed() {
+  position: fixed;
+  left: 0;
+  right: 0;
+
+  z-index: 2;
+}
+
 .custom-table {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--base-03);
+  border: $-border;
 
   mat-table {
     overflow: auto;
@@ -11,6 +21,13 @@
     // Header
 
     mat-header {
+      &-row.fixed {
+        @include fixed();
+        top: 64px; // toolbar height
+        padding-inline: 2rem;
+        box-shadow: 0 0.125rem 1rem var(--base-03);
+      }
+
       &-cell.mat-column {
         &-expand,
         &-select {
@@ -80,7 +97,7 @@
 }
 
 .custom-pagination {
-  border: 1px solid var(--base-03);
+  border: $-border;
   border-top: none;
 }
 

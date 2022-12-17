@@ -15,6 +15,7 @@
     [data]="filtered_data"
     [columns]="columns"
     [highlight]="query.value"
+    [pageSizeOptions]="[5, 10]"
     [defaultSortColumn]="'name'"
     [enableCheckbox]="true"
     (selectedRows)="selection = $event"

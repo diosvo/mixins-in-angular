@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
-import { NgClass, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, Output, QueryList, TemplateRef, ViewChild
@@ -8,7 +8,7 @@ import {
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatHeaderRow, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Required } from '@lib/decorators/required-attribute';
 import { HighlightDirective } from '@lib/directives/highlight.directive';
@@ -17,6 +17,7 @@ import { SlugifyPipe } from '@lib/pipes/slugify.pipe';
 import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
+import { distinctUntilChanged, fromEvent, map, Observable } from 'rxjs';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 interface ColumnProperties {
@@ -35,19 +36,21 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
   templateUrl: './custom-table.component.html',
   standalone: true,
   imports: [
+    /* @angular */
     NgIf,
     NgForOf,
     NgClass,
+    AsyncPipe,
     TitleCasePipe,
     UpperCasePipe,
     NgTemplateOutlet,
-
+    /* @material */
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatPaginatorModule,
-
+    /* @lib */
     SlugifyPipe,
     HighlightDirective
   ],
@@ -78,12 +81,17 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
   @Input() trackByKey: string;
   @Input() @Required columns: TableColumn[] = [];
-  @ViewChild('table', { read: ElementRef }) private tableRef: ElementRef;
+  @ViewChild('table', { read: ElementRef }) private readonly tableRef: ElementRef;
 
   /** Styles */
 
   @Input() highlight: string;
   @Input() style: Record<string, unknown>;
+
+  /** Header */
+
+  protected fixedHeader$: Observable<boolean>;
+  @ViewChild(MatHeaderRow, { read: ElementRef }) private readonly headerRef: ElementRef;
 
   /** Pagination */
 
@@ -136,7 +144,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
   protected displayedColumns: string[]; // columns declaration + able to add/ remove columns
 
-  protected readonly DEFAULT_PAGESIZE = 5;
+  protected readonly DEFAULT_PAGESIZE = 10;
   protected source = new MatTableDataSource<T>([]);
   protected selection = new SelectionModel<T>(true, []); // store selection data
 
@@ -147,8 +155,13 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.fixedHeader$ = this.isFixed$();
     this.configColumnTemplates();
   }
+
+  /**
+   * @description Configurations
+   */
 
   private setDataSource(source: T[]): void {
     this.source = new MatTableDataSource<T>(source);
@@ -225,5 +238,16 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   trackByFn(_: number, item: T): T {
     // TODO: can not get trackByKey even thought we already declare it in specific component
     return this.trackByKey ? item[this.trackByKey] : item;
+  }
+
+  /**
+   * @description Utils
+   */
+
+  private isFixed$(): Observable<boolean> {
+    return fromEvent(window, 'scroll').pipe(
+      map(() => window.scrollY > this.headerRef.nativeElement.offsetTop),
+      distinctUntilChanged()
+    );
   }
 }

@@ -9,7 +9,7 @@ import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/
 import { Comment } from '@lib/models/json-placeholder/comment.model';
 import { LineBreakPipe } from '@lib/pipes/line-break.pipe';
 import { DestroyService } from '@lib/services/destroy/destroy.service';
-import { defaultIfEmpty, map, merge, mergeMap, Observable, skip, Subject, switchMap, take, takeUntil } from 'rxjs';
+import { map, merge, mergeMap, Observable, skip, startWith, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { AdvancedCachingService } from '../../services/advanced-caching.service';
 
 @Component({
@@ -85,7 +85,7 @@ export class AdvancedCachingComponent implements OnInit, OnDestroy {
   }
 
   private getCommentsOnce(): Observable<Comment[]> {
-    return this.service.comments.pipe(take(1), defaultIfEmpty([]));
+    return this.service.comments.pipe(take(1), startWith([]));
   }
 
   ngOnDestroy(): void {

@@ -15,12 +15,12 @@
   [columns]="columns"
   [defaultSortColumn]="'id'"
 >
-  <div header class="d-flex ai-baseline jc-between">
+  <ng-container header>
     <h2>Advanced Caching</h2>
     <custom-button variant="flat" (click)="forceReload()">
       Refresh
     </custom-button>
-  </div>
+  </ng-container>
 
   <custom-column columnName="body">
     <ng-template let-comment>

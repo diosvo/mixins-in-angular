@@ -21,7 +21,7 @@
     (selectedRows)="selection = $event"
     [enableExpansion]="true"
   >
-    <div header class="d-flex ai-baseline jc-between">
+    <ng-container header>
       <h2>List Users</h2>
       <custom-button
         variant="flat"
@@ -32,7 +32,7 @@
       >
         Create User
       </custom-button>
-    </div>
+    </ng-container>
 
     <div filters>
       <ng-container *ngIf="selection.length > 0; else searchingTemplate">

@@ -5,8 +5,11 @@ import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, Input,
   OnChanges, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
 import { MatHeaderRow, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -18,6 +21,7 @@ import isEmpty from 'lodash.isempty';
 import isEqual from 'lodash.isequal';
 import isUndefined from 'lodash.isundefined';
 import { distinctUntilChanged, fromEvent, map, Observable } from 'rxjs';
+import { CustomButtonComponent } from '../custom-button/custom-button.component';
 import { TableColumnDirective } from './custom-table-abstract.directive';
 
 interface ColumnProperties {
@@ -44,15 +48,19 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
     TitleCasePipe,
     UpperCasePipe,
     NgTemplateOutlet,
+    ReactiveFormsModule,
     /* @material */
     MatSortModule,
+    MatMenuModule,
     MatTableModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatPaginatorModule,
+    MatSlideToggleModule,
     /* @lib */
     SlugifyPipe,
-    HighlightDirective
+    HighlightDirective,
+    CustomButtonComponent,
   ],
   styleUrls: ['./custom-table.component.scss'],
   animations: [
@@ -71,7 +79,6 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   @Input() @Required set data(source: T[]) {
     this.setDataSource(source);
-    this.displayedColumns = this.columns.map(({ key }) => key);
 
     if (source.length > 0) {
       this.configDisplayColumns();
@@ -125,6 +132,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
 
   /** Constants */
 
+  protected form: FormGroup;
   readonly select = 'select';
   readonly expand = 'expand';
   readonly actions = 'actions';
@@ -151,6 +159,10 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   ngOnChanges(changes: NgChanges<CustomTableComponent<T>>): void {
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
+    }
+    if (changes.columns && changes.columns.firstChange) {
+      this.displayedColumns = changes.columns.currentValue.map(({ key }) => key);
+      this.columnsToDisplay(this.displayedColumns);
     }
   }
 
@@ -203,6 +215,16 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     for (const column of this.columnDefs.toArray()) {
       this.columnTemplates[column.columnName] = column.columnTemplate;
     }
+  }
+
+  private columnsToDisplay(columns: string[]): void {
+    const controls = columns.reduce((accumulator, name, index) => {
+      const disabled = index < 1 || isEqual(name, this.actions);
+      // do not change the position of the first and last column
+      accumulator[name] = new FormControl({ value: true, disabled }, { nonNullable: true });
+      return accumulator;
+    }, {});
+    this.form = new FormGroup(controls);
   }
 
   onPageChanged(event: PageEvent): void {

@@ -1,5 +1,36 @@
 <main class="bg-white bd-auto bs-light m-2 p-2">
-  <ng-content select="[header]"></ng-content>
+  <div class="d-flex">
+    <div class="d-flex jc-between width-100">
+      <ng-content select="[header]"></ng-content>
+    </div>
+    <custom-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Show or hide columns"
+      class="ml-1 text-primary"
+      variant="outline"
+      tooltip="Show or hide columns"
+    >
+      [ | | ]
+    </custom-button>
+    <mat-menu #menu="matMenu">
+      <form [formGroup]="form">
+        <button
+          mat-menu-item
+          role="menuitem"
+          *ngFor="let control of columns"
+          [disabled]="form.get(control.key).disabled"
+        >
+          <mat-slide-toggle
+            color="primary"
+            [disableRipple]="true"
+            [formControlName]="control.key"
+          >
+            {{ control.key | titlecase }}
+          </mat-slide-toggle>
+        </button>
+      </form>
+    </mat-menu>
+  </div>
   <ng-content select="[filters]"></ng-content>
 
   <!-- Table -->
@@ -62,6 +93,7 @@
               $event ? masterToggle() : null;
               selectedRows.emit(selection.selected)
             "
+            [disabled]="source.data.length < 1"
             [checked]="selection.hasValue() && isAllSelected()"
             [indeterminate]="selection.hasValue() && !isAllSelected()"
           >
@@ -84,7 +116,7 @@
 
       <!-- Column declaration -->
       <ng-container
-        *ngFor="let column of columns; let idx = index"
+        *ngFor="let column of columns"
         [matColumnDef]="column.key"
         [stickyEnd]="column.key === actions"
       >
@@ -104,7 +136,7 @@
           </span>
         </mat-header-cell>
         <mat-cell
-          *matCellDef="let row; let idx = index"
+          *matCellDef="let row"
           [style.flex]="column.flex"
           [matTooltip]="column.tooltip ? row[column.key] : null"
         >

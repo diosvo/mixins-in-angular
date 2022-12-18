@@ -18,6 +18,7 @@ eg: create a basic custom select
     [items]="selection"
     placeholder="Group"
     formControlName="group"
+  >
   </custom-select>
 ```
 

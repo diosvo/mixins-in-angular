@@ -99,6 +99,10 @@ $-border: 1px solid var(--base-03);
 .custom-pagination {
   border: $-border;
   border-top: none;
+
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 @include screen("small") {

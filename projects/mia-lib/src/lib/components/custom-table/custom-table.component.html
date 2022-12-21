@@ -13,22 +13,33 @@
       [ | | ]
     </custom-button>
     <mat-menu #menu="matMenu">
-      <form [formGroup]="form">
-        <button
-          mat-menu-item
-          role="menuitem"
-          *ngFor="let control of columns"
-          [disabled]="form.get(control.key).disabled"
-        >
-          <mat-slide-toggle
-            color="primary"
-            [disableRipple]="true"
-            [formControlName]="control.key"
+      <div (click)="$event.stopPropagation()">
+        <form [formGroup]="form">
+          <button
+            mat-menu-item
+            role="menuitem"
+            *ngFor="let control of columns"
+            [disabled]="form.get(control.key).disabled"
           >
-            {{ control.key | titlecase }}
-          </mat-slide-toggle>
-        </button>
-      </form>
+            <mat-slide-toggle
+              color="primary"
+              [disableRipple]="true"
+              [formControlName]="control.key"
+            >
+              {{ control.key | titlecase }}
+            </mat-slide-toggle>
+          </button>
+        </form>
+      </div>
+
+      <div class="d-flex gap-1 px-1">
+        <custom-button variant="outline" (click)="form.reset()" i18n>
+          Cancel
+        </custom-button>
+        <custom-button variant="flat" (click)="onDisplayColumns()" i18n>
+          Apply
+        </custom-button>
+      </div>
     </mat-menu>
   </div>
   <ng-content select="[filters]"></ng-content>

@@ -1,5 +1,7 @@
 @import "./flex";
 
+$-visibilities: hidden, visible;
+
 .d {
   &-none {
     display: none;
@@ -49,8 +51,10 @@
 }
 
 .visibility {
-  &-hidden {
-    visibility: hidden;
+  @each $item in $-visibilities {
+    &-#{$item} {
+      visibility: $item;
+    }
   }
 }
 

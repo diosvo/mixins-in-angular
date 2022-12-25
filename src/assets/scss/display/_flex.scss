@@ -14,26 +14,26 @@ $-maximum: 3;
   }
 }
 
-$-justify-content: ('center': center,
-  'between': space-between,
-  'space-around': space-around,
-  'flex-end': flex-end,
+$-justify-content: (
+  "center": center,
+  "between": space-between,
+  "space-around": space-around,
+  "flex-end": flex-end,
 );
 
-@each $name,
-$position in $-justify-content {
+@each $name, $position in $-justify-content {
   .jc-#{$name} {
     justify-content: $position;
   }
 }
 
-$-align-items: ('center': center,
-  'baseline': baseline,
-  'flex-end': flex-end,
+$-align-items: (
+  "center": center,
+  "baseline": baseline,
+  "flex-end": flex-end,
 );
 
-@each $name,
-$position in $-align-items {
+@each $name, $position in $-align-items {
   .ai-#{$name} {
     align-items: $position;
   }

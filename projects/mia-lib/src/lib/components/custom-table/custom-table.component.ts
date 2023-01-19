@@ -161,7 +161,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }
     if (changes.columns && changes.columns.firstChange) {
-      this.displayedColumns = changes.columns.currentValue.map(({ key }) => key);
+      this.displayedColumns = changes.columns.currentValue.map(({ key }) => key).concat(this.actions);
       this.columnsToDisplay(this.displayedColumns);
     }
   }
@@ -231,9 +231,6 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     this.pageChanges.emit(event);
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    window.requestAnimationFrame(() =>
-      this.tableRef.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    );
   }
 
   /**

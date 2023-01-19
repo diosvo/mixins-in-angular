@@ -1,5 +1,13 @@
 $-icon-fill-light: #959595;
 
+$-colors: (
+  "action": var(--base-05),
+);
+
+$-colors-hover: (
+  "action-hover": var(--base-06),
+);
+
 .icon {
   &-dark {
     fill: var(--base-08);
@@ -7,5 +15,17 @@ $-icon-fill-light: #959595;
 
   &-light {
     fill: $-icon-fill-light;
+  }
+
+  @each $name, $color in $-colors {
+    &-#{$name} {
+      color: $color;
+    }
+  }
+
+  @each $name, $color in $-colors-hover {
+    &-#{$name}:hover {
+      color: $color;
+    }
   }
 }

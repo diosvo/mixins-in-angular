@@ -29,7 +29,6 @@ $-border: 1px solid var(--base-03);
       }
 
       &-cell.mat-column {
-        &-expand,
         &-select {
           flex: 2;
         }
@@ -64,7 +63,6 @@ $-border: 1px solid var(--base-03);
 
     mat-row {
       mat-cell.mat-column {
-        &-expand,
         &-select {
           flex: 2;
         }
@@ -80,7 +78,6 @@ $-border: 1px solid var(--base-03);
         mat-cell {
           &.mat-column-actions {
             visibility: visible;
-            color: var(--base-05);
           }
 
           &.mat-column-actions.mat-table-sticky {
@@ -120,4 +117,16 @@ $-border: 1px solid var(--base-03);
       }
     }
   }
+}
+
+/* Customize Material styles */
+
+.mat-menu-item {
+  display: flex;
+  justify-content: space-between;
+
+  height: 2rem;
+  line-height: 2rem;
+
+  font-size: 12px;
 }

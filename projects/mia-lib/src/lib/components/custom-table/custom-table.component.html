@@ -3,44 +3,6 @@
     <div class="d-flex jc-between width-100">
       <ng-content select="[header]"></ng-content>
     </div>
-    <custom-button
-      [matMenuTriggerFor]="menu"
-      aria-label="Show or hide columns"
-      class="ml-1 text-primary"
-      variant="outline"
-      tooltip="Show or hide columns"
-    >
-      [ | | ]
-    </custom-button>
-    <mat-menu #menu="matMenu">
-      <div (click)="$event.stopPropagation()">
-        <form [formGroup]="form">
-          <button
-            mat-menu-item
-            role="menuitem"
-            *ngFor="let control of columns"
-            [disabled]="form.get(control.key).disabled"
-          >
-            <mat-slide-toggle
-              color="primary"
-              [disableRipple]="true"
-              [formControlName]="control.key"
-            >
-              {{ control.key | titlecase }}
-            </mat-slide-toggle>
-          </button>
-        </form>
-      </div>
-
-      <div class="d-flex gap-1 px-1">
-        <custom-button variant="outline" (click)="form.reset()" i18n>
-          Cancel
-        </custom-button>
-        <custom-button variant="flat" (click)="onDisplayColumns()" i18n>
-          Apply
-        </custom-button>
-      </div>
-    </mat-menu>
   </div>
   <ng-content select="[filters]"></ng-content>
 
@@ -58,7 +20,7 @@
       [multiTemplateDataRows]="enableExpansion"
     >
       <!-- Expansion -->
-      <ng-container matColumnDef="expand">
+      <ng-container [matColumnDef]="expand">
         <mat-header-cell *matHeaderCellDef aria-label="row actions">
           &nbsp;
         </mat-header-cell>
@@ -95,7 +57,7 @@
       </ng-container>
 
       <!-- Checkbox selection -->
-      <ng-container matColumnDef="select">
+      <ng-container [matColumnDef]="select">
         <mat-header-cell *matHeaderCellDef [class.px-2]="enableExpansion">
           <mat-checkbox
             color="warn"
@@ -125,22 +87,59 @@
         </mat-cell>
       </ng-container>
 
-      <!-- Column declaration -->
-      <ng-container
-        *ngFor="let column of columns"
-        [matColumnDef]="column.key"
-        [stickyEnd]="column.key === actions"
-      >
+      <!-- On/off columns -->
+      <ng-container [matColumnDef]="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <custom-button
+            variant="icon"
+            tooltip="Columns configuration"
+            iconClass="mdi-table-edit mdi-18px text-primary text-link-hover"
+            [matMenuTriggerFor]="columnsConfiguration"
+          ></custom-button>
+          <mat-menu #columnsConfiguration="matMenu">
+            <div (click)="$event.stopPropagation()">
+              <ng-container [formGroup]="form">
+                <button mat-menu-item i18n>Unpin all columns</button>
+                <button mat-menu-item i18n>Show all columns</button>
+                <button
+                  [disableRipple]="true"
+                  *ngFor="let control of columns"
+                  [disabled]="form.get(control.key).disabled"
+                  mat-menu-item
+                >
+                  <mat-checkbox
+                    color="primary"
+                    [disableRipple]="true"
+                    ariaLabel="selected column"
+                    [formControlName]="control.key"
+                  >
+                    {{ control.key | titlecase }}
+                  </mat-checkbox>
+                  <i
+                    class="mdi mdi-dots-grid icon-action icon-action-hover cursor-pointer"
+                  ></i>
+                </button>
+              </ng-container>
+            </div>
+          </mat-menu>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <custom-button
+            variant="icon"
+            tooltip="Actions"
+            iconClass="mdi-dots-vertical icon-action icon-action-hover"
+          ></custom-button>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Columns declaration -->
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
         <mat-header-cell
           *matHeaderCellDef
           disableClear
           mat-sort-header
           [style.flex]="column.flex"
-          [disabled]="
-            !source.data.length ||
-            column.disableSorting ||
-            column.key === actions
-          "
+          [disabled]="!source.data.length || column.disableSorting"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
             {{ column.header || column.key | uppercase }}

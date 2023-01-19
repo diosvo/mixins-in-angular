@@ -1,13 +1,11 @@
 <div class="d-flex jc-between ai-center alert">
-  <span class="message min-width" [innerHTML]="data"></span>
-  <button
-    class="bg-none bd-circle w-32 height-32 ml-1"
+  <span class="message min-width">{{ data }}</span>
+  <custom-button
+    variant="icon"
     data-toggle="tooltip"
     title="Close message"
+    iconClass="mdi-close icon-action"
     (click)="snackBarRef.dismiss()"
   >
-    <span class="text-secondary f-24" [style]="{ 'font-family': 'wide-font' }">
-      &times;
-    </span>
-  </button>
+  </custom-button>
 </div>

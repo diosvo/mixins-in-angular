@@ -27,10 +27,11 @@ import { TableColumnDirective } from './custom-table-abstract.directive';
 interface ColumnProperties {
   flex: string;
   header: string;
+  expandable: boolean;
   tooltip: boolean;
   truncate: boolean;
-  isExpanded: boolean;
-  disableSorting: boolean;
+  sortable: boolean;
+  visible: boolean;
 }
 
 export type TableColumn = { key: string } & Partial<ColumnProperties>;
@@ -160,6 +161,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     if (changes.pageSizeOptions && changes.pageSizeOptions.currentValue) {
       this.pageSize = changes.pageSizeOptions.currentValue[0];
     }
+    // TODO: if there does not cache in/visible columns in local storage => get al columns by injected data
     if (changes.columns && changes.columns.firstChange) {
       this.displayedColumns = changes.columns.currentValue.map(({ key }) => key).concat(this.actions);
       this.columnsToDisplay(this.displayedColumns);
@@ -225,6 +227,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
       return accumulator;
     }, {});
     this.form = new FormGroup(controls);
+    this.modifyColumns();
   }
 
   onPageChanged(event: PageEvent): void {
@@ -234,7 +237,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   }
 
   /**
-   * @description Checkbox
+   * @returns Checkbox (first place at the table)
    */
 
   isAllSelected(): boolean {
@@ -257,6 +260,18 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   trackByFn(_: number, item: T): T {
     // TODO: can not get trackByKey even thought we already declare it in specific component
     return this.trackByKey ? item[this.trackByKey] : item;
+  }
+
+  /**
+   * @returns Columns configuration
+   */
+
+  modifyColumns(): void {
+    this.columns.forEach((column: TableColumn) => column.visible = this.form.getRawValue()[column.key]);
+  }
+
+  showAllColumns(unpin: boolean): void {
+    Object.keys(this.form.value).forEach((key: string) => this.form.patchValue({ [key]: unpin }));
   }
 
   /**

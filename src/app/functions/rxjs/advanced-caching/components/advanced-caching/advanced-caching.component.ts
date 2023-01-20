@@ -42,8 +42,8 @@ export class AdvancedCachingComponent implements OnInit, OnDestroy {
     { key: 'postId', flex: '10%' },
     { key: 'id', flex: '10%' },
     { key: 'name', flex: '30%' },
-    { key: 'email', flex: '20%', disableSorting: true, },
-    { key: 'body', flex: '50%', disableSorting: true, truncate: false },
+    { key: 'email', flex: '20%', sortable: true, },
+    { key: 'body', flex: '50%', sortable: true, truncate: false },
   ];
 
   constructor(

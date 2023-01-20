@@ -55,7 +55,6 @@ export class ListComponent implements OnInit {
     { key: 'name', flex: '20%' },
     { key: 'email', flex: '20%' },
     { key: 'phone', flex: '20%' },
-    { key: 'actions', flex: '15%', truncate: false },
   ];
 
   constructor(

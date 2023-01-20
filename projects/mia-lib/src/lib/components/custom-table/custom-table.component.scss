@@ -43,7 +43,11 @@ $-border: 1px solid var(--base-03);
 
     // Cell
 
-    mat-cell {
+    mat-cell,
+    mat-header-cell {
+      &.mat-column-actions {
+        right: 2rem;
+      }
     }
 
     // Text that is longer than the column width is truncated with an ellipsis

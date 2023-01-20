@@ -28,14 +28,14 @@
           *matCellDef="let row"
           class="cursor-pointer"
           aria-label="expand row"
-          (click)="row.isExpanded = !row.isExpanded"
+          (click)="row.expandable = !row.expandable"
         >
           <i
-            *ngIf="row.isExpanded"
+            *ngIf="row.expandable"
             class="mdi mdi-unfold-more-horizontal text-error"
           ></i>
           <i
-            *ngIf="!row.isExpanded"
+            *ngIf="!row.expandable"
             class="mdi mdi-unfold-less-horizontal text-secondary"
           ></i>
         </mat-cell>
@@ -45,7 +45,7 @@
         <mat-cell
           *matCellDef="let row"
           [attr.colspan]="displayedColumns.length"
-          [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'"
+          [@detailExpand]="row.expandable ? 'expanded' : 'collapsed'"
         >
           <ng-container
             [ngTemplateOutlet]="expandedTemplate"
@@ -89,18 +89,23 @@
 
       <!-- On/off columns -->
       <ng-container [matColumnDef]="actions">
-        <mat-header-cell *matHeaderCellDef>
+        <!-- Columns configuration -->
+        <mat-header-cell *matHeaderCellDef class="position-fixed">
           <custom-button
             variant="icon"
             tooltip="Columns configuration"
             iconClass="mdi-table-edit mdi-18px text-primary text-link-hover"
             [matMenuTriggerFor]="columnsConfiguration"
           ></custom-button>
-          <mat-menu #columnsConfiguration="matMenu">
+          <mat-menu #columnsConfiguration="matMenu" (closed)="modifyColumns()">
             <div (click)="$event.stopPropagation()">
               <ng-container [formGroup]="form">
-                <button mat-menu-item i18n>Unpin all columns</button>
-                <button mat-menu-item i18n>Show all columns</button>
+                <button mat-menu-item (click)="showAllColumns(false)" i18n>
+                  Unpin all columns
+                </button>
+                <button mat-menu-item (click)="showAllColumns(true)" i18n>
+                  Show all columns
+                </button>
                 <button
                   [disableRipple]="true"
                   *ngFor="let control of columns"
@@ -123,7 +128,9 @@
             </div>
           </mat-menu>
         </mat-header-cell>
-        <mat-cell *matCellDef="let row">
+
+        <!-- Row actions -->
+        <mat-cell *matCellDef="let row" class="position-fixed">
           <custom-button
             variant="icon"
             tooltip="Actions"
@@ -139,7 +146,8 @@
           disableClear
           mat-sort-header
           [style.flex]="column.flex"
-          [disabled]="!source.data.length || column.disableSorting"
+          [class.d-none]="!column.visible"
+          [disabled]="!source.data.length || column.sortable"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
             {{ column.header || column.key | uppercase }}
@@ -148,6 +156,7 @@
         <mat-cell
           *matCellDef="let row"
           [style.flex]="column.flex"
+          [class.d-none]="!column.visible"
           [matTooltip]="column.tooltip ? row[column.key] : null"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
@@ -172,11 +181,11 @@
       <ng-container *ngIf="enableExpansion">
         <mat-row
           *matRowDef="let row; columns: ['expandedDetail']"
-          [class.py-2]="row.isExpanded"
-          [class.visibility-hidden]="!row.isExpanded"
+          [class.py-2]="row.expandable"
+          [class.visibility-hidden]="!row.expandable"
           [style]="{
-            'min-height': row.isExpanded ? '' : '0',
-            'border-bottom': row.isExpanded ? '' : 'none'
+            'min-height': row.expandable ? '' : '0',
+            'border-bottom': row.expandable ? '' : 'none'
           }"
         ></mat-row>
       </ng-container>

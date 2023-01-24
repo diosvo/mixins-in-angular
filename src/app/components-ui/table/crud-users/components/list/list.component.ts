@@ -1,21 +1,22 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Params } from '@angular/router';
 import { AlertComponent } from '@lib/components/alert/alert.component';
 import { ConfirmDialogComponent, Dialog } from '@lib/components/confirm-dialog/confirm-dialog.component';
 import { CustomButtonComponent } from '@lib/components/custom-button/custom-button.component';
-import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
+import { CustomFiltersComponent } from '@lib/components/custom-filters/custom-filters.component';
 import { TableColumnDirective } from '@lib/components/custom-table/custom-table-abstract.directive';
 import { CustomTableComponent, TableColumn } from '@lib/components/custom-table/custom-table.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
 import { TrackByKeyDirective } from '@lib/directives/track-by-key.directive';
+import { Schema } from '@lib/models/filters.model';
 import { User } from '@lib/models/json-placeholder/user.model';
 import { EAction } from '@lib/models/table';
 import { FilterPipe } from '@lib/pipes/filter.pipe';
 import { UsersService } from '@lib/services/json-placeholder/users/users.service';
 import isEmpty from 'lodash.isempty';
-import { filter, take } from 'rxjs';
+import { filter, map, take } from 'rxjs';
 import { DetailsComponent } from '../details/details.component';
 
 @Component({
@@ -30,8 +31,8 @@ import { DetailsComponent } from '../details/details.component';
     AlertComponent,
     NoResultsComponent,
     CustomTableComponent,
-    CustomInputComponent,
     CustomButtonComponent,
+    CustomFiltersComponent,
     ConfirmDialogComponent,
     /* @lib/helpers */
     FilterPipe,
@@ -45,13 +46,24 @@ export class ListComponent implements OnInit {
 
   protected selection = [];
   readonly state$ = this.service.users_state$;
+  readonly params$ = this.route.queryParams.pipe(
+    map((params: Params) => ({
+      query: '',
+      ...params
+    }))
+  );
 
-  protected query = new FormControl('', { nonNullable: true });
+  readonly SCHEMA: Schema = {
+    query: {
+      multiple: null
+    }
+  };
+
   @ViewChild(CustomTableComponent) private readonly table: CustomTableComponent<User>;
-  @ViewChild('selectionTpl') private readonly selectionRef: TemplateRef<ElementRef>;
+  @ViewChild('selectionTemplate') private readonly selectionRef: TemplateRef<ElementRef>;
 
-  readonly columns: TableColumn[] = [
-    { key: 'id', flex: '10%' },
+  readonly COLUMNS: TableColumn[] = [
+    { key: 'id', flex: '5%' },
     { key: 'name', flex: '20%' },
     { key: 'email', flex: '20%' },
     { key: 'phone', flex: '20%' },
@@ -59,6 +71,7 @@ export class ListComponent implements OnInit {
 
   constructor(
     private readonly dialog: MatDialog,
+    private readonly route: ActivatedRoute,
     private readonly service: UsersService,
   ) { }
 

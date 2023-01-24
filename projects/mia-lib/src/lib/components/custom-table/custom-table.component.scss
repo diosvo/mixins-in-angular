@@ -27,12 +27,6 @@ $-border: 1px solid var(--base-03);
         padding-inline: 2rem;
         box-shadow: 0 0.125rem 1rem var(--base-03);
       }
-
-      &-cell.mat-column {
-        &-select {
-          flex: 2;
-        }
-      }
     }
 
     [aria-sort="ascending"],
@@ -42,13 +36,6 @@ $-border: 1px solid var(--base-03);
     }
 
     // Cell
-
-    mat-cell,
-    mat-header-cell {
-      &.mat-column-actions {
-        right: 2rem;
-      }
-    }
 
     // Text that is longer than the column width is truncated with an ellipsis
 
@@ -67,10 +54,6 @@ $-border: 1px solid var(--base-03);
 
     mat-row {
       mat-cell.mat-column {
-        &-select {
-          flex: 2;
-        }
-
         &-actions {
           visibility: hidden;
         }
@@ -115,9 +98,15 @@ $-border: 1px solid var(--base-03);
       min-width: 1024px;
       overflow: initial;
 
-      mat-cell.mat-column-actions.mat-table-sticky {
-        justify-content: flex-end;
-        background: var(--base-01) !important;
+      :is(mat-header-cell, mat-cell) {
+        &.mat-column-actions {
+          position: fixed;
+          right: 2rem;
+
+          padding: 0;
+          border-right: $-border;
+          background: var(--base-01);
+        }
       }
     }
   }

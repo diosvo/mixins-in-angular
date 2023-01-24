@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgClass, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, Input,
@@ -53,6 +54,7 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
     /* @material */
     MatSortModule,
     MatMenuModule,
+    DragDropModule,
     MatTableModule,
     MatTooltipModule,
     MatCheckboxModule,
@@ -88,8 +90,8 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
   }
   @Input() trackByKey: string;
+  @Input() enableReorderColumns = false;
   @Input() @Required columns: TableColumn[] = [];
-  @ViewChild('table', { read: ElementRef }) private readonly tableRef: ElementRef;
 
   /** Styles */
 
@@ -129,7 +131,7 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
   /* Expansion */
 
   @Input() enableExpansion = false;
-  @ContentChild('expandedDetail') expandedTemplate: TemplateRef<ElementRef>;
+  @ContentChild('expandedDetail') protected readonly expandedTemplate: TemplateRef<ElementRef>;
 
   /** Constants */
 
@@ -151,6 +153,8 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     }
     return {};
   }
+
+  @ContentChild('actions') protected readonly actionsTemplate: TemplateRef<ElementRef>;
   protected displayedColumns: string[]; // columns declaration + able to add/ remove columns
 
   protected readonly DEFAULT_PAGESIZE = 10;
@@ -270,8 +274,29 @@ export class CustomTableComponent<T> implements OnChanges, AfterViewInit {
     this.columns.forEach((column: TableColumn) => column.visible = this.form.getRawValue()[column.key]);
   }
 
-  showAllColumns(unpin: boolean): void {
-    Object.keys(this.form.value).forEach((key: string) => this.form.patchValue({ [key]: unpin }));
+  showAllColumns(all: boolean): void {
+    Object.keys(this.form.value).forEach((key: string) => this.form.patchValue({ [key]: all }));
+  }
+
+  changeColumnPosition(event: CdkDragDrop<T>): void {
+    // update position in dropdown selection
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+
+    // update view 
+    let fromIndex = event.previousIndex;
+    let toIndex = event.currentIndex;
+
+    if (this.displayedColumns.includes(this.expand)) {
+      fromIndex++;
+      toIndex++;
+    }
+    if (this.displayedColumns.includes(this.select)) {
+      fromIndex++;
+      toIndex++;
+    }
+
+    const element = this.displayedColumns.splice(fromIndex, 1)[0];
+    this.displayedColumns.splice(toIndex, 0, element);
   }
 
   /**

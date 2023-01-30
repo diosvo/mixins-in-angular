@@ -16,7 +16,7 @@
         class="position-relative d-flex ai-center max-width-content"
       >
         <i
-          class="mdi position-absolute fs-16 mdi-{{
+          class="mdi position-absolute mdi-18px mdi-{{
             property.value.searchIcon ?? 'magnify'
           }}"
         ></i>
@@ -28,13 +28,14 @@
           [formControlName]="property.key"
           [name]="'search-' + property.key"
           [placeholder]="property.value.searchPlaceholder ?? 'Search'"
+          (keyup)="updateFilters()"
         />
         <i
           title="clear"
           data-toggle="tooltip"
-          (click)="form.get(property.key).reset()"
           [class.visibility-visible]="form.get(property.key).value.length > 0"
           class="mdi mdi-close visibility-hidden position-absolute cursor-pointer"
+          (click)="form.get(property.key).reset(); updateFilters()"
         ></i>
       </span>
     </ng-template>

@@ -13,7 +13,9 @@
 | Name           | 🔗 Link                                         | Note                |
 | -------------- | ----------------------------------------------- | ------------------- |
 | 🎨 UX-UI       |                                                 |                     |
+| color picker   | https://taiga-ui.dev/colors                     |                     |
 | lexicon        | https://liferay.design/lexicon/core-components/ |                     |
+| dev.extreme    | https://js.devexpress.com/Demos/WidgetsGallery/ |                     |
 | design.procore | https://design.procore.com/index.html           |                     |
 | 🪬 Helpers      |                                                 |                     |
 | primeNg        | https://www.primefaces.org/primeng/             | write `readme` file |

@@ -1,11 +1,6 @@
 button {
   outline: none;
-  border: 0;
-
-  &:hover {
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
+  background-color: var(--base-01);
 
   &:focus {
     outline: none;

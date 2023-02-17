@@ -1,5 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import '@angular/compiler';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -24,13 +25,15 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom([
+      /* @angular */
       HttpClientModule,
+      ReactiveFormsModule,
+      /* @firebase */
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule,
-
+      /* @material */
       MatDialogModule,
       MatSnackBarModule,
-      ReactiveFormsModule,
     ]),
     provideAnimations(),
     provideRouter(APP_ROUTES),

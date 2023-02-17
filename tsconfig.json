@@ -9,11 +9,12 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": false,
     "paths": {
       "tslib": ["path/to/node_modules/tslib/tslib.d.ts"],
       "@env/*": ["src/environments/*"],
@@ -29,7 +30,7 @@
       "@lib/services/*": ["projects/mia-lib/src/lib/services/*"],
       "@lib/pipes/*": ["projects/mia-lib/src/lib/pipes/*"],
       "@lib/utils/*": ["projects/mia-lib/src/lib/utils/*"],
-      "@lib/decorators/*": ["projects/mia-lib/src/lib/decorators/*"],
+      "@lib/decorators/*": ["projects/mia-lib/src/lib/decorators/*"]
     }
   }
 }

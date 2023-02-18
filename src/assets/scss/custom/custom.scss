@@ -2,17 +2,24 @@
 @use "@angular/material" as mat;
 @use "./variables" as var;
 
+@include mat.core();
+
 // typography
 
 $custom-typography: mat.define-typography-config(
-  $body-1: mat.define-typography-level(var.$font-size, 20px, 400),
+  $body-1:
+    mat.define-typography-level(
+      var.$font-size,
+      var.$line-height,
+      var.$font-weight
+    ),
   $font-family: var.$font-family,
 );
 
 // palette
 
-$custom-primary: mat.define-palette(var.$primary, 400);
-$custom-accent: mat.define-palette(var.$accent, 400);
+$custom-primary: mat.define-palette(var.$primary, var.$font-weight);
+$custom-accent: mat.define-palette(var.$accent, var.$font-weight);
 
 $custom-theme: mat.define-light-theme(
   (
@@ -20,12 +27,12 @@ $custom-theme: mat.define-light-theme(
       primary: $custom-primary,
       accent: $custom-accent,
     ),
+    typography: $custom-typography,
   )
 );
 
 // config
 
-@include mat.core($custom-typography);
 @include mat.all-component-themes($custom-theme);
 
 // export global variables

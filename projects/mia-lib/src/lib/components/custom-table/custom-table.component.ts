@@ -6,7 +6,6 @@ import {
   OnChanges, Output, QueryList, TemplateRef, ViewChild
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -61,12 +60,6 @@ export type TableColumn = { key: string } & Partial<ColumnProperties>;
     ]),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'standard' }
-    },
-  ]
 })
 
 export class CustomTableComponent<T> implements OnChanges, AfterViewInit {

@@ -9,7 +9,6 @@ import { ERole, TRole } from '@lib/models/role';
 import firebase from 'firebase/compat/app';
 import { BehaviorSubject, from, Observable, switchMap, take } from 'rxjs';
 
-
 export interface AuthUser extends firebase.UserInfo {
   expire: number;
   providerId: string;

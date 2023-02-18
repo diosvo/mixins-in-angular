@@ -9,23 +9,23 @@
       controlErrorContainer
       formControlName="email"
     ></custom-input>
-    <mat-form-field class="width-100" appearance="standard">
+    <mat-form-field class="width-100">
       <mat-label i18n>Hobbies</mat-label>
-      <mat-chip-list #chipList formControlName="hobbies" aria-label="Hobbies">
-        <mat-chip
+      <mat-chip-grid #chipList formControlName="hobbies" aria-label="Hobbies">
+        <mat-chip-row
           *ngFor="let item of hobbies.value; let idx = index"
           [removable]="true"
           (removed)="removeHobby(idx)"
         >
           {{ item }}
           <button matChipRemove>&times;</button>
-        </mat-chip>
+        </mat-chip-row>
         <input
           [matChipInputFor]="chipList"
           [matChipInputAddOnBlur]="true"
           (matChipInputTokenEnd)="addHobby($event)"
         />
-      </mat-chip-list>
+      </mat-chip-grid>
       <mat-error *ngIf="hobbies.hasError('duplicate')" i18n>
         Duplicated values.
       </mat-error>
@@ -37,7 +37,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="gap-1">
-  <custom-button variant="outline" (click)="onSave(false)" i18n>
+  <custom-button variant="stroked" (click)="onSave(false)" i18n>
     Close
   </custom-button>
   <custom-button

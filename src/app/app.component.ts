@@ -12,10 +12,11 @@ import { AuthService } from './auth/services/auth.service';
   standalone: true,
   templateUrl: './app.component.html',
   imports: [
+    /* @angular */
     NgIf,
     AsyncPipe,
     RouterModule,
-
+    /* @components */
     FooterComponent,
     ToolbarComponent,
   ],

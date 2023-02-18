@@ -24,6 +24,7 @@
       <h2>List Users</h2>
       <custom-button
         variant="flat"
+        color="primary"
         (click)="onBulk({})"
         [disabled]="state.loading"
         i18n
@@ -34,20 +35,21 @@
 
     <div filters>
       <ng-container *ngIf="selection.length > 0; else searchingTemplate">
-        <section
-          class="bg-primary text-white d-flex ai-center jc-between pl-2 py-1"
-        >
+        <section class="text-black d-flex ai-center jc-between py-1">
           <div *ngIf="selection.length > 0" class="flex-1" i18n>
             {{ selection.length }}
             {selection.length, plural, =1 {user} other {users} } selected
           </div>
-
           <ng-container>
-            <custom-button variant="basic" (click)="onDelete(selection)" i18n>
+            <custom-button
+              variant="flat"
+              color="warn"
+              (click)="onDelete(selection)"
+              i18n
+            >
               Delete
             </custom-button>
-            <span>|</span>
-            <custom-button variant="basic" (click)="onCancel()" i18n>
+            <custom-button variant="flat" (click)="onCancel()" i18n>
               Cancel
             </custom-button>
           </ng-container>

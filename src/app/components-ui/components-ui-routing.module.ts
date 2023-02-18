@@ -11,10 +11,6 @@ export const COMPONENT_ROUTES: Routes = [
     title: 'Components'
   },
   {
-    path: EComponentUI.BUTTON,
-    loadChildren: () => import('./button/button-routing.module').then(({ BUTTON_ROUTES }) => BUTTON_ROUTES)
-  },
-  {
     path: EComponentUI.CARD,
     loadChildren: () => import('./card/card-routing.module').then(({ CARD_ROUTES }) => CARD_ROUTES)
   },

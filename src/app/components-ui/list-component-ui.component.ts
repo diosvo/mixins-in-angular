@@ -11,7 +11,6 @@ import { CustomButtonComponent } from '@lib/components/custom-button/custom-butt
 import { CustomInputComponent } from '@lib/components/custom-input/custom-input.component';
 import { CustomSelectComponent } from '@lib/components/custom-select/custom-select.component';
 import { NoResultsComponent } from '@lib/components/no-results/no-results.component';
-import { FormStorageDirective } from '@lib/directives/form/form-storage.directive';
 import { State } from '@lib/models/server.model';
 import isEqual from 'lodash.isequal';
 import { Observable } from 'rxjs';
@@ -26,18 +25,18 @@ const DEFAULT_FILTER = {
   selector: 'list-component-ui',
   standalone: true,
   imports: [
+    /* @angular */
     NgIf,
     AsyncPipe,
     ReactiveFormsModule,
-
+    /* @lib */
     AlertComponent,
     CardItemComponent,
     NoResultsComponent,
     CustomInputComponent,
-    FormStorageDirective,
     CustomButtonComponent,
     CustomSelectComponent,
-
+    /* @material */
     MatExpansionModule,
     MatProgressBarModule,
   ],

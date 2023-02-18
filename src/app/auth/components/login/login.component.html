@@ -1,7 +1,7 @@
-<form [formGroup]="form">
+<form [formGroup]="form" class="m-3">
   <ng-container *ngIf="[mode.REGISTER, mode.LOGIN].includes(mode$.value)">
     <custom-button
-      variant="outline"
+      variant="stroked"
       [disabled]="loading"
       buttonClass="width-100"
       (click)="googleSignIn()"

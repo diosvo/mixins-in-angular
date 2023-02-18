@@ -22,17 +22,18 @@ import { DetailsComponent } from '../details/details.component';
   selector: 'list-users',
   standalone: true,
   imports: [
+    /* @angular */
     NgIf,
     NgForOf,
     AsyncPipe,
-
+    /* @lib/components */
     AlertComponent,
     NoResultsComponent,
     CustomTableComponent,
     CustomInputComponent,
     CustomButtonComponent,
     ConfirmDialogComponent,
-
+    /* @lib/helpers */
     FilterPipe,
     TrackByKeyDirective,
     TableColumnDirective,

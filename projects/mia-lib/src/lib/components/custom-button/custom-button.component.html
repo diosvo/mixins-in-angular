@@ -2,6 +2,7 @@
   <button
     *ngSwitchCase="'basic'"
     mat-button
+    [color]="color"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
@@ -10,15 +11,25 @@
   <button
     *ngSwitchCase="'flat'"
     mat-flat-button
-    color="primary"
+    [color]="color"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
     <ng-container *ngTemplateOutlet="baseTemplate"></ng-container>
   </button>
   <button
-    *ngSwitchCase="'outline'"
+    *ngSwitchCase="'raised'"
+    mat-raised-button
+    [color]="color"
+    [class]="buttonClass"
+    [disabled]="disabled || loading"
+  >
+    <ng-container *ngTemplateOutlet="baseTemplate"></ng-container>
+  </button>
+  <button
+    *ngSwitchCase="'stroked'"
     mat-stroked-button
+    [color]="color"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
@@ -27,6 +38,7 @@
   <button
     *ngSwitchCase="'icon'"
     mat-icon-button
+    [color]="color"
     [class]="buttonClass"
     [disabled]="disabled || loading"
     data-toggle="tooltip"

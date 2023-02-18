@@ -20,17 +20,18 @@ import { filter, take } from 'rxjs';
   selector: 'toolbar',
   standalone: true,
   imports: [
+    /* @angular */
     NgIf,
     NgForOf,
     AsyncPipe,
     RouterModule,
-
+    /* @angular */
     LoginComponent,
     LazyImageDirective,
     TrackByKeyDirective,
     CustomButtonComponent,
     ConfirmDialogComponent,
-
+    /* @material */
     MatMenuModule,
     MatCardModule,
     MatToolbarModule,

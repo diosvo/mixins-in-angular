@@ -61,13 +61,13 @@ export class UsersService extends StateService<State<User>> {
           data: job(user),
           loading: false
         });
-        this.snackbar.success(`The user has been ${action.concat('d')}`);
+        this.snackbar.show(`The user has been ${action.concat('d')}`);
       },
       error: ({ message }) => {
         this.setState({
           loading: false
         });
-        this.snackbar.error(message);
+        this.snackbar.show(message);
       }
     });
   }
@@ -82,17 +82,17 @@ export class UsersService extends StateService<State<User>> {
           data: diffBy(this.state.data, users, 'id'),
           loading: false
         });
-        this.snackbar.success(
+        this.snackbar.show(
           users.length > 1
-            ? 'The selected users have been deleted'
-            : 'The user has been deleted'
+            ? $localize`The selected users have been deleted`
+            : $localize`The user has been deleted`
         );
       },
       error: ({ message }) => {
         this.setState({
           loading: false
         });
-        this.snackbar.error(message);
+        this.snackbar.show(message);
       }
     });
   }

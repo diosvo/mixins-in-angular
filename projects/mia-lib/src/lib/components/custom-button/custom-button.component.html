@@ -3,6 +3,8 @@
     *ngSwitchCase="'basic'"
     mat-button
     [color]="color"
+    [title]="tooltip"
+    data-toggle="tooltip"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
@@ -12,6 +14,9 @@
     *ngSwitchCase="'flat'"
     mat-flat-button
     [color]="color"
+    color="primary"
+    [title]="tooltip"
+    data-toggle="tooltip"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
@@ -30,6 +35,8 @@
     *ngSwitchCase="'stroked'"
     mat-stroked-button
     [color]="color"
+    [title]="tooltip"
+    data-toggle="tooltip"
     [class]="buttonClass"
     [disabled]="disabled || loading"
   >
@@ -39,10 +46,10 @@
     *ngSwitchCase="'icon'"
     mat-icon-button
     [color]="color"
+    [title]="tooltip"
+    data-toggle="tooltip"
     [class]="buttonClass"
     [disabled]="disabled || loading"
-    data-toggle="tooltip"
-    [title]="tooltip"
   >
     <i [style.line-height]="'unset'" class="mdi" [class]="iconClass"></i>
   </button>

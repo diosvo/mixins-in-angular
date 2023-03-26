@@ -38,8 +38,7 @@ $custom-theme: mat.define-light-theme(
 // export global variables
 
 :root {
-  --font-text: #{var.$font-style var.$font-size var.$line-height
-    var.$font-family};
+  --font-family: #{var.$font-family};
   --primary: #{map-get($custom-primary, 400)};
   --primary-active: #{#314692};
   --base-01: #{#fff};

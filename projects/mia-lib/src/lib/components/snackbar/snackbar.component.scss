@@ -1,26 +1,4 @@
-@use 'colors/severity'as severity;
-
-.alert {
-  .message {
-    line-height  : 1.5;
-    overflow-wrap: break-word;
-  }
-
-  &-success {
-    $-color     : #287D3C;
-    $-background: #EDF9F0;
-    @include severity.message-config($-color, $-background);
-  }
-
-  &-warning {
-    $-color     : #B95000;
-    $-background: #FFF4EC;
-    @include severity.message-config($-color, $-background);
-  }
-
-  &-error {
-    $-color     : #DA1414;
-    $-background: #FEEFFE;
-    @include severity.message-config($-color, $-background);
-  }
+.message {
+  line-height: 1.5;
+  overflow-wrap: break-word;
 }

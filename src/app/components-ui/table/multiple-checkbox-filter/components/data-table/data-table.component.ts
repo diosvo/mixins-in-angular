@@ -42,7 +42,7 @@ export class DataTableComponent implements OnInit {
   protected readonly columns: TableColumn[] = [
     { key: 'id', flex: '10%' },
     { key: 'created_at', flex: '10%' },
-    { key: 'state', disableSorting: true, flex: '10%' },
+    { key: 'state', sortable: true, flex: '10%' },
     { key: 'number', flex: '10%' },
     { key: 'title', flex: '50%' },
   ];

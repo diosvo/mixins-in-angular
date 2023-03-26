@@ -8,6 +8,10 @@ $-items: 10, 32, 40, 100, 300;
   max-width: 100%;
 }
 
+.max-width-content {
+  max-width: max-content;
+}
+
 .min-width {
   min-width: 0;
 }

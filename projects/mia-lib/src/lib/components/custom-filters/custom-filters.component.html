@@ -1,0 +1,43 @@
+<form
+  [formGroup]="form"
+  [style.gap.px]="8"
+  class="d-flex jc-flex-end flex-wrap mb-2"
+>
+  <ng-container *ngFor="let property of schema | keyvalue">
+    <!-- Selection -->
+    <ng-container
+      *ngIf="property.value.options as options; else querySearch"
+    ></ng-container>
+
+    <!-- Query -->
+    <ng-template #querySearch>
+      <span
+        id="input-container"
+        class="position-relative d-flex ai-center max-width-content"
+      >
+        <i
+          class="mdi position-absolute mdi-18px mdi-{{
+            property.value.searchIcon ?? 'magnify'
+          }}"
+        ></i>
+        <input
+          type="search"
+          class="bd-auto"
+          i18n-placeholder
+          [id]="'search-' + property.key"
+          [formControlName]="property.key"
+          [name]="'search-' + property.key"
+          [placeholder]="property.value.searchPlaceholder ?? 'Search'"
+          (keyup)="updateFilters()"
+        />
+        <i
+          title="clear"
+          data-toggle="tooltip"
+          [class.visibility-visible]="form.get(property.key).value.length > 0"
+          class="mdi mdi-close visibility-hidden position-absolute cursor-pointer"
+          (click)="form.get(property.key).reset(); updateFilters()"
+        ></i>
+      </span>
+    </ng-template>
+  </ng-container>
+</form>

@@ -79,7 +79,7 @@ export class LoginComponent {
       .pipe(
         take(1),
         catchError(({ message }) => {
-          this.snackbar.error(message);
+          this.snackbar.show(message);
           return EMPTY;
         }),
         finalize(() => {
@@ -124,7 +124,7 @@ export class LoginComponent {
       .pipe(
         take(1),
         catchError(({ message }) => {
-          this.snackbar.error(message);
+          this.snackbar.show(message);
           return EMPTY;
         }),
         finalize(() => this.dialogRef.close())

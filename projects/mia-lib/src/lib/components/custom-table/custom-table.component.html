@@ -16,7 +16,7 @@
       [multiTemplateDataRows]="enableExpansion"
     >
       <!-- Expansion -->
-      <ng-container matColumnDef="expand">
+      <ng-container [matColumnDef]="expand">
         <mat-header-cell *matHeaderCellDef aria-label="row actions">
           &nbsp;
         </mat-header-cell>
@@ -24,14 +24,14 @@
           *matCellDef="let row"
           class="cursor-pointer"
           aria-label="expand row"
-          (click)="row.isExpanded = !row.isExpanded"
+          (click)="row.expandable = !row.expandable"
         >
           <i
-            *ngIf="row.isExpanded"
+            *ngIf="row.expandable"
             class="mdi mdi-unfold-more-horizontal text-error"
           ></i>
           <i
-            *ngIf="!row.isExpanded"
+            *ngIf="!row.expandable"
             class="mdi mdi-unfold-less-horizontal text-secondary"
           ></i>
         </mat-cell>
@@ -41,7 +41,7 @@
         <mat-cell
           *matCellDef="let row"
           [attr.colspan]="displayedColumns.length"
-          [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'"
+          [@detailExpand]="row.expandable ? 'expanded' : 'collapsed'"
         >
           <ng-container
             [ngTemplateOutlet]="expandedTemplate"
@@ -53,7 +53,7 @@
       </ng-container>
 
       <!-- Checkbox selection -->
-      <ng-container matColumnDef="select">
+      <ng-container [matColumnDef]="select">
         <mat-header-cell *matHeaderCellDef [class.px-2]="enableExpansion">
           <mat-checkbox
             color="warn"
@@ -62,6 +62,7 @@
               $event ? masterToggle() : null;
               selectedRows.emit(selection.selected)
             "
+            [disabled]="source.data.length < 1"
             [checked]="selection.hasValue() && isAllSelected()"
             [indeterminate]="selection.hasValue() && !isAllSelected()"
           >
@@ -82,30 +83,85 @@
         </mat-cell>
       </ng-container>
 
-      <!-- Column declaration -->
-      <ng-container
-        *ngFor="let column of columns; let idx = index"
-        [matColumnDef]="column.key"
-        [stickyEnd]="column.key === actions"
-      >
+      <!-- On/off columns -->
+      <ng-container [matColumnDef]="actions">
+        <!-- Columns configuration -->
+        <mat-header-cell *matHeaderCellDef class="d-flex jc-flex-end">
+          <custom-button
+            *ngIf="enableReorderColumns"
+            variant="icon"
+            tooltip="Columns configuration"
+            iconClass="mdi-table mdi-18px text-primary text-link-hover"
+            [matMenuTriggerFor]="columnsConfiguration"
+          ></custom-button>
+          <mat-menu #columnsConfiguration="matMenu" (closed)="modifyColumns()">
+            <div (click)="$event.stopPropagation()">
+              <ng-container [formGroup]="form">
+                <button mat-menu-item (click)="showAllColumns(false)" i18n>
+                  Unpin all columns
+                </button>
+                <button mat-menu-item (click)="showAllColumns(true)" i18n>
+                  Show all columns
+                </button>
+                <div cdkDropList>
+                  <button
+                    cdkDrag
+                    [disableRipple]="true"
+                    *ngFor="let control of columns; let first = first"
+                    [disabled]="form.get(control.key).disabled"
+                    [cdkDragDisabled]="form.get(control.key).disabled"
+                    (cdkDragDropped)="changeColumnPosition($event)"
+                    mat-menu-item
+                  >
+                    <mat-checkbox
+                      color="primary"
+                      [disableRipple]="true"
+                      ariaLabel="selected column"
+                      [formControlName]="control.key"
+                    >
+                      {{ control.key | titlecase }}
+                    </mat-checkbox>
+                    <i
+                      *ngIf="!first"
+                      cdkDragHandle
+                      class="mdi mdi-dots-grid icon-action icon-action-hover cursor-pointer"
+                    ></i>
+                  </button>
+                </div>
+              </ng-container>
+            </div>
+          </mat-menu>
+        </mat-header-cell>
+
+        <!-- Row actions -->
+        <mat-cell *matCellDef="let row">
+          <ng-container
+            [ngTemplateOutlet]="actionsTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: row
+            }"
+          ></ng-container>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Columns declaration -->
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
         <mat-header-cell
           *matHeaderCellDef
           disableClear
           mat-sort-header
           [style.flex]="column.flex"
-          [disabled]="
-            !source.data.length ||
-            column.disableSorting ||
-            column.key === actions
-          "
+          [class.d-none]="!column.visible"
+          [disabled]="!source.data.length || column.sortable"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
             {{ column.header || column.key | uppercase }}
           </span>
         </mat-header-cell>
         <mat-cell
-          *matCellDef="let row; let idx = index"
+          *matCellDef="let row"
           [style.flex]="column.flex"
+          [class.d-none]="!column.visible"
           [matTooltip]="column.tooltip ? row[column.key] : null"
         >
           <span [class.truncate-cell]="column.truncate ?? true">
@@ -122,17 +178,19 @@
 
       <!-- Define columns -->
       <mat-header-row
-        *matHeaderRowDef="displayedColumns; sticky: true"
+        class="position-sticky z-100 top-0"
+        [class.fixed]="fixedHeader$ | async"
+        *matHeaderRowDef="displayedColumns"
       ></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       <ng-container *ngIf="enableExpansion">
         <mat-row
           *matRowDef="let row; columns: ['expandedDetail']"
-          [class.py-2]="row.isExpanded"
-          [class.visibility-hidden]="!row.isExpanded"
+          [class.py-2]="row.expandable"
+          [class.visibility-hidden]="!row.expandable"
           [style]="{
-            'min-height': row.isExpanded ? '' : '0',
-            'border-bottom': row.isExpanded ? '' : 'none'
+            'min-height': row.expandable ? '' : '0',
+            'border-bottom': row.expandable ? '' : 'none'
           }"
         ></mat-row>
       </ng-container>

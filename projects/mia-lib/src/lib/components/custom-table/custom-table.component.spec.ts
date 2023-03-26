@@ -2,6 +2,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MOCK_LIST_USERS } from '@lib/mocks/json-placeholder/user.mock';
 import { User } from '@lib/models/json-placeholder/user.model';
+import * as rxjs from 'rxjs';
 import { CustomTableComponent, TableColumn } from './custom-table.component';
 
 const columns: TableColumn[] = [
@@ -180,11 +181,11 @@ describe('CustomTableComponent', () => {
     };
     jest.spyOn(component.pageChanges, 'emit');
 
-    component['tableRef'] = {
+    (component as any)['tableRef'] = {
       nativeElement: {
         scrollIntoView: jest.fn()
       }
-    } as any;
+    };
     windowSpy.requestAnimationFrame = jest.fn().mockImplementationOnce(() => {
       return () => component['tableRef'];
     });
@@ -232,6 +233,37 @@ describe('CustomTableComponent', () => {
       jest.spyOn(component, 'isAllSelected').mockReturnValue(false);
       component.masterToggle();
       component['source'].data.forEach(row => expect(component['selection'].select(row)));
+    });
+  });
+
+  describe('isFixed$()', () => {
+    beforeEach(() => {
+      window = Object.assign(window, { scrollY: 900 });
+      jest.spyOn(rxjs, 'fromEvent').mockReturnValue(rxjs.of({ type: 'scroll' }));
+    });
+
+    test('should set header under the toolbar', (done) => {
+      (component as any)['headerRef'] = {
+        nativeElement: {
+          offsetTop: 901
+        }
+      };
+      component['isFixed$']().subscribe((fixed: boolean) => {
+        expect(fixed).toBe(false);
+        done();
+      });
+    });
+
+    test('should stick header as initial state', (done) => {
+      (component as any)['headerRef'] = {
+        nativeElement: {
+          offsetTop: 899
+        }
+      };
+      component['isFixed$']().subscribe((fixed: boolean) => {
+        expect(fixed).toBe(true);
+        done();
+      });
     });
   });
 });

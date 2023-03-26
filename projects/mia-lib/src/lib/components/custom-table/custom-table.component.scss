@@ -1,9 +1,19 @@
 @import "layout/breakpoints";
 
+$-border: 1px solid var(--base-03);
+
+@mixin fixed() {
+  position: fixed;
+  left: 0;
+  right: 0;
+
+  z-index: 2;
+}
+
 .custom-table {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--base-03);
+  border: $-border;
 
   mat-table {
     overflow: auto;
@@ -11,11 +21,11 @@
     // Header
 
     mat-header {
-      &-cell.mat-column {
-        &-expand,
-        &-select {
-          flex: 2;
-        }
+      &-row.fixed {
+        @include fixed();
+        top: 64px; // toolbar height
+        padding-inline: 2rem;
+        box-shadow: 0 0.125rem 1rem var(--base-03);
       }
     }
 
@@ -26,9 +36,6 @@
     }
 
     // Cell
-
-    mat-cell {
-    }
 
     // Text that is longer than the column width is truncated with an ellipsis
 
@@ -47,11 +54,6 @@
 
     mat-row {
       mat-cell.mat-column {
-        &-expand,
-        &-select {
-          flex: 2;
-        }
-
         &-actions {
           visibility: hidden;
         }
@@ -63,7 +65,6 @@
         mat-cell {
           &.mat-column-actions {
             visibility: visible;
-            color: var(--base-05);
           }
 
           &.mat-column-actions.mat-table-sticky {
@@ -80,8 +81,12 @@
 }
 
 .custom-pagination {
-  border: 1px solid var(--base-03);
+  border: $-border;
   border-top: none;
+
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 @include screen("small") {
@@ -93,10 +98,28 @@
       min-width: 1024px;
       overflow: initial;
 
-      mat-cell.mat-column-actions.mat-table-sticky {
-        justify-content: flex-end;
-        background: var(--base-01) !important;
+      :is(mat-header-cell, mat-cell) {
+        &.mat-column-actions {
+          position: fixed;
+          right: 2rem;
+
+          padding: 0;
+          border-right: $-border;
+          background: var(--base-01);
+        }
       }
     }
   }
+}
+
+/* Customize Material styles */
+
+.mat-menu-item {
+  display: flex;
+  justify-content: space-between;
+
+  height: 2rem;
+  line-height: 2rem;
+
+  font-size: 12px;
 }

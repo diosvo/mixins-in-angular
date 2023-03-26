@@ -1,4 +1,4 @@
-<ng-template #selectionTpl let-users>
+<ng-template #selectionTemplate let-users>
   <div i18n>This will delete selected users. Are you sure?</div>
   <ul>
     <li *ngFor="let user of users">#{{ user.id }} {{ user.name }}</li>
@@ -11,31 +11,24 @@
   </alert-message>
 
   <custom-table
-    *ngIf="state.data | filter : query.value as filtered_data"
-    [data]="filtered_data"
-    [columns]="columns"
-    [highlight]="query.value"
+    *ngIf="params$ | async as params"
+    [data]="state.data | filter : params.query"
+    [columns]="COLUMNS"
+    [highlight]="params.query"
+    [pageSizeOptions]="[5, 10]"
     [defaultSortColumn]="'name'"
     [enableCheckbox]="true"
     (selectedRows)="selection = $event"
     [enableExpansion]="true"
+    [enableReorderColumns]="true"
   >
-    <div header class="d-flex ai-baseline jc-between">
-      <h2>List Users</h2>
-      <custom-button
-        variant="flat"
-        color="primary"
-        (click)="onBulk({})"
-        [disabled]="state.loading"
-        i18n
-      >
-        Create User
-      </custom-button>
-    </div>
+    <h2 header>List Users</h2>
 
-    <div filters>
-      <ng-container *ngIf="selection.length > 0; else searchingTemplate">
-        <section class="text-black d-flex ai-center jc-between py-1">
+    <ng-container filters>
+      <ng-container *ngIf="selection.length > 0; else filtersTemplate">
+        <section
+          class="bg-primary text-white d-flex ai-center jc-between pl-2 py-1"
+        >
           <div *ngIf="selection.length > 0" class="flex-1" i18n>
             {{ selection.length }}
             {selection.length, plural, =1 {user} other {users} } selected
@@ -57,41 +50,41 @@
       </ng-container>
 
       <!-- Basic template -->
-      <ng-template #searchingTemplate>
-        <custom-input
-          filters
-          *ngIf="state.data.length > 0"
-          label="search"
-          [clearFilter]="true"
-          [formControl]="query"
-          placeholder="type to search..."
-        >
-        </custom-input>
+      <ng-template #filtersTemplate>
+        <div class="d-flex jc-between">
+          <custom-filters [schema]="SCHEMA"></custom-filters>
+          <custom-button
+            variant="flat"
+            (click)="onBulk({})"
+            [disabled]="state.loading"
+            i18n
+          >
+            Create User
+          </custom-button>
+        </div>
       </ng-template>
-    </div>
+    </ng-container>
 
-    <custom-column columnName="actions">
-      <ng-template let-user let-index="index">
-        <custom-button
-          variant="icon"
-          tooltip="Edit"
-          iconClass="mdi-pencil-outline text-action-icon-hover"
-          [class.visibility-hidden]="selection.length > 1"
-          [disabled]="state.loading"
-          (click)="onBulk(user)"
-        >
-        </custom-button>
-        <custom-button
-          variant="icon"
-          tooltip="Delete"
-          iconClass="mdi-delete-outline text-action-icon-hover"
-          [class.visibility-hidden]="selection.length > 1"
-          [disabled]="state.loading"
-          (click)="onDelete([user])"
-        >
-        </custom-button>
-      </ng-template>
-    </custom-column>
+    <ng-template #actions let-user>
+      <custom-button
+        variant="icon"
+        tooltip="Edit"
+        [disabled]="state.loading"
+        [class.visibility-hidden]="selection.length > 1"
+        iconClass="mdi-pencil-outline icon-action icon-action-hover"
+        (click)="onBulk(user)"
+      >
+      </custom-button>
+      <custom-button
+        variant="icon"
+        tooltip="Delete"
+        [disabled]="state.loading"
+        [class.visibility-hidden]="selection.length > 1"
+        iconClass="mdi-delete-outline icon-action icon-action-hover"
+        (click)="onDelete([user])"
+      >
+      </custom-button>
+    </ng-template>
 
     <ng-template #expandedDetail let-user>
       <div class="d-flex width-100">

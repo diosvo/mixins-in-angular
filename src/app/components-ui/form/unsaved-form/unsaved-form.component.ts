@@ -75,7 +75,7 @@ export class UnsavedFormComponent implements OnInit, DeactivateComponent {
 
   saveChanges(url?: string): void {
     this.vm$.next(this.name.value);
-    this.snackbar.success('Update successfully!');
+    this.snackbar.show('Update successfully!');
     this.router.navigate([url ?? this.router.url]);
   }
 }

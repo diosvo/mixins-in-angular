@@ -38,7 +38,7 @@ export class CardItemComponent {
 
   directItem(item: CardItem): void {
     if (item.is_maintained && this.prod_mode) {
-      return this.snackbar.error('The site is currently down for maintenance');
+      return this.snackbar.show($localize`The site is currently down for maintenance`);
     }
     this.router.navigate([item.group_id.toLowerCase(), item.routing_path], {
       relativeTo: this.route

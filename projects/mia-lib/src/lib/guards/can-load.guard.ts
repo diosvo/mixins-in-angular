@@ -24,7 +24,7 @@ export class CanLoadGuard implements CanLoad {
         next: (isLoggedIn: boolean) => {
           if (!isLoggedIn) {
             this.logger.log('activated');
-            this.snackbar.warning('You must log in first');
+            this.snackbar.show('You must log in first');
           }
         }
       })
